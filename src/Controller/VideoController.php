@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/video', name: 'video_')]
 class VideoController extends AbstractController
 {
-    #[Route('/list/{categorie}/{genre}/{periode}/{page}', name: 'list', requirements: ['categorie' => '\d+', 'genre' => '\d+', 'page' => '\d+'])]
+    #[Route('/list/{categorie}/{genre}/{periode}/{page}', name: 'list', requirements: ['categorie' => '\d+', 'genre' => '\d+|-\d+', 'page' => '\d+'])]
     public function listAction(
         Request $request,
         VideoRepository $videoRepository,
@@ -48,7 +48,7 @@ class VideoController extends AbstractController
         ]);
     }
 
-    #[Route('/couch/{categorie}/{genre}/{periode}', name: 'couch', requirements: ['categorie' => '\d+', 'genre' => '\d+'])]
+    #[Route('/couch/{categorie}/{genre}/{periode}', name: 'couch', requirements: ['categorie' => '\d+', 'genre' => '\d+|-\d+'])]
     public function couchAction(
         VideoRepository $videoRepository,
         ShuflerExtension $shuflerExtension,
