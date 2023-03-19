@@ -1,0 +1,10 @@
+<a class="video-link" href="{{ video.lien|popUp }}">
+	{{  video.lien|convertFrame|raw}}
+	<div class="media-body">
+	{% if is_granted('ROLE_AUTEUR') %}
+		<div class="link_edit"><a href="{{ path('shufler_video_edit',{'id':video.id}) }}"><i class="glyphicon glyphicon-edit"></i></a></div>
+	{% endif %}
+		<h3 class="media-heading">{{  video.titre }}</h3>
+		{{  video.auteur }} <span class="annee_small">{{  video.annee|yearDisplay }}</span>
+	</div>
+</a>

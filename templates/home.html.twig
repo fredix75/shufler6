@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <section class="col-sm-8 col-md-9 ">
+            {% for video in anims|slice(0, 1) %}
+                <div class="ratio ratio-16x9">
+                    <iframe  class="media embed-responsive-item" src="{{  video.lien }}" allowfullscreen></iframe>
+                </div>
+                <div class="topcom media-body">
+                    <div class="col-xs-10 col-sm-10 col-md-10">
+                        <h2 class="media-heading">{{  video.titre }}</h2>
+                        <span class="top-auteur">{{  video.auteur }}</span>
+                        <br/>
+                        <p class="topchapo">{{ video.chapo }}</p>
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-push-md-right">
+                        <div class="col-md-12"><br/><span class="top-annee">{{  video.annee|yearDisplay }}</span></div>
+                        {% if is_granted('ROLE_AUTEUR') %}
+                            <br/><div class="link_edit"><a href="{{ path('shufler_video_edit',{'id':video.id}) }}"><span class="glyphicon glyphicon-edit"></span></a></div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </section>
+
+        <section class="col-sm-4 col-md-3" data-controller="video">
+            <h1 style="text-align:left;"><i class="bi bi-film"></i>&nbsp;Anim's</h1>
+            {% for video in anims|slice(1, 3) %}
+                <div class="media topcol embed-responsive-16by9">
+                    {% include("video/video_part.html.twig") %}
+                </div>
+            {% endfor %}
+        </section>
+    </div>
+{% endblock %}

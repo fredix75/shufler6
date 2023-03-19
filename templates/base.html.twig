@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name = "description " content = "Un site qui propose aléatoirement des vidéos démentes et des trucs méconnus.">
+        <meta name = "keywords" content = "videos, animations, musique, clips" >
+        <meta name = "generator" content = "Symfony6" >
+        <meta name = "author" content = "Fred Fox" >
+        <meta name = "viewport" content = "width=device-width, initial-scale=1">
+        <meta name = "robots" content = "index, follow">
+        <title>{% block title %}Shufler{% endblock %}</title>
+        <link rel="icon" type="image/png" href="{{ asset('build/images/fav.png') }}" />
+        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
+        {% endblock %}
+
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+        {% endblock %}
+    </head>
+    <body>
+        <header>
+            <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="{{ path('home') }}"><img src="{{ asset('build/images/shufler_logo.png') }}" width=150px /></a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="mynavbar">
+                        <ul class="navbar-nav me-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('video_list') }}"><i class="bi bi-film"></i>&nbsp;Videos</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><i class="bi bi-pencil"></i> Editer</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#">Link</a></li>
+                                    <li><a class="dropdown-item" href="#">Another link</a></li>
+                                    <li><a class="dropdown-item" href="#">A third link</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><img src="{{ asset('build/images/flags/flag-'~ app.request.locale ~'.png')}}" width="30px" />&nbsp;<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#" class="dropdown-item"><img src="{{ asset('build/images/flags/flag-en.png')}}" width="30px" />&nbsp;english</a></li>
+                                    <li><a href="#" class="dropdown-item"><img src="{{ asset('build/images/flags/flag-fr.png')}}" width="30px" />&nbsp;français</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <form class="d-flex">
+                            <input class="form-control me-2" type="text" placeholder="Search">
+                            <button class="btn btn-primary" type="button">Search</button>
+                        </form>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+    <div class="container-fluid content">
+        {% for label, flashes in app.session.flashbag.all %}
+            {% for flash in flashes %}
+                <div class="alert alert-{{ label }}">
+                    <p style="float:left;"><img src="{{ asset('build/images/' ~ label ~ '.png') }}" width=75px/></p>
+                    <p style="margin-left:120px;">{{ flash }}</p>
+                </div>
+            {% endfor %}
+        {% endfor %}
+
+        {% block body %}{% endblock %}
+
+
+    </div>
+    <footer>
+        <br />
+        <p>nFactory © {{ 'now'|date('Y') }} - fred_ric@hotmail.com.</p>
+    </footer>
+    </body>
+</html>

@@ -1,0 +1,19 @@
+{% extends "base.html.twig" %}
+
+{% block title %}{{ parent() }} :: Couch'{% endblock %}
+
+{% block body %}
+	<div class="row">
+		<section class="col-sm-12 col-md-12">
+			<div id="player"></div>
+			<div id="cartouche-bloc" class="col-xs-12 col-sm-12 col-md-12" style="background-color:black;">
+				<div id="cartouche" class="col-xs-8 col-sm-8 col-md-11"></div>
+				<div class="pull-right" style="padding:1em 0">
+					<a class="btn btn-default" onclick="player.previousVideo();"><span class="glyphicon glyphicon-backward"></span></a>
+					<a class="btn btn-default" onclick='player.nextVideo();'><span class="glyphicon glyphicon-forward"></span></a>
+				</div>
+				<div id="description" class="col-md-12" style="color:white;"></div>
+			</div> 
+		</section>
+	</div>
+{% endblock %}

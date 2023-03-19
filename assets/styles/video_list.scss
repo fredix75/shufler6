@@ -1,0 +1,36 @@
+.medias-bande {
+  margin-top:10px;
+  display:flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.media-vignette {
+  padding: 0 10px;
+}
+
+.page_videos_sous_titre {
+  font-size:3em;
+  text-align:right;
+  color:orange;
+  line-height: 1.1;
+}
+
+.page_videos_genre {
+  font-size:3em;
+  text-align:right;
+  color:#9dff00;
+  line-height: 1.1;
+}
+
+.page_videos_periode {
+  font-size:2em;
+  text-align:right;
+  color:#ffeb00;
+  margin-top:1em;
+}
+
+.media, .media-body {
+  overflow: hidden;
+}

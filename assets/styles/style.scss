@@ -1,0 +1,87 @@
+@font-face {
+  font-family: "blippok";
+  src: url('../font/BLIPPOK.TTF');
+}
+
+@font-face {
+  font-family: "futuran";
+  src: url('../font/FUTURAN.TTF');
+}
+
+body {
+  background-color: $background-color;
+}
+
+.content {
+  margin-top: 60px;
+  padding: 20px;
+}
+
+.navbar {
+  border-bottom: 1px solid #fff;
+}
+
+footer {
+  color: white;
+  background-color: rgb(33,37,41);
+  height: 300px;
+}
+
+h1 {
+  color: orange;
+  font-family: blippok;
+  font-size: 4.6em;
+  margin-top: -5px;
+  text-shadow: 1px 1px 3px black;
+  text-align:right;
+  border-bottom: 1px solid white;
+}
+
+@media ( max-width : 1500px) {
+  h1 {
+    font-size: 3em;
+  }
+}
+
+@media ( max-width : 755px) {
+  h1 {
+    font-size: 2em;
+  }
+}
+
+h1 .bi {
+  color: #F15A24;
+}
+
+h3 {
+  font-size: 1.3em;
+  color: #FFFFCC;
+}
+
+a {
+  color: orange;
+  text-decoration: none;
+}
+
+a:hover, a:active {
+  text-decoration: none;
+  color: #B27300;
+}
+
+a.video-link img {
+  transition: all 1s ease;
+  max-width: 100%;
+}
+
+a.video-link:hover img {
+  scale: 1.3;
+}
+
+.alert {
+  height: 105px;
+}
+
+.alert-error {
+  color: white;
+  background-color: red;
+}

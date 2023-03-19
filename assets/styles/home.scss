@@ -1,0 +1,72 @@
+.topcom {
+  background-color: rgba(0, 0, 0, 1);
+  color: #ccff99;
+  width: 100%;
+  position: relative;
+  padding: 10px;
+  text-shadow: 1px 1px 2px rgba(36, 36, 36, 1);
+}
+
+.top-auteur {
+  font-size: 150%;
+  color: #FFFFCC;
+  font-weight: bold;
+}
+
+.topchapo {
+  color: white;
+  font-weight: bold;
+}
+
+.topcom h2 {
+  color: white;
+}
+
+.media iframe {
+  background-color:black;
+}
+
+.topcol {
+  border-radius: 12px;
+  border: 4px solid #6f42c1;
+  margin-bottom: 15px;
+}
+
+.topcol .media-body {
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 5px;
+  margin-top: -4em;
+  height: 4em;
+  z-index: 990;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  text-shadow: 1px 1px black;
+}
+
+.media-body h4 {
+  color: yellow;
+}
+
+.categorie {
+  color: orange;
+  z-index: 991;
+  font-weight: bold;
+  font-size: 80%;
+
+}
+
+.date {
+  float: right;
+}
+
+.top-annee {
+  font-size: 125%;
+  color: white;
+}
+
+.annee_small {
+  color: orange;
+  font-weight: bold;
+}

@@ -1,0 +1,49 @@
+parameters:
+    shufler_video:
+        max_list: 9
+        max_list_couch: 99
+        index_max_anim: 4
+        index_max_music: 15
+        index_max_autre: 3
+
+        categories:
+            1: Anim
+            2: Music Moment
+            3: Strange
+            4: Funny
+            6: Seen on Tv
+            8: Movie Time
+            9: Nature
+
+        genres:
+            1: Jazz/Blues
+            2: Rock n'Roll
+            3: Rock/Pop
+            4: Soul/Funk
+            5: Reggae/Ragga/Dub
+            6: Chanson
+            7: Punk/Alternatif
+            8: Hard-Rock
+            9: Blues Rock
+            10: Electro/DJs
+            11: World
+            12: Roots/Folk Rock
+            13: Rock progressif/psyché',
+            14: Variétés/Pop
+            15: Trip-Hop
+            16: Afrobeat
+
+        periods:
+            - 2016-2030
+            - 2001-2015
+            - 1986-2000
+            - 1971-1985
+            - 1956-1970
+            - 1940-1955
+            - <1939
+
+        priorities:
+            - 1
+            - 2
+            - 3
+            - 4
