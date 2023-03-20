@@ -50,7 +50,9 @@
                                 </li>
                             {% else %}
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ path('app_login') }}"><i class="bi bi-key"></i>&nbsp;Connexion</a>
+                                    <a class="nav-link" href="#" {{ stimulus_controller('modal-form', {
+                                        formUrl: path('app_login')
+                                    }) }} data-action="click->modal-form#openModal"><i class="bi bi-key"></i>&nbsp;Connexion</a>
                                 </li>
                             {% endif %}
                         </ul>
@@ -83,8 +85,7 @@
         {% endfor %}
 
         {% block body %}{% endblock %}
-
-
+        {{ include('modal.html.twig', { modalTitle: 'Connexion'}) }}
     </div>
     <footer>
         <br />
