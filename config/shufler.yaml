@@ -1,6 +1,6 @@
 parameters:
     shufler_video:
-        max_list: 9
+        max_list: 11
         max_list_couch: 99
         index_max_anim: 4
         index_max_music: 15

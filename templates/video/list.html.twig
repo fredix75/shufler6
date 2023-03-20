@@ -4,7 +4,7 @@
 
 {% block body %}
     <section class="col col-sm-12 col-md-12 medias-bande" data-controller="video">
-        <div class="col col-12 col-sm-6 col-md-6 col-lg-3" style="">
+        <div class="col col-12 col-sm-6 col-md-6 col-lg-3 media-select" style="">
             {% if search is defined %}
                 <h1>{% if videos_count >0 %}Trouvé{% else %}Désolé{% endif %}</h1>
                 <div class="page_videos_sous_titre">{{ search }}<br/><span class="badge">{{ videos_count }} vids</span></div>

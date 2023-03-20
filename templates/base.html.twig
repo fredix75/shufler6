@@ -40,6 +40,19 @@
                                     <li><a class="dropdown-item" href="#">A third link</a></li>
                                 </ul>
                             </li>
+                            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><i class="bi bi-person-vcard"></i> Mon compte</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#"><i class="bi bi-person-circle"></i> Mon profil</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('app_logout') }}"><i class="bi bi-x-circle"></i> Me déconnecter</a></li>
+                                    </ul>
+                                </li>
+                            {% else %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('app_login') }}"><i class="bi bi-key"></i>&nbsp;Connexion</a>
+                                </li>
+                            {% endif %}
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
                             <li class="nav-item dropdown">
