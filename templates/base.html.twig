@@ -29,18 +29,28 @@
                     </button>
                     <div class="collapse navbar-collapse" id="mynavbar">
                         <ul class="navbar-nav me-auto">
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ path('video_list') }}"><i class="bi bi-film"></i>&nbsp;Videos</a>
-                            </li>
+                            {% if is_granted('ROLE_USER') %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('video_list') }}"><i class="bi bi-film"></i>&nbsp;Videos</a>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><i class="bi bi-pencil"></i> Editer</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#">Link</a></li>
+                                        <li><a class="dropdown-item" href="#">Another link</a></li>
+                                        <li><a class="dropdown-item" href="#">A third link</a></li>
+                                    </ul>
+                                </li>
+                            {% endif %}
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><i class="bi bi-pencil"></i> Editer</a>
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><i class="bi"></i> Divers</a>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="#">Link</a></li>
                                     <li><a class="dropdown-item" href="#">Another link</a></li>
                                     <li><a class="dropdown-item" href="#">A third link</a></li>
                                 </ul>
                             </li>
-                            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                            {% if is_granted('IS_AUTHENTICATED') %}
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><i class="bi bi-person-vcard"></i> Mon compte</a>
                                     <ul class="dropdown-menu">

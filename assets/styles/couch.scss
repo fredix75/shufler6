@@ -1,0 +1,22 @@
+.description {
+  height: 190px;
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.description_pl {
+  height: auto;
+  color: white;
+}
+
+#cartouche {
+  color: white;
+  padding: 20px 0px;
+  height: auto;
+  font-size: 2em;
+}
+
+#cartouche-bloc .btn{
+  background-color: black;
+  color: white;
+}

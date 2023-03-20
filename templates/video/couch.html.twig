@@ -5,7 +5,9 @@
 {% block body %}
 	<div class="row">
 		<section class="col-sm-12 col-md-12">
-			<div id="player"></div>
+			<div id="player" {{ stimulus_controller('videos-couch', {
+				videos : videos
+			}) }}></div>
 			<div id="cartouche-bloc" class="col-xs-12 col-sm-12 col-md-12" style="background-color:black;">
 				<div id="cartouche" class="col-xs-8 col-sm-8 col-md-11"></div>
 				<div class="pull-right" style="padding:1em 0">

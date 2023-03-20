@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/video', name: 'video_')]
-#[Security("is_granted('ROLE_SUPER_ADMIN')")]
+#[Security("is_granted('ROLE_USER')")]
 class VideoController extends AbstractController
 {
     #[Route('/list/{categorie}/{genre}/{periode}/{page}', name: 'list', requirements: ['categorie' => '\d+', 'genre' => '\d+|-\d+', 'page' => '\d+'])]
