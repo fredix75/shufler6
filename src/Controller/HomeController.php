@@ -45,9 +45,16 @@ class HomeController extends AbstractController
 
         if (empty($playlist)) $playlist = new Flux();
 **/
+        $playlist = [
+            'channelClass' => 'lienPl',
+            'ProviderId'  => 'UUqt99sKYNTxqlHtzV9weUYA',
+            'oldImage'      => 'build/images/img.png',
+            'name'          => 'Vu - France 2'
+        ];
+
         return $this->render('home.html.twig', array(
             'videos' => $videos,
-//            'playlist' => $playlist,
+            'playlist' => $playlist,
             'anims' => $anims,
             'musics' => $musics,
             'stranges' => $stranges

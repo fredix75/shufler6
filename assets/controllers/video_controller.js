@@ -39,5 +39,13 @@ export default class extends Controller {
                     }
                 }
             });
+
+        $('.lienPl').magnificPopup({
+            items: {
+                index : YOUTUBE,
+                src: '<iframe style="margin:auto;" width="800" height="500" src="https://www.youtube.com/embed/videoseries?list=' + $('.lienPl').attr('href') + '" frameborder="0" allowfullscreen></iframe>',
+                type: 'inline'
+            }
+        });
     }
 }

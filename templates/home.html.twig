@@ -2,19 +2,19 @@
 
 {% block body %}
     <div class="row">
-        <section class="col-sm-8 col-md-9 ">
+        <section class="col col-12 col-sm-12 col-md-12 col-lg-9 ">
             {% for video in anims|slice(0, 1) %}
                 <div class="ratio ratio-16x9">
                     <iframe  class="media embed-responsive-item" src="{{  video.lien }}" allowfullscreen></iframe>
                 </div>
                 <div class="topcom media-body">
-                    <div class="col-xs-10 col-sm-10 col-md-10">
+                    <div class="col col-10 col-sm-10 col-md-10">
                         <h2 class="media-heading">{{  video.titre }}</h2>
                         <span class="top-auteur">{{  video.auteur }}</span>
                         <br/>
                         <p class="topchapo">{{ video.chapo }}</p>
                     </div>
-                    <div class="col-xs-2 col-sm-2 col-md-2 col-push-md-right">
+                    <div class="col col-2 col-sm-2 col-md-2 col-push-md-right">
                         <div class="col-md-12"><br/><span class="top-annee">{{  video.annee|yearDisplay }}</span></div>
                         {% if is_granted('ROLE_AUTEUR') %}
                             <br/><div class="link_edit"><a href="{{ path('shufler_video_edit',{'id':video.id}) }}"><span class="glyphicon glyphicon-edit"></span></a></div>
@@ -22,13 +22,91 @@
                     </div>
                 </div>
             {% endfor %}
+            <div class="texte">
+                <br/><br/>
+                <p><img src="{{ asset('build/images/shufler_logo.png') }}" width=50% /> des clips en vrac..</p>
+                <div style="text-align:center">
+                    <a class="btn btn-dark" href="{{ path('home') }}" style="background-color:black"><span class="glyphicon glyphicon-refresh"></span>&nbsp;{{ 'New Selection'|trans }}</a>&nbsp;&nbsp;
+                    {% if not app.user %}<a id="register_second" class="btn btn-dark" data-toggle="modal" data-target="#userModal" href="#" style="background-color:black" ><span class="glyphicon glyphicon-flag"></span>&nbsp;{{ 'Create an account'|trans }}</a>{% endif %}
+                </div>
+                <br/><br/>
+            </div>
+        </section>
+        <section class="col col-12 col-sm-12 col-md-12 col-lg-3" data-controller="video">
+            <h1 style="text-align:left;"><i class="bi bi-film"></i>&nbsp;Anim's</h1>
+            <div class="" style="display:flex; flex-wrap: wrap; flex-direction: row;">
+            {% for video in anims|slice(1, 3) %}
+                <div class="col col-12 col-sm-12 col-md-4 col-lg-12 media topcol embed-responsive-16by9">
+                    {% include("video/video_part.html.twig") %}
+                </div>
+            {% endfor %}
+            </div>
         </section>
 
-        <section class="col-sm-4 col-md-3" data-controller="video">
-            <h1 style="text-align:left;"><i class="bi bi-film"></i>&nbsp;Anim's</h1>
-            {% for video in anims|slice(1, 3) %}
-                <div class="media topcol embed-responsive-16by9">
-                    {% include("video/video_part.html.twig") %}
+        <div class="row">
+            <section class="col col-12 col-sm-12 col-md-6 col-lg-6 medias-bande">
+                <div id="vu-widget" class="col col-12">
+                    <div class="col col-12 col-sm-12 col-md-6 col-lg-6">
+                        <a class="{{ playlist.channelClass}}" href="{{ playlist.ProviderId}}" data-toggle="tooltip">
+                            <img src="{{ playlist.oldImage }}" width=60% />
+                        </a>
+                    </div>
+                    <div class="col col-12 col-sm-12 col-md-6 col-lg-6" style="font-size:130%;">
+                        <h3 style="background-color:#0153e7;color:white;">{{ playlist.name }}</h3>
+                        <p style="background-color:white;color:black;">Le meilleur et le pire de qu'est-ce qui s'est passé chaque jour à la télé...</p>
+                    </div>
+                </div>
+                <br/><br/>
+                <h1 style="width: 100%"><span class="glyphicon glyphicon-music"></span>&nbsp;Du son, des images</h1>
+                <p class="legend">Une palanquée de morceaux d'anthologie, parfois méconnus, amoureusement choisis</p><br/>
+                {% for video in musics|slice(0, 2) %}
+                    <div class="col col-12 col-sm-12 col-md-12 col-lg-6 media-vignette">
+                        <div class="media topcol embed-responsive-16by9">
+                            <div class="categorie"><a href = "{{ path('video_list', {'categorie' : video.categorie, 'genre' : video.genre}) }}">{{ video.genre|genreDisplay }}</a></div>
+                            {% include("video/video_part.html.twig") %}
+                        </div>
+                    </div>
+                {% endfor %}
+                {% for video in musics|slice(2, 1) %}
+                    <div class="col col-12 col-sm-12 col-md-12 col-lg-12 media-vignette">
+                        <div class="media topcol embed-responsive-16by9">
+                            <div class="categorie"><a href = "{{ path('video_list', {'categorie' : video.categorie, 'genre' : video.genre}) }}">{{ video.genre|genreDisplay }}</a></div>
+                            {% include("video/video_part.html.twig") %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </section>
+            <section class="col col-12 col-sm-12 col-md-6 col-lg-6 medias-bande">
+                <h1 style="width: 100%"><span class="glyphicon glyphicon-cutlery"></span>&nbsp;OMG, WTF ??</h1>
+                <p class="legend">Du bizarre, du cheulou comme disent les jeunes.. On y trouve aussi du mdr, voire du ptdr</p><br/>
+                {% for video in stranges|slice(0,2) %}
+                    <div class="col col-12 col-sm-12 col-md-12 col-lg-6 media-vignette">
+                        <div class="media topcol embed-responsive-16by9">
+                            {% include("video/video_part.html.twig") %}
+                        </div>
+                    </div>
+                {% endfor %}
+                {% for video in stranges|slice(2, 1) %}
+                    <div class="col col-12 col-sm-12 col-md-12 col-lg-12 media-vignette">
+                        <div class="media topcol embed-responsive-16by9">
+                            {% include("video/video_part.html.twig") %}
+                        </div>
+                    </div>
+                {% endfor %}
+                <div style="height: 300px;background-color: red;">fdhfdh</div>
+            </section>
+        </div>
+    </div>
+    <h1 style="width:100%;"><span class="glyphicon glyphicon-eye-open"></span>&nbsp;Etcaetera</h1>
+    <br/>
+    <div class="row">
+        <section class="col col-12 medias-bande">
+            {% for video in musics|slice(3,12) %}
+                <div class="col col-12 col-sm-6 col-md-6 col-lg-3 media-vignette">
+                    <div class="media topcol embed-responsive-16by9">
+                        <div class="categorie"><a href = "{{ path('video_list', {'categorie' : video.categorie, 'genre' : video.genre}) }}">{{ video.genre|genreDisplay }}</a></div>
+                        {% include("video/video_part.html.twig") %}
+                    </div>
                 </div>
             {% endfor %}
         </section>

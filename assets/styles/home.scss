@@ -41,7 +41,6 @@
   z-index: 990;
   width: 100%;
   overflow: hidden;
-  position: relative;
   text-shadow: 1px 1px black;
 }
 
@@ -69,4 +68,25 @@
 .annee_small {
   color: orange;
   font-weight: bold;
+}
+
+.texte {
+  font-size:260%;
+  line-height:1;
+  text-align:center;
+  color: white;
+}
+
+.legend {
+  color: white;
+}
+
+#vu-widget {
+  display:flex;
+  flex-wrap: wrap;
+  background-color:black;
+  color:white;
+  height:auto;
+  margin:10px;
+  background-image: url('../images/tv_old.png');
 }
