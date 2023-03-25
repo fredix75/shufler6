@@ -54,6 +54,31 @@ class VideoController extends AbstractController
         ]);
     }
 
+    #[Route('/search', name: 'search')]
+    public function searchAction(Request $request, VideoRepository $videoRepository, int $page = 1)
+    {
+        $search = $request->get('search_field');
+
+        $videos = $videoRepository->searchVideos($search, $page, $this->getParameter('shufler_video')['max_list']);
+        $videos_count = count($videos);
+        $pagination = [
+            'search_field' => $search,
+            'page' => $page,
+            'route' => 'video_search',
+            'pages_count' => ceil($videos_count / $this->getParameter('shufler_video')['max_list']),
+            'route_params' => [
+                'search_field' => $search
+            ]
+        ];
+
+        return $this->render('video/list.html.twig', [
+            'search' => $search,
+            'pagination' => $pagination,
+            'videos_count' => $videos_count,
+            'videos' => $videos
+        ]);
+    }
+
     #[Route('/couch/{categorie}/{genre}/{periode}', name: 'couch', requirements: ['categorie' => '\d+', 'genre' => '\d+|-\d+'])]
     public function couchAction(
         VideoRepository $videoRepository,

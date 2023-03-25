@@ -95,6 +95,32 @@ class VideoRepository extends ServiceEntityRepository
 
         return $q;
     }
+
+    function searchVideos(string $search, int $page = 1, int $maxperpage = 10): Paginator
+    {
+        $q = $this->getEntityManager()->createQueryBuilder()
+            ->select('a')
+            ->where('a.published= 1');
+
+        $orModule = $q->expr()
+            ->orx()
+            ->add($q->expr()
+                ->like('a.auteur', ':search'))
+            ->add($q->expr()
+                ->like('a.titre', ':search'))
+            ->add($q->expr()
+                ->like('a.chapo', ':search'))
+            ->add($q->expr()
+                ->like('a.annee', ':search'));
+
+        $q->andWhere($orModule)
+            ->setParameter('search', '%' . $search . '%')
+            ->from('App\Entity\Video', 'a');
+
+        $q->setFirstResult(($page - 1) * $maxperpage)->setMaxResults($maxperpage);
+
+        return new Paginator($q);
+    }
 //    /**
 //     * @return Video[] Returns an array of Video objects
 //     */

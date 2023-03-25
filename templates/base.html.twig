@@ -75,9 +75,9 @@
                                 </ul>
                             </li>
                         </ul>
-                        <form class="d-flex">
-                            <input class="form-control me-2" type="text" placeholder="Search">
-                            <button class="btn btn-primary" type="button">Search</button>
+                        <form class="d-flex" role="form" action="{{ url('video_search') }}">
+                            <input class="form-control me-2" type="search" id="search_field" name="search_field" placeholder="Y'en a ou pas?">
+                            <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
                         </form>
                     </div>
                 </div>
