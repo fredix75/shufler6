@@ -113,6 +113,7 @@ class VideoController extends AbstractController
             return $this->redirectToRoute('video_list');
         }
 
+
         return $this->render('video/edit.html.twig', [
             'form'   => $form,
             'video'  => $video,
