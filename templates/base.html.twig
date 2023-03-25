@@ -36,7 +36,7 @@
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><i class="bi bi-pencil"></i> Editer</a>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Link</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('video_edit', { 'id' : 0 }) }}"><i class="bi bi-film"></i> Ajouter une Vidéo</a></li>
                                         <li><a class="dropdown-item" href="#">Another link</a></li>
                                         <li><a class="dropdown-item" href="#">A third link</a></li>
                                     </ul>
@@ -55,7 +55,7 @@
                                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><i class="bi bi-person-vcard"></i> Mon compte</a>
                                     <ul class="dropdown-menu">
                                         <li><a class="dropdown-item" href="#"><i class="bi bi-person-circle"></i> Mon profil</a></li>
-                                        <li><a class="dropdown-item" href="{{ path('app_logout') }}"><i class="bi bi-x-circle"></i> Me déconnecter</a></li>
+                                        <li><a class="dropdown-item" href="{{ path('app_logout') }}"><i class="bi bi-door-closed"></i> Me déconnecter</a></li>
                                     </ul>
                                 </li>
                             {% else %}
@@ -88,8 +88,7 @@
         {% for label, flashes in app.session.flashbag.all %}
             {% for flash in flashes %}
                 <div class="alert alert-{{ label }}">
-                    <p style="float:left;"><img src="{{ asset('build/images/' ~ label ~ '.png') }}" width=75px/></p>
-                    <p style="margin-left:120px;">{{ flash }}</p>
+                    <p><i class="{{ label|toIconAlert }}"></i> {{ flash }}</p>
                 </div>
             {% endfor %}
         {% endfor %}
@@ -99,7 +98,7 @@
     </div>
     <footer>
         <br />
-        <p>nFactory © {{ 'now'|date('Y') }} - fred_ric@hotmail.com.</p>
+        <p>&nbsp;&nbsp;&nbsp;Shufler © {{ 'now'|date('Y') }} - fred@shufler.fr</p>
     </footer>
     </body>
 </html>

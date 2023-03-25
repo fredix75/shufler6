@@ -9,6 +9,9 @@
                 </div>
                 <div class="topcom media-body">
                     <div class="col col-10 col-sm-10 col-md-10">
+                        {% if is_granted('ROLE_AUTEUR') %}
+                            <div class="link_edit"><a href="{{ path('video_edit', {'id':video.id}) }}"><i class="bi bi-pencil-square"></i></a></div>
+                        {% endif %}
                         <h2 class="media-heading">{{  video.titre }}</h2>
                         <span class="top-auteur">{{  video.auteur }}</span>
                         <br/>
@@ -16,9 +19,6 @@
                     </div>
                     <div class="col col-2 col-sm-2 col-md-2 col-push-md-right">
                         <div class="col-md-12"><br/><span class="top-annee">{{  video.annee|yearDisplay }}</span></div>
-                        {% if is_granted('ROLE_AUTEUR') %}
-                            <br/><div class="link_edit"><a href="{{ path('shufler_video_edit',{'id':video.id}) }}"><span class="glyphicon glyphicon-edit"></span></a></div>
-                        {% endif %}
                     </div>
                 </div>
             {% endfor %}
@@ -56,9 +56,10 @@
                         <p style="background-color:white;color:black;">Le meilleur et le pire de qu'est-ce qui s'est passé chaque jour à la télé...</p>
                     </div>
                 </div>
-                <br/><br/>
-                <h1 style="width: 100%"><span class="glyphicon glyphicon-music"></span>&nbsp;Du son, des images</h1>
+
+                <h1 style="width:100%; margin-top: 60px"><i class="bi bi-disc-fill"></i>&nbsp;Du son, des images</h1>
                 <p class="legend">Une palanquée de morceaux d'anthologie, parfois méconnus, amoureusement choisis</p><br/>
+                <br/><br/>
                 {% for video in musics|slice(0, 2) %}
                     <div class="col col-12 col-sm-12 col-md-12 col-lg-6 media-vignette">
                         <div class="media topcol embed-responsive-16by9">
@@ -77,7 +78,7 @@
                 {% endfor %}
             </section>
             <section class="col col-12 col-sm-12 col-md-6 col-lg-6 medias-bande">
-                <h1 style="width: 100%"><span class="glyphicon glyphicon-cutlery"></span>&nbsp;OMG, WTF ??</h1>
+                <h1 style="width: 100%"><i class="bi bi-tencent-qq"></i>&nbsp;OMG, WTF ??</h1>
                 <p class="legend">Du bizarre, du cheulou comme disent les jeunes.. On y trouve aussi du mdr, voire du ptdr</p><br/>
                 {% for video in stranges|slice(0,2) %}
                     <div class="col col-12 col-sm-12 col-md-12 col-lg-6 media-vignette">
@@ -93,11 +94,14 @@
                         </div>
                     </div>
                 {% endfor %}
-                <div style="height: 300px;background-color: red;">fdhfdh</div>
+                <div style="height: 300px;text-align: center; color :white;">
+                    <br/><br/><br/><br/>
+                    <p><img src="{{ asset('build/images/shufler_logo.png') }}" width=50% /> en v'là encore..</p>
+                </div>
             </section>
         </div>
     </div>
-    <h1 style="width:100%;"><span class="glyphicon glyphicon-eye-open"></span>&nbsp;Etcaetera</h1>
+    <h1 style="width:100%;margin-top:60px;"><i class="bi bi-fuel-pump-fill"></i>&nbsp;En v'là encore</h1>
     <br/>
     <div class="row">
         <section class="col col-12 medias-bande">

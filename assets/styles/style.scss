@@ -23,7 +23,7 @@ body {
 
 footer {
   color: white;
-  background-color: rgb(33,37,41);
+  background-color: #212529;
   height: 300px;
 }
 
@@ -31,9 +31,8 @@ h1 {
   color: orange;
   font-family: blippok;
   font-size: 4.6em;
-  margin-top: -5px;
   text-shadow: 1px 1px 3px black;
-  border-bottom: 1px solid white;
+  border-bottom: 3px dotted #F15A24;
 }
 
 @media ( max-width : 1500px) {
@@ -50,6 +49,7 @@ h1 {
 
 h1 .bi {
   color: #F15A24;
+  font-size:60%;
 }
 
 h3 {
@@ -87,4 +87,9 @@ a.video-link:hover img {
 
 .mfp-content {
   max-width: 800px;
+}
+
+.well {
+  background-color: #999;
+  padding:10px;
 }

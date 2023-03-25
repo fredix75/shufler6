@@ -3,10 +3,16 @@
 namespace App\Entity;
 
 use App\Repository\VideoRepository;
+use App\Validator\VideoValidator;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: VideoRepository::class)]
+#[Assert\Callback([VideoValidator::class, 'validate'])]
+#[ORM\HasLifecycleCallbacks]
 class Video
 {
     #[ORM\Id]
@@ -48,10 +54,18 @@ class Video
     private ?\DateTimeInterface $date_insert = null;
 
     #[ORM\Column(type: Types::BOOLEAN)]
-    private ?bool $published = false;
+    private ?bool $published = true;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $date_update = null;
+
+    #[ORM\ManyToMany(targetEntity: Mood::class, inversedBy: 'videos')]
+    private Collection $moods;
+
+    public function __construct()
+    {
+        $this->moods = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -183,9 +197,10 @@ class Video
         return $this->date_insert;
     }
 
-    public function setDateInsert(\DateTimeInterface $date_insert): self
+    #[ORM\PrePersist]
+    public function setDateInsert(): self
     {
-        $this->date_insert = $date_insert;
+        $this->date_insert = new \DateTime();
 
         return $this;
     }
@@ -207,9 +222,34 @@ class Video
         return $this->date_update;
     }
 
-    public function setDateUpdate(?\DateTimeInterface $date_update): self
+    #[ORM\PreUpdate]
+    public function setDateUpdate(): self
     {
-        $this->date_update = $date_update;
+        $this->date_update = new \DateTime();
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Mood>
+     */
+    public function getMoods(): Collection
+    {
+        return $this->moods;
+    }
+
+    public function addMood(Mood $mood): self
+    {
+        if (!$this->moods->contains($mood)) {
+            $this->moods->add($mood);
+        }
+
+        return $this;
+    }
+
+    public function removeMood(Mood $mood): self
+    {
+        $this->moods->removeElement($mood);
 
         return $this;
     }

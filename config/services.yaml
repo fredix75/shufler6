@@ -29,3 +29,7 @@ services:
     App\Twig\ShuflerExtension:
         arguments:
             $videoParameters: '@=parameter("shufler_video")'
+
+    App\Form\VideoType:
+        arguments:
+            $videoParameters: '@=parameter("shufler_video")'

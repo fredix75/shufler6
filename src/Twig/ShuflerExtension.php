@@ -19,10 +19,9 @@ class ShuflerExtension extends AbstractExtension
      * *********************************
      */
     const DAILYMOTION = 'dailymotion.com';
-    const DAILYMOTION_WWW = 'www.' . self::DAILYMOTION;
-    const DAILYMOTION_VIDEO = 'http://' . self::DAILYMOTION_WWW . '/video/';
-    const DAILYMOTION_EMBED = '//' . self::DAILYMOTION_WWW . '/embed/video/';
-    const DAILYMOTION_API = 'http://' . self::DAILYMOTION_WWW . '/services/oembed?url=';
+    const DAILYMOTION_VIDEO = 'https://' . self::DAILYMOTION . '/video';
+    const DAILYMOTION_EMBED = '//' . self::DAILYMOTION . '/embed/video';
+    const DAILYMOTION_API = 'https://' . self::DAILYMOTION . '/services/oembed?url=';
 
     /**
      * *********************************
@@ -63,6 +62,10 @@ class ShuflerExtension extends AbstractExtension
             new TwigFilter('popUp', [
                 $this,
                 'popUpFilter'
+            ]),
+            new TwigFilter('toIconAlert', [
+                $this,
+                'toIconAlertFilter'
             ])
         ];
     }
@@ -80,7 +83,7 @@ class ShuflerExtension extends AbstractExtension
     /**
      * Display genre
      */
-    public function genreFilter(int $genre = -1): string
+    public function genreFilter(int $genre = null): string
     {
         return $this->videoParameters['genres'][$genre] ?? 'Inconnu';
     }
@@ -108,9 +111,9 @@ class ShuflerExtension extends AbstractExtension
     {
         if (preg_match(self::PATTERN_HTTP . $this->sanitize(self::YOUTUBE_WWW) . '/', $lien)) {
             return self::YOUTUBE;
-        } elseif (preg_match(self::PATTERN_HTTP . $this->sanitize(self::VIMEO_PLAYER) . '/', $lien)) {
+        } elseif (strripos($lien,self::VIMEO) || preg_match(self::PATTERN_HTTP . $this->sanitize(self::VIMEO_PLAYER) . '/', $lien)) {
             return self::VIMEO;
-        } elseif (preg_match(self::PATTERN_HTTP . $this->sanitize(self::DAILYMOTION_WWW) . '/', $lien)) {
+        } elseif (strripos($lien,self::DAILYMOTION)) {
             return self::DAILYMOTION;
         }
 
@@ -129,9 +132,7 @@ class ShuflerExtension extends AbstractExtension
             }
             $vid = substr($vid, - strlen($vid) + 1);
         } elseif (self::VIMEO === $platform){
-            $vid = substr($vid, - strlen($vid) + 1);
-        } elseif (self::DAILYMOTION === $platform) {
-            // ?
+            $vid =  substr($vid, - strlen($vid) + 1);
         }
 
         return $vid;
@@ -204,10 +205,26 @@ class ShuflerExtension extends AbstractExtension
         if (self::YOUTUBE === $platform) {
             $link = self::YOUTUBE_WATCH . $id;
         } elseif (self::DAILYMOTION === $platform) {
-            $link = self::DAILYMOTION_VIDEO . $id;
+            $link = self::DAILYMOTION_EMBED . $id;
         }
 
         return $link;
+    }
+
+    public function toIconAlertFilter(string $string): string
+    {
+        switch ($string) {
+            case 'success' :
+                return 'bi bi-shield-fill-check';
+            case 'warning' :
+                return 'bi bi-shield-fill-exclamation';
+            case 'danger' :
+                return 'bi bi-bug-fill';
+            default:
+                return $string;
+        }
+
+        return $icon;
     }
 
     public function getName(): string

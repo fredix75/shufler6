@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Video;
+use App\Form\VideoType;
 use App\Repository\VideoRepository;
 use App\Twig\ShuflerExtension;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -9,6 +11,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+use function PHPUnit\Framework\throwException;
 
 #[Route('/video', name: 'video_')]
 #[Security("is_granted('ROLE_USER')")]
@@ -82,5 +86,97 @@ class VideoController extends AbstractController
         return $this->render('video/couch.html.twig', [
             'videos' => $playlist
         ]);
+    }
+
+    #[Route('/edit/{id}', name: 'edit', requirements: ['id' => '\d+'])]
+    #[Security("is_granted('ROLE_AUTEUR')")]
+    public function editAction(
+        Request $request,
+        VideoRepository $videoRepository,
+        Video $video = null
+    ): Response
+    {
+        if (0 != $request->get('id') && !$video) {
+            $this->addFlash('danger', 'No Way !!');
+            return $this->redirectToRoute('video_list');
+        }
+
+        $video = $video ?? new Video();
+        $form = $this->createForm(VideoType::class, $video);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $video = $form->getData();
+            $videoRepository->save($video, true);
+            $this->addFlash('success', 'Video enregistrée');
+
+            return $this->redirectToRoute('video_list');
+        }
+
+        return $this->render('video/edit.html.twig', [
+            'form'   => $form,
+            'video'  => $video,
+            'periods'=> $this->getParameter('shufler_video')['periods']
+        ]);
+    }
+
+    #[Route('/view/{id}', name: 'view', requirements: ['id' => '\d+'])]
+    public function viewAction(Video $video): Response
+    {
+        return $this->render('video/view.html.twig', array(
+            'video' => $video
+        ));
+    }
+
+    #[Route('/delete/{id}', name: 'delete', requirements: ['id' => '\d+'])]
+    #[Security("is_granted('ROLE_AUTEUR')")]
+    public function deleteAction(VideoRepository $videoRepository, Video $video): Response
+    {
+        $videoRepository->remove($video, true);
+        $this->addFlash('success', 'Video supprimée');
+        return $this->redirectToRoute('video_list');
+    }
+
+    #[Route('/getVideoInfos/{plateforme}/{videoKey}', name: 'getVideoInfos')]
+    public function getVideoInfos(
+        HttpClientInterface $httpClient,
+        string $plateforme,
+        string $videoKey
+    ): Response
+    {
+        if ('youtube' === $plateforme) {
+            $response = $httpClient->request('GET', 'https://www.googleapis.com/youtube/v3/videos', [
+                'query' => [
+                    'key'  => $this->getParameter('youtube_key'),
+                    'id'   => $videoKey,
+                    'part' => 'snippet'
+                ],
+                'headers' => [
+                    'Content-Type: application/json',
+                    'Accept: application/json',
+                ]
+            ]);
+
+            $result = json_decode($response->getContent(), true)['items'][0]['snippet'] ?? null;
+        } elseif ('vimeo' === $plateforme) {
+            if (!@file_get_contents('https://vimeo.com/api/v2/video/'.$videoKey.'.json')) {
+                return new Response('No data', 404);
+            }
+
+            $response = $httpClient->request('GET', 'https://vimeo.com/api/v2/video/'.$videoKey.'.json', [
+                'headers' => [
+                    'Content-Type: application/json',
+                    'Accept: application/json',
+                ]
+            ]);
+
+            $result = json_decode($response->getContent(), true)[0] ?? null;
+        }
+
+        if ($response && 200 === $response->getStatusCode()) {
+            Return new Response(json_encode($result));
+        }
+
+        return new Response('No data', 401);
     }
 }
