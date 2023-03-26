@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme form 'form/shufler_form_theme_layout.html.twig' %}
+
+{% block title %}{{ parent() }} :: Flux Edit {% endblock %}
+
+{% block body %}
+    {% if flux.id is defined and flux.id !=0  %}
+        <h1><i class="bi bi-pencil"></i>&nbsp;Editer le Flux {{ flux.id }}</h1>
+        <span class="badge bg-secondary" style="float:right;">{{ flux.dateInsert|date("d/m/Y H:i:s") }}</span><br/>
+    {% else %}
+        <h1><i class="bi bi-plus-circle"></i>&nbsp;Ajouter un Flux</h1>
+    {% endif %}
+
+    <div class="well">
+        <div class="row justify-content-md-center txt-center">
+            <div class="col-12 col-lg-6" {{ stimulus_controller('video-edit', {'periods' : {} }) }} >
+                {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+                {{ form_errors(form) }}
+                {{ form_widget(form) }}
+                <div class="text-end">
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-circle-fill"></i> OK</button>
+                    &nbsp;
+                    {% if flux.id is defined and flux.id != 0  %}
+                        <a class="btn btn-danger" href="{{ path('flux_delete', {'id': flux.id}) }}" onclick="return confirm('global.confirmation');"><i class="bi bi-trash-fill"></i>&nbsp;Delete</a>
+                    {% endif %}
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

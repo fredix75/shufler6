@@ -50,3 +50,50 @@ parameters:
             - 4
 
     youtube_key: '%env(YOUTUBE_KEY)%'
+
+    shufler_flux:
+        types:
+            1: rss
+            2: podcast
+            3: radio
+            4: lien
+            6: video_playlist
+
+        radios:
+            1: généraliste
+            2: rock
+            3: jazz
+            4: groove
+            5: reggae
+            6: disco
+            7: funk
+            8: classique
+            9: electro
+            10: bossa-nova
+            11: infos
+            99: autre
+
+        links:
+            101: animation
+            102: artistes
+            103: BD
+            104: Blogs
+            105: Emissions
+            106: Humour
+            107: Jeux
+            108: Liens divers
+            109: Outils
+            110: Presse
+            111: Radios
+            112: Tumbler
+            113: Web dev
+            114: Webdocs
+            115: Musique
+
+        rss:
+            201: Info
+            202: PQR
+            203: Sciences et techniques
+            204: Dev et Informatique
+            205: Divertissements
+            299: Autres
