@@ -121,6 +121,46 @@ class VideoRepository extends ServiceEntityRepository
 
         return new Paginator($q);
     }
+
+    function searchAjax(string $search): array
+    {
+        $auteurs = $this->getEntityManager()->createQueryBuilder()
+            ->select('a.auteur')
+            ->where('a.priorite= :priorite')
+            ->andWhere('a.published= true')
+            ->andWhere('a.auteur like :search OR a.chapo like :search')
+            ->setParameter('priorite', 1)
+            ->setParameter('search', '%' . $search . '%')
+            ->orderBy('a.auteur', 'ASC')
+            ->from('App\Entity\Video', 'a')
+            ->groupBy('a.auteur')
+            ->getQuery()
+            ->getResult();
+
+        $titres = $this->getEntityManager()->createQueryBuilder()
+            ->select('a.titre')
+            ->where('a.priorite= :priorite')
+            ->andWhere('a.published= true')
+            ->andWhere('a.titre like :search')
+            ->setParameter('priorite', 1)
+            ->setParameter('search', '%' . $search . '%')
+            ->orderBy('a.titre', 'ASC')
+            ->from('App\Entity\Video', 'a')
+            ->groupBy('a.titre')
+            ->getQuery()
+            ->getResult();
+
+        $suggestions = [];
+
+        foreach ($auteurs as $auteur) {
+            $suggestions[] = $auteur['auteur'];
+        }
+        foreach ($titres as $titre) {
+            $suggestions[] = $titre['titre'];
+        }
+
+        return $suggestions;
+    }
 //    /**
 //     * @return Video[] Returns an array of Video objects
 //     */

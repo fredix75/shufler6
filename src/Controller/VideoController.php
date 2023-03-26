@@ -204,4 +204,29 @@ class VideoController extends AbstractController
 
         return new Response('No data', 401);
     }
+
+    #[Route('/autocomplete', name: 'autocomplete')]
+    public function autocomplete(Request $request, VideoRepository $videoRepository): Response
+    {
+        if ($request->isXmlHttpRequest()) {
+            $search = $request->query->get('q');
+
+            $videos = $videoRepository->searchAjax($search);
+
+            $suggestions = [];
+            $suggestions['suggestions'] = [];
+
+            if ($videos) {
+                foreach ($videos as $video) {
+                    $suggestions['suggestions'][] = $video;
+                }
+            }
+
+            return $this->render('video/autocomplete.html.twig', [
+                'suggestions' => $suggestions['suggestions']
+            ]);
+        }
+
+        return new Response('error', 402);
+    }
 }
