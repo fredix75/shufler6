@@ -26,6 +26,10 @@
                     {% endif %}
                 </div>
                 {{ form_end(form) }}
+                <br/>
+                {% if flux.id is defined and flux.image is not null %}
+                    <img src="{{ asset('uploads/logos/' ~ flux.image) }}" width="200px" /> <a href="{{ path('flux_delete_logo',{'id': flux.id}) }}" type="button" class="btn btn-danger" onclick="return confirm('{{ 'Are You sure ?'|trans}}');" title="Delete this Logo"><i class="bi bi-trash-fill"></i></a>
+                {% endif %}
             </div>
         </div>
     </div>

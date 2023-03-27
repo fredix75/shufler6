@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\ChannelFlux;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,6 +20,24 @@ class ChannelFluxRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, ChannelFlux::class);
+    }
+
+    function getChannelFluxAudio(): QueryBuilder
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('c')
+            ->where('c.providerName is NULL')
+            ->from('App\Entity\ChannelFlux', 'c');
+    }
+
+    function getChannelFluxVideo(): array
+    {
+        return $this->getEntityManager()->createQueryBuilder()
+            ->select('c')
+            ->where('c.providerName IS NOT NULL')
+            ->from('App\Entity\ChannelFlux', 'c')
+            ->getQuery()
+            ->getResult();
     }
 
     public function save(ChannelFlux $entity, bool $flush = false): void

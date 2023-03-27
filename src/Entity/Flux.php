@@ -5,8 +5,10 @@ namespace App\Entity;
 use App\Repository\FluxRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 #[ORM\Entity(repositoryClass: FluxRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Flux
 {
     #[ORM\Id]
@@ -23,6 +25,8 @@ class Flux
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
+    private ?UploadedFile $file = null;
+
     private ?string $oldImage = null;
 
     #[ORM\Column]
@@ -38,6 +42,9 @@ class Flux
     private ?\DateTimeInterface $dateInsert = null;
 
     private ?string $contenu = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $dateUpdate = null;
 
     public function getId(): ?int
     {
@@ -80,16 +87,27 @@ class Flux
         return $this;
     }
 
+    public function getFile(): ?UploadedFile
+    {
+        return $this->file;
+    }
+
+    public function setFile(?UploadedFile $file): self
+    {
+        $this->file = $file;
+
+        return $this;
+    }
+
     public function getOldImage(): ?string
     {
         return $this->oldImage;
     }
 
-    public function setOldImage(string $oldImage): self
+    #[ORM\PostLoad]
+    public function setOldImage(): void
     {
-        $this->oldImage = $oldImage;
-
-        return $this;
+        $this->oldImage = $this->image;
     }
 
     public function getType(): ?int
@@ -133,9 +151,10 @@ class Flux
         return $this->dateInsert;
     }
 
-    public function setDateInsert(\DateTimeInterface $dateInsert): self
+    #[ORM\PrePersist]
+    public function setDateInsert(): self
     {
-        $this->dateInsert = $dateInsert;
+        $this->dateInsert = new \DateTime();
 
         return $this;
     }
@@ -148,6 +167,19 @@ class Flux
     public function setContenu(?string $contenu): self
     {
         $this->contenu = $contenu;
+
+        return $this;
+    }
+
+    public function getDateUpdate(): ?\DateTimeInterface
+    {
+        return $this->dateUpdate;
+    }
+
+    #[ORM\PreUpdate]
+    public function setDateUpdate(): self
+    {
+        $this->dateUpdate = new \DateTime();
 
         return $this;
     }
