@@ -63,4 +63,5 @@ class FluxListener
         );
         $flux->setImage($fileName);
     }
+
 }
