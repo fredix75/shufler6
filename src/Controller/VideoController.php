@@ -19,7 +19,7 @@ use function PHPUnit\Framework\throwException;
 class VideoController extends AbstractController
 {
     #[Route('/list/{categorie}/{genre}/{periode}/{page}', name: 'list', requirements: ['categorie' => '\d+', 'genre' => '\d+|-\d+', 'page' => '\d+'])]
-    public function listAction(
+    public function list(
         Request $request,
         VideoRepository $videoRepository,
         int $categorie = 0,
@@ -55,7 +55,7 @@ class VideoController extends AbstractController
     }
 
     #[Route('/search', name: 'search')]
-    public function searchAction(Request $request, VideoRepository $videoRepository, int $page = 1)
+    public function search(Request $request, VideoRepository $videoRepository, int $page = 1)
     {
         $search = $request->get('search_field');
 
@@ -80,7 +80,7 @@ class VideoController extends AbstractController
     }
 
     #[Route('/couch/{categorie}/{genre}/{periode}', name: 'couch', requirements: ['categorie' => '\d+', 'genre' => '\d+|-\d+'])]
-    public function couchAction(
+    public function couch(
         VideoRepository $videoRepository,
         ShuflerExtension $shuflerExtension,
         int $categorie = 0,
@@ -115,7 +115,7 @@ class VideoController extends AbstractController
 
     #[Route('/edit/{id}', name: 'edit', requirements: ['id' => '\d+'])]
     #[Security("is_granted('ROLE_AUTEUR')")]
-    public function editAction(
+    public function edit(
         Request $request,
         VideoRepository $videoRepository,
         Video $video = null
@@ -146,7 +146,7 @@ class VideoController extends AbstractController
     }
 
     #[Route('/view/{id}', name: 'view', requirements: ['id' => '\d+'])]
-    public function viewAction(Video $video): Response
+    public function view(Video $video): Response
     {
         return $this->render('video/view.html.twig', array(
             'video' => $video
@@ -155,7 +155,7 @@ class VideoController extends AbstractController
 
     #[Route('/delete/{id}', name: 'delete', requirements: ['id' => '\d+'])]
     #[Security("is_granted('ROLE_AUTEUR')")]
-    public function deleteAction(VideoRepository $videoRepository, Video $video): Response
+    public function delete(VideoRepository $videoRepository, Video $video): Response
     {
         $videoRepository->remove($video, true);
         $this->addFlash('success', 'Video supprimée');

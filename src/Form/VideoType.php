@@ -19,6 +19,7 @@ use Symfony\Component\Validator\Constraints\Range;
 class VideoType extends AbstractType
 {
     private array $videoParameters;
+
     public function __construct(array $videoParameters) {
         $this->videoParameters = $videoParameters;
     }

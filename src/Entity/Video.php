@@ -51,13 +51,13 @@ class Video
     private ?string $periode = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $date_insert = null;
+    private ?\DateTimeInterface $dateInsert = null;
 
     #[ORM\Column(type: Types::BOOLEAN)]
     private ?bool $published = true;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $date_update = null;
+    private ?\DateTimeInterface $dateUpdate = null;
 
     #[ORM\ManyToMany(targetEntity: Mood::class, inversedBy: 'videos')]
     private Collection $moods;
@@ -194,13 +194,13 @@ class Video
 
     public function getDateInsert(): ?\DateTimeInterface
     {
-        return $this->date_insert;
+        return $this->dateInsert;
     }
 
     #[ORM\PrePersist]
     public function setDateInsert(): self
     {
-        $this->date_insert = new \DateTime();
+        $this->dateInsert = new \DateTime();
 
         return $this;
     }
@@ -219,13 +219,13 @@ class Video
 
     public function getDateUpdate(): ?\DateTimeInterface
     {
-        return $this->date_update;
+        return $this->dateUpdate;
     }
 
     #[ORM\PreUpdate]
     public function setDateUpdate(): self
     {
-        $this->date_update = new \DateTime();
+        $this->dateUpdate = new \DateTime();
 
         return $this;
     }

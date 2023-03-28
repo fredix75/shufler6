@@ -7,6 +7,7 @@ imports:
     - { resource: 'shufler.yaml' }
 
 parameters:
+    uploads: '%kernel.project_dir%/public/uploads/'
 
 services:
     # default configuration for services in *this* file
@@ -33,3 +34,20 @@ services:
     App\Form\VideoType:
         arguments:
             $videoParameters: '@=parameter("shufler_video")'
+
+    App\Form\FluxType:
+        arguments:
+            $fluxParameters: '@=parameter("shufler_flux")'
+
+    App\Helper\FileHelper:
+        arguments:
+            $slugger: '@slugger'
+            $directory: '%uploads%'
+
+    App\EventListener\FluxListener:
+        arguments:
+            $fileHelper: '@App\Helper\FileHelper'
+        tags:
+            - { name: 'doctrine.event_listener', event: 'prePersist' }
+            - { name: 'doctrine.event_listener', event: 'preUpdate' }
+            - { name: 'doctrine.event_listener', event: 'preRemove' }
