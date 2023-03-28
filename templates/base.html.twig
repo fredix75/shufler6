@@ -108,6 +108,11 @@
     <footer>
         <br />
         <p>&nbsp;&nbsp;&nbsp;Shufler © {{ 'now'|date('Y') }} - fred@shufler.fr</p>
+        <div id="animation-bottom" class="sticky-bottom" style="color:grey;font-size:2.5em;margin-bottom:5px;overflow:hidden;white-space: nowrap;" data-controller="animation-bottom">
+            {% for i in 1..50 %}
+                <i class="bi bi-reception-2"></i>
+            {% endfor %}
+        </div>
     </footer>
     </body>
 </html>
