@@ -9,7 +9,7 @@
 }
 
 body {
-  background-color: $background-color;
+  background: linear-gradient($background-color, #00050d);
 }
 
 .content {
@@ -28,11 +28,11 @@ footer {
 }
 
 h1 {
-  color: orange;
+  color: $orange-simple;
   font-family: blippok;
   font-size: 4.6em;
   text-shadow: 1px 1px 3px black;
-  border-bottom: 3px dotted #F15A24;
+  border-bottom: 3px dotted $orange-red;
 }
 
 @media ( max-width : 1500px) {
@@ -48,13 +48,13 @@ h1 {
 }
 
 h1 .bi {
-  color: #F15A24;
+  color: $orange-red;
   font-size:60%;
 }
 
 h3 {
   font-size: 1.3em;
-  color: #FFFFCC;
+  color: $white-broken;
 }
 
 a {
