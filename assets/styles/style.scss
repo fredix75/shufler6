@@ -67,12 +67,12 @@ a:hover, a:active {
   color: #B27300;
 }
 
-a.video-link img {
+a.video-link img, a.lienPl img{
   transition: all 1s ease;
   max-width: 100%;
 }
 
-a.video-link:hover img {
+a.video-link:hover img, a.lienPl:hover img {
   scale: 1.3;
 }
 

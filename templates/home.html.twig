@@ -26,7 +26,7 @@
                 <br/><br/>
                 <p><img src="{{ asset('build/images/shufler_logo.png') }}" width=50% /> des clips en vrac..</p>
                 <div style="text-align:center">
-                    <a class="btn btn-dark" href="{{ path('home') }}" style="background-color:black"><span class="glyphicon glyphicon-refresh"></span>&nbsp;{{ 'New Selection'|trans }}</a>&nbsp;&nbsp;
+                    <a class="btn btn-dark" href="{{ path('home') }}" style="background-color:black"><i class="bi bi-dice-3-fill"></i>&nbsp;{{ 'New Selection'|trans }} <i class="bi bi-dice-6-fill"></i></a>&nbsp;&nbsp;
                     {% if not app.user %}<a id="register_second" class="btn btn-dark" data-toggle="modal" data-target="#userModal" href="#" style="background-color:black" ><span class="glyphicon glyphicon-flag"></span>&nbsp;{{ 'Create an account'|trans }}</a>{% endif %}
                 </div>
                 <br/><br/>
@@ -46,18 +46,18 @@
         <div class="row">
             <section class="col col-12 col-sm-12 col-md-6 col-lg-6 medias-bande">
                 <div id="vu-widget" class="col col-12">
-                    <div class="col col-12 col-sm-12 col-md-6 col-lg-6">
+                    <div class="col col-12 col-sm-12 col-md-6 col-lg-6 media">
                         <a class="{{ playlist.channelClass}}" href="{{ playlist.ProviderId}}" data-toggle="tooltip">
                             <img src="{{ playlist.oldImage }}" width=60% />
                         </a>
                     </div>
                     <div class="col col-12 col-sm-12 col-md-6 col-lg-6" style="font-size:130%;">
                         <h3 style="background-color:#0153e7;color:white;">{{ playlist.name }}</h3>
-                        <p style="background-color:white;color:black;">Le meilleur et le pire de qu'est-ce qui s'est passé chaque jour à la télé...</p>
+                        <p style="background-color:white;color:black;">Le meilleur et le pire de keski s'est passé chaque jour à la télé...</p>
                     </div>
                 </div>
 
-                <h1 style="width:100%; margin-top: 60px"><i class="bi bi-disc-fill"></i>&nbsp;Du son, des images</h1>
+                <h1 style="width:100%; margin-top: 60px; text-align: center;">Du son, des images <i class="bi bi-disc-fill"></i></h1>
                 <p class="legend">Une palanquée de morceaux d'anthologie, parfois méconnus, amoureusement choisis</p><br/>
                 <br/><br/>
                 {% for video in musics|slice(0, 2) %}
@@ -78,7 +78,7 @@
                 {% endfor %}
             </section>
             <section class="col col-12 col-sm-12 col-md-6 col-lg-6 medias-bande">
-                <h1 style="width: 100%"><i class="bi bi-tencent-qq"></i>&nbsp;OMG, WTF ??</h1>
+                <h1 style="width: 100%; text-align: center;"><i class="bi bi-tencent-qq"></i>&nbsp;OMG, WTF ??</h1>
                 <p class="legend">Du bizarre, du cheulou comme disent les jeunes.. On y trouve aussi du mdr, voire du ptdr</p><br/>
                 {% for video in stranges|slice(0,2) %}
                     <div class="col col-12 col-sm-12 col-md-12 col-lg-6 media-vignette">
@@ -95,8 +95,10 @@
                     </div>
                 {% endfor %}
                 <div style="height: 300px;text-align: center; color :white;">
-                    <br/><br/><br/><br/>
-                    <p>En veux tu ? <img src="{{ asset('build/images/shufler_logo.png') }}" width=50% /> en v'là encore..</p>
+                    <br/><br/>
+                    <img src="{{ asset('build/images/shufler_logo.png') }}" width=50% />
+                    <p>Nous vous prions de nou<img src="{{ asset('build/images/tv_brouillage.gif') }}" width=50% />uite de notre programme</p>
+
                 </div>
             </section>
         </div>
