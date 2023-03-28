@@ -10,7 +10,6 @@
         <meta name = "robots" content = "index, follow">
         <title>{% block title %}Shufler{% endblock %}</title>
         <link rel="icon" type="image/png" href="{{ asset('build/images/fav.png') }}" />
-        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
         {% endblock %}
@@ -33,6 +32,8 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ path('video_list') }}"><i class="bi bi-film"></i>&nbsp;Videos</a>
                                 </li>
+                            {% endif %}
+                            {% if is_granted('ROLE_AUTEUR') %}
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><i class="bi bi-pencil"></i> Editer</a>
                                     <ul class="dropdown-menu">

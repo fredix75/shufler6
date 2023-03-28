@@ -14,7 +14,11 @@
 
     <div class="well">
         <div class="row justify-content-md-center txt-center">
-            <div class="col-12 col-lg-6" {{ stimulus_controller('video-edit', {'periods' : {} }) }} >
+            <div class="col-12 col-lg-6" {{ stimulus_controller('flux-edit', {
+                'rss': rss,
+                'radios': radios,
+                'links': links
+            }) }}>
                 {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
                 {{ form_errors(form) }}
                 {{ form_widget(form) }}
@@ -22,13 +26,30 @@
                     <button type="submit" class="btn btn-primary"><i class="bi bi-check-circle-fill"></i> OK</button>
                     &nbsp;
                     {% if flux.id is defined and flux.id != 0  %}
-                        <a class="btn btn-danger" href="{{ path('flux_delete', {'id': flux.id}) }}" onclick="return confirm('global.confirmation');"><i class="bi bi-trash-fill"></i>&nbsp;Delete</a>
+                        <a class="btn btn-danger"
+                           href="{{ path('flux_delete', {'id': flux.id}) }}"
+                           onclick="return confirm('global.confirmation');"
+                        >
+                            <i class="bi bi-trash-fill"></i>&nbsp;Delete
+                        </a>
                     {% endif %}
                 </div>
                 {{ form_end(form) }}
                 <br/>
                 {% if flux.id is defined and flux.image is not null %}
-                    <img src="{{ asset('uploads/logos/' ~ flux.image) }}" width="200px" /> <a href="{{ path('flux_delete_logo',{'id': flux.id}) }}" type="button" class="btn btn-danger" onclick="return confirm('{{ 'Are You sure ?'|trans}}');" title="Delete this Logo"><i class="bi bi-trash-fill"></i></a>
+                    {% if 'http' in flux.image %}
+                        <img src="{{ asset(flux.image) }}" width="200px" />
+                    {% else %}
+                        <img src="{{ asset('uploads/logos/' ~ flux.image) }}" width="200px" />
+                        <a href="{{ path('flux_delete_logo',{'id': flux.id}) }}"
+                           type="button"
+                           class="btn btn-danger"
+                           onclick="return confirm('{{ 'Are You sure ?'|trans}}');"
+                           title="Delete this Logo"
+                        >
+                            <i class="bi bi-trash-fill"></i>
+                        </a>
+                    {%  endif %}
                 {% endif %}
             </div>
         </div>

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Flux;
 use App\Form\FluxType;
 use App\Repository\FluxRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,6 +22,7 @@ class FluxController extends AbstractController
     }
 
     #[Route('/edit/{id}', name: 'edit', requirements: ['id' => '\d+'])]
+    #[Security("is_granted('ROLE_AUTEUR')")]
     public function edit(
         Request $request,
         FluxRepository $fluxRepository,
@@ -48,12 +50,17 @@ class FluxController extends AbstractController
         }
 
         return $this->render('flux/edit.html.twig', [
-            'form' => $form,
-            'flux' => $flux
+            'form'      => $form,
+            'flux'      => $flux,
+            'rss'       => $this->getParameter('shufler_flux')['rss'],
+            'bizarre'   => [],
+            'radios'    => $this->getParameter('shufler_flux')['radios'],
+            'links'     => $this->getParameter('shufler_flux')['links'],
         ]);
     }
 
     #[Route('/delete/{id}', name: 'delete', requirements: ['id' => '\d+'])]
+    #[Security("is_granted('ROLE_AUTEUR')")]
     public function delete(
         FluxRepository $fluxRepository,
         Flux $flux
@@ -65,6 +72,7 @@ class FluxController extends AbstractController
     }
 
     #[Route('/delete_logo/{id}', name: 'delete_logo', requirements: ['id' => '\d+'])]
+    #[Security("is_granted('ROLE_AUTEUR')")]
     public function deleteLogo(
         FluxRepository $fluxRepository,
         Flux $flux

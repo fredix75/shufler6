@@ -36,6 +36,16 @@ class FluxType extends AbstractType
                     'class' => 'input-group mb-3'
                 ]
             ])
+            ->add('type', ChoiceType::class, [
+                'placeholder' => 'Choose a Type',
+                'choices' => array_flip($this->fluxParameters['types']),
+                'attr' => [
+                    'data-action' => 'change->flux-edit#typeChange'
+                ],
+                'row_attr' => [
+                    'class' => 'input-group mb-3'
+                ]
+            ])
             ->add('file', FileType::class, [
                 'label' => 'Image',
                 'required' => false,
@@ -51,21 +61,16 @@ class FluxType extends AbstractType
                     ])
                 ],
                 'row_attr' => [
-                    'class' => 'input-group mb-3'
-                ]
-            ])
-            ->add('type', ChoiceType::class, [
-                'placeholder' => 'Choose a Type',
-                'choices' => array_flip($this->fluxParameters['types']),
-                'row_attr' => [
+                    'id' => 'file',
                     'class' => 'input-group mb-3'
                 ]
             ])
             ->add('mood',ChoiceType::class, [
                 'placeholder' => 'Choose a category',
                 'required' => false,
-                'choices' => array_flip($this->fluxParameters['radios']),
+                'choices' => array_flip($this->fluxParameters['rss'] + $this->fluxParameters['radios'] + $this->fluxParameters['links']),
                 'row_attr' => [
+                    'id' => 'mood',
                     'class' => 'input-group mb-3'
                 ]
             ])
@@ -78,6 +83,7 @@ class FluxType extends AbstractType
                 },
                 'choice_label' => 'name',
                 'row_attr' => [
+                    'id' => 'channel',
                     'class' => 'input-group mb-3'
                 ]
             ])
