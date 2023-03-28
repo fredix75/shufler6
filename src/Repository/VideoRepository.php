@@ -156,10 +156,30 @@ class VideoRepository extends ServiceEntityRepository
             $suggestions[] = $auteur['auteur'];
         }
         foreach ($titres as $titre) {
+            if (\in_array($titre['titre'], $suggestions)) {
+                continue;
+            }
             $suggestions[] = $titre['titre'];
         }
 
         return $suggestions;
+    }
+
+    public function getPaginatedTrash($page = 1, $maxperpage = 10): Paginator
+    {
+        $q = $this->getEntityManager()->createQueryBuilder()
+            ->select('a')
+            ->where('a.priorite != :priorite')
+            ->setParameter('priorite', 1)
+            ->orWhere('a.published is null')
+            ->orderBy('a.published', 'DESC')
+            ->addOrderBy('a.priorite', 'ASC')
+            ->addOrderBy('a.id', 'DESC')
+            ->from('App\Entity\Video', 'a');
+
+        $q->setFirstResult(($page - 1) * $maxperpage)->setMaxResults($maxperpage);
+
+        return new Paginator($q);
     }
 //    /**
 //     * @return Video[] Returns an array of Video objects

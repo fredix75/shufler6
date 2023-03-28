@@ -50,6 +50,11 @@
                                     <li><a class="dropdown-item" href="#">A third link</a></li>
                                 </ul>
                             </li>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ path('video_trash') }}"><i class="bi bi-trash"></i>&nbsp;Trash</a>
+                                </li>
+                            {% endif %}
                             {% if is_granted('IS_AUTHENTICATED') %}
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><i class="bi bi-person-vcard"></i> Mon compte</a>
@@ -62,7 +67,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="#" {{ stimulus_controller('modal-form', {
                                         formUrl: path('app_login')
-                                    }) }} data-action="click->modal-form#openModal"><i class="bi bi-key"></i>&nbsp;Connexion</a>
+                                    }) }} data-action="click->modal-form#openModal"><i class="bi bi-power"></i>&nbsp;Connexion</a>
                                 </li>
                             {% endif %}
                         </ul>
@@ -80,7 +85,7 @@
                                 <input class="form-control me-2" type="search" id="search_field" name="search_field" data-autocomplete-target="input" placeholder="Y'en a ou pas?">
                                 <input type="hidden" name="video_id" data-autocomplete-target="hidden"/>
                                 <ul class="list-group" data-autocomplete-target="results" style="position:absolute;"></ul>
-                            </div>
+                            </div>&nbsp;&nbsp;
                             <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
                         </form>
                     </div>
