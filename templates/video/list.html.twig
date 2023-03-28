@@ -6,10 +6,18 @@
     <section class="col col-sm-12 col-md-12 medias-bande" data-controller="video">
         <div class="col col-12 col-sm-6 col-md-6 col-lg-3 media-select" style="">
             {% if search is defined %}
-                <h1>{% if videos_count >0 %}Trouvé{% else %}Désolé{% endif %}</h1>
-                <div class="page_videos_sous_titre">{{ search }}<br/><span class="badge bg-secondary">{{ videos_count }} vidéos</span></div>
+                <h1>{% if videos_count >0 %}
+                        Trouvé&nbsp;<i class="bi bi-binoculars"></i>&nbsp;
+                    {% else %}
+                        Désolé&nbsp;<i class="bi bi-emoji-frown"></i>&nbsp;
+                    {% endif %}
+                </h1>
+                <div class="page_videos_sous_titre">
+                    "{{ search }}"<br/>
+                    <span class="badge bg-secondary">{{ videos_count }} vidéos</span>
+                </div>
             {% elseif trash is defined %}
-                <h1>Trash <span class="glyphicon glyphicon-trash"></span></h1>
+                <h1>Trash <i class="bi bi-trash-fill"></i></h1>
             {% else %}
                 <h1>{{ pagination.route_params.categorie|categorieDisplay|trans }}</h1>
                 <div class="row">
@@ -73,6 +81,13 @@
                 </div>
             </div>
         {% endfor %}
+        {% if search is defined and 0 == videos_count %}
+            <div class="col col-12 col-sm-6 col-md-6 col-lg-3 media-vignette">
+                <div class="media topcol embed-responsive-16by9" style="margin-bottom:30px;">
+                    <img src="{{ asset('build/images/tv_brouillage.gif') }}" />
+                </div>
+            </div>
+        {% endif %}
     </section>
 
     {% include "pagination.html.twig" %}

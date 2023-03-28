@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use function PHPUnit\Framework\throwException;
 
 #[Route('/video', name: 'video_')]
 #[Security("is_granted('ROLE_USER')")]
@@ -30,12 +29,11 @@ class VideoController extends AbstractController
     {
         $videoParameters = $this->getParameter('shufler_video');
         $videos = $videoRepository->getPaginatedVideos($categorie, $genre, $periode, $page, $videoParameters['max_list']);
-        $videosCount = count($videos);
 
         $pagination = [
             'page' => $page,
             'route' => 'video_list',
-            'pages_count' => (int)ceil($videosCount / $videoParameters['max_list']),
+            'pages_count' => (int)ceil(count($videos) / $videoParameters['max_list']),
             'route_params' => $request->attributes->get('_route_params')
         ];
 
@@ -54,18 +52,18 @@ class VideoController extends AbstractController
         ]);
     }
 
-    #[Route('/search', name: 'search')]
+    #[Route('/search/{page}', name: 'search', requirements: ['id' => '\d+'])]
     public function search(Request $request, VideoRepository $videoRepository, int $page = 1)
     {
         $search = $request->get('search_field');
 
         $videos = $videoRepository->searchVideos($search, $page, $this->getParameter('shufler_video')['max_list']);
-        $videos_count = count($videos);
+        $videosCount = count($videos);
         $pagination = [
             'search_field' => $search,
             'page' => $page,
             'route' => 'video_search',
-            'pages_count' => ceil($videos_count / $this->getParameter('shufler_video')['max_list']),
+            'pages_count' => ceil($videosCount / $this->getParameter('shufler_video')['max_list']),
             'route_params' => [
                 'search_field' => $search
             ]
@@ -74,7 +72,7 @@ class VideoController extends AbstractController
         return $this->render('video/list.html.twig', [
             'search' => $search,
             'pagination' => $pagination,
-            'videos_count' => $videos_count,
+            'videos_count' => $videosCount,
             'videos' => $videos
         ]);
     }
@@ -228,5 +226,28 @@ class VideoController extends AbstractController
         }
 
         return new Response('error', 402);
+    }
+
+    #[Route('/trash/{page}', name: 'trash', requirements: ['page' => '\d+'])]
+    #[Security("is_granted('ROLE_ADMIN')")]
+    public function trash(
+        Request $request,
+        VideoRepository $videoRepository,
+        int $page = 1
+    ): Response
+    {
+        $videos = $videoRepository->getPaginatedTrash($page, $this->getParameter('shufler_video')['max_list']);
+        $pagination = [
+            'page' => $page,
+            'route' => 'shufler_trash',
+            'pages_count' => ceil(count($videos) / $this->getParameter('shufler_video')['max_list']),
+            'route_params' => $request->attributes->get('_route_params'),
+        ];
+
+        return $this->render('video/list.html.twig', [
+            'videos' => $videos,
+            'trash'  => true,
+            'pagination' => $pagination,
+        ]);
     }
 }

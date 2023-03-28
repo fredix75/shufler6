@@ -66,7 +66,7 @@ class FluxType extends AbstractType
                 ]
             ])
             ->add('mood',ChoiceType::class, [
-                'placeholder' => 'Choose a category',
+                'placeholder' => 'Choose a Category',
                 'required' => false,
                 'choices' => array_flip($this->fluxParameters['rss'] + $this->fluxParameters['radios'] + $this->fluxParameters['links']),
                 'row_attr' => [

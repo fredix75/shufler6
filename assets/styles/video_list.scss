@@ -15,10 +15,14 @@
 }
 
 .page_videos_sous_titre {
-  font-size:3em;
-  text-align:right;
-  color:orange;
+  font-size: 2em;
+  text-align:center;
+  color: white;
   line-height: 1.1;
+}
+
+.page_videos_sous_titre .badge {
+  font-size: 0.5em;
 }
 
 .page_videos_genre {
