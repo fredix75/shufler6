@@ -96,4 +96,5 @@ class FluxType extends AbstractType
             'data_class' => Flux::class,
         ]);
     }
+
 }
