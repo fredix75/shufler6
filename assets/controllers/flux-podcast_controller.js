@@ -14,8 +14,12 @@ export default class extends Controller {
     launch(event) {
         let url = $(event.target).closest('a').attr('href');
         let type = $(event.target).closest('a').data('type');
-        let id = $(event.target).closest('.audio').attr('id');
-        bindFile(id, url, type);
+        let title = $(event.target).closest('.accordion-item').find('.accordion-button');
+        let podcast = title.parent().parent().parent().closest('.accordion-item').find('.accordion-button').html();
+        let audio = '<audio controls="controls" autoplay class="col-12 col-xs-12 col-sm-12 col-md-12"><source src="' + url +'" type="' + type + '">Votre navigateur ne supporte pas l\'élément <code>audio</code>.</audio>';
+        $('#audio-stick').html(audio);
+        let text = '<div class="pres">' + podcast + '<br />' + title.html() + '</div>';
+        $('#audio-stick').append(text);
     }
 
     prev(event) {
@@ -86,9 +90,4 @@ function bindContent(id, data) {
         div.append(substructure);
     });
     div.append('</div>');
-}
-
-function bindFile(id, url, type) {
-    let audio = '<audio controls="controls" autoplay class="col-xs-12 col-sm-12 col-md-12"><source src="' + url +'" type="' + type + '">Votre navigateur ne supporte pas l\'élément <code>audio</code>.</audio>';
-    $('#' + id).html(audio);
 }
