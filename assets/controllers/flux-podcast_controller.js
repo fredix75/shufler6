@@ -84,7 +84,7 @@ function bindContent(id, data) {
             substructure += '<div class="row">';
             substructure += '<div id="sound-' + id + '-' + index + '" class="audio text-center col-8"><a href="' + value.enclosure["@attributes"].url + '" type="button" class="btn btn-secondary" data-type="' + value.enclosure["@attributes"].type + '" onclick="return false;" data-action="flux-podcast#launch" style="width:100%;"><i class="bi bi-play-circle-fill"></i></a></div>';
             substructure += '<div class="audio text-center col-4"><a href="' + value.enclosure["@attributes"].url + '" type="button" class="btn btn-secondary" type="' + value.enclosure["@attributes"].type + '" style="width:100%;" download target="_blank"><i class="bi bi-download"></i></a></div>'
-            substructure += '</div>';
+            substructure += '</div><br />';
         }
         if (typeof value.description != 'undefined') {
             substructure += '<p>' + value.description + '</p>';
