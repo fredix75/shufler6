@@ -14,11 +14,36 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/flux', name: 'flux_')]
 class FluxController extends AbstractController
 {
-    #[Route('/list', name: 'list')]
-    public function list(FluxRepository $fluxRepository):Response
+    #[Route('/podcasts', name: 'podcasts')]
+    public function list(Request $request, FluxRepository $fluxRepository):Response
     {
+        if ($request->isXmlHttpRequest()) {
+            $url = $request->get('url');
 
-        return new Response('flux liste');
+            $contenu = '';
+            try {
+                if (@simplexml_load_file($url)->{'channel'}->{'item'}) {
+                    $contenu = @simplexml_load_file($url)->{'channel'}->{'item'};
+                }
+            } catch (\Exception $e) {
+                // nsp quoi faire :D
+            }
+
+            $page = $request->query->get('page');
+            $debut = ($page - 1) * 6;
+
+            for ($i = $debut; $i < $debut + 6; $i ++) {
+                $infos[] = $contenu[$i];
+            }
+
+            return new Response(json_encode($infos));
+        }
+
+        $podcasts = $fluxRepository->getPodcasts();
+
+        return $this->render('flux/podcasts.html.twig', [
+            'podcasts' => $podcasts
+        ]);
     }
 
     #[Route('/edit/{id}', name: 'edit', requirements: ['id' => '\d+'])]

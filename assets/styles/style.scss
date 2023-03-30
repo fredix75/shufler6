@@ -10,6 +10,7 @@
 
 body {
   background: linear-gradient($background-color, #00050d);
+  font-family: "futuran";
 }
 
 .content {
@@ -92,4 +93,9 @@ a.video-link:hover img, a.lienPl:hover img {
 .well {
   background-color: #999;
   padding:10px;
+}
+
+.accordion-body.subAccordion {
+  font-size: 80%;
+  color:grey;
 }

@@ -88,6 +88,10 @@ export default class extends Controller {
         }
     }
 
+    getImageYoutubePlaylist() {
+        $.get()
+    }
+
     handleMoodSelect(type) {
         let val = $('[name="flux[mood]"]').val();
         $('[name="flux[mood]"]').empty().append(type);

@@ -41,8 +41,6 @@ class Flux
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateInsert = null;
 
-    private ?string $contenu = null;
-
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dateUpdate = null;
 
@@ -155,18 +153,6 @@ class Flux
     public function setDateInsert(): self
     {
         $this->dateInsert = new \DateTime();
-
-        return $this;
-    }
-
-    public function getContenu(): ?string
-    {
-        return $this->contenu;
-    }
-
-    public function setContenu(?string $contenu): self
-    {
-        $this->contenu = $contenu;
 
         return $this;
     }

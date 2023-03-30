@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} :: Podcasts{% endblock %}
+
+{% block body %}
+    <h1><i class="bi bi-broadcast-pin"></i> Podcasts</h1>
+    <div class="row justify-content-md-center txt-center">
+        <div class="col-12 col-lg-6" style="position:static" data-controller="flux-podcast">
+            <div class="accordion" id="accordionPodcast">
+                {% for podcast in podcasts %}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading-{{ podcast.id }}">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ podcast.id }}" aria-expanded="true" aria-controls="collapse-{{ podcast.id }}">
+                                <img src="{{ asset('uploads/logos/' ~ podcast.channel.image) }}" height=30px />&nbsp;&nbsp;
+                                {{ podcast.name }}
+                            </button>
+                        </h2>
+                        <div id="collapse-{{ podcast.id }}" class="accordion-collapse collapse" data-bs-parent="#accordionPodcast" data-url="{{ podcast.url }}" style="background-color: #a2b6d9;">
+                            <div class="pod-nav row justify-content-center" style="padding:10px;">
+                                <div class="col col-2 col-sm-2 col-lg-2">
+                                    <a href="#" class="left btn btn-secondary disabled" data-page="0" data-action="flux-podcast#prev"><i class="bi bi-chevron-left"></i></a>
+                                </div>
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <div class="col col-auto text-center">
+                                        <a href="{{ path('flux_edit', {'id': podcast.id}) }}" class="btn btn-secondary"><i class="bi bi-pencil-square"></i>&nbsp;Editer</a>
+                                    </div>
+                                {% endif %}
+                                <div class="col col-2 col-sm-2 col-lg-2 text-end">
+                                    <a href="#" class="right btn btn-secondary" data-page="2" data-action="flux-podcast#next"><i class="bi bi-chevron-right"></i></a>
+                                </div>
+                            </div>
+
+                            <div class="accordion-body">
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div> Loading...
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -39,6 +39,29 @@ class FluxRepository extends ServiceEntityRepository
         }
     }
 
+    public function getFlux($id)
+    {
+        return $this->_em->createQueryBuilder()
+            ->select('a')
+            ->where('a.id= :id')
+            ->setParameter('id', $id)
+            ->from('SHUFLERShuflerBundle:Flux', 'a')
+            ->getQuery()
+            ->getSingleResult();
+    }
+
+    function getPodcasts(): array
+    {
+        return $this->_em->createQueryBuilder()
+            ->select('a')
+            ->where('a.type= :type')
+            ->setParameter('type', 2)
+            ->from('App\Entity\Flux', 'a')
+            ->orderBy('a.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Flux[] Returns an array of Flux objects
 //     */

@@ -20,77 +20,7 @@
     </head>
     <body>
         <header>
-            <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
-                <div class="container-fluid">
-                    <a class="navbar-brand" href="{{ path('home') }}"><img src="{{ asset('build/images/shufler_logo.png') }}" width=150px /></a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="mynavbar">
-                        <ul class="navbar-nav me-auto">
-                            {% if is_granted('ROLE_USER') %}
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ path('video_list') }}"><i class="bi bi-film"></i>&nbsp;Videos</a>
-                                </li>
-                            {% endif %}
-                            {% if is_granted('ROLE_AUTEUR') %}
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><i class="bi bi-pencil"></i> Editer</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="{{ path('video_edit', { 'id' : 0 }) }}"><i class="bi bi-film"></i> Ajouter une Vidéo</a></li>
-                                        <li><a class="dropdown-item" href="{{ path('flux_edit', { 'id' : 0 }) }}"><i class="bi bi-rss"></i> Ajouter un Flux</a></li>
-                                    </ul>
-                                </li>
-                            {% endif %}
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><i class="bi"></i> Divers</a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">Link</a></li>
-                                    <li><a class="dropdown-item" href="#">Another link</a></li>
-                                    <li><a class="dropdown-item" href="#">A third link</a></li>
-                                </ul>
-                            </li>
-                            {% if is_granted('ROLE_ADMIN') %}
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ path('video_trash') }}"><i class="bi bi-trash"></i>&nbsp;Trash</a>
-                                </li>
-                            {% endif %}
-                            {% if is_granted('IS_AUTHENTICATED') %}
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><i class="bi bi-person-vcard"></i> Mon compte</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#"><i class="bi bi-person-circle"></i> Mon profil</a></li>
-                                        <li><a class="dropdown-item" href="{{ path('app_logout') }}"><i class="bi bi-door-closed"></i> Me déconnecter</a></li>
-                                    </ul>
-                                </li>
-                            {% else %}
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#" {{ stimulus_controller('modal-form', {
-                                        formUrl: path('app_login')
-                                    }) }} data-action="click->modal-form#openModal"><i class="bi bi-power"></i>&nbsp;Connexion</a>
-                                </li>
-                            {% endif %}
-                        </ul>
-                        <ul class="nav navbar-nav navbar-right">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><img src="{{ asset('build/images/flags/flag-'~ app.request.locale ~'.png')}}" width="30px" />&nbsp;<b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#" class="dropdown-item"><img src="{{ asset('build/images/flags/flag-en.png')}}" width="30px" />&nbsp;english</a></li>
-                                    <li><a href="#" class="dropdown-item"><img src="{{ asset('build/images/flags/flag-fr.png')}}" width="30px" />&nbsp;français</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                        <form class="d-flex" role="form" action="{{ url('video_search') }}">
-                            <div data-controller="autocomplete" data-autocomplete-url-value="/video/autocomplete" role="combobox" style="flex-direction: column;">
-                                <input class="form-control me-2" type="search" id="search_field" name="search_field" data-autocomplete-target="input" placeholder="Y'en a ou pas?">
-                                <input type="hidden" name="video_id" data-autocomplete-target="hidden"/>
-                                <ul class="list-group" data-autocomplete-target="results" style="position:absolute;"></ul>
-                            </div>&nbsp;&nbsp;
-                            <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
-                        </form>
-                    </div>
-                </div>
-            </nav>
+            {% include 'nav.html.twig' %}
         </header>
 
     <div class="container-fluid content">
