@@ -21,11 +21,18 @@
                     </li>
                 {% endif %}
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><i class="bi"></i> Divers</a>
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><i class="bi bi-archive"></i> Divers</a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ path('flux_podcasts') }}"><i class="bi bi-broadcast-pin"></i> Podcast</a></li>
-                        <li><a class="dropdown-item" href="#">Another link</a></li>
-                        <li><a class="dropdown-item" href="#">A third link</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-newspaper"></i> News</a></li>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li><a class="dropdown-item" href="{{ path('flux_podcasts') }}"><i class="bi bi-broadcast-pin"></i> Podcast</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><i class="bi bi-cloud"></i> Apis</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ path('other_api_video') }}"><i class="bi bi-vimeo"></i> Videos recherche</a></li>
                     </ul>
                 </li>
                 {% if is_granted('ROLE_ADMIN') %}

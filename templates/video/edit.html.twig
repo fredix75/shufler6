@@ -22,6 +22,8 @@
                     <button type="submit" class="btn btn-primary"><i class="bi bi-check-circle-fill"></i> OK</button>
                     &nbsp;
                     {% if video.id is defined and video.id != 0  %}
+                        <a class="btn btn-secondary" href="#" data-action="video-edit#xchange" data-search="{{ video.auteur }} {{ video.titre }}" data-id="{{ video.id }}"><i class="bi bi-arrow-left-right"></i>&nbsp;Exchange on Api</a>
+                        &nbsp;
                         <a class="btn btn-secondary" href="{{ path('video_view', {'id':video.id}) }}"><i class="bi bi-eye-fill"></i>&nbsp;View</a>
                         &nbsp;
                         <a class="btn btn-danger" href="{{ path('video_delete', {'id':video.id}) }}" onclick="return confirm('{% trans %}global.confirmation{% endtrans %}');"><i class="bi bi-trash-fill"></i>&nbsp;Delete</a>
@@ -29,12 +31,10 @@
                 </div>
                 {{ form_end(form) }}
             </div>
-            {% if video.id is defined and video.id !=0  %}
-                <form name="form1" action="{{  path('home') }}" method="POST">
-                    <input type="hidden" id="search_api" name="search_api" />
-                    <input type="hidden" id="id_video" name="id_video" />
-                </form>
-            {% endif %}
         </div>
+        <form name="form_api_search" action="{{ path('other_api_video') }}" method="POST">
+            <input type="hidden" name="search_api">
+            <input type="hidden" name="id_video">
+        </form>
     </div>
 {% endblock %}

@@ -125,6 +125,11 @@ class VideoController extends AbstractController
         }
 
         $video = $video ?? new Video();
+
+        if ($request->get('videokey')) {
+            $video->setLien($request->get('videokey'));
+        }
+
         $form = $this->createForm(VideoType::class, $video);
         $form->handleRequest($request);
 
@@ -133,13 +138,15 @@ class VideoController extends AbstractController
             $videoRepository->save($video, true);
             $this->addFlash('success', 'Video enregistrée');
 
-            return $this->redirectToRoute('video_list');
+            return $this->redirectToRoute('video_view', [
+                'id' => $video->getId(),
+            ]);
         }
 
         return $this->render('video/edit.html.twig', [
             'form'   => $form,
             'video'  => $video,
-            'periods'=> $this->getParameter('shufler_video')['periods']
+            'periods'=> $this->getParameter('shufler_video')['periods'],
         ]);
     }
 
@@ -168,7 +175,7 @@ class VideoController extends AbstractController
     ): Response
     {
         if ('youtube' === $plateforme) {
-            $response = $httpClient->request('GET', 'https://www.googleapis.com/youtube/v3/videos', [
+            $response = $httpClient->request('GET', $this->getParameter('youtube_api_url').'/videos', [
                 'query' => [
                     'key'  => $this->getParameter('youtube_key'),
                     'id'   => $videoKey,
@@ -182,11 +189,11 @@ class VideoController extends AbstractController
 
             $result = json_decode($response->getContent(), true)['items'][0]['snippet'] ?? null;
         } elseif ('vimeo' === $plateforme) {
-            if (!@file_get_contents('https://vimeo.com/api/v2/video/'.$videoKey.'.json')) {
+            if (!@file_get_contents($this->getParameter('vimeo_api_url').'/video/'.$videoKey.'.json')) {
                 return new Response('No data', 404);
             }
 
-            $response = $httpClient->request('GET', 'https://vimeo.com/api/v2/video/'.$videoKey.'.json', [
+            $response = $httpClient->request('GET', $this->getParameter('vimeo_api_url').'/video/'.$videoKey.'.json', [
                 'headers' => [
                     'Content-Type: application/json',
                     'Accept: application/json',

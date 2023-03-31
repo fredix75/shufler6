@@ -51,4 +51,19 @@ export default class extends Controller {
             });
         }
     }
+
+    edit(event) {
+        let url = $(event.target).closest('a').data('url');
+        $('input[name="videokey"]').val(url);
+        $('form[name="form_edit"]').submit();
+    }
+
+    deleteKey(event) {
+        $('input[name="id_video"]').val(0);
+        $('.link_edit').find('i').removeClass('bi-arrow-left-right');
+        $('.link_edit').find('i').addClass('bi-patch-plus');
+        $('form[name="form_edit"]').attr('action', '/video/edit/0');
+        $(event.target).closest('a').hide();
+        event.preventDefault();
+    }
 }

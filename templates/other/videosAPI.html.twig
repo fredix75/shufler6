@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} :: Search Video Api{% endblock %}
+
+{% block body %}
+    <div class="row" data-controller="video">
+        <form name="form_search" action="{{  path('other_api_video') }}" method="POST" class="row justify-content-center">
+            <div class="col col-10 col-sm-10 col-lg-6">
+                <input type="search" id="search_api" name="search_api" value="{{ search|trim }}" class="input-sm form-control" placeholder="search on the Web" style="background-color:#666666;color:white;font-size:200%;height:50px;" />
+                <input type="hidden" name="id_video" value="{{ idVideo ?? 0 }}"/>
+            </div>
+            <div class="col col-2 col-sm-2 col-lg-2">
+                <button type="submit" id="enter_search" class="btn btn-primary btn-sm" style="height:50px;width:50px;"><i class="bi bi-binoculars"></i></button>
+                {% if idVideo != 0 %}
+                    <a href="#" data-action="video#deleteKey"><span class="badge bg-warning"><i class="bi bi-pin-angle-fill"></i>&nbsp;{{ idVideo }}</span></a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+    <br/><br/>
+    {% if wiki is defined and idVideo is not null %}
+        {% for image in wiki %}
+            <img src="{% if image.image is defined %}{{ image.image }}{% endif %}" title="{% if image.title is defined %}{{ image.title }}{% endif %}"/>
+        {% endfor %}
+    {% endif %}
+    <form name="form_edit" action="{{  path('video_edit',{'id': idVideo ?? 0 }) }}" method="POST">
+        <input type="hidden" name="videokey" />
+    </form>
+    <div class="row justify-content-center" data-controller="video">
+        {% for index, plateforme in resultat %}
+            <section class="col col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4" style="margin-top:10px;">
+                <h1><i class="bi bi-{{ index }}"></i> {{ plateforme['label'] }}</h1>
+                {% if plateforme['items'] is not null %}
+                    {% for vignette in plateforme['items'] %}
+                        <div class="row g-0 bg-body-secondary position-relative">
+                            <div class="col-6 col-md-6 mb-md-0 p-md-4">
+                                <div class="media topcol embed-responsive-16by9">
+                                    <a class="video-link" href="{{ vignette.url }}" onclick="return false;">
+                                        <img src="{{ vignette.link }}" height=180px />
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-6 p-4 ps-md-0">
+                                <strong>{{ vignette.name }}</strong>';
+                                {% if is_granted('ROLE_AUTEUR') %}
+                                    {% set class = "bi bi-patch-plus" %}
+                                    {%  if idVideo is defined and idVideo != 0 %}
+                                        {% set class = "bi bi-arrow-left-right" %}
+                                    {% endif %}
+                                    <div class="link_edit" style="position:relative;"><a href="#" class="btn btn-secondary" data-action="video#edit" data-url="{{ vignette.url }}"><i class="{{ class }}"></i></a></div>
+                                {% endif %}
+                                <br/>{{ vignette.author }}<br/>
+                                <span class="badge bg-secondary">{{ vignette.date }}</span>
+                            </div>
+                        </div><br/><br/>
+                    {% endfor %}
+                {% endif %}
+            </section>
+        {% endfor %}
+    </div>
+{% endblock %}

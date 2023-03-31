@@ -49,7 +49,12 @@ parameters:
             - 3
             - 4
 
+    youtube_api_url: 'https://www.googleapis.com/youtube/v3'
     youtube_key: '%env(YOUTUBE_KEY)%'
+    vimeo_api_url: 'https://vimeo.com/api/v2'
+    vimeo_secret: '%env(VIMEO_SECRET)%'
+    vimeo_id: '%env(VIMEO_ID)%'
+    vimeo_access_token: '%env(VIMEO_ACCESS_TOKEN)%'
 
     shufler_flux:
         types:
