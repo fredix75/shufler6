@@ -59,6 +59,10 @@ class ShuflerExtension extends AbstractExtension
                 $this,
                 'convertFrameFilter'
             ]),
+            new TwigFilter('youtubeChannelId', [
+                $this,
+                'getYoutubeChannelId'
+            ]),
             new TwigFilter('popUp', [
                 $this,
                 'popUpFilter'
@@ -192,6 +196,11 @@ class ShuflerExtension extends AbstractExtension
         return $frame;
     }
 
+    public function getYoutubeChannelId(string $lien): string
+    {
+        $pos = mb_strpos($lien, 'list=');
+        return mb_substr($lien, $pos + 5);
+    }
 
     /**
      * Display Video Pop-up

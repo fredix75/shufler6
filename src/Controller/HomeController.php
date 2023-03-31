@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\FluxRepository;
 use App\Repository\VideoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -10,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'home')]
-    public function homeAction(VideoRepository $videoRepository): Response
+    public function homeAction(VideoRepository $videoRepository, FluxRepository $fluxRepository): Response
     {
         $videos = $videoRepository->getRandomVideos();
         $anims = $musics = $stranges = [];
@@ -37,20 +38,7 @@ class HomeController extends AbstractController
             }
         }
 
-        /**
-        $playlist = $this->getDoctrine()
-            ->getManager()
-            ->getRepository('SHUFLERShuflerBundle:Flux')
-            ->getVu();
-
-        if (empty($playlist)) $playlist = new Flux();
-**/
-        $playlist = [
-            'channelClass' => 'lienPl',
-            'ProviderId'  => 'UUqt99sKYNTxqlHtzV9weUYA',
-            'oldImage'      => 'build/images/img.png',
-            'name'          => 'Vu - France 2'
-        ];
+        $playlist = $fluxRepository->findOneBy(['name' => 'Vu - France 2']);
 
         return $this->render('home.html.twig', array(
             'videos' => $videos,
