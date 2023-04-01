@@ -12,18 +12,40 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/flux', name: 'flux_')]
+#[Security("is_granted('ROLE_USER')")]
 class FluxController extends AbstractController
 {
     #[Route('/podcasts', name: 'podcasts')]
-    public function list(Request $request, FluxRepository $fluxRepository):Response
+    public function podcasts(Request $request, FluxRepository $fluxRepository):Response
+    {
+        $podcasts = $fluxRepository->getPodcasts();
+
+        return $this->render('flux/podcasts.html.twig', [
+            'podcasts' => $podcasts
+        ]);
+    }
+
+    #[Route('/news/{category}', name: 'news', requirements: ['category' => '\d+'])]
+    public function news(Request $request, FluxRepository $fluxRepository, int $category = 201): Response
+    {
+        $news = $fluxRepository->getNews($category);
+
+        return $this->render('/flux/news.html.twig', [
+            'news' =>$news
+        ]);
+    }
+
+    #[Route('/handle', name: 'handle_file')]
+    public function handleFlux(Request $request): Response
     {
         if ($request->isXmlHttpRequest()) {
             $url = $request->get('url');
 
             $contenu = '';
+
             try {
-                if (@simplexml_load_file($url)->{'channel'}->{'item'}) {
-                    $contenu = @simplexml_load_file($url)->{'channel'}->{'item'};
+                if (@simplexml_load_file($url)->{'channel'}) {
+                    $contenu = @simplexml_load_file($url)->{'channel'};
                 }
             } catch (\Exception $e) {
                 // nsp quoi faire :D
@@ -33,17 +55,13 @@ class FluxController extends AbstractController
             $debut = ($page - 1) * 6;
 
             for ($i = $debut; $i < $debut + 6; $i ++) {
-                $infos[] = $contenu[$i];
+                $infos[] = $contenu->item[$i];
             }
 
             return new Response(json_encode($infos));
         }
 
-        $podcasts = $fluxRepository->getPodcasts();
-
-        return $this->render('flux/podcasts.html.twig', [
-            'podcasts' => $podcasts
-        ]);
+        return new Response("Method not allowed", 405);
     }
 
     #[Route('/edit/{id}', name: 'edit', requirements: ['id' => '\d+'])]

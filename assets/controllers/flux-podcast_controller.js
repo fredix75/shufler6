@@ -56,7 +56,7 @@ export default class extends Controller {
 }
 
 function getData(url, id, page) {
-    $.get('/flux/podcasts',
+    $.get('/flux/handle',
         {url: url, page: page},
         function(data){
             bindContent(id, data);
@@ -75,9 +75,9 @@ function bindContent(id, data) {
         }
         let date = new Date(value.pubDate).toLocaleDateString();
         let substructure = '<div class="accordion-item">\n' +
-            '                        <h2 class="accordion-header" id="subheading-' + id + '-' + index + '">\n' +
+            '                        <h3 class="accordion-header" id="subheading-' + id + '-' + index + '">\n' +
             '                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-' + id + '-' + index + '" aria-expanded="true" aria-controls="collapse-' + id + '-' + index + '"><span class="badge bg-secondary text-end" style="font-size:60%;">' + date + '</span>&nbsp;&nbsp;' + value.title + '</button>\n' +
-            '                        </h2>' +
+            '                        </h3>' +
             '                        <div id="collapse-' + id + '-' + index + '" class="accordion-collapse collapse" data-bs-parent="#subAccordion-' + id + '">\n' +
             '                            <div class="accordion-body subAccordion">\n';
         if (value.enclosure !== undefined && value.enclosure["@attributes"].url != null) {
