@@ -33,7 +33,10 @@
         {% endfor %}
 
         {% block body %}{% endblock %}
-        {{ include('modal.html.twig', { modalTitle: 'Connexion'}) }}
+
+        {% if not is_granted('IS_AUTHENTICATED') %}
+            {{ include('modal.html.twig', { modalTitle: 'Connexion'}) }}
+        {% endif %}
     </div>
     <footer>
         <br />
