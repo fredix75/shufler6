@@ -113,6 +113,7 @@ class ShuflerExtension extends AbstractExtension
      */
     public function getPlatform(string $lien): string
     {
+        //@todo parait cheulou ce truc
         if (preg_match(self::PATTERN_HTTP . $this->sanitize(self::YOUTUBE_WWW) . '/', $lien)) {
             return self::YOUTUBE;
         } elseif (strripos($lien,self::VIMEO) || preg_match(self::PATTERN_HTTP . $this->sanitize(self::VIMEO_PLAYER) . '/', $lien)) {

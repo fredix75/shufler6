@@ -230,9 +230,6 @@ class Video
         return $this;
     }
 
-    /**
-     * @return Collection<int, Mood>
-     */
     public function getMoods(): Collection
     {
         return $this->moods;
