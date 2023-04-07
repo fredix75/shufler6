@@ -27,7 +27,6 @@ function bindContent(id, data) {
         if (null === value) {
             return;
         }
-        console.log(value);
         let date = new Date(value.pubDate).toLocaleDateString();
         let structure = '<div class="accordion-item">\n' +
             '                        <h2 class="accordion-header" id="heading-' + id + '-' + index + '">\n' +
