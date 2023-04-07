@@ -188,7 +188,7 @@ class FluxController extends AbstractController
     public function channelDelete(
         ChannelFluxRepository $channelFluxRepository,
         FluxRepository $fluxRepository,
-        ChannelFlux $channelFlux,
+        ChannelFlux $channelFlux
     ): Response
     {
         foreach ($channelFlux->getFlux() as $flux) {
