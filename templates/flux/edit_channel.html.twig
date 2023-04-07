@@ -1,0 +1,33 @@
+{{ form_start(form) }}
+{{ form_widget(form) }}
+<button class="btn btn-primary"
+    type="button"
+    data-action = 'modal-channel-form#submitForm'
+>
+    <i class="bi bi-save-fill"></i>&nbsp;Save
+</button>&nbsp;
+{% if channelflux.id is not null %}
+    <a class="btn btn-danger"
+       href="{{ path('flux_channel_delete', {'id': channelflux.id}) }}"
+       onclick="return confirm('global.confirmation');"
+    >
+        <i class="bi bi-trash-fill"></i>&nbsp;Delete
+    </a>
+    <br/><br/>
+    {%  if channelflux.image is not null %}
+        {% if 'http' in channelflux.image %}
+            <img src="{{ asset(channelflux.image) }}" width="200px" />
+        {% else %}
+            <img src="{{ asset('uploads/logos/' ~ channelflux.image) }}" width="200px" />
+            <a href="{{ path('flux_channel_delete_logo',{'id': channelflux.id}) }}"
+               type="button"
+               class="btn btn-danger"
+               onclick="return confirm('{{ 'Are You sure ?'|trans}}');"
+               title="Delete this Logo"
+            >
+                <i class="bi bi-trash-fill"></i>
+            </a>
+        {%  endif %}
+    {% endif %}
+{% endif %}
+{{ form_end(form) }}

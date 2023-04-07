@@ -44,10 +44,11 @@ class VideoRepository extends ServiceEntityRepository
     public function getRandomVideos(
         int $categorie = null,
         int $genre = null,
-        string $periode = '0'
+        string $periode = '0',
+        string $plateforme = null
     ): array
     {
-        $q = $this->getVideosQuery($categorie, $genre, $periode);
+        $q = $this->getVideosQuery($categorie, $genre, $periode, $plateforme);
         $videos = $q->getQuery()->getResult();
         for ($i = 0; $i < 5; $i++) {
             shuffle($videos);
@@ -71,14 +72,18 @@ class VideoRepository extends ServiceEntityRepository
         return new Paginator($q);
     }
 
-    private function getVideosQuery(int $categorie = null , int $genre = null, string $periode = '0'): QueryBuilder
+    private function getVideosQuery(int $categorie = null , int $genre = null, string $periode = '0', string $plateforme = null): QueryBuilder
     {
         $q = $this->getEntityManager()->createQueryBuilder()
             ->select('a')
             ->where('a.priorite= :priorite')
             ->setParameter('priorite', 1)
-            ->andWhere('a.published = true')
-            ->orderBy('a.id', 'DESC')
+            ->andWhere('a.published = true');
+        if ($plateforme) {
+            $q->andWhere('a.lien like :plateforme')
+                ->setParameter('plateforme', '%'.$plateforme.'%');
+        }
+            $q->orderBy('a.id', 'DESC')
             ->from('App\Entity\Video', 'a');
 
         if ($categorie) {

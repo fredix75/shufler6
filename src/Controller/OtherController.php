@@ -13,6 +13,7 @@ use Vimeo\Vimeo;
 class OtherController extends AbstractController
 {
     #[Route('/api_video', name: 'api_video')]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function searchApiVideoAction(Request $request, HttpClientInterface $httpClient): Response
     {
         $search = $idVideo = $wiki = null;

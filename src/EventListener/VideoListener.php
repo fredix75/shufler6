@@ -3,34 +3,31 @@
 namespace App\EventListener;
 
 use App\Entity\Video;
-use Doctrine\Persistence\Event\LifecycleEventArgs;
 
 class VideoListener
 {
-    public function prePersist(LifecycleEventArgs $args): void
+    public function postLoad(Video $video): void
     {
-        $entity = $args->getObject();
-        if (!$entity instanceof Video) {
-            return;
+        $link = $video->getLien();
+        if (strripos($link, 'youtube.com/watch?v=')) {
+            $link = str_replace('watch?v=', 'embed/', $link);
         }
-
-        $this->sanitizeLink($entity);
-
+        $video->setLien(rtrim(preg_replace('/http:\/\//','https://', $link,1),'/'));
     }
 
-    public function preUpdate(LifecycleEventArgs $args): void
+    public function prePersist(Video $video): void
     {
-        $entity = $args->getObject();
-        if (!$entity instanceof Video) {
-            return;
-        }
-
-        $this->sanitizeLink($entity);
+        $this->sanitizeLink($video);
     }
 
-    private function sanitizeLink($entity): void
+    public function preUpdate(Video $video): void
     {
-        $lienOrigin = $entity->getLien();
+        $this->sanitizeLink($video);
+    }
+
+    private function sanitizeLink(Video $video): void
+    {
+        $lienOrigin = $video->getLien();
 
         switch($lienOrigin) {
             case false !== strripos($lienOrigin, 'youtube.com/watch?v='):
@@ -52,7 +49,7 @@ class VideoListener
                 $lien = $lienOrigin;
         }
 
-        $entity->setLien($lien);
+        $video->setLien($lien);
     }
 
 }

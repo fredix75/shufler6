@@ -11,7 +11,9 @@
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="heading-{{ podcast.id }}">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ podcast.id }}" aria-expanded="true" aria-controls="collapse-{{ podcast.id }}">
-                                <img src="{{ asset('uploads/logos/' ~ podcast.channel.image) }}" height=30px />&nbsp;&nbsp;
+                                {% if podcast.channel is defined and podcast.channel.image is defined %}
+                                <img src="{{ asset('uploads/logos/' ~ podcast.channel.image) }}" height=30px />&nbsp;
+                                {% endif %}&nbsp;
                                 {{ podcast.name }}
                             </button>
                         </h2>

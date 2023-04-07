@@ -2,17 +2,20 @@
 
 namespace App\Entity;
 
+use App\EventListener\VideoListener;
 use App\Repository\VideoRepository;
 use App\Validator\VideoValidator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\EntityListeners;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: VideoRepository::class)]
 #[Assert\Callback([VideoValidator::class, 'validate'])]
 #[ORM\HasLifecycleCallbacks]
+#[EntityListeners([VideoListener::class])]
 class Video
 {
     #[ORM\Id]

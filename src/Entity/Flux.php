@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Contract\UploadInterface;
 use App\Repository\FluxRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -9,7 +10,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 #[ORM\Entity(repositoryClass: FluxRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-class Flux
+class Flux implements UploadInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -40,9 +41,6 @@ class Flux
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateInsert = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $dateUpdate = null;
 
     public function getId(): ?int
     {
@@ -103,9 +101,11 @@ class Flux
     }
 
     #[ORM\PostLoad]
-    public function setOldImage(): void
+    public function setOldImage(): self
     {
         $this->oldImage = $this->image;
+
+        return $this;
     }
 
     public function getType(): ?int
@@ -153,19 +153,6 @@ class Flux
     public function setDateInsert(): self
     {
         $this->dateInsert = new \DateTime();
-
-        return $this;
-    }
-
-    public function getDateUpdate(): ?\DateTimeInterface
-    {
-        return $this->dateUpdate;
-    }
-
-    #[ORM\PreUpdate]
-    public function setDateUpdate(): self
-    {
-        $this->dateUpdate = new \DateTime();
 
         return $this;
     }

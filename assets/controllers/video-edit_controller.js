@@ -55,7 +55,7 @@ export default class extends Controller {
     completeInfos() {
         let lien = $('[name="video[lien]"]').val();
         let match, videoKey, plateforme;
-        if (match = lien.match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)(?:\/watch\?v=|\/embed\/)([^\s&]+)/)) {
+        if (match = lien.match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)\/(?:watch\?v=|\/embed\/)?([^\s&]+)/)) {
             plateforme = 'youtube';
             videoKey = match[1];
         } else if (lien.indexOf('vimeo') > 0) {

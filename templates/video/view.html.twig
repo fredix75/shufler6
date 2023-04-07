@@ -5,7 +5,9 @@
 {% block body %}
     <div class="row">
         <section class="col-sm-12 col-md-12">
-            <iframe class="media embed-responsive-item" src="{{  video.lien }}"></iframe>
+            <div class="ratio ratio-16x9">
+                <iframe class="media embed-responsive-item" src="{{  video.lien }}"></iframe>
+            </div>
             <div class="topcom media-body">
                 <div class="col-md-10">
                     <h2 class="media-heading">{{  video.titre }}</h2>
@@ -13,7 +15,7 @@
                     <p class="topchapo">{{ video.chapo }}</p>
                 </div>
                 <div class="col-md-2 col-push-right">
-                    <div class="categorie col-md-12">{{ video.categorie|categorieDisplay }}</div>
+                    <div class="categorie col-md-12" style="position:relative;">{{ video.categorie|categorieDisplay }}</div>
                     <div class="col-md-12"><span class="top-annee">{{  video.annee|yearDisplay }}</span></div>
                 </div>
                 {% for mood in video.moods %}
@@ -27,7 +29,7 @@
             <div class="well">
                 <span class="badge" style="float:right;">{{ video.dateInsert|date("d/m/Y H:i:s") }}</span><br/>
                 {% if is_granted('ROLE_AUTEUR') %}
-                    <a class="btn btn-default" href="{{ path('video_edit', {'id':video.id}) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;Edit the reference</a>
+                    <a class="btn btn-secondary" href="{{ path('video_edit', {'id':video.id}) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;Edit the reference</a>
                     &nbsp;
                     {% if video.published == 1 %}
                         <a class="btn btn-warning" href="{{ path('video_edit', { 'id':video.id }) }}"><span class="glyphicon glyphicon-remove-sign"></span>&nbsp;Retirer</a>

@@ -34,7 +34,7 @@ class FluxType extends AbstractType
             ])
             ->add('url', UrlType::class, [
                 'attr' => [
-                    'data-action' => 'change->flux-edit#getImageYoutubePlaylist'
+             //       'data-action' => 'change->flux-edit#getImageYoutubePlaylist'
                 ],
                 'row_attr' => [
                     'class' => 'input-group mb-3'
@@ -87,6 +87,9 @@ class FluxType extends AbstractType
                     return $repo->getChannelFluxAudio();
                 },
                 'choice_label' => 'name',
+                'attr' => [
+                      'data-action' => 'modal-channel-form#openModal'
+                ],
                 'row_attr' => [
                     'id' => 'channel',
                     'class' => 'input-group mb-3'

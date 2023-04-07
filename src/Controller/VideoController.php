@@ -86,24 +86,16 @@ class VideoController extends AbstractController
         string $periode = '0'
     ): Response
     {
-        $videos = $videoRepository
-            ->getRandomVideos($categorie, $genre, $periode);
-
+        $videos = $videoRepository->getRandomVideos($categorie, $genre, $periode, 'youtube');
         $videoParameters = $this->getParameter('shufler_video');
-        $playlist = [];
+        $playlist = [$videoParameters['intro_couch']];
         $i = 0;
-
         foreach ($videos as $video) {
-            $api = $shuflerExtension->getPlatform($video->getLien());
-
-            if ($shuflerExtension::YOUTUBE === $api && $vid = $shuflerExtension->getIdentifer($video->getLien(), $api)) {
-                $playlist[] = $vid;
-                $i ++;
-            }
-
+            $playlist[] = $shuflerExtension->getIdentifer($video->getLien(), 'youtube.com');
             if ($i >= $videoParameters['max_list_couch']) {
                 break;
             }
+            $i++;
         }
 
         return $this->render('video/couch.html.twig', [
@@ -136,7 +128,7 @@ class VideoController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $video = $form->getData();
             $videoRepository->save($video, true);
-            $this->addFlash('success', 'Video enregistrée');
+            $this->addFlash('success', 'Vidéo enregistrée');
 
             return $this->redirectToRoute('video_view', [
                 'id' => $video->getId(),
@@ -163,7 +155,7 @@ class VideoController extends AbstractController
     public function delete(VideoRepository $videoRepository, Video $video): Response
     {
         $videoRepository->remove($video, true);
-        $this->addFlash('success', 'Video supprimée');
+        $this->addFlash('success', 'Vidéo supprimée');
         return $this->redirectToRoute('video_list');
     }
 
@@ -215,9 +207,7 @@ class VideoController extends AbstractController
     {
         if ($request->isXmlHttpRequest()) {
             $search = $request->query->get('q');
-
             $videos = $videoRepository->searchAjax($search);
-
             $suggestions = [];
             $suggestions['suggestions'] = [];
 

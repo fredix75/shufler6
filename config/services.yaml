@@ -10,6 +10,7 @@ parameters:
     uploads: '%kernel.project_dir%/public/uploads/'
 
 services:
+    Symfony\Component\Dotenv\Command\DotenvDumpCommand: ~
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
@@ -44,15 +45,10 @@ services:
             $slugger: '@slugger'
             $directory: '%uploads%'
 
-    App\EventListener\FluxListener:
+    App\EventListener\UploadListener:
         arguments:
             $fileHelper: '@App\Helper\FileHelper'
         tags:
             - { name: 'doctrine.event_listener', event: 'prePersist' }
             - { name: 'doctrine.event_listener', event: 'preUpdate' }
             - { name: 'doctrine.event_listener', event: 'preRemove' }
-
-    App\EventListener\VideoListener:
-        tags:
-            - { name: 'doctrine.event_listener', event: 'prePersist' }
-            - { name: 'doctrine.event_listener', event: 'preUpdate' }

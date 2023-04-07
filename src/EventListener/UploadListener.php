@@ -2,15 +2,16 @@
 
 namespace App\EventListener;
 
-use App\Entity\Flux;
+use App\Contract\UploadInterface;
 use App\Helper\FileHelper;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Event\PreRemoveEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 
-class FluxListener
+class UploadListener
 {
     private FileHelper $fileHelper;
+
     public function __construct(FileHelper $fileHelper) {
         $this->fileHelper = $fileHelper;
     }
@@ -18,7 +19,7 @@ class FluxListener
     public function prePersist(PrePersistEventArgs $args): void
     {
         $entity = $args->getObject();
-        if (!$entity instanceof Flux) {
+        if (!$entity instanceof UploadInterface) {
             return;
         }
         if ($entity->getFile()) {
@@ -29,7 +30,7 @@ class FluxListener
     public function preUpdate(PreUpdateEventArgs $args): void
     {
         $entity = $args->getObject();
-        if (!$entity instanceof Flux) {
+        if (!$entity instanceof UploadInterface) {
             return;
         }
 
@@ -44,7 +45,7 @@ class FluxListener
     public function preRemove(PreRemoveEventArgs $args): void
     {
         $entity = $args->getObject();
-        if (!$entity instanceof Flux) {
+        if (!$entity instanceof UploadInterface) {
             return;
         }
 
@@ -53,15 +54,15 @@ class FluxListener
         }
     }
 
-    private function fileUpload(Flux $flux): void
+    private function fileUpload(UploadInterface $entity): void
     {
         $fileName = $this->fileHelper->uploadFile(
-            $flux->getFile(),
-            $flux->getName(),
+            $entity->getFile(),
+            $entity->getName(),
             'logos',
-            $flux->getOldImage()
+            $entity->getOldImage()
         );
-        $flux->setImage($fileName);
+        $entity->setImage($fileName);
     }
 
 }

@@ -36,7 +36,6 @@ export default class extends Controller {
         let player;
 
         player = YouTubePlayer('player', {
-            height: '600px',
             width: '100%'
         });
 
@@ -44,6 +43,4 @@ export default class extends Controller {
             e.target.loadPlaylist(this.videosValue);
         })
     }
-
-
 }

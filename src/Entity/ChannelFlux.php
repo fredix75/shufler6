@@ -2,12 +2,16 @@
 
 namespace App\Entity;
 
+use App\Contract\UploadInterface;
 use App\Repository\ChannelFluxRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 #[ORM\Entity(repositoryClass: ChannelFluxRepository::class)]
-class ChannelFlux
+#[ORM\HasLifecycleCallbacks]
+class ChannelFlux implements UploadInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -20,6 +24,8 @@ class ChannelFlux
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
+    private ?UploadedFile $file = null;
+
     private ?string $oldImage = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -30,6 +36,9 @@ class ChannelFlux
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateInsert = null;
+
+    #[ORM\OneToMany(mappedBy: 'channel', targetEntity: Flux::class)]
+    private Collection $flux;
 
     public function getId(): ?int
     {
@@ -65,9 +74,28 @@ class ChannelFlux
         return $this->oldImage;
     }
 
-    public function setOldImage(string $oldImage): self
+    #[ORM\PostLoad]
+    public function setOldImage(): self
     {
-        $this->oldImage = $oldImage;
+        $this->oldImage = $this->image;
+
+        return $this;
+    }
+
+    /**
+     * @return UploadedFile|null
+     */
+    public function getFile(): ?UploadedFile
+    {
+        return $this->file;
+    }
+
+    /**
+     * @param UploadedFile|null $file
+     */
+    public function setFile(?UploadedFile $file): self
+    {
+        $this->file = $file;
 
         return $this;
     }
@@ -96,14 +124,20 @@ class ChannelFlux
         return $this;
     }
 
+    public function getFlux(): Collection
+    {
+        return $this->flux;
+    }
+
     public function getDateInsert(): ?\DateTimeInterface
     {
         return $this->dateInsert;
     }
 
-    public function setDateInsert(\DateTimeInterface $dateInsert): self
+    #[ORM\PrePersist]
+    public function setDateInsert(): self
     {
-        $this->dateInsert = $dateInsert;
+        $this->dateInsert = new \DateTime();
 
         return $this;
     }
