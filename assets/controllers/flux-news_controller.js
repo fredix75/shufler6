@@ -10,8 +10,41 @@ export default class extends Controller {
             getData(url, id, 1);
         });
     }
+
+    prev(event) {
+        let url = $(event.target).closest('.news').find('.accordion').data('url');
+        let id = $(event.target).closest('.news').find('.accordion').attr('id');
+        let page = parseInt($(event.target).closest('a.left').data('page'));
+        getData(url, id, page);
+        $(event.target).closest('.pod-nav').find('a.right').data('page', page + 1);
+        if (page > 1) {
+            $(event.target).closest('a.left').data('page', page - 1);
+        } else {
+            $(event.target).closest('a.left').addClass('disabled');
+        }
+        event.preventDefault();
+    }
+
+    next(event) {
+        let url = $(event.target).closest('.news').find('.accordion').data('url');
+        let id = $(event.target).closest('.news').find('.accordion').attr('id');
+        let page = parseInt($(event.target).closest('a.right').data('page'));
+        getData(url, id, page);
+        $(event.target).closest('a.right').data('page', page + 1);
+        if (page > 1) {
+            $(event.target).closest('.pod-nav').find('a.left').data('page', page - 1);
+            $(event.target).closest('.pod-nav').find('a.left').removeClass('disabled');
+        } else {
+            if (!$(event.target).closest('.pod-nav').find('a.left').hasClass('disabled')) {
+                $(event.target).closest('.pod-nav').find('a.left').data('page', page - 1);
+                $(event.target).closest('.pod-nav').find('a.left').addClass('disabled');
+            }
+        }
+        event.preventDefault();
+    }
 }
 function getData(url, id, page) {
+    getLoading(id);
     $.get('/flux/handle',
         {url: url, page: page},
         function(data){
@@ -23,6 +56,7 @@ function getData(url, id, page) {
 function bindContent(id, data) {
     let content = JSON.parse(data);
     let div = $('#' + id);
+    div.html('');
     $.each(content, function(index, value) {
         if (null === value) {
             return;
@@ -50,4 +84,12 @@ function bindContent(id, data) {
     });
 
     $(".accordion-body").find('img').css('width', '100%');
+}
+
+function getLoading(id) {
+    let div = $('#' + id);
+    div.html('<div class="spinner-border" role="status">' +
+        '        <span class="visually-hidden">Loading...</span>' +
+        '    </div>'
+    );
 }

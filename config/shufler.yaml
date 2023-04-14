@@ -63,7 +63,7 @@ parameters:
             2: podcast
             3: radio
             4: lien
-            6: video_playlist
+            5: video_playlist
 
         radios:
             1: généraliste

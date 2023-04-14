@@ -52,8 +52,8 @@ class FluxController extends AbstractController
             } catch (\Exception $e) {
                 // nsp quoi faire :D
             }
-;
-            $page = $request->query->get('page');
+
+            $page = $request->get('page');
             $debut = ($page - 1) * 6;
             $namespaces = $contenu ? $contenu->getNamespaces(true) : [];
             $infos = [];
@@ -89,6 +89,13 @@ class FluxController extends AbstractController
             return $this->redirectToRoute('home');
         }
         $flux = $flux ?? new Flux();
+
+        if ($request->get('channelkey')) {
+            $flux->setUrl('https://www.youtube.com/playlist?list='.$request->get('channelkey'));
+            $flux->setImage($request->get('channelpicture'));
+            $flux->setType(5);
+        }
+
         $form = $this->createForm(FluxType::class, $flux);
         $form->handleRequest($request);
 

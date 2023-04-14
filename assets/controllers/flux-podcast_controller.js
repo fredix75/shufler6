@@ -56,6 +56,7 @@ export default class extends Controller {
 }
 
 function getData(url, id, page) {
+    getLoading(id);
     $.get('/flux/handle',
         {url: url, page: page},
         function(data){
@@ -93,4 +94,12 @@ function bindContent(id, data) {
         div.append(substructure);
     });
     div.append('</div>');
+}
+
+function getLoading(id) {
+    let div = $('#' + id).children('.accordion-body');
+    div.html('<div class="spinner-border" role="status">' +
+        '        <span class="visually-hidden">Loading...</span>' +
+        '    </div>'
+    );
 }

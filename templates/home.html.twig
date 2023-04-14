@@ -46,8 +46,8 @@
         <div class="row">
             <section class="col col-12 col-sm-12 col-md-6 col-lg-6 medias-bande">
                 <div id="vu-widget" class="col col-12">
-                    <div class="col col-12 col-sm-12 col-md-6 col-lg-6 media">
-                        <a class="lienPl" href="{{ playlist.url|youtubeChannelId }}" data-toggle="tooltip">
+                    <div class="col col-12 col-sm-12 col-md-6 col-lg-6 media" data-controller="video">
+                        <a class="lienPl" href="#" data-id="{{ playlist.url|youtubeChannelId }}" data-toggle="tooltip" data-action="video#popupPlaylist">
                             <img src="{{ playlist.image }}" width=60% />
                         </a>
                     </div>

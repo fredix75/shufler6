@@ -110,4 +110,72 @@ class OtherController extends AbstractController
             'wiki' => $wiki
         ]);
     }
+
+    #[Route('/api_channel', name: 'api_channel')]
+    public function searchApiChannel(Request $request, HttpClientInterface $httpClient): Response
+    {
+        $resultat = $search = $idChannel = null;
+        if ($request->get('search_api')) {
+            $search = $request->get('search_api');
+
+            $response = $httpClient->request('GET', $this->getParameter('youtube_api_url').'/search', [
+                'query' => [
+                    'key'  => $this->getParameter('youtube_key'),
+                    'q'   => $search,
+                    'part' => 'snippet',
+                    'type' => 'channel',
+                    'maxResults' => 25,
+                ],
+                'headers' => [
+                    'Content-Type: application/json',
+                    'Accept: application/json',
+                ]
+            ]);
+
+            $resultYouToube = json_decode($response->getContent(), true)['items'] ?? [];
+            foreach ($resultYouToube as $item) {
+                $resultat[] = [
+                    'link' => $item['snippet']['thumbnails']['high']['url'] ?? null,
+                    'name' => $item['snippet']['title'] ?? null,
+                    'url'  => 'https://www.youtube.com/watch?v='.($item['id']['videoId'] ?? ''),
+                    'author' => $item['snippet']['channelTitle'] ?? null,
+                    'date' => date("d-m-Y", strtotime($item['snippet']['publishedAt'])),
+                    'channelId' => $item['snippet']['channelId'],
+                ];
+            }
+        }
+        return $this->render('other/channelsAPI.html.twig', [
+            'resultats' => $resultat,
+            'search' => $search,
+            'idChannel' => $idChannel
+        ]);
+    }
+
+    #[Route('/channel/handle', name: 'handle_channel')]
+    public function handleChannel(Request $request, HttpClientInterface $httpClient): Response
+    {
+        if ($request->isXmlHttpRequest()) {
+            $channelId = $request->get('id');
+            $response = $httpClient->request('GET', $this->getParameter('youtube_api_url').'/playlists', [
+                'query' => [
+                    'key'  => $this->getParameter('youtube_key'),
+                    'channelId'   => $channelId,
+                    'part' => 'snippet, contentDetails',
+                    'maxResults' => 75,
+                ],
+                'headers' => [
+                    'Content-Type: application/json',
+                    'Accept: application/json',
+                ]
+            ]);
+
+            $playlists = json_decode($response->getContent(), true)['items'] ?? [];
+
+            return $this->render('other/part/_playlists.html.twig', [
+                'playlists' => $playlists,
+            ]);
+        }
+
+        return new Response("Method not allowed", 405);
+    }
 }

@@ -44,7 +44,7 @@ export default class extends Controller {
             $('#file').hide();
             $('#channel').hide();
             this.handleMoodSelect(links);
-        } else if ('6' === type) {
+        } else if ('5' === type) {
             $('#file').hide();
             $('#channel').hide();
             $('#mood').hide();
@@ -78,7 +78,7 @@ export default class extends Controller {
             $('#channel').fadeOut('slow');
             $('[name="flux[mood]"]').empty().append(links);
             $('#mood').fadeIn('slow');
-        } else if ('6' === $('[name="flux[type]"]').val()) {
+        } else if ('5' === $('[name="flux[type]"]').val()) {
             $('[name="flux[file]"]').val(null);
             $('#file').fadeOut('slow');
             $('[name="flux[channel]"]').val(null);

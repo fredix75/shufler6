@@ -177,6 +177,7 @@ class VideoRepository extends ServiceEntityRepository
             ->where('a.priorite != :priorite')
             ->setParameter('priorite', 1)
             ->orWhere('a.published is null')
+            ->orWhere('a.published = false')
             ->orderBy('a.published', 'DESC')
             ->addOrderBy('a.priorite', 'ASC')
             ->addOrderBy('a.id', 'DESC')

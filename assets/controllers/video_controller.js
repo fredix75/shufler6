@@ -41,15 +41,21 @@ export default class extends Controller {
             });
         }
 
-        if ($('.lienPl').length > 0) {
-            $('.lienPl').magnificPopup({
+
+    }
+
+    popupPlaylist(event) {
+        $(document).ready(function() {
+            let key = $(event.target).closest('a').data('id');
+            $(event.target).closest('a').magnificPopup({
                 items: {
-                    index : YOUTUBE,
-                    src: '<iframe style="margin:auto;" width="800" height="500" src="https://www.youtube.com/embed/videoseries?list=' + $('.lienPl').attr('href') + '" frameborder="0" allowfullscreen></iframe>',
+                    index: 'youtube.com',
+                    src: '<iframe style="margin:auto;" width="800" height="500" src="https://www.youtube.com/embed/videoseries?list=' + key + '" frameborder="0" allowfullscreen></iframe>',
                     type: 'inline'
                 }
             });
-        }
+        });
+        event.preventDefault();
     }
 
     edit(event) {

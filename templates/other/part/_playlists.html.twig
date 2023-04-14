@@ -1,0 +1,21 @@
+<ul class="list-group">
+    {% for index, playlist in playlists %}
+        {% set page = ((index + 1)/6)|round(0, 'ceil') %}
+        <li class="list-group-item" data-page="{{ page }}">
+            <div class="row flex">
+                <div class="col col-3" style="overflow: hidden">
+                    <a class="lienPl" href="#" data-id="{{ playlist.id }}" data-toggle="tooltip" data-action="video#popupPlaylist">
+                        <img src="{{ playlist.snippet.thumbnails.default.url }}" />
+                    </a>
+                </div>
+                <div class="col col-8">
+                    {{ playlist.snippet.title }}
+                    <span class="badge bg-secondary">{{ playlist.contentDetails.itemCount }}</span>
+                </div>
+                <div class="col col-1">
+                    <a href="#" type="btn btn-secondary" data-action="other-channel#editChannel"><i class="bi bi-save"></i></a>
+                </div>
+            </div>
+        </li>
+    {% endfor %}
+</ul>

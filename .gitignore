@@ -28,3 +28,6 @@ yarn-error.log
 
 /public/uploads/
 .idea/
+.buildpath
+.project
+.settings/
