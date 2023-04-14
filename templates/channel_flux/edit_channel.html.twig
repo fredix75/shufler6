@@ -8,7 +8,7 @@
 </button>&nbsp;
 {% if channelflux.id is not null %}
     <a class="btn btn-danger"
-       href="{{ path('flux_channel_delete', {'id': channelflux.id}) }}"
+       href="{{ path('channel_delete', {'id': channelflux.id}) }}"
        onclick="return confirm('global.confirmation');"
     >
         <i class="bi bi-trash-fill"></i>&nbsp;Delete
@@ -19,7 +19,7 @@
             <img src="{{ asset(channelflux.image) }}" width="200px" />
         {% else %}
             <img src="{{ asset('uploads/logos/' ~ channelflux.image) }}" width="200px" />
-            <a href="{{ path('flux_channel_delete_logo',{'id': channelflux.id}) }}"
+            <a href="{{ path('channel_delete_logo',{'id': channelflux.id}) }}"
                type="button"
                class="btn btn-danger"
                onclick="return confirm('{{ 'Are You sure ?'|trans}}');"

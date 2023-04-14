@@ -2,11 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\ChannelFlux;
 use App\Entity\Flux;
-use App\Form\ChannelFluxType;
 use App\Form\FluxType;
-use App\Repository\ChannelFluxRepository;
 use App\Repository\FluxRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -145,79 +142,5 @@ class FluxController extends AbstractController
         $this->addFlash('success', 'Logo supprimé');
 
         return $this->redirectToRoute('flux_edit', ['id' => $flux->getId()]);
-    }
-
-    #[Route('/channel_edit/{id}', name: 'channel_edit', requirements: ['id' => '\d+'])]
-    #[Security("is_granted('ROLE_AUTEUR')")]
-    public function channelEdit(
-        Request $request,
-        ChannelFluxRepository $channelFluxRepository,
-        ChannelFlux $channelFlux = null
-    ): Response
-    {
-        if (!$channelFlux && '0' !== $request->get('id')) {
-            $this->addFlash('danger', 'No Way !!');
-            return $this->redirectToRoute('home');
-        }
-
-        $channelFlux = $channelFlux ?? new ChannelFlux();
-        $form = $this->createForm(ChannelFluxType::class, $channelFlux, [
-            'action' => $this->generateUrl(
-                $request->attributes->get('_route'),
-                $request->attributes->get('_route_params')
-            ),
-        ]);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $channelFlux = $form->getData();
-            if ($channelFlux->getFile()) {
-                // pour que ça persiste en cas de simple changement d'image
-                $channelFlux->setImage('new file');
-            }
-            $channelFluxRepository->save($channelFlux, true);
-            $this->addFlash('success', 'Channel enregistré');
-
-            return new Response(json_encode([
-                'id' => $channelFlux->getId(),
-                'name' => $channelFlux->getName(),
-                'image' => $channelFlux->getImage(),
-            ]), 200);
-        }
-        return $this->render('flux/edit_channel.html.twig', [
-            'form' => $form,
-            'channelflux' => $channelFlux
-        ]);
-    }
-
-    #[Route('/channel_delete/{id}', name: 'channel_delete', requirements: ['id' => '\d+'])]
-    #[Security("is_granted('ROLE_AUTEUR')")]
-    public function channelDelete(
-        ChannelFluxRepository $channelFluxRepository,
-        FluxRepository $fluxRepository,
-        ChannelFlux $channelFlux
-    ): Response
-    {
-        foreach ($channelFlux->getFlux() as $flux) {
-            $flux->setChannel(null);
-            $fluxRepository->save($flux, true);
-        }
-        $channelFluxRepository->remove($channelFlux, true);
-        $this->addFlash('success', 'Channel bien supprimée');
-        return $this->redirectToRoute('home');
-    }
-
-    #[Route('/channel_delete_logo/{id}', name: 'channel_delete_logo', requirements: ['id' => '\d+'])]
-    #[Security("is_granted('ROLE_AUTEUR')")]
-    public function channelDeleteLogo(
-        ChannelFluxRepository $channelFluxRepository,
-        ChannelFlux $channelFlux
-    ): Response
-    {
-        $channelFlux->setImage(null);
-        $channelFluxRepository->save($channelFlux, true);
-        $this->addFlash('success', 'Logo supprimé');
-//@todo faire en ajax
-        return $this->redirectToRoute('flux_channel_edit', ['id' => $channelFlux->getId()]);
     }
 }
