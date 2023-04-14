@@ -4,16 +4,16 @@
 
 {% block body %}
     <h1><i class="bi bi-newspaper"></i> News</h1>
-    <div class="row justify-content-center txt-center" data-controller="flux-news">
+    <div class="row justify-content-center txt-center" data-controller="flux">
         {% for rss in news %}
-            <section class="news row g-0 d-flex position-relative col col-12 col-md-6 col-lg-4" style="padding:5px;">
-                <div id="news-{{ rss.id }}" class="row news-widget bg-body-secondary">
+            <section class="flux row g-0 d-flex position-relative col col-12 col-md-6 col-lg-4" style="padding:5px;">
+                <div id="flux-{{ rss.id }}" class="row news-widget bg-body-secondary">
                     <div class="col col-12 mb-md-0 p-md-4 center-block">
                         <img src="{{ asset('/uploads/logos/' ~ rss.image) }}" alt="{{ rss.name }}" class="img-responsive center-block" style="max-height:100px; max-width:150px; margin: 0 auto;">
                     </div>
                     <div class="pod-nav row justify-content-center" style="padding:10px;">
                         <div class="col col-2 col-sm-2 col-lg-2">
-                            <a href="#" class="left btn btn-secondary disabled" data-page="0" data-action="flux-news#prev"><i class="bi bi-chevron-left"></i></a>
+                            <a href="#" class="left btn btn-secondary disabled" data-page="0" data-action="flux#prev"><i class="bi bi-chevron-left"></i></a>
                         </div>
                         {% if is_granted('ROLE_ADMIN') %}
                             <div class="col col-auto text-center">
@@ -21,11 +21,11 @@
                             </div>
                         {% endif %}
                         <div class="col col-2 col-sm-2 col-lg-2 text-end">
-                            <a href="#" class="right btn btn-secondary" data-page="2" data-action="flux-news#next"><i class="bi bi-chevron-right"></i></a>
+                            <a href="#" class="right btn btn-secondary" data-page="2" data-action="flux#next"><i class="bi bi-chevron-right"></i></a>
                         </div>
                     </div>
                     <div class="col-12 p-4 ps-md-0">
-                        <div id="accordion-{{ rss.id }}" class="accordion" data-url="{{ rss.url }}"></div>
+                        <div id="accordion-{{ rss.id }}" class="accordion" data-url="{{ rss.url }}" data-type="news"></div>
                     </div>
                 </div>
             </section>

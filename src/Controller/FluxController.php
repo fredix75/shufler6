@@ -39,15 +39,16 @@ class FluxController extends AbstractController
     public function handleFlux(Request $request): Response
     {
         if ($request->isXmlHttpRequest()) {
+            $id = $request->get('id');
             $url = $request->get('url');
-
+            $type = $request->get('type');
             $contenu = '';
             try {
                 if (@simplexml_load_file($url, null, LIBXML_NOCDATA)->{'channel'}->{'item'}) {
                     $contenu = @simplexml_load_file($url)->{'channel'}->{'item'};
                 }
             } catch (\Exception $e) {
-                // nsp quoi faire :D
+                return new Response('No data');
             }
 
             $page = $request->get('page');
@@ -67,7 +68,12 @@ class FluxController extends AbstractController
                 }
             }
 
-            return new Response(json_encode($infos));
+            $template = sprintf('%s_%s_list.html.twig', 'flux/part/', $type);
+
+            return $this->render($template, [
+                'id' => $id,
+                'datas' => $infos
+            ]);
         }
 
         return new Response("Method not allowed", 405);
