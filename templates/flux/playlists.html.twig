@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} :: Playlists Youtube{% endblock %}
+
+{% block body %}
+    <h1><i class="bi bi-youtube"></i> Youtube playlists</h1>
+    <section class="col col-sm-12 col-md-12 medias-bande" data-controller="video">
+        {% for playlist in playlists %}
+            <div class="col col-6 col-sm-6 col-md-3 col-lg-2 media-vignette">
+                <div class="media topcol embed-responsive-16by9" style="margin-bottom:30px;">
+                    <a class="lienPl" href="#" data-id="{{ playlist.url|youtubeChannelId }}" data-action="video#popupPlaylist">
+                        <img src="{{ playlist.image }}" class="embed-responsive-item" width="100%" />
+                        <div class="media-body">
+                            {% if is_granted('ROLE_AUTEUR') %}
+                                <div class="link_edit">
+                                    <a href="{{ path('flux_edit',{'id':playlist.id}) }}">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                </div>
+                            {% endif %}
+                            <h3 class="media-heading">{{  playlist.name }}</h3>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    </section>
+{% endblock %}

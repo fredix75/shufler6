@@ -31,7 +31,17 @@ class FluxController extends AbstractController
         $news = $fluxRepository->getNews($category);
 
         return $this->render('/flux/news.html.twig', [
-            'news' =>$news
+            'news' => $news
+        ]);
+    }
+
+    #[Route('/playlists', name: 'playlists')]
+    public function playlists(FluxRepository $fluxRepository): Response
+    {
+        $playlists = $fluxRepository->getPlaylists();
+
+        return $this->render('/flux/playlists.html.twig', [
+            'playlists' => $playlists
         ]);
     }
 

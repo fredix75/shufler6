@@ -76,6 +76,18 @@ class FluxRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    function getPlaylists(): array
+    {
+        return $this->_em->createQueryBuilder()
+            ->select('a')
+            ->where('a.type= :type')
+            ->setParameter('type', 5)
+            ->from('App\Entity\Flux', 'a')
+            ->orderBy('a.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Flux[] Returns an array of Flux objects
 //     */
