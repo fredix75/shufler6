@@ -59,11 +59,11 @@ parameters:
 
     shufler_flux:
         types:
-            1: rss
+            1: news
             2: podcast
             3: radio
             4: lien
-            5: video_playlist
+            5: playlist
 
         radios:
             1: généraliste
@@ -79,9 +79,9 @@ parameters:
             11: infos
             99: autre
 
-        links:
-            101: animation
-            102: artistes
+        liens:
+            101: Animation
+            102: Artistes
             103: BD
             104: Blogs
             105: Emissions
@@ -96,7 +96,7 @@ parameters:
             114: Webdocs
             115: Musique
 
-        rss:
+        news:
             201: Info
             202: PQR
             203: Sciences et techniques

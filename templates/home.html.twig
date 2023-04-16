@@ -37,7 +37,7 @@
             <div class="" style="display:flex; flex-wrap: wrap; flex-direction: row;">
             {% for video in anims|slice(1, 3) %}
                 <div class="col col-12 col-sm-12 col-md-4 col-lg-12 media topcol embed-responsive-16by9">
-                    {% include("video/video_part.html.twig") %}
+                    {% include("video/part/_videoFrame.html.twig") %}
                 </div>
             {% endfor %}
             </div>
@@ -64,7 +64,7 @@
                     <div class="col col-12 col-sm-12 col-md-12 col-lg-6 media-vignette">
                         <div class="media topcol embed-responsive-16by9">
                             <div class="categorie"><a href = "{{ path('video_list', {'categorie' : video.categorie, 'genre' : video.genre}) }}">{{ video.genre|genreDisplay }}</a></div>
-                            {% include("video/video_part.html.twig") %}
+                            {% include("video/part/_videoFrame.html.twig") %}
                         </div>
                     </div>
                 {% endfor %}
@@ -72,7 +72,7 @@
                     <div class="col col-12 col-sm-12 col-md-12 col-lg-12 media-vignette">
                         <div class="media topcol embed-responsive-16by9">
                             <div class="categorie"><a href = "{{ path('video_list', {'categorie' : video.categorie, 'genre' : video.genre}) }}">{{ video.genre|genreDisplay }}</a></div>
-                            {% include("video/video_part.html.twig") %}
+                            {% include("video/part/_videoFrame.html.twig") %}
                         </div>
                     </div>
                 {% endfor %}
@@ -83,14 +83,14 @@
                 {% for video in stranges|slice(0,2) %}
                     <div class="col col-12 col-sm-12 col-md-12 col-lg-6 media-vignette">
                         <div class="media topcol embed-responsive-16by9">
-                            {% include("video/video_part.html.twig") %}
+                            {% include("video/part/_videoFrame.html.twig") %}
                         </div>
                     </div>
                 {% endfor %}
                 {% for video in stranges|slice(2, 1) %}
                     <div class="col col-12 col-sm-12 col-md-12 col-lg-12 media-vignette">
                         <div class="media topcol embed-responsive-16by9">
-                            {% include("video/video_part.html.twig") %}
+                            {% include("video/part/_videoFrame.html.twig") %}
                         </div>
                     </div>
                 {% endfor %}
@@ -111,7 +111,7 @@
                 <div class="col col-12 col-sm-6 col-md-6 col-lg-3 media-vignette">
                     <div class="media topcol embed-responsive-16by9">
                         <div class="categorie"><a href = "{{ path('video_list', {'categorie' : video.categorie, 'genre' : video.genre}) }}">{{ video.genre|genreDisplay }}</a></div>
-                        {% include("video/video_part.html.twig") %}
+                        {% include("video/part/_videoFrame.html.twig") %}
                     </div>
                 </div>
             {% endfor %}

@@ -1,4 +1,4 @@
-{%  extends 'base.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}{{ parent() }} :: API Channels{% endblock %}
 
@@ -8,7 +8,7 @@
     <div class="row">
         <form name="form_search" action="{{ path('other_api_channel') }}" method="POST" class="row justify-content-center">
             <div class="col col-10 col-sm-10 col-lg-6">
-                <input type="search" id="search_api" name="search_api" value="{{ search|trim }}" class="input-sm form-control" placeholder="search on the Web" style="background-color:#666666;color:white;font-size:200%;height:50px;" />
+                <input type="search" id="search_api" name="search_api" value="{{ search|trim }}" class="input-sm form-control" placeholder="search on Youtube" style="background-color:#666666;color:white;font-size:200%;height:50px;" />
             </div>
             <div class="col col-2 col-sm-2 col-lg-2">
                 <button type="submit" id="enter_search" class="btn btn-primary btn-sm" style="height:50px;width:50px;"><i class="bi bi-binoculars"></i></button>
@@ -25,8 +25,10 @@
             <section class="channel row g-0 d-flex position-relative col col-12 col-md-6 col-lg-4" style="padding:5px;">
                 <div id="channel-{{ result.channelId }}" class="row news-widget bg-body-secondary">
                     <div class="channel-picture col col-12 mb-md-0 p-md-4 center-block">
-                        <img src="{{ result.link }}" alt="{{ result.name }}" class="img-responsive center-block" style="max-height:100px; max-width:150px; margin: 0 auto;">
-                        {{ result.name }}
+                        <a href="https://www.youtube.com/channel/{{ result.channelId }}" target="_blank">
+                            <img src="{{ result.link }}" alt="{{ result.name }}" class="img-responsive center-block" style="max-height:100px; max-width:150px; margin: 0 auto;">
+                            {{ result.name }}
+                        </a>
                     </div>
                     <div class="pod-nav row justify-content-center" style="padding:10px;">
                         <div class="col col-2 col-sm-2 col-lg-2">

@@ -15,9 +15,9 @@
     <div class="well" data-controller="modal-channel-form">
         <div class="row justify-content-md-center txt-center">
             <div class="col-12 col-lg-6" {{ stimulus_controller('flux-edit', {
-                'rss': rss,
+                'news': news,
                 'radios': radios,
-                'links': links
+                'liens': liens
             }) }}>
                 {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
                 {{ form_errors(form) }}
@@ -71,7 +71,7 @@
                         </a>
                     {% endif %}
                 {% endif %}
-                {{ include('modal.html.twig', { modalTitle: 'Edit Channel'}) }}
+                {{ include('part/_modal.html.twig', { modalTitle: 'Edit Channel'}) }}
             </div>
         </div>
     </div>

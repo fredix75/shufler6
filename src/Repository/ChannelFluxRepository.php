@@ -24,18 +24,14 @@ class ChannelFluxRepository extends ServiceEntityRepository
 
     function getChannelFluxAudio(): QueryBuilder
     {
-        return $this->getEntityManager()->createQueryBuilder()
-            ->select('c')
-            ->where('c.providerName is NULL')
-            ->from('App\Entity\ChannelFlux', 'c');
+        return $this->createQueryBuilder('c')
+            ->where('c.providerName is NULL');
     }
 
     function getChannelFluxVideo(): array
     {
-        return $this->getEntityManager()->createQueryBuilder()
-            ->select('c')
+        return $this->createQueryBuilder('c')
             ->where('c.providerName IS NOT NULL')
-            ->from('App\Entity\ChannelFlux', 'c')
             ->getQuery()
             ->getResult();
     }

@@ -20,7 +20,7 @@
     </head>
     <body>
         <header>
-            {% include 'nav.html.twig' %}
+            {% include 'part/_nav.html.twig' %}
         </header>
 
     <div class="container-fluid content">
@@ -35,7 +35,7 @@
         {% block body %}{% endblock %}
 
         {% if not is_granted('IS_AUTHENTICATED') %}
-            {{ include('modal.html.twig', { modalTitle: 'Connexion'}) }}
+            {{ include('part/_modal.html.twig', { modalTitle: 'Connexion'}) }}
         {% endif %}
     </div>
     <footer>

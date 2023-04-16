@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,7 +15,7 @@ class OtherController extends AbstractController
 {
     #[Route('/api_video', name: 'api_video')]
     #[Security("is_granted('ROLE_ADMIN')")]
-    public function searchApiVideoAction(Request $request, HttpClientInterface $httpClient): Response
+    public function searchApiVideo(Request $request, HttpClientInterface $httpClient): Response
     {
         $search = $idVideo = $wiki = null;
         $resultat = [];
@@ -112,6 +113,7 @@ class OtherController extends AbstractController
     }
 
     #[Route('/api_channel', name: 'api_channel')]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function searchApiChannel(Request $request, HttpClientInterface $httpClient): Response
     {
         $resultat = $search = $idChannel = null;
@@ -124,7 +126,7 @@ class OtherController extends AbstractController
                     'q'   => $search,
                     'part' => 'snippet',
                     'type' => 'channel',
-                    'maxResults' => 25,
+                    'maxResults' => 50,
                 ],
                 'headers' => [
                     'Content-Type: application/json',

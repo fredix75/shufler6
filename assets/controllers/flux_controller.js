@@ -14,11 +14,16 @@ export default class extends Controller {
     launch(event) {
         let url = $(event.target).closest('a').attr('href');
         let type = $(event.target).closest('a').data('type');
-        let title = $(event.target).closest('.accordion-item').find('.accordion-button');
-        let podcast = title.closest('.flux-widget').data('title');
-        let audio = '<audio controls="controls" autoplay class="col-12 col-xs-12 col-sm-12 col-md-12"><source src="' + url +'" type="' + type + '">Votre navigateur ne supporte pas l\'élément <code>audio</code>.</audio>';
+        let text, audio;
+        if ('radio' === type) {
+            audio = '<iframe src="' + url + '" style="width:100%;height:100px;"></iframe>';
+        } else {
+            let title = $(event.target).closest('.accordion-item').find('.accordion-button');
+            let podcast = title.closest('.flux-widget').data('title');
+            audio = '<audio controls="controls" autoplay class="col-12 col-xs-12 col-sm-12 col-md-12"><source src="' + url +'" type="' + type + '">Votre navigateur ne supporte pas l\'élément <code>audio</code>.</audio>';
+            text = '<div class="pres">' + podcast + '<br />' + title.html() + '</div>';
+        }
         $('#audio-stick').html(audio);
-        let text = '<div class="pres">' + podcast + '<br />' + title.html() + '</div>';
         $('#audio-stick').append(text);
         event.preventDefault();
     }

@@ -72,10 +72,14 @@ class VideoRepository extends ServiceEntityRepository
         return new Paginator($q);
     }
 
-    private function getVideosQuery(int $categorie = null , int $genre = null, string $periode = '0', string $plateforme = null): QueryBuilder
+    private function getVideosQuery(
+        int $categorie = null,
+        int $genre = null,
+        string $periode = '0',
+        string $plateforme = null
+    ): QueryBuilder
     {
-        $q = $this->getEntityManager()->createQueryBuilder()
-            ->select('a')
+        $q = $this->createQueryBuilder('a')
             ->where('a.priorite= :priorite')
             ->setParameter('priorite', 1)
             ->andWhere('a.published = true');
@@ -83,8 +87,7 @@ class VideoRepository extends ServiceEntityRepository
             $q->andWhere('a.lien like :plateforme')
                 ->setParameter('plateforme', '%'.$plateforme.'%');
         }
-            $q->orderBy('a.id', 'DESC')
-            ->from('App\Entity\Video', 'a');
+            $q->orderBy('a.id', 'DESC');
 
         if ($categorie) {
             $q->andWhere('a.categorie= :categorie')->setParameter('categorie', $categorie);
@@ -101,10 +104,13 @@ class VideoRepository extends ServiceEntityRepository
         return $q;
     }
 
-    function searchVideos(string $search, int $page = 1, int $maxperpage = 10): Paginator
+    function searchVideos(
+        string $search,
+        int $page = 1,
+        int $maxperpage = 10
+    ): Paginator
     {
-        $q = $this->getEntityManager()->createQueryBuilder()
-            ->select('a')
+        $q = $this->createQueryBuilder('a')
             ->where('a.published= 1');
 
         $orModule = $q->expr()
@@ -119,8 +125,7 @@ class VideoRepository extends ServiceEntityRepository
                 ->like('a.annee', ':search'));
 
         $q->andWhere($orModule)
-            ->setParameter('search', '%' . $search . '%')
-            ->from('App\Entity\Video', 'a');
+            ->setParameter('search', '%' . $search . '%');
 
         $q->setFirstResult(($page - 1) * $maxperpage)->setMaxResults($maxperpage);
 
@@ -129,7 +134,7 @@ class VideoRepository extends ServiceEntityRepository
 
     function searchAjax(string $search): array
     {
-        $auteurs = $this->getEntityManager()->createQueryBuilder()
+        $auteurs = $this->createQueryBuilder('a')
             ->select('a.auteur')
             ->where('a.priorite= :priorite')
             ->andWhere('a.published= true')
@@ -137,12 +142,11 @@ class VideoRepository extends ServiceEntityRepository
             ->setParameter('priorite', 1)
             ->setParameter('search', '%' . $search . '%')
             ->orderBy('a.auteur', 'ASC')
-            ->from('App\Entity\Video', 'a')
             ->groupBy('a.auteur')
             ->getQuery()
             ->getResult();
 
-        $titres = $this->getEntityManager()->createQueryBuilder()
+        $titres = $this->createQueryBuilder('a')
             ->select('a.titre')
             ->where('a.priorite= :priorite')
             ->andWhere('a.published= true')
@@ -150,7 +154,6 @@ class VideoRepository extends ServiceEntityRepository
             ->setParameter('priorite', 1)
             ->setParameter('search', '%' . $search . '%')
             ->orderBy('a.titre', 'ASC')
-            ->from('App\Entity\Video', 'a')
             ->groupBy('a.titre')
             ->getQuery()
             ->getResult();
@@ -172,16 +175,14 @@ class VideoRepository extends ServiceEntityRepository
 
     public function getPaginatedTrash($page = 1, $maxperpage = 10): Paginator
     {
-        $q = $this->getEntityManager()->createQueryBuilder()
-            ->select('a')
+        $q = $this->createQueryBuilder('a')
             ->where('a.priorite != :priorite')
             ->setParameter('priorite', 1)
             ->orWhere('a.published is null')
             ->orWhere('a.published = false')
             ->orderBy('a.published', 'DESC')
             ->addOrderBy('a.priorite', 'ASC')
-            ->addOrderBy('a.id', 'DESC')
-            ->from('App\Entity\Video', 'a');
+            ->addOrderBy('a.id', 'DESC');
 
         $q->setFirstResult(($page - 1) * $maxperpage)->setMaxResults($maxperpage);
 

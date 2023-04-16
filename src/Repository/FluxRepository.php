@@ -39,26 +39,13 @@ class FluxRepository extends ServiceEntityRepository
         }
     }
 
-    public function getFlux(int $id)
-    {
-        return $this->_em->createQueryBuilder()
-            ->select('a')
-            ->where('a.id= :id')
-            ->setParameter('id', $id)
-            ->from('SHUFLERShuflerBundle:Flux', 'a')
-            ->getQuery()
-            ->getSingleResult();
-    }
-
     function getNews(int $category): array
     {
-        return $this->_em->createQueryBuilder()
-            ->select('a')
+        return $this->createQueryBuilder('a')
             ->where('a.type= :type')
             ->setParameter('type', 1)
             ->andWhere('a.mood= :category')
             ->setParameter('category', $category)
-            ->from('App\Entity\Flux', 'a')
             ->orderBy('a.id', 'ASC')
             ->getQuery()
             ->getResult();
@@ -66,23 +53,39 @@ class FluxRepository extends ServiceEntityRepository
 
     function getPodcasts(): array
     {
-        return $this->_em->createQueryBuilder()
-            ->select('a')
+        return $this->createQueryBuilder('a')
             ->where('a.type= :type')
             ->setParameter('type', 2)
-            ->from('App\Entity\Flux', 'a')
             ->orderBy('a.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    function getRadios(): array
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.type= :type')
+            ->setParameter('type', 3)
+            ->orderBy('a.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    function getLinks(): array
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.type= :type')
+            ->setParameter('type', 4)
+            ->orderBy('a.mood, a.id', 'ASC')
             ->getQuery()
             ->getResult();
     }
 
     function getPlaylists(): array
     {
-        return $this->_em->createQueryBuilder()
-            ->select('a')
+        return $this->createQueryBuilder('a')
             ->where('a.type= :type')
             ->setParameter('type', 5)
-            ->from('App\Entity\Flux', 'a')
             ->orderBy('a.id', 'ASC')
             ->getQuery()
             ->getResult();

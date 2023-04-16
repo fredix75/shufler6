@@ -77,7 +77,7 @@
                             {% endif %}
                         {% endif %}
                     </div>
-                    {% include("video/video_part.html.twig") %}
+                    {% include("video/part/_videoFrame.html.twig") %}
                 </div>
             </div>
         {% endfor %}
@@ -90,5 +90,5 @@
         {% endif %}
     </section>
 
-    {% include "pagination.html.twig" %}
+    {% include "part/_pagination.html.twig" %}
 {% endblock %}

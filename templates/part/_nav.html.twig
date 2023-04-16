@@ -27,7 +27,9 @@
                         <li><a class="dropdown-item" href="{{ path('flux_news') }}"><i class="bi bi-newspaper"></i> News</a></li>
                         {% if is_granted('ROLE_ADMIN') %}
                             <li><a class="dropdown-item" href="{{ path('flux_podcasts') }}"><i class="bi bi-broadcast-pin"></i> Podcast</a></li>
-                            <li><a class="dropdown-item" href="{{ path('flux_playlists') }}"><i class="bi bi-youtube"></i> Playlists</a></li>
+                            <li><a class="dropdown-item" href="{{ path('flux_playlists') }}"><i class="bi bi-youtube"></i> Video Playlists</a></li>
+                            <li><a class="dropdown-item" href="{{ path('flux_liens') }}"><i class="bi bi-link"></i> Liens</a></li>
+                            <li><a class="dropdown-item" href="{{ path('flux_radios') }}"><i class="bi bi-radioactive"></i> Radios</a></li>
                         {% endif %}
                     </ul>
                 </li>

@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} :: Liens{% endblock %}
+
+{% block body %}
+    <h1><i class="bi bi-link"></i> Liens</h1>
+    <div class="row justify-content-center txt-center">
+        {% for index, categ in categories %}
+            <div class="link row g-0 position-relative col col-12 col-md-6 col-lg-4" style="padding: 5px;">
+                <div class="row" style="padding: 5px;background-color: grey;">
+                    <h2 class="flux-titre">{{ categ }}</h2>
+                    <div class="list-group">
+                        {% for link in liens %}
+                            {% if link.mood == index %}
+                                <div class="list-group-item">
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <a href="{{ path('flux_edit',{'id': link.id}) }}" class="btn btn-transparent">
+                                            <span class="bi bi-pencil"></span>
+                                        </a>
+                                    {% endif %}
+                                    <a href="{{ link.url }}" class="list-group-item-action" target="_blank">
+                                        {{ link.name }}
+                                    </a>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

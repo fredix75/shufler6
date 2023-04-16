@@ -1,22 +1,22 @@
 import { Controller } from '@hotwired/stimulus';
 import $ from 'jquery';
 
-const rss = [];
+const news = [];
 const radios = [];
-const links = [];
+const liens = [];
 
 export default class extends Controller {
 
     static values = {
-        'rss': Object,
+        'news': Object,
         'radios': Object,
-        'links': Object,
+        'liens': Object,
     };
 
     connect() {
-        rss.push('<option value="">Choose a Category</option>');
-        $.each(this.rssValue, function(key, value) {
-            rss.push('<option value="' + key + '">' + value + '</option>');
+        news.push('<option value="">Choose a Category</option>');
+        $.each(this.newsValue, function(key, value) {
+            news.push('<option value="' + key + '">' + value + '</option>');
         });
 
         radios.push('<option value="">Choose a Category</option>');
@@ -24,15 +24,15 @@ export default class extends Controller {
             radios.push('<option value="' + key + '">' + value + '</option>');
         });
 
-        links.push('<option value="">Choose a Category</option>');
-        $.each(this.linksValue, function(key, value) {
-            links.push('<option value="' + key + '">' + value + '</option>');
+        liens.push('<option value="">Choose a Category</option>');
+        $.each(this.liensValue, function(key, value) {
+            liens.push('<option value="' + key + '">' + value + '</option>');
         });
 
         let type = $('[name="flux[type]"]').val();
         if ('1' === type) {
             $('#channel').hide();
-            this.handleMoodSelect(rss);
+            this.handleMoodSelect(news);
         } else if ('2' === type ) {
             $('#file').hide();
             $('#mood').hide();
@@ -43,7 +43,7 @@ export default class extends Controller {
         } else if ('4' === type) {
             $('#file').hide();
             $('#channel').hide();
-            this.handleMoodSelect(links);
+            this.handleMoodSelect(liens);
         } else if ('5' === type) {
             $('#file').hide();
             $('#channel').hide();
@@ -56,7 +56,7 @@ export default class extends Controller {
             $('#file').fadeIn('slow');
             $('[name="flux[channel]"]').val(null);
             $('#channel').fadeOut('slow');
-            $('[name="flux[mood]"]').empty().append(rss);
+            $('[name="flux[mood]"]').empty().append(news);
             $('#mood').fadeIn('slow');
         } else if ('2' === $('[name="flux[type]"]').val()) {
             $('[name="flux[file]"]').val(null);
@@ -76,7 +76,7 @@ export default class extends Controller {
             $('#file').fadeOut('slow');
             $('[name="flux[channel]"]').val(null);
             $('#channel').fadeOut('slow');
-            $('[name="flux[mood]"]').empty().append(links);
+            $('[name="flux[mood]"]').empty().append(liens);
             $('#mood').fadeIn('slow');
         } else if ('5' === $('[name="flux[type]"]').val()) {
             $('[name="flux[file]"]').val(null);

@@ -31,17 +31,43 @@ class FluxController extends AbstractController
         $news = $fluxRepository->getNews($category);
 
         return $this->render('/flux/news.html.twig', [
-            'news' => $news
+            'news' => $news,
+            'categories' => $this->getParameter('shufler_flux')['news'],
         ]);
     }
 
     #[Route('/playlists', name: 'playlists')]
+    #[Security("is_granted('ROLE_ADMIN')")]
     public function playlists(FluxRepository $fluxRepository): Response
     {
         $playlists = $fluxRepository->getPlaylists();
 
         return $this->render('/flux/playlists.html.twig', [
             'playlists' => $playlists
+        ]);
+    }
+
+    #[Route('/liens', name: 'liens')]
+    #[Security("is_granted('ROLE_ADMIN')")]
+    public function links(FluxRepository $fluxRepository): Response
+    {
+        $liens = $fluxRepository->getLinks();
+
+        return $this->render('flux/liens.html.twig', [
+            'liens' => $liens,
+            'categories' => $this->getParameter('shufler_flux')['liens'],
+        ]);
+    }
+
+    #[Route('/radios', name: 'radios')]
+    #[Security("is_granted('ROLE_ADMIN')")]
+    public function radios(FluxRepository $fluxRepository): Response
+    {
+        $radios = $fluxRepository->getRadios();
+
+        return $this->render('/flux/radios.html.twig', [
+            'radios' => $radios,
+            'categories' => $this->getParameter('shufler_flux')['radios'],
         ]);
     }
 
@@ -121,16 +147,17 @@ class FluxController extends AbstractController
 
             $fluxRepository->save($flux, true);
             $this->addFlash('success', 'Flux enregistré');
+            $routeToRedirect = $this->getRouteToRedirect($flux->getType());
 
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute($routeToRedirect);
         }
 
         return $this->render('flux/edit.html.twig', [
             'form'      => $form,
             'flux'      => $flux,
-            'rss'       => $this->getParameter('shufler_flux')['rss'],
+            'news'      => $this->getParameter('shufler_flux')['news'],
             'radios'    => $this->getParameter('shufler_flux')['radios'],
-            'links'     => $this->getParameter('shufler_flux')['links'],
+            'liens'     => $this->getParameter('shufler_flux')['liens'],
         ]);
     }
 
@@ -141,9 +168,12 @@ class FluxController extends AbstractController
         Flux $flux
     ): Response
     {
+        $type = $flux->getType();
         $fluxRepository->remove($flux, true);
         $this->addFlash('success', 'Flux bien supprimé');
-        return $this->redirectToRoute('home');
+        $routeToRedirect = $this->getRouteToRedirect($type);
+
+        return $this->redirectToRoute($routeToRedirect);
     }
 
     #[Route('/delete_logo/{id}', name: 'delete_logo', requirements: ['id' => '\d+'])]
@@ -158,5 +188,12 @@ class FluxController extends AbstractController
         $this->addFlash('success', 'Logo supprimé');
 
         return $this->redirectToRoute('flux_edit', ['id' => $flux->getId()]);
+    }
+
+    private function getRouteToRedirect(int $type): string
+    {
+        $routeToRedirect = !empty($this->getParameter('shufler_flux')['types'][$type]) ? sprintf('flux_%s', $this->getParameter('shufler_flux')['types'][$type]) : 'home';
+
+        return $routeToRedirect !== 'flux_news' ? $routeToRedirect.'s' : $routeToRedirect;
     }
 }

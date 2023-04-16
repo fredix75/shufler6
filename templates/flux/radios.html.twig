@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} :: Radios{% endblock %}
+
+{% block body %}
+    <h1><i class="bi bi-link"></i> Radios</h1>
+    <div class="row justify-content-center txt-center">
+    <div class="list-group" data-controller="flux">
+        {% for radio in radios %}
+            <div class="list-group-item">
+                <a href="{{ radio.url }}" class="btn btn-secondary" data-action="flux#launch" data-type="radio"><i class="bi bi-play-circle"></i></a>
+                <span class="badge bg-secondary">{{ categories[radio.mood] }}</span>
+                {{ radio.name}}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('flux_edit',{'id': radio.id}) }}" style="position:absolute;right:50px;"><span class="bi bi-pencil"></span></a>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+    </div>
+    <div id="audio-stick" class="sticky-bottom" style="height:auto; background-color:darkslategrey;"></div>
+{% endblock %}
