@@ -86,7 +86,7 @@ class FluxRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('a')
             ->where('a.type= :type')
             ->setParameter('type', 5)
-            ->orderBy('a.id', 'ASC')
+            ->orderBy('a.name', 'ASC')
             ->getQuery()
             ->getResult();
     }
