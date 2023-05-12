@@ -45,6 +45,7 @@
 
         <div class="row">
             <section class="col col-12 col-sm-12 col-md-6 col-lg-6 medias-bande">
+			{% if playlist is not empty %}
                 <div id="vu-widget" class="col col-12">
                     <div class="col col-12 col-sm-12 col-md-6 col-lg-6 media" data-controller="video">
                         <a class="lienPl" href="#" data-id="{{ playlist.url|youtubeChannelId }}" data-toggle="tooltip" data-action="video#popupPlaylist">
@@ -56,7 +57,7 @@
                         <p style="background-color:white;color:black;">Le meilleur et le pire de keski s'est passé chaque jour à la télé...</p>
                     </div>
                 </div>
-
+			{% endif %}
                 <h1 style="width:100%; margin-top: 60px; text-align: center;">Du son, des images <i class="bi bi-disc-fill"></i></h1>
                 <p class="legend">Une palanquée de morceaux d'anthologie, parfois méconnus, amoureusement choisis</p><br/>
                 <br/><br/>
