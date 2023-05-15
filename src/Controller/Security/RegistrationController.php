@@ -28,6 +28,7 @@ class RegistrationController extends AbstractController
         $user->setPassword($hashedPassword);
         $userRepository->save($user, true);
 **/
+
         return $this->render('registration/index.html.twig', [
             'controller_name' => 'RegistrationController',
         ]);
