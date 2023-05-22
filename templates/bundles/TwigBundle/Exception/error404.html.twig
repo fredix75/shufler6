@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} :: Error 404{% endblock %}
+
+{% block body %}
+    <h1><i class="bi bi-bug"></i> Ooops : 404!!</h1>
+    <div>
+        <p class="legend">On dirait que vous vous êtes perdu...</p>
+        <br/><br/>
+        <img src="{{ asset('build/images/marty.gif') }}" width="50%" style="display:block;margin:auto;"/>
+    </div>
+{% endblock %}

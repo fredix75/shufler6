@@ -1,23 +1,12 @@
-<form method="post" action="{{ path('app_login') }}">
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+{% extends 'base.html.twig' %}
 
-    <label for="inputEmail">Email</label>
-    <input type="email" value="{{ last_username }}" name="_username" id="inputEmail" class="form-control" autocomplete="email" placeholder="Email" required autofocus>
-    <label for="inputPassword">Password</label>
-    <input type="password" name="_password" id="inputPassword" class="form-control" autocomplete="current-password" placeholder="Password" required>
-    <input type="hidden" name="_csrf_token"
-           value="{{ csrf_token('authenticate') }}"
-    >
-    <div class="checkbox mb-3">
-        <label>
-            <input type="checkbox" name="_remember_me"> Se souvenir de moi
-        </label>
+{% block body %}
+    <h1>Please Connect</h1>
+    <div class="well">
+        <div class="row justify-content-md-center txt-center">
+            <div class="col-12 col-lg-6">
+                {% include 'security/login_inc.html.twig' %}
+            </div>
+        </div>
     </div>
-    <div class="d-flex justify-content-center">
-        <button class="btn btn-lg btn-primary text-center" type="submit">
-            Connexion
-        </button>
-    </div>
-</form>
+{% endblock %}

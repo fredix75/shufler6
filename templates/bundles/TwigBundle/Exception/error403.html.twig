@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} :: Error 403{% endblock %}
+
+{% block body %}
+    <h1><i class="bi bi-bug"></i> Forbidden : 403!!</h1>
+    <div>
+        <p class="legend">Vous ne devriez pas être là!</p>
+        <br/><br/>
+        <img src="{{ asset('build/images/access-denied.gif') }}" width="50%" style="display:block;margin:auto;"/>
+    </div>
+{% endblock %}

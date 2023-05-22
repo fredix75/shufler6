@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} :: Error 500{% endblock %}
+
+{% block body %}
+    <h1><i class="bi bi-bug"></i> Oooops : Boom !</h1>
+    <div>
+        <p class="legend">... On vous rappelle</p>
+        <br/><br/>
+        <img src="{{ asset('build/images/buildingfalling.gif') }}" width="50%" style="display:block;margin:auto;"/>
+    </div>
+{% endblock %}
