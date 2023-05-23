@@ -16,7 +16,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Range;
 
-class VideoType extends AbstractType
+class VideoFormType extends AbstractType
 {
     private array $videoParameters;
 

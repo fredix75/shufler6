@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Flux;
-use App\Form\FluxType;
+use App\Form\FluxFormType;
 use App\Repository\FluxRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -135,7 +135,7 @@ class FluxController extends AbstractController
             $flux->setType(5);
         }
 
-        $form = $this->createForm(FluxType::class, $flux);
+        $form = $this->createForm(FluxFormType::class, $flux);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Video;
-use App\Form\VideoType;
+use App\Form\VideoFormType;
 use App\Repository\VideoRepository;
 use App\Twig\ShuflerExtension;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -122,7 +122,7 @@ class VideoController extends AbstractController
             $video->setLien($request->get('videokey'));
         }
 
-        $form = $this->createForm(VideoType::class, $video);
+        $form = $this->createForm(VideoFormType::class, $video);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

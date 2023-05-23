@@ -1,4 +1,5 @@
 parameters:
+    mailer_sender: '%env(MAILER_SENDER)%'
     shufler_video:
         max_list: 11
         max_list_couch: 99

@@ -13,12 +13,16 @@ class SecurityController extends AbstractController
     #[Route('/login', name: 'app_login')]
     public function index(AuthenticationUtils $authenticationUtils, Request $request): Response
     {
+        if (!empty($this->getUser())) {
+            return $this->redirectToRoute('home');
+        }
+
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 
         $template = 'security/login.html.twig';
         if ($request->isXmlHttpRequest()) {
-            $template = 'security/login_inc.html.twig';
+            $template = 'security/_login_part.html.twig';
         }
 
         return $this->render($template, [

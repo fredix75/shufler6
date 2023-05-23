@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\ChannelFlux;
-use App\Form\ChannelFluxType;
+use App\Form\ChannelFluxFormType;
 use App\Repository\ChannelFluxRepository;
 use App\Repository\FluxRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -29,7 +29,7 @@ class ChannelFluxController extends AbstractController
         }
 
         $channelFlux = $channelFlux ?? new ChannelFlux();
-        $form = $this->createForm(ChannelFluxType::class, $channelFlux, [
+        $form = $this->createForm(ChannelFluxFormType::class, $channelFlux, [
             'action' => $this->generateUrl(
                 $request->attributes->get('_route'),
                 $request->attributes->get('_route_params')

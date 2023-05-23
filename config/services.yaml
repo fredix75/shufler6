@@ -32,11 +32,11 @@ services:
         arguments:
             $videoParameters: '@=parameter("shufler_video")'
 
-    App\Form\VideoType:
+    App\Form\VideoFormType:
         arguments:
             $videoParameters: '@=parameter("shufler_video")'
 
-    App\Form\FluxType:
+    App\Form\FluxFormType:
         arguments:
             $fluxParameters: '@=parameter("shufler_flux")'
 
