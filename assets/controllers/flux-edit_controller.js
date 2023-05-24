@@ -29,7 +29,8 @@ export default class extends Controller {
             liens.push('<option value="' + key + '">' + value + '</option>');
         });
 
-        let type = $('[name="flux[type]"]').val();
+        let type = $('select[name="flux_form[type]"]').val();
+
         if ('1' === type) {
             $('#channel').hide();
             this.handleMoodSelect(news);
@@ -52,45 +53,45 @@ export default class extends Controller {
     }
 
     typeChange() {
-        if ('1' === $('[name="flux[type]"]').val()) {
+        if ('1' === $('[name="flux_form[type]"]').val()) {
             $('#file').fadeIn('slow');
-            $('[name="flux[channel]"]').val(null);
+            $('[name="flux_form[channel]"]').val(null);
             $('#channel').fadeOut('slow');
-            $('[name="flux[mood]"]').empty().append(news);
+            $('[name="flux_form[mood]"]').empty().append(news);
             $('#mood').fadeIn('slow');
-        } else if ('2' === $('[name="flux[type]"]').val()) {
-            $('[name="flux[file]"]').val(null);
+        } else if ('2' === $('[name="flux_form[type]"]').val()) {
+            $('[name="flux_form[file]"]').val(null);
             $('#file').fadeOut('slow');
             $('#channel').fadeIn('slow');
-            $('[name="flux[mood]"]').val(null);
+            $('[name="flux_form[mood]"]').val(null);
             $('#mood').fadeOut('slow');
-        } else if ('3' === $('[name="flux[type]"]').val()) {
-            $('[name="flux[file]"]').val(null);
+        } else if ('3' === $('[name="flux_form[type]"]').val()) {
+            $('[name="flux_form[file]"]').val(null);
             $('#file').fadeOut('slow');
-            $('[name="flux[channel]"]').val(null);
+            $('[name="flux_form[channel]"]').val(null);
             $('#channel').fadeOut('slow');
-            $('[name="flux[mood]"]').empty().append(radios);
+            $('[name="flux_form[mood]"]').empty().append(radios);
             $('#mood').fadeIn('slow');
-        } else if ('4' === $('[name="flux[type]"]').val()) {
-            $('[name="flux[file]"]').val(null);
+        } else if ('4' === $('[name="flux_form[type]"]').val()) {
+            $('[name="flux_form[file]"]').val(null);
             $('#file').fadeOut('slow');
-            $('[name="flux[channel]"]').val(null);
+            $('[name="flux_form[channel]"]').val(null);
             $('#channel').fadeOut('slow');
-            $('[name="flux[mood]"]').empty().append(liens);
+            $('[name="flux_form[mood]"]').empty().append(liens);
             $('#mood').fadeIn('slow');
-        } else if ('5' === $('[name="flux[type]"]').val()) {
-            $('[name="flux[file]"]').val(null);
+        } else if ('5' === $('[name="flux_form[type]"]').val()) {
+            $('[name="flux_form[file]"]').val(null);
             $('#file').fadeOut('slow');
-            $('[name="flux[channel]"]').val(null);
+            $('[name="flux_form[channel]"]').val(null);
             $('#channel').fadeOut('slow');
-            $('[name="flux[mood]"]').val(null);
+            $('[name="flux_form[mood]"]').val(null);
             $('#mood').fadeOut('slow');
         }
     }
 
     handleMoodSelect(type) {
-        let val = $('[name="flux[mood]"]').val();
-        $('[name="flux[mood]"]').empty().append(type);
-        $('[name="flux[mood]"]').val(val);
+        let val = $('[name="flux_form[mood]"]').val();
+        $('[name="flux_form[mood]"]').empty().append(type);
+        $('[name="flux_form[mood]"]').val(val);
     }
 }

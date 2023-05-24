@@ -6,7 +6,7 @@ export default class extends Controller {
     static targets = ['modal', 'modalBody'];
 
     connect() {
-        $('select[name="flux[channel]"]')
+        $('select[name="flux_form[channel]"]')
             .append($('<option>', {value : 'new', text: 'Add new Channel'}));
     }
 
@@ -24,9 +24,9 @@ export default class extends Controller {
                 console.log(data.responseText);
             }
         }).done(function(result) {
-            if ($('select[name="flux[channel]"] option[value="' + result.id + '"]').length === 0) {
-                $('select[name="flux[channel]"]').append('<option value="' + result.id + '">' + result.name + '</option>');
-                $('select[name="flux[channel]"]').val(result.id);
+            if ($('select[name="flux_form[channel]"] option[value="' + result.id + '"]').length === 0) {
+                $('select[name="flux_form[channel]"]').append('<option value="' + result.id + '">' + result.name + '</option>');
+                $('select[name="flux_form[channel]"]').val(result.id);
             }
             $('#formModal').modal.hide();
         });

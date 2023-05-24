@@ -7,15 +7,15 @@ export default class extends Controller {
     };
 
     connect() {
-        if ('2' !== $('[name="video[categorie]"]').val()) {
+        if ('2' !== $('[name="video_form[categorie]"]').val()) {
             $('#genre').hide();
         }
         this.completeInfos();
     }
 
     categorieChange() {
-        if ('2' !== $('[name="video[categorie]"]').val()) {
-            $('[name="video[genre]"]').val(null);
+        if ('2' !== $('[name="video_form[categorie]"]').val()) {
+            $('[name="video_form[genre]"]').val(null);
             $('#genre').fadeOut('slow');
         } else {
             $('#genre').fadeIn('slow');
@@ -23,7 +23,7 @@ export default class extends Controller {
     }
 
     selectPeriod() {
-        let year = $('[name="video[annee]"]').val();
+        let year = $('[name="video_form[annee]"]').val();
         year = parseInt(year);
         if (year < 1900) {
             return;
@@ -49,11 +49,11 @@ export default class extends Controller {
             return;
         }
 
-        $('[name="video[periode]"]').val(periode);
+        $('[name="video_form[periode]"]').val(periode);
     }
 
     completeInfos() {
-        let lien = $('[name="video[lien]"]').val();
+        let lien = $('[name="video_form[lien]"]').val();
         let match, videoKey, plateforme;
         if (match = lien.match(/(?:https?:\/{2})?(?:w{3}\.)?youtu(?:be)?\.(?:com|be)\/(?:watch\?v=|\/embed\/)?([^\s&]+)/)) {
             plateforme = 'youtube';
@@ -69,15 +69,15 @@ export default class extends Controller {
         //@todo Trigger completion année -> selectPeriod()
         $.get('/video/getVideoInfos/' + plateforme + '/' + videoKey, function (result) {
             if(result && result.title) {
-                if ("" === $('[name="video[auteur]"]').val()) {
-                    $('[name="video[auteur]"]').val(result.title);
+                if ("" === $('[name="video_form[auteur]"]').val()) {
+                    $('[name="video_form[auteur]"]').val(result.title);
                 }
-                if ("" === $('[name="video[titre]"]').val()) {
-                    $('[name="video[titre]"]').val(result.title);
+                if ("" === $('[name="video_form[titre]"]').val()) {
+                    $('[name="video_form[titre]"]').val(result.title);
                 }
 
-                if ("" === $('[name="video[annee]"]').val() && result.upload_date) {
-                    $('[name="video[annee]"]').val((new Date(result.upload_date)).getFullYear()).change();
+                if ("" === $('[name="video_form[annee]"]').val() && result.upload_date) {
+                    $('[name="video_form[annee]"]').val((new Date(result.upload_date)).getFullYear()).change();
                 }
             }
         }, 'json');
