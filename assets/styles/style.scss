@@ -16,6 +16,7 @@ body {
 .content {
   margin-top: 60px;
   padding: 20px;
+  min-height: 1000px;
 }
 
 .navbar {
@@ -93,7 +94,9 @@ a.video-link:hover img, a.lienPl:hover img {
 .well {
   background-color: #6882a475;
   color:white;
-  padding:10px;
+  padding:40px;
+  border-radius: 12px;
+  border: 1px solid $border-color-2;
 }
 
 .accordion-body.subAccordion {

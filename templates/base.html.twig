@@ -23,24 +23,25 @@
             {% include 'part/_nav.html.twig' %}
         </header>
 
-    <div class="container-fluid content">
-        {% for label, flashes in app.session.flashbag.all %}
-            {% for flash in flashes %}
-                <div class="alert alert-{{ label }}">
-                    <p><i class="{{ label|toIconAlert }}"></i> {{ flash }}</p>
-                </div>
+        <div class="container-fluid content">
+            {% for label, flashes in app.session.flashbag.all %}
+                {% for flash in flashes %}
+                    <div class="alert alert-{{ label }}">
+                        <p><i class="{{ label|toIconAlert }}"></i> {{ flash }}</p>
+                    </div>
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
 
-        {% block body %}{% endblock %}
+            {% block body %}{% endblock %}
 
-        {% if not is_granted('IS_AUTHENTICATED') %}
-            {{ include('part/_modal.html.twig', { modalTitle: 'Connexion'}) }}
-        {% endif %}
-    </div>
-    <footer>
-        <br />
-        <p>&nbsp;&nbsp;&nbsp;Shufler © {{ 'now'|date('Y') }} - fred@shufler.fr</p>
-    </footer>
+            {% if not is_granted('IS_AUTHENTICATED') %}
+                {{ include('part/_modal.html.twig', { modalTitle: 'Connexion'}) }}
+            {% endif %}
+        </div>
+        <footer>
+            <br />
+            <p>&nbsp;&nbsp;&nbsp;Shufler © {{ 'now'|date('Y') }} - fred@shufler.fr</p>
+            <p>&nbsp;&nbsp;&nbsp;<strong>-v 6.2-</strong> Bonjour à ma maman!</p>
+        </footer>
     </body>
 </html>
