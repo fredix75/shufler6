@@ -39,7 +39,7 @@ class OtherController extends AbstractController
             ];
 
             // Youtube
-            $response = $httpClient->request('GET', $this->getParameter('youtube_api_url').'/search', [
+            $response = $httpClient->request('GET', sprintf('%s/search', $this->getParameter('youtube_api_url')), [
                 'query' => [
                     'key'  => $this->getParameter('youtube_key'),
                     'q'   => $search,
@@ -120,7 +120,7 @@ class OtherController extends AbstractController
         if ($request->get('search_api')) {
             $search = $request->get('search_api');
 
-            $response = $httpClient->request('GET', $this->getParameter('youtube_api_url').'/search', [
+            $response = $httpClient->request('GET',  sprintf('%s/search', $this->getParameter('youtube_api_url')), [
                 'query' => [
                     'key'  => $this->getParameter('youtube_key'),
                     'q'   => $search,
@@ -158,7 +158,7 @@ class OtherController extends AbstractController
     {
         if ($request->isXmlHttpRequest()) {
             $channelId = $request->get('id');
-            $response = $httpClient->request('GET', $this->getParameter('youtube_api_url').'/playlists', [
+            $response = $httpClient->request('GET', sprintf('%s/playlists', $this->getParameter('youtube_api_url')), [
                 'query' => [
                     'key'  => $this->getParameter('youtube_key'),
                     'channelId'   => $channelId,

@@ -167,7 +167,7 @@ class VideoController extends AbstractController
     ): Response
     {
         if ('youtube' === $plateforme) {
-            $response = $httpClient->request('GET', $this->getParameter('youtube_api_url').'/videos', [
+            $response = $httpClient->request('GET', sprintf('%s/videos', $this->getParameter('youtube_api_url')), [
                 'query' => [
                     'key'  => $this->getParameter('youtube_key'),
                     'id'   => $videoKey,
@@ -185,7 +185,7 @@ class VideoController extends AbstractController
                 return new Response('No data', 404);
             }
 
-            $response = $httpClient->request('GET', $this->getParameter('vimeo_api_url').'/video/'.$videoKey.'.json', [
+            $response = $httpClient->request('GET', sprintf('%s/video/%s.json', $this->getParameter('vimeo_api_url'), $videoKey), [
                 'headers' => [
                     'Content-Type: application/json',
                     'Accept: application/json',

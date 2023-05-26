@@ -104,3 +104,7 @@ parameters:
             204: Dev et Informatique
             205: Divertissements
             299: Autres
+
+    music_collection:
+        batch_size: 20
+        csv_path: '%kernel.project_dir%/public/uploads/csv/music.csv'

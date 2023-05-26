@@ -52,3 +52,9 @@ services:
             - { name: 'doctrine.event_listener', event: 'prePersist' }
             - { name: 'doctrine.event_listener', event: 'preUpdate' }
             - { name: 'doctrine.event_listener', event: 'preRemove' }
+
+    App\Command\ImportTracksCommand:
+        arguments:
+            $parameters: '@=parameter("music_collection")'
+            $apiUrl: '@=parameter("youtube_api_url")'
+            $apiKey: '@=parameter("youtube_key")'
