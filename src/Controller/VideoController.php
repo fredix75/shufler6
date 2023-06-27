@@ -156,6 +156,7 @@ class VideoController extends AbstractController
     {
         $videoRepository->remove($video, true);
         $this->addFlash('success', 'Vidéo supprimée');
+
         return $this->redirectToRoute('video_list');
     }
 
