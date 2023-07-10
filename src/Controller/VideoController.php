@@ -237,7 +237,7 @@ class VideoController extends AbstractController
         $videos = $videoRepository->getPaginatedTrash($page, $this->getParameter('shufler_video')['max_list']);
         $pagination = [
             'page' => $page,
-            'route' => 'shufler_trash',
+            'route' => 'video_trash',
             'pages_count' => ceil(count($videos) / $this->getParameter('shufler_video')['max_list']),
             'route_params' => $request->attributes->get('_route_params'),
         ];
