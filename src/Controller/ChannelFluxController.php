@@ -6,17 +6,17 @@ use App\Entity\ChannelFlux;
 use App\Form\ChannelFluxFormType;
 use App\Repository\ChannelFluxRepository;
 use App\Repository\FluxRepository;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/channel', name: 'channel_')]
 class ChannelFluxController extends AbstractController
 {
     #[Route('/edit/{id}', name: 'edit', requirements: ['id' => '\d+'])]
-    #[Security("is_granted('ROLE_AUTEUR')")]
+    #[IsGranted('ROLE_AUTEUR')]
     public function channelEdit(
         Request $request,
         ChannelFluxRepository $channelFluxRepository,
@@ -59,7 +59,7 @@ class ChannelFluxController extends AbstractController
     }
 
     #[Route('/delete/{id}', name: 'delete', requirements: ['id' => '\d+'])]
-    #[Security("is_granted('ROLE_AUTEUR')")]
+    #[IsGranted('ROLE_AUTEUR')]
     public function channelDelete(
         ChannelFluxRepository $channelFluxRepository,
         FluxRepository $fluxRepository,
@@ -76,7 +76,7 @@ class ChannelFluxController extends AbstractController
     }
 
     #[Route('/delete_logo/{id}', name: 'delete_logo', requirements: ['id' => '\d+'])]
-    #[Security("is_granted('ROLE_AUTEUR')")]
+    #[IsGranted('ROLE_AUTEUR')]
     public function channelDeleteLogo(
         ChannelFluxRepository $channelFluxRepository,
         ChannelFlux $channelFlux

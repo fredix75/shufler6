@@ -6,15 +6,19 @@ use App\Entity\Video;
 use App\Form\VideoFormType;
 use App\Repository\VideoRepository;
 use App\Twig\ShuflerExtension;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[Route('/video', name: 'video_')]
-#[Security("is_granted('ROLE_USER')")]
+#[IsGranted("ROLE_USER")]
 class VideoController extends AbstractController
 {
     #[Route('/list/{categorie}/{genre}/{periode}/{page}', name: 'list', requirements: ['categorie' => '\d+', 'genre' => '\d+|-\d+', 'page' => '\d+'])]
@@ -104,7 +108,7 @@ class VideoController extends AbstractController
     }
 
     #[Route('/edit/{id}', name: 'edit', requirements: ['id' => '\d+'])]
-    #[Security("is_granted('ROLE_AUTEUR')")]
+    #[IsGranted('ROLE_AUTEUR')]
     public function edit(
         Request $request,
         VideoRepository $videoRepository,
@@ -151,7 +155,7 @@ class VideoController extends AbstractController
     }
 
     #[Route('/delete/{id}', name: 'delete', requirements: ['id' => '\d+'])]
-    #[Security("is_granted('ROLE_AUTEUR')")]
+    #[IsGranted('ROLE_AUTEUR')]
     public function delete(VideoRepository $videoRepository, Video $video): Response
     {
         $videoRepository->remove($video, true);
@@ -160,6 +164,12 @@ class VideoController extends AbstractController
         return $this->redirectToRoute('video_list');
     }
 
+    /**
+     * @throws RedirectionExceptionInterface
+     * @throws ClientExceptionInterface
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     */
     #[Route('/getVideoInfos/{plateforme}/{videoKey}', name: 'getVideoInfos')]
     public function getVideoInfos(
         HttpClientInterface $httpClient,
@@ -227,7 +237,7 @@ class VideoController extends AbstractController
     }
 
     #[Route('/trash/{page}', name: 'trash', requirements: ['page' => '\d+'])]
-    #[Security("is_granted('ROLE_ADMIN')")]
+    #[IsGranted('ROLE_ADMIN')]
     public function trash(
         Request $request,
         VideoRepository $videoRepository,

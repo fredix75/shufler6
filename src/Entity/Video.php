@@ -2,6 +2,11 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\EventListener\VideoListener;
 use App\Repository\VideoRepository;
 use App\Validator\VideoValidator;
@@ -10,20 +15,36 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\EntityListeners;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: VideoRepository::class)]
 #[Assert\Callback([VideoValidator::class, 'validate'])]
 #[ORM\HasLifecycleCallbacks]
 #[EntityListeners([VideoListener::class])]
+#[ApiResource(operations: [
+    new GetCollection(
+        uriTemplate: '/videos',
+        schemes: ['https'],
+        paginationItemsPerPage: 25,
+    ),
+    new Get(
+        uriTemplate: '/video/{id}',
+        requirements: ['id' => '\d+'],
+        schemes: ['https'],
+    )
+])]
+#[ApiFilter(SearchFilter::class, properties: ['categorie' => 'exact'])]
 class Video
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["video:read"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["video:read", "video:write"])]
     private ?string $titre = null;
 
     #[ORM\Column(length: 255)]

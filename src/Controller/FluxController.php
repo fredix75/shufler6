@@ -5,14 +5,14 @@ namespace App\Controller;
 use App\Entity\Flux;
 use App\Form\FluxFormType;
 use App\Repository\FluxRepository;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/flux', name: 'flux_')]
-#[Security("is_granted('ROLE_USER')")]
+#[IsGranted('ROLE_USER')]
 class FluxController extends AbstractController
 {
     #[Route('/podcasts', name: 'podcasts')]
@@ -37,7 +37,7 @@ class FluxController extends AbstractController
     }
 
     #[Route('/playlists', name: 'playlists')]
-    #[Security("is_granted('ROLE_ADMIN')")]
+    #[IsGranted('ROLE_ADMIN')]
     public function playlists(FluxRepository $fluxRepository): Response
     {
         $playlists = $fluxRepository->getPlaylists();
@@ -48,7 +48,7 @@ class FluxController extends AbstractController
     }
 
     #[Route('/liens', name: 'liens')]
-    #[Security("is_granted('ROLE_ADMIN')")]
+    #[IsGranted('ROLE_ADMIN')]
     public function links(FluxRepository $fluxRepository): Response
     {
         $liens = $fluxRepository->getLinks();
@@ -60,7 +60,7 @@ class FluxController extends AbstractController
     }
 
     #[Route('/radios', name: 'radios')]
-    #[Security("is_granted('ROLE_ADMIN')")]
+    #[IsGranted('ROLE_ADMIN')]
     public function radios(FluxRepository $fluxRepository): Response
     {
         $radios = $fluxRepository->getRadios();
@@ -116,7 +116,7 @@ class FluxController extends AbstractController
     }
 
     #[Route('/edit/{id}', name: 'edit', requirements: ['id' => '\d+'])]
-    #[Security("is_granted('ROLE_AUTEUR')")]
+    #[IsGranted('ROLE_AUTEUR')]
     public function edit(
         Request $request,
         FluxRepository $fluxRepository,
@@ -162,7 +162,7 @@ class FluxController extends AbstractController
     }
 
     #[Route('/delete/{id}', name: 'delete', requirements: ['id' => '\d+'])]
-    #[Security("is_granted('ROLE_AUTEUR')")]
+    #[IsGranted('ROLE_AUTEUR')]
     public function delete(
         FluxRepository $fluxRepository,
         Flux $flux
@@ -177,7 +177,7 @@ class FluxController extends AbstractController
     }
 
     #[Route('/delete_logo/{id}', name: 'delete_logo', requirements: ['id' => '\d+'])]
-    #[Security("is_granted('ROLE_AUTEUR')")]
+    #[IsGranted('ROLE_AUTEUR')]
     public function deleteLogo(
         FluxRepository $fluxRepository,
         Flux $flux

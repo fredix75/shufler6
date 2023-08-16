@@ -2,11 +2,11 @@
 
 namespace App\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Vimeo\Vimeo;
 
@@ -14,7 +14,7 @@ use Vimeo\Vimeo;
 class OtherController extends AbstractController
 {
     #[Route('/api_video', name: 'api_video')]
-    #[Security("is_granted('ROLE_ADMIN')")]
+    #[IsGranted('ROLE_ADMIN')]
     public function searchApiVideo(Request $request, HttpClientInterface $httpClient): Response
     {
         $search = $idVideo = $wiki = null;
@@ -113,7 +113,7 @@ class OtherController extends AbstractController
     }
 
     #[Route('/api_channel', name: 'api_channel')]
-    #[Security("is_granted('ROLE_ADMIN')")]
+    #[IsGranted('ROLE_ADMIN')]
     public function searchApiChannel(Request $request, HttpClientInterface $httpClient): Response
     {
         $resultat = $search = $idChannel = null;
