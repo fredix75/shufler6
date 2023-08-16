@@ -13,5 +13,6 @@ class TestController extends AbstractController
     public function test(): Response
     {
         return new Response('ok');
+
     }
 }
