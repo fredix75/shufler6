@@ -8,6 +8,7 @@ imports:
 
 parameters:
     uploads: '%kernel.project_dir%/public/uploads/'
+    jwt_key_pass_phrase: ~
 
 services:
     Symfony\Component\Dotenv\Command\DotenvDumpCommand: ~

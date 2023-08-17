@@ -31,3 +31,6 @@ yarn-error.log
 .buildpath
 .project
 .settings/
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###

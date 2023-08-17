@@ -155,7 +155,7 @@ class VideoController extends AbstractController
     }
 
     #[Route('/delete/{id}', name: 'delete', requirements: ['id' => '\d+'])]
-    #[IsGranted('ROLE_AUTEUR')]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(VideoRepository $videoRepository, Video $video): Response
     {
         $videoRepository->remove($video, true);

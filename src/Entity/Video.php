@@ -5,8 +5,12 @@ namespace App\Entity;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\EventListener\VideoListener;
 use App\Repository\VideoRepository;
 use App\Validator\VideoValidator;
@@ -22,35 +26,60 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[Assert\Callback([VideoValidator::class, 'validate'])]
 #[ORM\HasLifecycleCallbacks]
 #[EntityListeners([VideoListener::class])]
-#[ApiResource(operations: [
-    new GetCollection(
-        uriTemplate: '/videos',
-        schemes: ['https'],
-        paginationItemsPerPage: 25,
-    ),
-    new Get(
-        uriTemplate: '/video/{id}',
-        requirements: ['id' => '\d+'],
-        schemes: ['https'],
-    )
-])]
-#[ApiFilter(SearchFilter::class, properties: ['categorie' => 'exact'])]
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            uriTemplate: '/videos',
+            schemes: ['https'],
+            paginationItemsPerPage: 25,
+            normalizationContext: ['groups' => 'video:list']
+        ),
+        new Get(
+            uriTemplate: '/video/{id}',
+            requirements: ['id' => '\d+'],
+            schemes: ['https'],
+        ),
+        new Post(
+            uriTemplate: '/video',
+            status: 301,
+            security: "is_granted('ROLE_AUTEUR')"
+        ),
+        new Put(
+            uriTemplate: '/video/{id}',
+            requirements: ['id' => '\d+'],
+            security: "is_granted('ROLE_AUTEUR')"
+        ),
+        new Patch(
+            uriTemplate: '/video/{id}',
+            requirements: ['id' => '\d+'],
+            security: "is_granted('ROLE_AUTEUR')"
+        ),
+        new Delete(
+            uriTemplate: '/video/{id}',
+            requirements: ['id' => '\d+'],
+            security: "is_granted('ROLE_ADMIN')"
+        )
+],
+    security: "is_granted('ROLE_USER')")]
+#[ApiFilter(SearchFilter::class, properties: ['categorie' => 'exact', 'genre' => 'exact'])]
 class Video
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["video:read"])]
+    #[Groups(["video:list"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["video:read", "video:write"])]
+    #[Groups(["video:list", "video:write"])]
     private ?string $titre = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["video:list"])]
     private ?string $auteur = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["video:list"])]
     private ?string $lien = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -60,24 +89,31 @@ class Video
     private ?string $texte = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(["video:list"])]
     private ?int $annee = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Groups(["video:list"])]
     private ?int $categorie = null;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    #[Groups(["video:list"])]
     private ?int $genre = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Groups(["video:list"])]
     private ?int $priorite = null;
 
     #[ORM\Column(length: 9)]
+    #[Groups(["video:list"])]
     private ?string $periode = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(["video:list"])]
     private ?\DateTimeInterface $dateInsert = null;
 
     #[ORM\Column(type: Types::BOOLEAN)]
+    #[Groups(["video:list"])]
     private ?bool $published = true;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
