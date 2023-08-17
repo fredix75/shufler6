@@ -60,11 +60,11 @@ Encore
             from: './assets/images',
             // optional target path, relative to the output dir
             to: 'images/[path][name].[ext]',
-        },
-        {
-            from: './assets/font',
+    })
+    .copyFiles({
+            from: './assets/fonts',
             // optional target path, relative to the output dir
-            to: 'font/[path][name].[ext]',
+            to: 'fonts/[path][name].[ext]',
     })
     // enables Sass/SCSS support
     .enableSassLoader()
