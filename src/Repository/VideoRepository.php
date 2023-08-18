@@ -58,16 +58,16 @@ class VideoRepository extends ServiceEntityRepository
     }
 
     public function getPaginatedVideos(
-        int $categorie,
-        int $genre,
-        string $periode,
-        int $page,
-        int $maxperpage
+        int $categorie = null,
+        int $genre = null,
+        string $periode = '0',
+        int $page = 1,
+        int $maxperpage = 10
     ) : Paginator
     {
-        $q = $this->getVideosQuery($categorie, $genre, $periode);
-
-        $q->setFirstResult(($page - 1) * $maxperpage)->setMaxResults($maxperpage);
+        $q = $this->getVideosQuery($categorie, $genre, $periode)
+            ->setFirstResult(($page - 1) * $maxperpage)
+            ->setMaxResults($maxperpage);
 
         return new Paginator($q);
     }
@@ -125,9 +125,9 @@ class VideoRepository extends ServiceEntityRepository
                 ->like('a.annee', ':search'));
 
         $q->andWhere($orModule)
-            ->setParameter('search', '%' . $search . '%');
-
-        $q->setFirstResult(($page - 1) * $maxperpage)->setMaxResults($maxperpage);
+            ->setParameter('search', '%' . $search . '%')
+            ->setFirstResult(($page - 1) * $maxperpage)
+            ->setMaxResults($maxperpage);
 
         return new Paginator($q);
     }
@@ -182,9 +182,9 @@ class VideoRepository extends ServiceEntityRepository
             ->orWhere('a.published = false')
             ->orderBy('a.published', 'DESC')
             ->addOrderBy('a.priorite', 'ASC')
-            ->addOrderBy('a.id', 'DESC');
-
-        $q->setFirstResult(($page - 1) * $maxperpage)->setMaxResults($maxperpage);
+            ->addOrderBy('a.id', 'DESC')
+            ->setFirstResult(($page - 1) * $maxperpage)
+            ->setMaxResults($maxperpage);
 
         return new Paginator($q);
     }

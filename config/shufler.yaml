@@ -6,6 +6,7 @@ parameters:
         index_max_anim: 4
         index_max_music: 15
         index_max_autre: 3
+        api_max_list: 25
         intro_couch: '67lnjV6SrFw'
 
         categories:

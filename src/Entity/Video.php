@@ -11,6 +11,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Controller\Api\VideoController;
 use App\EventListener\VideoListener;
 use App\Repository\VideoRepository;
 use App\Validator\VideoValidator;
@@ -31,13 +32,14 @@ use Symfony\Component\Validator\Constraints as Assert;
         new GetCollection(
             uriTemplate: '/videos',
             schemes: ['https'],
-            paginationItemsPerPage: 25,
+            controller: VideoController::class,
+            paginationItemsPerPage: 3,
             normalizationContext: ['groups' => 'video:list']
         ),
         new Get(
             uriTemplate: '/video/{id}',
             requirements: ['id' => '\d+'],
-            schemes: ['https'],
+            schemes: ['https']
         ),
         new Post(
             uriTemplate: '/video',
@@ -59,9 +61,10 @@ use Symfony\Component\Validator\Constraints as Assert;
             requirements: ['id' => '\d+'],
             security: "is_granted('ROLE_ADMIN')"
         )
-],
-    security: "is_granted('ROLE_USER')")]
-#[ApiFilter(SearchFilter::class, properties: ['categorie' => 'exact', 'genre' => 'exact'])]
+    ],
+    security: "is_granted('ROLE_USER')"
+)]
+#[ApiFilter(SearchFilter::class, properties: ['categorie' => 'exact', 'genre' => 'exact', 'periode' => 'exact'])]
 class Video
 {
     #[ORM\Id]
@@ -265,7 +268,7 @@ class Video
         return $this;
     }
 
-    public function getPublished(): ?bool
+    public function isPublished(): ?bool
     {
         return $this->published;
     }
