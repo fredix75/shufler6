@@ -29,33 +29,12 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    App\Twig\ShuflerExtension:
-        arguments:
-            $videoParameters: '@=parameter("shufler_video")'
-
-    App\Form\VideoFormType:
-        arguments:
-            $videoParameters: '@=parameter("shufler_video")'
-
-    App\Form\FluxFormType:
-        arguments:
-            $fluxParameters: '@=parameter("shufler_flux")'
-
-    App\Helper\FileHelper:
-        arguments:
-            $slugger: '@slugger'
-            $directory: '%uploads%'
-
     App\EventListener\UploadListener:
         arguments:
             $fileHelper: '@App\Helper\FileHelper'
+            #$exempleParameters: '@=parameter("shufler_video")'
         tags:
             - { name: 'doctrine.event_listener', event: 'prePersist' }
             - { name: 'doctrine.event_listener', event: 'preUpdate' }
             - { name: 'doctrine.event_listener', event: 'preRemove' }
 
-    App\Command\ImportTracksCommand:
-        arguments:
-            $parameters: '@=parameter("music_collection")'
-            $apiUrl: '@=parameter("youtube_api_url")'
-            $apiKey: '@=parameter("youtube_key")'

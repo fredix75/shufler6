@@ -2,6 +2,7 @@
 
 namespace App\Twig;
 
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
@@ -36,8 +37,8 @@ class ShuflerExtension extends AbstractExtension
     const VIDEO_UNAVAILABLE = 'http://s3.amazonaws.com/colorcombos-images/users/1/color-schemes/color-scheme-2-main.png?v=20111009081033';
     private array $videoParameters;
 
-    public function __construct(array $videoParameters) {
-        $this->videoParameters = $videoParameters;
+    public function __construct(ParameterBagInterface $parameterBag) {
+        $this->videoParameters = $parameterBag->get('shufler_video');
     }
 
     public function getFilters(): array

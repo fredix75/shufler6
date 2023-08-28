@@ -10,11 +10,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[AsCommand(
@@ -43,16 +42,14 @@ class ImportTracksCommand extends Command
         EntityManagerInterface $entityManager,
         CsvConverter $csvConverter,
         HttpClientInterface $httpClient,
-        array $parameters,
-        string $apiUrl,
-        string $apiKey
+        ParameterBagInterface $parameterBag
     ) {
         $this->entityManager = $entityManager;
         $this->converter = $csvConverter;
         $this->httpClient = $httpClient;
-        $this->parameters = $parameters;
-        $this->apiUrl = $apiUrl;
-        $this->apiKey = $apiKey;
+        $this->parameters = $parameterBag->get('music_collection');
+        $this->apiUrl = $parameterBag->get('youtube_api_url');
+        $this->apiKey = $parameterBag->get('youtube_key');
 
         parent::__construct();
     }

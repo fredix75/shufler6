@@ -6,6 +6,7 @@ use App\Entity\ChannelFlux;
 use App\Entity\Flux;
 use App\Repository\ChannelFluxRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -20,8 +21,8 @@ class FluxFormType extends AbstractType
 {
     private array $fluxParameters;
 
-    public function __construct(array $fluxParameters) {
-        $this->fluxParameters = $fluxParameters;
+    public function __construct(ParameterBagInterface $parameterBag) {
+        $this->fluxParameters = $parameterBag->get('shufler_flux');
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void

@@ -2,6 +2,7 @@
 
 namespace App\Helper;
 
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\File;
@@ -19,12 +20,12 @@ class FileHelper
     public function __construct(
         Filesystem $fileSystem,
         SluggerInterface $slugger,
-        string $directory
+        ParameterBagInterface $parameterBag
     )
     {
         $this->filesystem = $fileSystem;
         $this->slugger = $slugger;
-        $this->directory = $directory;
+        $this->directory = $parameterBag->get('uploads');
     }
 
     /**

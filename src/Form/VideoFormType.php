@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Mood;
 use App\Entity\Video;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -20,8 +21,8 @@ class VideoFormType extends AbstractType
 {
     private array $videoParameters;
 
-    public function __construct(array $videoParameters) {
-        $this->videoParameters = $videoParameters;
+    public function __construct(ParameterBagInterface $parameterBag) {
+        $this->videoParameters = $parameterBag->get('shufler_video');
     }
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
