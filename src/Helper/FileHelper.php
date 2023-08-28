@@ -19,7 +19,8 @@ class FileHelper
     public function __construct(
         Filesystem $fileSystem,
         SluggerInterface $slugger,
-        string $directory)
+        string $directory
+    )
     {
         $this->filesystem = $fileSystem;
         $this->slugger = $slugger;
@@ -32,7 +33,7 @@ class FileHelper
     public function copyFileFromUrl(
         string $filePath,
         string $subPath,
-        string $newName,
+        string $newName = "",
         string $url = ""
     ): string
     {
@@ -44,11 +45,10 @@ class FileHelper
             $fileUrl = $url.$filePath;
         }
         $fileUrl = preg_replace('/\s/', '%20', $fileUrl);
-
         $directory = $this->directory.$subPath;
         $this->filesystem->copy($fileUrl, $directory.'/tmp');
         $file = new File($directory.'/tmp');
-        $newFile = $file->move($directory, $newName.'.'.$file->guessExtension());
+        $newFile = $file->move($directory, $newName ? $newName.'.'.$file->guessExtension() : basename($fileUrl));
 
         return $newFile->getPathname();
     }
@@ -95,5 +95,4 @@ class FileHelper
 
         return true;
     }
-
 }
