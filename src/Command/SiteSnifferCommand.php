@@ -74,7 +74,7 @@ class SiteSnifferCommand extends Command
                     );
                     $this->fileHelper->copyFileFromUrl($val[1], sprintf('%s/%s', $this->uploadDir, $dirName), $fileName, $url);
                 } catch (\Exception $e) {
-                    $io->warning(sprintf('Impossible to copy this file : %s', $url.$val[1]));
+                    $io->warning(sprintf('Impossible to copy this file : %s%s', $url, $val[1]));
                     $io->warning($e->getMessage());
                 }
 
