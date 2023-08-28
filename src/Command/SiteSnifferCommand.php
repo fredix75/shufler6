@@ -6,6 +6,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -50,7 +51,7 @@ class SiteSnifferCommand extends Command
 
         $filesystem = new Filesystem();
 
-        $dirName = preg_replace(array('/\.[\.]+/', '/[^\w\s\.\-]/'), array('.', ''), $dirName);
+        $dirName = preg_replace(array('/\.[\.]+/', '/[^\w\s\.\-\']/'), array('.', ''), $dirName);
         $uploadDirName = $this->uploadDir.'/'.$dirName;
 
         $finished = false;
@@ -59,9 +60,14 @@ class SiteSnifferCommand extends Command
             return Command::FAILURE;
         }
 
+        if (!$output instanceof ConsoleOutputInterface) {
+            throw new \LogicException('This command accepts only an instance of "ConsoleOutputInterface".');
+        }
+        $section = $output->section();
         while (($page = @file_get_contents($url.$pattern)) && !$finished) {
             $index = $pattern ? preg_replace( '/[^0-9]+/', '', $pattern) : 1;
 
+            $section->overwrite('#'.$index);
             preg_match_all('/<img[^>]*'.'src=[\"|\'](.*[.]jpe?g)[\"|\']/Ui', $page, $matches, PREG_SET_ORDER);
             foreach ($matches as $key => $val) {
                 // on enlève les "../" de la src pour l'ajouter à la racine de l'url pour atteindre l'image
