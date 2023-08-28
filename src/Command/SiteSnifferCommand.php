@@ -48,7 +48,7 @@ class SiteSnifferCommand extends Command
         $dirName = $input->getArgument('name');
         $pattern = $input->getArgument('serial_pattern') ?? null;
 
-        $dirName = preg_replace(array('/\.[\.]+/', '/[^\w\s\.\-\']/'), array('.', ''), $dirName);
+        $dirName = preg_replace(['/\.[\.]+/', '/[^\w\s\.\-\']/'], ['.', ''], $dirName);
 
         $finished = false;
         if (empty(@get_headers($url.$pattern, 1))) {
@@ -67,8 +67,12 @@ class SiteSnifferCommand extends Command
             preg_match_all('/<img[^>]*'.'src=[\"|\'](.*[.]jpe?g)[\"|\']/Ui', $page, $matches, PREG_SET_ORDER);
             foreach ($matches as $key => $val) {
                 try {
-                    $fileName = sprintf("%05d", $index).'_'.sprintf("%04d", $key);
-                    $this->fileHelper->copyFileFromUrl($val[1], $this->uploadDir.'/'.$dirName, $fileName, $url);
+                    $fileName = sprintf(
+                        "%s_%s",
+                        sprintf("%05d", $index),
+                        sprintf("%04d", $key)
+                    );
+                    $this->fileHelper->copyFileFromUrl($val[1], sprintf('%s/%s', $this->uploadDir, $dirName), $fileName, $url);
                 } catch (\Exception $e) {
                     $io->warning(sprintf('Impossible to copy this file : %s', $url.$val[1]));
                     $io->warning($e->getMessage());

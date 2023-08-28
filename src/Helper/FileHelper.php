@@ -45,10 +45,10 @@ class FileHelper
             $fileUrl = $url.$filePath;
         }
         $fileUrl = preg_replace('/\s/', '%20', $fileUrl);
-        $directory = $this->directory.$subPath;
-        $this->filesystem->copy($fileUrl, $directory.'/tmp');
-        $file = new File($directory.'/tmp');
-        $newFile = $file->move($directory, $newName ? $newName.'.'.$file->guessExtension() : basename($fileUrl));
+        $directory = sprintf('%s%s', $this->directory, $subPath);
+        $this->filesystem->copy($fileUrl, sprintf('%s/%s',$directory, 'tmp'));
+        $file = new File(sprintf('%s/%s',$directory, 'tmp'));
+        $newFile = $file->move($directory, $newName ? sprintf('%s.%s', $newName, $file->guessExtension()) : basename($fileUrl));
 
         return $newFile->getPathname();
     }
@@ -61,12 +61,12 @@ class FileHelper
     ): string
     {
         $safeFilename = $fileName ? strtolower($this->slugger->slug($fileName)) : md5(uniqid());
-        $newFilename = $safeFilename.'.'.$file->guessExtension();
+        $newFilename = sprintf('%s.%s', $safeFilename, $file->guessExtension());
         $directory = $this->directory;
         $directory .= $subPath ?? '';
         try {
             if ($imageToDelete) {
-                $filePath = $subPath ? $subPath.'/'.$imageToDelete : $imageToDelete;
+                $filePath = $subPath ? sprintf('%s/%s', $subPath, $imageToDelete) : $imageToDelete;
                 $this->deleteFile($filePath);
             }
             $file->move(
