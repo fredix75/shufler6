@@ -54,6 +54,11 @@ class SiteSnifferCommand extends Command
         $uploadDirName = $this->uploadDir.'/'.$dirName;
 
         $finished = false;
+        if (empty(@get_headers($url.$pattern, 1))) {
+            $io->error(sprintf('Website is not available : %s%s', $url, $pattern));
+            return Command::FAILURE;
+        }
+
         while (($page = @file_get_contents($url.$pattern)) && !$finished) {
             $index = $pattern ? preg_replace( '/[^0-9]+/', '', $pattern) : 1;
 
@@ -69,6 +74,7 @@ class SiteSnifferCommand extends Command
                 $filesystem->copy($uploadDirName.'/tmp', $uploadDirName.'/'.sprintf("%05d", $index).'_'.sprintf("%04d", $key).'.'.$file->guessExtension());
                 unlink($file->getPathname());
             }
+
             $finished = true;
             if ($pattern) {
                 $index++;
