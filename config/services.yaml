@@ -32,7 +32,7 @@ services:
     App\EventListener\UploadListener:
         arguments:
             $fileHelper: '@App\Helper\FileHelper'
-            #$exempleParameters: '@=parameter("shufler_video")'
+#           $exempleParameters: '@=parameter("shufler_video")'
         tags:
             - { name: 'doctrine.event_listener', event: 'prePersist' }
             - { name: 'doctrine.event_listener', event: 'preUpdate' }
