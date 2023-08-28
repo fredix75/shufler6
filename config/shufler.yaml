@@ -111,4 +111,4 @@ parameters:
         csv_path: '%uploads%csv/music.csv'
 
     sniffer:
-        upload_directory: '%uploads%sniffer'
+        upload_directory: 'sniffer'

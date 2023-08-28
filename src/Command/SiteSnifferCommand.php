@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Helper\FileHelper;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -10,8 +11,6 @@ use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\File\File;
 
 #[AsCommand(
     name: 'shufler:site-sniffer',
@@ -19,13 +18,16 @@ use Symfony\Component\HttpFoundation\File\File;
 )]
 class SiteSnifferCommand extends Command
 {
+    protected FileHelper $fileHelper;
     protected string $uploadDir;
 
     public function __construct(
+        FileHelper $fileHelper,
         ParameterBagInterface $parameterBag,
         string $name = null
     )
     {
+        $this->fileHelper = $fileHelper;
         $this->uploadDir = $parameterBag->get('sniffer')['upload_directory'];
         parent::__construct($name);
     }
@@ -46,13 +48,7 @@ class SiteSnifferCommand extends Command
         $dirName = $input->getArgument('name');
         $pattern = $input->getArgument('serial_pattern') ?? null;
 
-        $pieces = parse_url($url);
-        $rootUrl = $pieces['scheme'].'://'.$pieces['host'];
-
-        $filesystem = new Filesystem();
-
         $dirName = preg_replace(array('/\.[\.]+/', '/[^\w\s\.\-\']/'), array('.', ''), $dirName);
-        $uploadDirName = $this->uploadDir.'/'.$dirName;
 
         $finished = false;
         if (empty(@get_headers($url.$pattern, 1))) {
@@ -70,15 +66,15 @@ class SiteSnifferCommand extends Command
             $section->overwrite('#'.$index);
             preg_match_all('/<img[^>]*'.'src=[\"|\'](.*[.]jpe?g)[\"|\']/Ui', $page, $matches, PREG_SET_ORDER);
             foreach ($matches as $key => $val) {
-                // on enlève les "../" de la src pour l'ajouter à la racine de l'url pour atteindre l'image
-                // TODO: à améliorer pour rendre compatible qq soit le path
-                $imgUrl = $rootUrl.substr($val[1],2);
-                $imgUrl = preg_replace('/\s/', '%20', $imgUrl);
+                try {
+                    $fileName = sprintf("%05d", $index).'_'.sprintf("%04d", $key);
+                    $this->fileHelper->copyFileFromUrl($val[1], $this->uploadDir.'/'.$dirName, $fileName, $url);
+                } catch (\Exception $e) {
+                    $io->warning(sprintf('Impossible to copy this file : %s', $url.$val[1]));
+                    $io->warning($e->getMessage());
+                }
 
-                $filesystem->copy($imgUrl, $uploadDirName.'/tmp');
-                $file = new File($uploadDirName.'/tmp');
-                $filesystem->copy($uploadDirName.'/tmp', $uploadDirName.'/'.sprintf("%05d", $index).'_'.sprintf("%04d", $key).'.'.$file->guessExtension());
-                unlink($file->getPathname());
+                $section->write('-');
             }
 
             $finished = true;
