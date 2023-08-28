@@ -48,10 +48,10 @@ class SiteSnifferCommand extends Command
         $dirName = $input->getArgument('name');
         $pattern = $input->getArgument('serial_pattern') ?? null;
 
-        $dirName = preg_replace(['/\.[\.]+/', '/[^\w\s\.\-\']/'], ['.', ''], $dirName);
+        $dirName = preg_replace(['/\.+/', '/[^\w\s\.\-\']/'], ['.', ''], $dirName);
 
         $finished = false;
-        if (empty(@get_headers($url.$pattern, 1))) {
+        if (empty($header = @get_headers($url.$pattern, true))) {
             $io->error(sprintf('Website is not available : %s%s', $url, $pattern));
             return Command::FAILURE;
         }
@@ -64,21 +64,31 @@ class SiteSnifferCommand extends Command
             $index = $pattern ? preg_replace( '/[^0-9]+/', '', $pattern) : 1;
 
             $section->overwrite('#'.$index);
-            preg_match_all('/<img[^>]*'.'src=[\"|\'](.*[.]jpe?g)[\"|\']/Ui', $page, $matches, PREG_SET_ORDER);
-            foreach ($matches as $key => $val) {
+
+            if ($header['Content-Type'] === "text/html") {
+                preg_match_all('/<img[^>]*'.'src=[\"|\'](.*[.]jpe?g)[\"|\']/Ui', $page, $matches, PREG_SET_ORDER);
+                foreach ($matches as $key => $val) {
+                    try {
+                        $fileName = sprintf(
+                            "%s_%s",
+                            sprintf("%05d", $index),
+                            sprintf("%04d", $key)
+                        );
+                        $this->fileHelper->copyFileFromUrl($val[1], sprintf('%s/%s', $this->uploadDir, $dirName), $fileName, $url);
+                    } catch (\Exception $e) {
+                        $io->warning(sprintf('Impossible to copy this file : %s%s', $url, $val[1]));
+                        $io->warning($e->getMessage());
+                    }
+
+                    $section->write('-');
+                }
+            } elseif (false !== mb_strpos($header['Content-Type'], "image")) {
                 try {
-                    $fileName = sprintf(
-                        "%s_%s",
-                        sprintf("%05d", $index),
-                        sprintf("%04d", $key)
-                    );
-                    $this->fileHelper->copyFileFromUrl($val[1], sprintf('%s/%s', $this->uploadDir, $dirName), $fileName, $url);
+                    $this->fileHelper->copyFileFromUrl($url.$pattern, sprintf('%s/%s', $this->uploadDir, $dirName));
                 } catch (\Exception $e) {
-                    $io->warning(sprintf('Impossible to copy this file : %s%s', $url, $val[1]));
+                    $io->warning(sprintf('Impossible to copy this file : %s%s', $url, $pattern));
                     $io->warning($e->getMessage());
                 }
-
-                $section->write('-');
             }
 
             $finished = true;
