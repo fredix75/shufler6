@@ -82,7 +82,7 @@ class SiteSnifferCommand extends Command
 
                     $section->write('-');
                 }
-            } elseif (false !== mb_strpos($header['Content-Type'], "image")) {
+            } elseif (preg_match("/^((audio)|(image))/", $header['Content-Type'])) {
                 try {
                     $this->fileHelper->copyFileFromUrl($url.$pattern, sprintf('%s/%s', $this->uploadDir, $dirName));
                 } catch (\Exception $e) {
