@@ -11,11 +11,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/flux', name: 'flux_')]
+#[Route('/flux', name: 'flux')]
 #[IsGranted('ROLE_USER')]
 class FluxController extends AbstractController
 {
-    #[Route('/podcasts', name: 'podcasts')]
+    #[Route('/podcasts', name: '_podcasts')]
     public function podcasts(FluxRepository $fluxRepository):Response
     {
         $podcasts = $fluxRepository->getPodcasts();
@@ -25,7 +25,7 @@ class FluxController extends AbstractController
         ]);
     }
 
-    #[Route('/news/{category}', name: 'news', requirements: ['category' => '\d+'])]
+    #[Route('/news/{category}', name: '_news', requirements: ['category' => '\d+'])]
     public function news(FluxRepository $fluxRepository, int $category = 201): Response
     {
         $news = $fluxRepository->getNews($category);
@@ -36,7 +36,7 @@ class FluxController extends AbstractController
         ]);
     }
 
-    #[Route('/playlists', name: 'playlists')]
+    #[Route('/playlists', name: '_playlists')]
     #[IsGranted('ROLE_ADMIN')]
     public function playlists(FluxRepository $fluxRepository): Response
     {
@@ -47,7 +47,7 @@ class FluxController extends AbstractController
         ]);
     }
 
-    #[Route('/liens', name: 'liens')]
+    #[Route('/liens', name: '_liens')]
     #[IsGranted('ROLE_ADMIN')]
     public function links(FluxRepository $fluxRepository): Response
     {
@@ -59,7 +59,7 @@ class FluxController extends AbstractController
         ]);
     }
 
-    #[Route('/radios', name: 'radios')]
+    #[Route('/radios', name: '_radios')]
     #[IsGranted('ROLE_ADMIN')]
     public function radios(FluxRepository $fluxRepository): Response
     {
@@ -71,7 +71,7 @@ class FluxController extends AbstractController
         ]);
     }
 
-    #[Route('/handle', name: 'handle_file')]
+    #[Route('/handle', name: '_handle_file')]
     public function handleFlux(Request $request): Response
     {
         if ($request->isXmlHttpRequest()) {
@@ -115,7 +115,7 @@ class FluxController extends AbstractController
         return new Response("Method not allowed", 405);
     }
 
-    #[Route('/edit/{id}', name: 'edit', requirements: ['id' => '\d+'])]
+    #[Route('/edit/{id}', name: '_edit', requirements: ['id' => '\d+'])]
     #[IsGranted('ROLE_AUTEUR')]
     public function edit(
         Request $request,
@@ -161,7 +161,7 @@ class FluxController extends AbstractController
         ]);
     }
 
-    #[Route('/delete/{id}', name: 'delete', requirements: ['id' => '\d+'])]
+    #[Route('/delete/{id}', name: '_delete', requirements: ['id' => '\d+'])]
     #[IsGranted('ROLE_AUTEUR')]
     public function delete(
         FluxRepository $fluxRepository,
@@ -176,7 +176,7 @@ class FluxController extends AbstractController
         return $this->redirectToRoute($routeToRedirect);
     }
 
-    #[Route('/delete_logo/{id}', name: 'delete_logo', requirements: ['id' => '\d+'])]
+    #[Route('/delete_logo/{id}', name: '_delete_logo', requirements: ['id' => '\d+'])]
     #[IsGranted('ROLE_AUTEUR')]
     public function deleteLogo(
         FluxRepository $fluxRepository,

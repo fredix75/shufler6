@@ -51,7 +51,7 @@ class FileHelper
         $file = new File(sprintf('%s/%s',$directory, 'tmp'));
         $newFile = $file->move($directory, $newName ? sprintf('%s.%s', $newName, $file->guessExtension()) : basename($fileUrl));
 
-        return $newFile->getPathname();
+        return $subPath.'/'.$newFile->getBasename();
     }
 
     public function uploadFile(

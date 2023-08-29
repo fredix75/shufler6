@@ -23,8 +23,7 @@ export default class extends Controller {
             audio = '<audio controls="controls" autoplay class="col-12 col-xs-12 col-sm-12 col-md-12"><source src="' + url +'" type="' + type + '">Votre navigateur ne supporte pas l\'élément <code>audio</code>.</audio>';
             text = '<div class="pres">' + podcast + '<br />' + title.html() + '</div>';
         }
-        $('#audio-stick').html(audio);
-        $('#audio-stick').append(text);
+        $('#audio-stick').html(audio).append(text);
         event.preventDefault();
     }
 
@@ -57,6 +56,21 @@ export default class extends Controller {
                 $(event.target).closest('.pod-nav').find('a.left').addClass('disabled');
             }
         }
+        event.preventDefault();
+    }
+
+    download(event) {
+        let url = $(event.target).closest('a').data('url');
+        $(event.target).closest('a').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
+        $.get('/download/resource',
+            {url: url},
+            function(data){
+                $(event.target).closest('a').html('<i class="bi bi-download"></i>');
+                $(event.target).closest('a').attr('href', '/uploads/'+data);
+                $(event.target).closest('a').css('color', 'green');
+                $(event.target).closest('a').removeAttr('data-action');
+            }
+        );
         event.preventDefault();
     }
 }

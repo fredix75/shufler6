@@ -13,7 +13,7 @@
                             <a href="{{ value.enclosure.attributes.url }}" type="button" class="btn btn-secondary" data-type="{{ value.enclosure.attributes.type }}" data-action="flux#launch" style="width:100%;"><i class="bi bi-play-circle-fill"></i></a>
                         </div>
                         <div class="audio text-center col-4">
-                            <a href="#" data-url="{{ value.enclosure.attributes.url }}" type="button" class="btn btn-secondary" data-type="{{ value.enclosure.attributes.type }}" style="width:100%;" download><i class="bi bi-download"></i></a>
+                            <a href="#" data-url="{{ value.enclosure.attributes.url }}" type="button" class="btn btn-secondary" data-type="{{ value.enclosure.attributes.type }}" data-action="flux#download" style="width:100%;" download><i class="bi bi-download"></i></a>
                         </div>
                     </div><br />
                 {% endif %}

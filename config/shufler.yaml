@@ -112,3 +112,6 @@ parameters:
 
     sniffer:
         upload_directory: 'sniffer'
+
+    resources:
+        downloads: 'resources'

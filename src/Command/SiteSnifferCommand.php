@@ -7,6 +7,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -37,7 +38,8 @@ class SiteSnifferCommand extends Command
         $this
             ->addArgument('url', InputArgument::REQUIRED, 'Website URL')
             ->addArgument('name', InputArgument::REQUIRED, 'Directory Name')
-            ->addArgument('serial_pattern', InputArgument::OPTIONAL, 'Serial Pattern e.g: page1.html')
+            ->addArgument('serial-pattern', InputArgument::OPTIONAL, 'Serial Pattern e.g: page1.html')
+            ->addOption('continue', 'c', InputOption::VALUE_NONE, 'Continue serial')
         ;
     }
 
@@ -46,7 +48,9 @@ class SiteSnifferCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $url = $input->getArgument('url');
         $dirName = $input->getArgument('name');
-        $pattern = $input->getArgument('serial_pattern') ?? null;
+        $pattern = $input->getArgument('serial-pattern') ?? null;
+
+        $noStop = $input->getOption('continue');
 
         $dirName = preg_replace(['/\.+/', '/[^\w\s\.\-\']/'], ['.', ''], $dirName);
 
@@ -60,7 +64,7 @@ class SiteSnifferCommand extends Command
             throw new \LogicException('This command accepts only an instance of "ConsoleOutputInterface".');
         }
         $section = $output->section();
-        while (($page = @file_get_contents($url.$pattern)) && !$finished) {
+        while (($page = @file_get_contents($url.$pattern)) && !$finished || $noStop) {
             $index = $pattern ? preg_replace( '/[^0-9]+/', '', $pattern) : 1;
 
             $section->overwrite('#'.$index);

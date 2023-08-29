@@ -10,10 +10,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Vimeo\Vimeo;
 
-#[Route('/other', name: 'other_')]
+#[Route('/other', name: 'other')]
 class OtherController extends AbstractController
 {
-    #[Route('/api_video', name: 'api_video')]
+    #[Route('/api_video', name: '_api_video')]
     #[IsGranted('ROLE_ADMIN')]
     public function searchApiVideo(Request $request, HttpClientInterface $httpClient): Response
     {
@@ -112,7 +112,7 @@ class OtherController extends AbstractController
         ]);
     }
 
-    #[Route('/api_channel', name: 'api_channel')]
+    #[Route('/api_channel', name: '_api_channel')]
     #[IsGranted('ROLE_ADMIN')]
     public function searchApiChannel(Request $request, HttpClientInterface $httpClient): Response
     {
@@ -153,7 +153,7 @@ class OtherController extends AbstractController
         ]);
     }
 
-    #[Route('/channel/handle', name: 'handle_channel')]
+    #[Route('/channel/handle', name: '_handle_channel')]
     public function handleChannel(Request $request, HttpClientInterface $httpClient): Response
     {
         if ($request->isXmlHttpRequest()) {

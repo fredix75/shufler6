@@ -17,11 +17,11 @@ use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-#[Route('/video', name: 'video_')]
+#[Route('/video', name: 'video')]
 #[IsGranted("ROLE_USER")]
 class VideoController extends AbstractController
 {
-    #[Route('/list/{categorie}/{genre}/{periode}/{page}', name: 'list', requirements: ['categorie' => '\d+', 'genre' => '\d+|-\d+', 'page' => '\d+'])]
+    #[Route('/list/{categorie}/{genre}/{periode}/{page}', name: '_list', requirements: ['categorie' => '\d+', 'genre' => '\d+|-\d+', 'page' => '\d+'])]
     public function list(
         Request $request,
         VideoRepository $videoRepository,
@@ -56,7 +56,7 @@ class VideoController extends AbstractController
         ]);
     }
 
-    #[Route('/search/{page}', name: 'search', requirements: ['id' => '\d+'])]
+    #[Route('/search/{page}', name: '_search', requirements: ['id' => '\d+'])]
     public function search(Request $request, VideoRepository $videoRepository, int $page = 1)
     {
         $search = $request->get('search_field');
@@ -81,7 +81,7 @@ class VideoController extends AbstractController
         ]);
     }
 
-    #[Route('/couch/{categorie}/{genre}/{periode}', name: 'couch', requirements: ['categorie' => '\d+', 'genre' => '\d+|-\d+'])]
+    #[Route('/couch/{categorie}/{genre}/{periode}', name: '_couch', requirements: ['categorie' => '\d+', 'genre' => '\d+|-\d+'])]
     public function couch(
         VideoRepository $videoRepository,
         ShuflerExtension $shuflerExtension,
@@ -107,7 +107,7 @@ class VideoController extends AbstractController
         ]);
     }
 
-    #[Route('/edit/{id}', name: 'edit', requirements: ['id' => '\d+'])]
+    #[Route('/edit/{id}', name: '_edit', requirements: ['id' => '\d+'])]
     #[IsGranted('ROLE_AUTEUR')]
     public function edit(
         Request $request,
@@ -146,7 +146,7 @@ class VideoController extends AbstractController
         ]);
     }
 
-    #[Route('/view/{id}', name: 'view', requirements: ['id' => '\d+'])]
+    #[Route('/view/{id}', name: '_view', requirements: ['id' => '\d+'])]
     public function view(Video $video): Response
     {
         return $this->render('video/view.html.twig', array(
@@ -154,7 +154,7 @@ class VideoController extends AbstractController
         ));
     }
 
-    #[Route('/delete/{id}', name: 'delete', requirements: ['id' => '\d+'])]
+    #[Route('/delete/{id}', name: '_delete', requirements: ['id' => '\d+'])]
     #[IsGranted('ROLE_ADMIN')]
     public function delete(VideoRepository $videoRepository, Video $video): Response
     {
@@ -170,7 +170,7 @@ class VideoController extends AbstractController
      * @throws TransportExceptionInterface
      * @throws ServerExceptionInterface
      */
-    #[Route('/getVideoInfos/{plateforme}/{videoKey}', name: 'getVideoInfos')]
+    #[Route('/getVideoInfos/{plateforme}/{videoKey}', name: '_getVideoInfos')]
     public function getVideoInfos(
         HttpClientInterface $httpClient,
         string $plateforme,
@@ -213,7 +213,7 @@ class VideoController extends AbstractController
         return new Response('No data', 401);
     }
 
-    #[Route('/autocomplete', name: 'autocomplete')]
+    #[Route('/autocomplete', name: '_autocomplete')]
     public function autocomplete(Request $request, VideoRepository $videoRepository): Response
     {
         if ($request->isXmlHttpRequest()) {
@@ -236,7 +236,7 @@ class VideoController extends AbstractController
         return new Response('error', 402);
     }
 
-    #[Route('/trash/{page}', name: 'trash', requirements: ['page' => '\d+'])]
+    #[Route('/trash/{page}', name: '_trash', requirements: ['page' => '\d+'])]
     #[IsGranted('ROLE_ADMIN')]
     public function trash(
         Request $request,

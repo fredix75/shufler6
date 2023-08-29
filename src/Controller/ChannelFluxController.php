@@ -12,10 +12,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/channel', name: 'channel_')]
+#[Route('/channel', name: 'channel')]
 class ChannelFluxController extends AbstractController
 {
-    #[Route('/edit/{id}', name: 'edit', requirements: ['id' => '\d+'])]
+    #[Route('/edit/{id}', name: '_edit', requirements: ['id' => '\d+'])]
     #[IsGranted('ROLE_AUTEUR')]
     public function channelEdit(
         Request $request,
@@ -58,7 +58,7 @@ class ChannelFluxController extends AbstractController
         ]);
     }
 
-    #[Route('/delete/{id}', name: 'delete', requirements: ['id' => '\d+'])]
+    #[Route('/delete/{id}', name: '_delete', requirements: ['id' => '\d+'])]
     #[IsGranted('ROLE_AUTEUR')]
     public function channelDelete(
         ChannelFluxRepository $channelFluxRepository,
@@ -75,7 +75,7 @@ class ChannelFluxController extends AbstractController
         return $this->redirectToRoute('home');
     }
 
-    #[Route('/delete_logo/{id}', name: 'delete_logo', requirements: ['id' => '\d+'])]
+    #[Route('/delete_logo/{id}', name: '_delete_logo', requirements: ['id' => '\d+'])]
     #[IsGranted('ROLE_AUTEUR')]
     public function channelDeleteLogo(
         ChannelFluxRepository $channelFluxRepository,
