@@ -20,11 +20,13 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\EntityListeners;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: VideoRepository::class)]
 #[Assert\Callback([VideoValidator::class, 'validate'])]
+#[UniqueEntity('lien', message: 'Cet URL est déja utilisée')]
 #[ORM\HasLifecycleCallbacks]
 #[EntityListeners([VideoListener::class])]
 #[ApiResource(
@@ -84,7 +86,7 @@ class Video
     #[Groups(["video:list"])]
     private ?string $auteur = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     #[Groups(["video:list"])]
     private ?string $lien = null;
 

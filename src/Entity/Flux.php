@@ -6,10 +6,12 @@ use App\Contract\UploadInterface;
 use App\Repository\FluxRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 #[ORM\Entity(repositoryClass: FluxRepository::class)]
 #[ORM\HasLifecycleCallbacks]
+#[UniqueEntity('url', message: 'Cet URL est déja utilisée')]
 class Flux implements UploadInterface
 {
     #[ORM\Id]
@@ -20,7 +22,7 @@ class Flux implements UploadInterface
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private ?string $url = null;
 
     #[ORM\Column(length: 255, nullable: true)]
