@@ -25,15 +25,8 @@ class ChannelFluxRepository extends ServiceEntityRepository
     function getChannelFluxAudio(): QueryBuilder
     {
         return $this->createQueryBuilder('c')
-            ->where('c.providerName is NULL');
-    }
-
-    function getChannelFluxVideo(): array
-    {
-        return $this->createQueryBuilder('c')
-            ->where('c.providerName IS NOT NULL')
-            ->getQuery()
-            ->getResult();
+            ->where('c.providerName is NULL')
+            ->orderBy('c.name');
     }
 
     public function save(ChannelFlux $entity, bool $flush = false): void

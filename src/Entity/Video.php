@@ -62,7 +62,10 @@ use Symfony\Component\Validator\Constraints as Assert;
             security: "is_granted('ROLE_ADMIN')"
         )
     ],
-    security: "is_granted('ROLE_USER')"
+    security: "is_granted('ROLE_USER')",
+    extraProperties: [
+        'standard_put' => true,
+    ]
 )]
 #[ApiFilter(SearchFilter::class, properties: ['categorie' => 'exact', 'genre' => 'exact', 'periode' => 'exact'])]
 class Video

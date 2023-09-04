@@ -9,7 +9,6 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<Flux>
  *
- * @method Flux|null find($id, $lockMode = null, $lockVersion = null)
  * @method Flux|null findOneBy(array $criteria, array $orderBy = null)
  * @method Flux[]    findAll()
  * @method Flux[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
@@ -28,6 +27,17 @@ class FluxRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function find(mixed $id, $lockMode = null, $lockVersion = null): ?Flux
+    {
+        $q = $this->createQueryBuilder('a')
+            ->where('a.id = :id')
+            ->setParameter('id', $id)
+            ->leftJoin('a.channel', 'channel')
+            ->addSelect('channel');
+
+        return $q->getQuery()->getOneOrNullResult();
     }
 
     public function remove(Flux $entity, bool $flush = false): void

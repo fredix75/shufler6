@@ -193,7 +193,7 @@ class VideoController extends AbstractController
             $result = json_decode($response->getContent(), true)['items'][0]['snippet'] ?? null;
         } elseif ('vimeo' === $plateforme) {
             if (!@file_get_contents($this->getParameter('vimeo_api_url').'/video/'.$videoKey.'.json')) {
-                return new Response('No data', 404);
+                return new Response('No data', Response::HTTP_NOT_FOUND);
             }
 
             $response = $httpClient->request('GET', sprintf('%s/video/%s.json', $this->getParameter('vimeo_api_url'), $videoKey), [
@@ -206,11 +206,11 @@ class VideoController extends AbstractController
             $result = json_decode($response->getContent(), true)[0] ?? null;
         }
 
-        if ($response && 200 === $response->getStatusCode()) {
+        if (!empty($response) && Response::HTTP_OK === $response->getStatusCode()) {
             Return new Response(json_encode($result));
         }
 
-        return new Response('No data', 401);
+        return new Response('No data', Response::HTTP_NOT_FOUND);
     }
 
     #[Route('/autocomplete', name: '_autocomplete')]
@@ -233,7 +233,7 @@ class VideoController extends AbstractController
             ]);
         }
 
-        return new Response('error', 402);
+        return new Response('error', Response::HTTP_PAYMENT_REQUIRED);
     }
 
     #[Route('/trash/{page}', name: '_trash', requirements: ['page' => '\d+'])]
