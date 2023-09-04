@@ -91,6 +91,7 @@ class Video
     #[ORM\Column(length: 255, unique: true)]
     #[Groups(["video:list"])]
     #[Assert\NotBlank]
+    #[Assert\Url]
     private ?string $lien = null;
 
     #[ORM\Column(length: 255, nullable: true)]
