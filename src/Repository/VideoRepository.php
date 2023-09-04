@@ -6,6 +6,7 @@ use App\Entity\Video;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Tools\Pagination\CountWalker;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -83,7 +84,11 @@ class VideoRepository extends ServiceEntityRepository
             ->setFirstResult(($page - 1) * $maxperpage)
             ->setMaxResults($maxperpage);
 
-        return new Paginator($q);
+        $q->getQuery()->setHint(CountWalker::HINT_DISTINCT, true);
+        $paginator = new Paginator($q, false);
+        $paginator->setUseOutputWalkers(false);
+
+        return $paginator;
     }
 
     private function getVideosQuery(
@@ -94,8 +99,6 @@ class VideoRepository extends ServiceEntityRepository
     ): QueryBuilder
     {
         $q = $this->createQueryBuilder('a')
-            ->leftJoin('a.moods', 'moods')
-            ->addSelect('moods')
             ->where('a.priorite= :priorite')
             ->setParameter('priorite', 1)
             ->andWhere('a.published = true');
@@ -106,15 +109,18 @@ class VideoRepository extends ServiceEntityRepository
             $q->orderBy('a.id', 'DESC');
 
         if ($categorie) {
-            $q->andWhere('a.categorie= :categorie')->setParameter('categorie', $categorie);
+            $q->andWhere('a.categorie= :categorie')
+                ->setParameter('categorie', $categorie);
         }
 
         if ($genre) {
-            $q->andWhere('a.genre= :genre')->setParameter('genre', $genre);
+            $q->andWhere('a.genre= :genre')
+                ->setParameter('genre', $genre);
         }
 
         if ($periode) {
-            $q->andWhere('a.periode= :periode')->setParameter('periode', $periode);
+            $q->andWhere('a.periode= :periode')
+                ->setParameter('periode', $periode);
         }
 
         return $q;
@@ -145,7 +151,12 @@ class VideoRepository extends ServiceEntityRepository
             ->setFirstResult(($page - 1) * $maxperpage)
             ->setMaxResults($maxperpage);
 
-        return new Paginator($q);
+        $q->getQuery()->setHint(CountWalker::HINT_DISTINCT, true);
+
+        $paginator = new Paginator($q, false);
+        $paginator->setUseOutputWalkers(false);
+
+        return $paginator;
     }
 
     function searchAjax(string $search): array
@@ -202,7 +213,12 @@ class VideoRepository extends ServiceEntityRepository
             ->setFirstResult(($page - 1) * $maxperpage)
             ->setMaxResults($maxperpage);
 
-        return new Paginator($q);
+        $q->getQuery()->setHint(CountWalker::HINT_DISTINCT, true);
+
+        $paginator = new Paginator($q, false);
+        $paginator->setUseOutputWalkers(false);
+
+        return $paginator;
     }
 //    /**
 //     * @return Video[] Returns an array of Video objects
