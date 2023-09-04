@@ -36,7 +36,7 @@ class Flux implements UploadInterface
     #[ORM\Column(nullable: true)]
     private ?int $mood = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy:"flux")]
     private ?ChannelFlux $channel = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]

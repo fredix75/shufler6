@@ -56,6 +56,8 @@ class FluxRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('a')
             ->where('a.type= :type')
             ->setParameter('type', 2)
+            ->leftJoin('a.channel', 'channel')
+            ->addSelect('channel')
             ->orderBy('a.id', 'ASC')
             ->getQuery()
             ->getResult();

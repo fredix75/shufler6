@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Video;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
@@ -11,7 +12,6 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<Video>
  *
- * @method Video|null find($id, $lockMode = null, $lockVersion = null)
  * @method Video|null findOneBy(array $criteria, array $orderBy = null)
  * @method Video[]    findAll()
  * @method Video[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
@@ -39,6 +39,20 @@ class VideoRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function find(mixed $id, $lockMode = null, $lockVersion = null): ?Video
+    {
+        $q = $this->createQueryBuilder('a')
+            ->where('a.id = :id')
+            ->setParameter('id', $id)
+            ->leftJoin('a.moods', 'moods')
+            ->addSelect('moods');
+
+        return $q->getQuery()->getOneOrNullResult();
     }
 
     public function getRandomVideos(
