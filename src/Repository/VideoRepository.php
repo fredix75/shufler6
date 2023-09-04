@@ -94,6 +94,8 @@ class VideoRepository extends ServiceEntityRepository
     ): QueryBuilder
     {
         $q = $this->createQueryBuilder('a')
+            ->leftJoin('a.moods', 'moods')
+            ->addSelect('moods')
             ->where('a.priorite= :priorite')
             ->setParameter('priorite', 1)
             ->andWhere('a.published = true');
