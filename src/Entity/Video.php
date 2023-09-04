@@ -80,14 +80,17 @@ class Video
 
     #[ORM\Column(length: 255)]
     #[Groups(["video:list", "video:write"])]
+    #[Assert\NotBlank]
     private ?string $titre = null;
 
     #[ORM\Column(length: 255)]
     #[Groups(["video:list"])]
+    #[Assert\NotBlank]
     private ?string $auteur = null;
 
     #[ORM\Column(length: 255, unique: true)]
     #[Groups(["video:list"])]
+    #[Assert\NotBlank]
     private ?string $lien = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -102,6 +105,7 @@ class Video
 
     #[ORM\Column(type: Types::SMALLINT)]
     #[Groups(["video:list"])]
+    #[Assert\NotBlank]
     private ?int $categorie = null;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
@@ -110,10 +114,12 @@ class Video
 
     #[ORM\Column(type: Types::SMALLINT)]
     #[Groups(["video:list"])]
+    #[Assert\NotBlank]
     private ?int $priorite = null;
 
     #[ORM\Column(length: 9)]
     #[Groups(["video:list"])]
+    #[Assert\NotBlank]
     private ?string $periode = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -145,7 +151,7 @@ class Video
         return $this->titre;
     }
 
-    public function setTitre(string $titre): self
+    public function setTitre(?string $titre): self
     {
         $this->titre = $titre;
 
@@ -157,7 +163,7 @@ class Video
         return $this->auteur;
     }
 
-    public function setAuteur(string $auteur): self
+    public function setAuteur(?string $auteur): self
     {
         $this->auteur = $auteur;
 
@@ -169,7 +175,7 @@ class Video
         return $this->lien;
     }
 
-    public function setLien(string $lien): self
+    public function setLien(?string $lien): self
     {
         $this->lien = $lien;
 
@@ -217,7 +223,7 @@ class Video
         return $this->categorie;
     }
 
-    public function setCategorie(int $categorie): self
+    public function setCategorie(?int $categorie): self
     {
         $this->categorie = $categorie;
 
@@ -241,7 +247,7 @@ class Video
         return $this->priorite;
     }
 
-    public function setPriorite(int $priorite): self
+    public function setPriorite(?int $priorite): self
     {
         $this->priorite = $priorite;
 
@@ -253,7 +259,7 @@ class Video
         return $this->periode;
     }
 
-    public function setPeriode(string $periode): self
+    public function setPeriode(?string $periode): self
     {
         $this->periode = $periode;
 

@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\MoodRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MoodRepository::class)]
 class Mood
@@ -15,6 +16,7 @@ class Mood
     private ?int $id = null;
 
     #[ORM\Column(length: 255, unique: true)]
+    #[Assert\NotBlank]
     private ?string $name = null;
 
     #[ORM\ManyToMany(targetEntity: Video::class, mappedBy: "moods")]

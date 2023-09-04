@@ -6,6 +6,7 @@ use App\Contract\UploadInterface;
 use App\Repository\FluxRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -20,9 +21,11 @@ class Flux implements UploadInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     private ?string $name = null;
 
     #[ORM\Column(length: 255, unique: true)]
+    #[Assert\NotBlank]
     private ?string $url = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -33,6 +36,7 @@ class Flux implements UploadInterface
     private ?string $oldImage = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank]
     private ?int $type = null;
 
     #[ORM\Column(nullable: true)]
@@ -54,7 +58,7 @@ class Flux implements UploadInterface
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(?string $name): self
     {
         $this->name = $name;
 
@@ -66,7 +70,7 @@ class Flux implements UploadInterface
         return $this->url;
     }
 
-    public function setUrl(string $url): self
+    public function setUrl(?string $url): self
     {
         $this->url = $url;
 
@@ -115,7 +119,7 @@ class Flux implements UploadInterface
         return $this->type;
     }
 
-    public function setType(int $type): self
+    public function setType(?int $type): self
     {
         $this->type = $type;
 
