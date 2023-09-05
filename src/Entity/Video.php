@@ -135,6 +135,7 @@ class Video
     private ?\DateTimeInterface $dateUpdate = null;
 
     #[ORM\ManyToMany(targetEntity: Mood::class, inversedBy: 'videos')]
+    #[Groups(["video:list"])]
     private Collection $moods;
 
     public function __construct()

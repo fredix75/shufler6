@@ -15,7 +15,7 @@ class VideoController extends AbstractController
         $categorie = $request->get('categorie') ?? null;
         $genre = $request->get('genre') ?? null;
         $periode = $request->get('periode') ?? '0';
-        $page = $request->get('page') ?? null;
+        $page = $request->get('page') ?? 1;
         $maxItems = $this->getParameter('shufler_video')['api_max_list'];
 
         return $videoRepository->getPaginatedVideos($categorie, $genre, $periode, $page, $maxItems);
