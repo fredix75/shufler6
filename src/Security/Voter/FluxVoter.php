@@ -12,6 +12,7 @@ class FluxVoter extends Voter
 {
     public const EDIT = 'FLUX_EDIT';
     public const DELETE = 'FLUX_DELETE';
+    public const DOWNLOAD = 'FLUX_DOWNLOAD';
 
     private Security $security;
 
@@ -23,7 +24,7 @@ class FluxVoter extends Voter
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, [self::EDIT, self::DELETE])
+        return in_array($attribute, [self::EDIT, self::DELETE, self::DOWNLOAD])
             && ($subject instanceof Flux || !$subject);
     }
 
@@ -41,6 +42,9 @@ class FluxVoter extends Voter
 
             case self::DELETE:
                 return $this->canDeleteFlux();
+
+            case self::DOWNLOAD:
+                return $this->canDownloadFlux();
         }
 
         return false;
@@ -52,6 +56,11 @@ class FluxVoter extends Voter
     }
 
     private function canDeleteFlux(): bool
+    {
+        return $this->security->isGranted('ROLE_ADMIN');
+    }
+
+    private function canDownloadFlux(): bool
     {
         return $this->security->isGranted('ROLE_ADMIN');
     }
