@@ -17,6 +17,9 @@ security:
             pattern: ^/api/login
             stateless: true
             provider: app_user_provider
+            login_throttling:
+                max_attempts: 3
+                interval: '3 minutes'
             json_login:
                 check_path: api_auth # The name in routes.yaml is enough for mapping
                 username_path: email
@@ -51,7 +54,7 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/api/auth, roles: PUBLIC_ACCESS }
+        - { path: ^/api/auth, roles: PUBLIC_ACCESS }
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
 

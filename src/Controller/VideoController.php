@@ -108,7 +108,7 @@ class VideoController extends AbstractController
     }
 
     #[Route('/edit/{id}', name: '_edit', requirements: ['id' => '\d+'])]
-    #[IsGranted('ROLE_AUTEUR')]
+    #[isGranted('VIDEO_EDIT', "video", 'No pasaran')]
     public function edit(
         Request $request,
         VideoRepository $videoRepository,
@@ -155,7 +155,7 @@ class VideoController extends AbstractController
     }
 
     #[Route('/delete/{id}', name: '_delete', requirements: ['id' => '\d+'])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('VIDEO_DELETE', "video", "No pasaran")]
     public function delete(VideoRepository $videoRepository, Video $video): Response
     {
         $videoRepository->remove($video, true);
@@ -237,7 +237,7 @@ class VideoController extends AbstractController
     }
 
     #[Route('/trash/{page}', name: '_trash', requirements: ['page' => '\d+'])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('VIDEO_VIEW')]
     public function trash(
         Request $request,
         VideoRepository $videoRepository,

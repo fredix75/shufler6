@@ -28,7 +28,7 @@
             <br/>
             <div class="well">
                 <span class="badge" style="float:right;">{{ video.dateInsert|date("d/m/Y H:i:s") }}</span><br/>
-                {% if is_granted('ROLE_AUTEUR') %}
+                {% if is_granted('VIDEO_EDIT') %}
                     <a class="btn btn-secondary" href="{{ path('video_edit', {'id':video.id}) }}"><span class="glyphicon glyphicon-edit"></span>&nbsp;Edit the reference</a>
                     &nbsp;
                     {% if video.published == 1 %}
@@ -36,7 +36,8 @@
                     {% else %}
                         <a class="btn btn-primary" href="{{ path('video_edit', { 'id':video.id, 'publish': true }) }}"><span class="glyphicon glyphicon-ok-sign"></span>&nbsp;Publier</a>
                     {% endif %}
-                    &nbsp;
+                {% endif %}    &nbsp;
+                {% if is_granted('VIDEO_DELETE') %}
                     <a class="btn btn-danger" href="{{ path('video_delete', {'id':video.id}) }}" onclick="return confirm('{{ 'Are You sure ?'|trans}}');"><i class="bi bi-trash"></i>&nbsp;Virer</a>
                 {%  endif %}
             </div>

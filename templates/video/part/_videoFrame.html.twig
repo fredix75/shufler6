@@ -1,7 +1,7 @@
 <a class="video-link" href="{{ video.lien|popUp }}">
 	{{ video.lien|convertFrame|raw}}
 	<div class="media-body">
-		{% if is_granted('ROLE_AUTEUR') %}
+		{% if is_granted('VIDEO_EDIT', video) %}
 			<div class="link_edit">
 				<a href="{{ path('video_edit',{'id':video.id}) }}">
 					<i class="bi bi-pencil-square"></i>

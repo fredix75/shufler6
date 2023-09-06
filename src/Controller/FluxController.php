@@ -116,7 +116,7 @@ class FluxController extends AbstractController
     }
 
     #[Route('/edit/{id}', name: '_edit', requirements: ['id' => '\d+'])]
-    #[IsGranted('ROLE_AUTEUR')]
+    #[IsGranted('FLUX_EDIT', "flux", "No pasaran")]
     public function edit(
         Request $request,
         FluxRepository $fluxRepository,
@@ -162,7 +162,7 @@ class FluxController extends AbstractController
     }
 
     #[Route('/delete/{id}', name: '_delete', requirements: ['id' => '\d+'])]
-    #[IsGranted('ROLE_AUTEUR')]
+    #[IsGranted('FLUX_DELETE', "flux", "No pasaran")]
     public function delete(
         FluxRepository $fluxRepository,
         Flux $flux

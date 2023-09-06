@@ -24,7 +24,7 @@
                         <div class="col col-2 col-sm-2 col-lg-2">
                             <a href="#" class="left btn btn-secondary disabled" data-page="0" data-action="flux#prev"><i class="bi bi-chevron-left"></i></a>
                         </div>
-                        {% if is_granted('ROLE_ADMIN') %}
+                        {% if is_granted('VIEW_EDIT', rss) %}
                             <div class="col col-auto text-center">
                                 <a href="{{ path('flux_edit', {'id': rss.id}) }}" class="btn btn-secondary"><i class="bi bi-pencil-square"></i>&nbsp;Editer</a>
                             </div>

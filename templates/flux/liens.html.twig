@@ -13,7 +13,7 @@
                         {% for link in liens %}
                             {% if link.mood == index %}
                                 <div class="list-group-item">
-                                    {% if is_granted('ROLE_ADMIN') %}
+                                    {% if is_granted('FLUX_EDIT', link) %}
                                         <a href="{{ path('flux_edit',{'id': link.id}) }}" class="btn btn-transparent">
                                             <span class="bi bi-pencil"></span>
                                         </a>
