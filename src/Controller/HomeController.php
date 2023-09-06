@@ -17,7 +17,6 @@ class HomeController extends AbstractController
         $anims = $musics = $stranges = [];
         $videoParameters = $this->getParameter('shufler_video');
 
-
         $i = 0;
         foreach ($videos as $key => $video) {
             if (($video->getCategorie() === 1 || $video->getCategorie() === 9) && count($anims) < $videoParameters['index_max_anim']) {
