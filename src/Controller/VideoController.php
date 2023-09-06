@@ -149,9 +149,9 @@ class VideoController extends AbstractController
     #[Route('/view/{id}', name: '_view', requirements: ['id' => '\d+'])]
     public function view(Video $video): Response
     {
-        return $this->render('video/view.html.twig', array(
+        return $this->render('video/view.html.twig', [
             'video' => $video
-        ));
+        ]);
     }
 
     #[Route('/delete/{id}', name: '_delete', requirements: ['id' => '\d+'])]

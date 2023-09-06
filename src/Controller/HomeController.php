@@ -40,12 +40,12 @@ class HomeController extends AbstractController
 
         $playlist = $fluxRepository->findOneBy(['name' => 'Vu - France 2']);
 
-        return $this->render('home.html.twig', array(
+        return $this->render('home.html.twig', [
             'videos' => $videos,
             'playlist' => $playlist,
             'anims' => $anims,
             'musics' => $musics,
             'stranges' => $stranges
-        ));
+        ]);
     }
 }
