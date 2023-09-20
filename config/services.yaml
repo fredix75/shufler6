@@ -9,6 +9,8 @@ imports:
 parameters:
     uploads: '%kernel.project_dir%/public/uploads/'
     jwt_key_pass_phrase: ~
+    locale: fr
+    app_locales: fr|en
 
 services:
     Symfony\Component\Dotenv\Command\DotenvDumpCommand: ~

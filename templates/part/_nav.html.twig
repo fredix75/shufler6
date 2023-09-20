@@ -68,8 +68,8 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><img src="{{ asset('build/images/flags/flag-'~ app.request.locale ~'.png')}}" width="30px" />&nbsp;<b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#" class="dropdown-item"><img src="{{ asset('build/images/flags/flag-en.png')}}" width="30px" />&nbsp;english</a></li>
-                        <li><a href="#" class="dropdown-item"><img src="{{ asset('build/images/flags/flag-fr.png')}}" width="30px" />&nbsp;français</a></li>
+                        <li><a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale' : 'en'})) }}" class="dropdown-item"><img src="{{ asset('build/images/flags/flag-en.png')}}" width="30px" />&nbsp;English</a></li>
+                        <li><a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale' : 'fr'})) }}" class="dropdown-item"><img src="{{ asset('build/images/flags/flag-fr.png')}}" width="30px" />&nbsp;Français</a></li>
                     </ul>
                 </li>
             </ul>

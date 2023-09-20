@@ -27,7 +27,7 @@
                 <p><img src="{{ asset('build/images/shufler_logo.png') }}" width=50% /> des clips en vrac..</p>
                 <div style="text-align:center">
                     <a class="btn btn-dark" href="{{ path('home') }}" style="background-color:black"><i class="bi bi-dice-3-fill"></i>&nbsp;{{ 'New Selection'|trans }} <i class="bi bi-dice-6-fill"></i></a>&nbsp;&nbsp;
-                    {% if not app.user %}<a id="register_second" class="btn btn-dark" data-toggle="modal" data-target="#userModal" href="#" style="background-color:black" ><span class="glyphicon glyphicon-flag"></span>&nbsp;{{ 'Create an account'|trans }}</a>{% endif %}
+                    {% if not app.user %}<a id="register_second" class="btn btn-dark" data-toggle="modal" data-target="#userModal" href="{{ path('account') }}" style="background-color:black" ><span class="glyphicon glyphicon-flag"></span>&nbsp;{{ 'Create an account'|trans }}</a>{% endif %}
                 </div>
                 <br/><br/>
             </div>

@@ -20,7 +20,13 @@ class AccountController extends AbstractController
         UserRepository $userRepository
     ): Response
     {
-        $user = $this->getUser() ?? new User();
+        $isCreation = false;
+        if (!empty($this->getUser())) {
+            $user = $this->getUser();
+        } else {
+            $user = new User();
+            $isCreation = true;
+        }
 
         $form = $this->createForm(AccountFormType::class, $user);
         $form->handleRequest($request);
@@ -38,7 +44,12 @@ class AccountController extends AbstractController
             }
 
             $userRepository->save($user, true);
-            $this->addFlash('success', 'Profil modifié');
+
+            if ($isCreation) {
+                $this->addFlash('success', 'Profil crée');
+            } else {
+                $this->addFlash('success', 'Profil modifié');
+            }
 
             return $this->redirectToRoute('home');
         }
