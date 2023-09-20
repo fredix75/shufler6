@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 #[ORM\Entity(repositoryClass: FluxRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-#[UniqueEntity('url', message: 'Cet URL est déja utilisée')]
+#[UniqueEntity('url', message: "flux.validation.is_uniq")]
 class Flux implements UploadInterface
 {
     #[ORM\Id]
@@ -21,7 +21,7 @@ class Flux implements UploadInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message: 'validation.name.not_blank')]
     private ?string $name = null;
 
     #[ORM\Column(length: 255, unique: true)]

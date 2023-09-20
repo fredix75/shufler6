@@ -62,7 +62,7 @@ export default class extends Controller {
     download(event) {
         let url = $(event.target).closest('a').data('url');
         $(event.target).closest('a').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
-        $.get('/download/resource',
+        $.get('/fr/download/resource',
             {url: url},
             function(data){
                 $(event.target).closest('a').html('<i class="bi bi-download"></i>');
@@ -77,7 +77,7 @@ export default class extends Controller {
 function getData(url, id, page) {
     let type = $('#' + id).data('type');
     getLoading(id);
-    $.get('/flux/handle',
+    $.get('/fr/flux/handle',
         {id: id, url: url, page: page, type: type},
         function(data){
             bindContent(id, data);

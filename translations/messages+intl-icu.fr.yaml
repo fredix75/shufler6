@@ -1,0 +1,7 @@
+menu.edit: 'Editer'
+video.videos_number: >-
+  {count, plural,
+      =0    {Aucune vidéo}
+      =1    {1 vidéo}
+      other {# vidéos}
+  }

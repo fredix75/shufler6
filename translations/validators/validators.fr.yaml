@@ -1,0 +1,4 @@
+flux.validation.is_uniq: 'Cette url est déja utilisée'
+validation.name.not_blank: 'Le nom ne peut pas être vide'
+validation.password.min_car: 'Le mot de passe doit avoir au moins {{ limit }} caractères'
+

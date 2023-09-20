@@ -14,7 +14,7 @@
                 </h1>
                 <div class="page_videos_sous_titre">
                     "{{ search }}"<br/>
-                    <span class="badge bg-secondary">{{ videos_count }} vidéos</span>
+                    <span class="badge bg-secondary">{{ 'video.videos_number'|trans({count: videos_count}) }}</span>
                 </div>
             {% elseif trash is defined %}
                 <h1>Trash <i class="bi bi-trash-fill"></i></h1>

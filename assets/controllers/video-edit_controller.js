@@ -68,7 +68,7 @@ export default class extends Controller {
         }
         if (plateforme && videoKey) {
             //@todo Trigger completion année -> selectPeriod()
-            $.get('/video/getVideoInfos/' + plateforme + '/' + videoKey, function (result) {
+            $.get('/fr/video/getVideoInfos/' + plateforme + '/' + videoKey, function (result) {
                 if(result && result.title) {
                     if ("" === $('[name="video_form[auteur]"]').val()) {
                         $('[name="video_form[auteur]"]').val(result.title);

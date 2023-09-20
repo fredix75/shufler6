@@ -13,7 +13,7 @@
                 {% endif %}
                 {% if is_granted('ROLE_AUTEUR') %}
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><i class="bi bi-pencil"></i> Editer</a>
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><i class="bi bi-pencil"></i> {{ 'menu.edit'|trans }}</a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{{ path('video_edit', { 'id' : 0 }) }}"><i class="bi bi-film"></i> Ajouter une Vidéo</a></li>
                             <li><a class="dropdown-item" href="{{ path('flux_edit', { 'id' : 0 }) }}"><i class="bi bi-rss"></i> Ajouter un Flux</a></li>
@@ -74,7 +74,7 @@
                 </li>
             </ul>
             <form class="d-flex" role="form" action="{{ url('video_search') }}">
-                <div data-controller="autocomplete" data-autocomplete-url-value="/video/autocomplete" role="combobox" style="flex-direction: column;">
+                <div data-controller="autocomplete" data-autocomplete-url-value="/fr/video/autocomplete" role="combobox" style="flex-direction: column;">
                     <input class="form-control me-2" type="search" id="search_field" name="search_field" data-autocomplete-target="input" placeholder="Y'en a ou pas?">
                     <input type="hidden" name="video_id" data-autocomplete-target="hidden"/>
                     <ul class="list-group" data-autocomplete-target="results" style="position:absolute;"></ul>

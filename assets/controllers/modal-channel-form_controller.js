@@ -38,7 +38,7 @@ export default class extends Controller {
             let id = $(event.target).closest('a').data('channel') ?? 0;
             const modal = new Modal('#formModal', {keyboard: false});
             modal.show();
-            $(document).find('.modal-body').html(await $.ajax('/channel/edit/' + id));
+            $(document).find('.modal-body').html(await $.ajax('/fr/channel/edit/' + id));
         }
         event.preventDefault()
     }
