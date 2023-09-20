@@ -61,7 +61,7 @@ class VideoController extends AbstractController
     {
         $search = $request->get('search_field');
 
-        $videos = $videoRepository->searchVideos($search, $page, $this->getParameter('shufler_video')['max_list']);
+        $videos = $search ? $videoRepository->searchVideos($search, $page, $this->getParameter('shufler_video')['max_list']) : [];
         $videosCount = count($videos);
         $pagination = [
             'search_field' => $search,
