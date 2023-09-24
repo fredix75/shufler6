@@ -24,10 +24,10 @@
         </header>
 
         <div class="container-fluid content">
-            {% for label, flashes in app.session.flashbag.all %}
-                {% for flash in flashes %}
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
                     <div class="alert alert-{{ label }}">
-                        <p><i class="{{ label|toIconAlert }}"></i> {{ flash }}</p>
+                        <p><i class="{{ label|toIconAlert }}"></i> {{ message }}</p>
                     </div>
                 {% endfor %}
             {% endfor %}

@@ -1,26 +1,22 @@
 <?php
 
-namespace App\Twig;
+namespace App\Twig\Runtime;
 
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFilter;
+use Twig\Extension\RuntimeExtensionInterface;
 
-class ShuflerExtension extends AbstractExtension
+class ShuflerRuntime implements RuntimeExtensionInterface
 {
     const PATTERN_HTTP = '/^(http)?(s)?(:)?(\/\/)?';
     const YOUTUBE = 'youtube.com';
     const YOUTUBE_WWW = 'www.' . self::YOUTUBE;
     const YOUTUBE_API = 'https://img.' . self::YOUTUBE . '/vi/';
-    const YOUTUBE_EMBED = 'https://' . self::YOUTUBE_WWW . '/embed/';
     const YOUTUBE_WATCH = 'https://' . self::YOUTUBE_WWW . '/watch?v=';
-    const YOUTUBE_SHARE = 'https://youtu.be/';
 
     /**
      * *********************************
      */
     const DAILYMOTION = 'dailymotion.com';
-    const DAILYMOTION_VIDEO = 'https://' . self::DAILYMOTION . '/video';
     const DAILYMOTION_EMBED = '//' . self::DAILYMOTION . '/embed/video';
     const DAILYMOTION_API = 'https://' . self::DAILYMOTION . '/services/oembed?url=';
 
@@ -28,51 +24,14 @@ class ShuflerExtension extends AbstractExtension
      * *********************************
      */
     const VIMEO = 'vimeo.com';
-    const VIMEO_HTTPS = 'https://' . self::VIMEO . '/';
     const VIMEO_PLAYER = 'player.' . self::VIMEO;
-    const VIMEO_PLAYER_HTTPS = 'https://' . self::VIMEO_PLAYER . '/';
-    const VIMEO_VIDEO = '//player.' . self::VIMEO . '/video/';
     const VIMEO_API = 'https://' . self::VIMEO . '/api/v2/video/';
-    const VIMEO_STAFFPICKS = 'https://' . self::VIMEO . '/channels/staffpicks/';
-    const VIDEO_UNAVAILABLE = 'http://s3.amazonaws.com/colorcombos-images/users/1/color-schemes/color-scheme-2-main.png?v=20111009081033';
+
     private array $videoParameters;
 
-    public function __construct(ParameterBagInterface $parameterBag) {
-        $this->videoParameters = $parameterBag->get('shufler_video');
-    }
-
-    public function getFilters(): array
+    public function __construct(ParameterBagInterface $parameterBag)
     {
-        return [
-            new TwigFilter('categorieDisplay', [
-                $this,
-                'categoryFilter'
-            ]),
-            new TwigFilter('genreDisplay', [
-                $this,
-                'genreFilter'
-            ]),
-            new TwigFilter('yearDisplay', [
-                $this,
-                'yearFilter'
-            ]),
-            new TwigFilter('convertFrame', [
-                $this,
-                'convertFrameFilter'
-            ]),
-            new TwigFilter('youtubeChannelId', [
-                $this,
-                'getYoutubeChannelId'
-            ]),
-            new TwigFilter('popUp', [
-                $this,
-                'popUpFilter'
-            ]),
-            new TwigFilter('toIconAlert', [
-                $this,
-                'toIconAlertFilter'
-            ])
-        ];
+        $this->videoParameters = $parameterBag->get('shufler_video');
     }
 
     /**
@@ -151,7 +110,7 @@ class ShuflerExtension extends AbstractExtension
     {
         $frame_prefix = '<img class="embed-responsive-item" src="';
         $width = '100%';
-        $frame = $frame_prefix . self::VIDEO_UNAVAILABLE . '" width=' . $width . ' />';
+        $frame = $frame_prefix . $this->videoParameters['no_signal'] . '" width=' . $width . ' />';
 
         $platform = $this->getPlatform($lien);
 
@@ -236,10 +195,5 @@ class ShuflerExtension extends AbstractExtension
         }
 
         return $icon;
-    }
-
-    public function getName(): string
-    {
-        return 'shufler_extension';
     }
 }
