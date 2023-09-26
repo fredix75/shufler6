@@ -1,5 +1,5 @@
 <a class="video-link" href="{{ video.lien|popUp }}">
-	{{ video.lien|convertFrame|raw}}
+	{{ video.lien|convertFrame}}
 	<div class="media-body">
 		{% if is_granted('VIDEO_EDIT', video) %}
 			<div class="link_edit">
