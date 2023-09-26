@@ -4,8 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Video;
 use App\Form\VideoFormType;
+use App\Helper\VideoHelper;
 use App\Repository\VideoRepository;
-use App\Twig\Runtime\ShuflerRuntime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -84,7 +84,7 @@ class VideoController extends AbstractController
     #[Route('/couch/{categorie}/{genre}/{periode}', name: '_couch', requirements: ['categorie' => '\d+', 'genre' => '\d+|-\d+'])]
     public function couch(
         VideoRepository $videoRepository,
-        ShuflerRuntime $shuflerExtension,
+        VideoHelper $videoHelper,
         int $categorie = 0,
         int $genre = 0,
         string $periode = '0'
@@ -95,7 +95,7 @@ class VideoController extends AbstractController
         $playlist = [$videoParameters['intro_couch']];
         $i = 0;
         foreach ($videos as $video) {
-            $playlist[] = $shuflerExtension->getIdentifer($video->getLien(), 'youtube.com');
+            $playlist[] = $videoHelper->getIdentifer($video->getLien(), 'youtube.com');
             if ($i >= $videoParameters['max_list_couch']) {
                 break;
             }
