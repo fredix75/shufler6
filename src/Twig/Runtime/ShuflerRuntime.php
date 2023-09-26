@@ -72,7 +72,7 @@ class ShuflerRuntime implements RuntimeExtensionInterface
             }
         } elseif (VideoHelper::DAILYMOTION === $platform) {
             try {
-                $vid = preg_replace('/^(http|https)?(:)?(\/\/)?/', 'https://', $lien);
+                $vid = preg_replace('/^(http)?s?(:)?(\/\/)?/', 'https://', $lien);
                 $data = file_get_contents(VideoHelper::DAILYMOTION_API . $vid);
             } catch (\Exception $e) {
                 error_log($e->getMessage());
