@@ -110,6 +110,24 @@ parameters:
     music_collection:
         batch_size: 20
         csv_path: '%uploads%csv/music.csv'
+        max_nb_albums: 20
+        track_fields:
+            - auteur
+            - titre
+            - numero
+            - album
+            - annee
+            - artiste
+            - genre
+            - duree
+            - pays
+            - bitrate
+            - note
+        album_fields:
+            - album
+            - artiste
+            - annee
+            - genre
 
     sniffer:
         upload_directory: 'sniffer'

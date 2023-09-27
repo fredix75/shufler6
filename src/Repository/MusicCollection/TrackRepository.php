@@ -39,6 +39,86 @@ class TrackRepository extends ServiceEntityRepository
         }
     }
 
+    public function getTracksByAlbum(string $artiste, string $album): array
+    {
+        return $this->createQueryBuilder('t')
+            ->orderBy('t.numero', 'ASC')
+            ->andWhere('t.artiste =  :artiste')
+            ->setParameter(':artiste', $artiste)
+            ->andWhere('t.album = :album')
+            ->setParameter(':album', $album)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getTracksAjax(
+        array $data,
+        int $page = 0,
+        int $max = null,
+        string $sort = 'titre',
+        string $dir = 'ASC'
+    ): array
+    {
+        $qb = $this->createQueryBuilder('t');
+
+        if (!empty($data['query'])) {
+            $qb->andWhere('t.auteur like :query OR t.artiste like :query OR t.titre like :query OR t.album like :query')
+                ->setParameter(':query', "%" . $data['query'] . "%");
+        }
+
+        $qb->orderBy('t.' . $sort, $dir);
+
+        if ($sort !== 'annee')
+            $qb->addOrderBy('t.annee', $dir);
+        if ($sort !== 'album')
+            $qb->addOrderBy('t.album', $dir);
+        if ($sort !== 'auteur')
+            $qb->addOrderBy('t.auteur', $dir);
+        if ($sort !== 'artiste')
+            $qb->addOrderBy('t.artiste', $dir);
+
+        $qb->addOrderBy('t.numero', $dir);
+
+        if ($sort !== 'titre')
+            $qb->addOrderBy('t.titre', $dir);
+
+        if ($max) {
+            $qb->setMaxResults($max)
+                ->setFirstResult($page * $max);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getTracksByAlbumsAjax($data, $page = 0, $max = NULL, $sort = 'album', $dir = 'ASC', $getResult = true)
+    {
+        $qb = $this->createQueryBuilder('t');
+
+        $qb->groupBy("t.album")
+            ->addGroupBy("t.artiste");
+
+        if (!empty($data['query'])) {
+            $qb->andWhere('t.auteur like :query OR t.artiste like :query OR t.titre like :query OR t.album like :query')
+                ->setParameter('query', "%" . $data['query'] . "%");
+        }
+
+        $qb->orderBy('t.' . $sort, $dir);
+
+        if ($sort !== 'annee')
+            $qb->addOrderBy('t.annee', $dir);
+        if ($sort !== 'album')
+            $qb->addOrderBy('t.album', $dir);
+        if ($sort !== 'artiste')
+            $qb->addOrderBy('t.artiste', $dir);
+
+        if ($max) {
+            $qb->setMaxResults($max)
+                ->setFirstResult($page * $max);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
 //    /**
 //     * @return Track[] Returns an array of Track objects
 //     */

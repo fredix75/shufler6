@@ -39,6 +39,14 @@ class ArtistRepository extends ServiceEntityRepository
         }
     }
 
+    public function getArtistes() {
+        return $this->createQueryBuilder('a')
+            ->orderBy('a.name', 'ASC')
+            ->andWhere('a.imageUrl IS NOT NULL')
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Artist[] Returns an array of Artist objects
 //     */
