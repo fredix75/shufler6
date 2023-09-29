@@ -56,12 +56,12 @@ class MusicCollectionController extends AbstractController
                 foreach ($tracks as $track) {
                     $output['data'][] = [
                         'id' => $track->getId(),
-                        'auteur' => strtoupper($track->getAuteur()) !== 'DIVERS' ? '<a href="#" class="artiste_track" data-toggle="modal" data-target="#musicModal" data-artiste="' . $track->getAuteur() . '" ><span class="glyphicon glyphicon-chevron-right"></span></a> ' . $track->getAuteur() : $track->getAuteur(),
+                        'auteur' => strtoupper($track->getAuteur()) !== 'DIVERS' ? '<a href="#" class="artiste_track" data-action="modal-music#openModal" data-artist="' . $track->getAuteur() . '" ><i class="bi bi-chevron-right"></i></a> ' . $track->getAuteur() : $track->getAuteur(),
                         'titre' => $track->getTitre(),
                         'numero' => $track->getNumero(),
-                        'album' => '<a href="#" class="album_tracks" data-toggle="modal" data-target="#musicModal" data-artiste="' . $track->getArtiste() . '" data-album="' . $track->getAlbum() . '" ><span class="glyphicon glyphicon-chevron-right"></span></a> ' . $track->getAlbum(),
+                        'album' => '<a href="#" class="album_tracks" data-action="modal-music#openModal" data-artist="' . $track->getArtiste() . '" data-album="' . $track->getAlbum() . '" ><i class="bi bi-chevron-right"></i></a> ' . $track->getAlbum(),
                         'annee' => $track->getAnnee(),
-                        'artiste' => strtoupper($track->getArtiste()) !== 'DIVERS' ? '<a href="#" class="artiste_track" data-toggle="modal" data-target="#musicModal" data-artiste="' . $track->getArtiste() . '" ><span class="glyphicon glyphicon-chevron-right"></span></a> ' . $track->getArtiste() : $track->getArtiste(),
+                        'artiste' => strtoupper($track->getArtiste()) !== 'DIVERS' ? '<a href="#" class="artiste_track" data-action="modal-music#openModal" data-artist="' . $track->getArtiste() . '" ><i class="bi bi-chevron-right"></i></a> ' . $track->getArtiste() : $track->getArtiste(),
                         'genre' => $track->getGenre(),
                         'duree' => $track->getDuree(),
                         'pays' => $track->getPays(),
@@ -111,10 +111,10 @@ class MusicCollectionController extends AbstractController
         foreach ($tracks as $track) {
             $output['data'][] = [
                 'numero' => $track->getNumero(),
-                'titre' => $track->getTitre(),
+                'titre'  => $track->getTitre(),
                 'auteur' => $track->getAuteur(),
-                'duree' => $track->getDuree(),
-                'annee' => $track->getAnnee()
+                'duree'  => $track->getDuree(),
+                'annee'  => $track->getAnnee()
             ];
         }
         return new Response(json_encode($output), Response::HTTP_OK, [
@@ -127,7 +127,7 @@ class MusicCollectionController extends AbstractController
     {
         $artists = $artistRepository->getArtistes();
         return $this->render('music/artists.html.twig', [
-            'artists' => $artists
+            'artists' => $artists,
         ]);
     }
 
@@ -136,7 +136,7 @@ class MusicCollectionController extends AbstractController
     {
         $albums = $albumRepository->getAlbums();
         return $this->render('music/albums.html.twig', [
-            'albums' => $albums
+            'albums' => $albums,
         ]);
     }
 
@@ -154,61 +154,39 @@ class MusicCollectionController extends AbstractController
         }
 
         return $this->render('music/albums_api.html.twig', [
-            'liste' => $liste
+            'liste' => $liste,
         ]);
     }
 
-    /**
-     * Get Artistes Random View of some Artists
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @Security("has_role('ROLE_ADMIN')")
-     */
-    public function artistesApiAction()
+    #[Route('/artists_api', name: '_artists_api')]
+    public function artistsApi(ArtistRepository $artistRepository, ParameterBagInterface $parameterBag): Response
     {
-        $em = $this->getDoctrine()->getManager();
-        $artistes = $em->getRepository('SHUFLERShuflerBundle:Artiste')->getArtistes('youtube');
+        $artists = $artistRepository->getArtistes();
 
-        shuffle($artistes);
+        shuffle($artists);
 
         $liste = [];
-        foreach ($artistes as $key => $artiste) {
-            if ($key >= 500)
+        foreach ($artists as $key => $artist) {
+            if ($key > $parameterBag->get('music_collection')['max_nb_artists'])
                 break;
 
-            $liste[] = $artiste;
+            $liste[] = $artist;
         }
 
-        return $this->render('SHUFLERShuflerBundle:Music:artistesApi.html.twig', array(
-            'liste' => $liste
-        ));
+        return $this->render('music/artistes_api.html.twig', [
+            'liste' => $liste,
+        ]);
     }
 
-    /**
-     * Get Random Tracks
-     *
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @Security("has_role('ROLE_ADMIN')")
-     */
-    public function getRandomTracksAction(Request $request)
+    public function getRandomTracks(Request $request, TrackRepository $trackRepository, ParameterBagInterface $parameterBag)
     {
         $genre = $request->query->get('genre');
         $note = $request->query->get('note');
         $annee = $request->query->get('annee');
         $search = $request->query->get('search');
 
-        $tracks = $this->getDoctrine()
-            ->getManager()
-            ->getRepository('SHUFLERShuflerBundle:MusicTrack')
-            ->getTracks($genre, $note, $annee, $search);
+        $tracks = $trackRepository->getTracks($genre, $note, $annee, $search);
 
-        if (empty($tracks)) {
-            $tracks = $this->getDoctrine()
-                ->getManager()
-                ->getRepository('SHUFLERShuflerBundle:MusicTrack')
-                ->getTracks();
-        }
         shuffle($tracks);
 
         $liste = "";
@@ -217,15 +195,15 @@ class MusicCollectionController extends AbstractController
                 $single = $track->getYoutubeKey();
                 continue;
             }
-            if ($key > 100)
+            if ($key > $parameterBag->get('music_collection')['max_random'])
                 break;
 
             $liste .= $track->getYoutubeKey() . ',';
         }
 
-        return $this->render('SHUFLERShuflerBundle:Music:musicList.html.twig', array(
+        return $this->render('music/music_list.html.twig', [
             'single' => $single,
-            'liste' => $liste
-        ));
+            'liste' => $liste,
+        ]);
     }
 }

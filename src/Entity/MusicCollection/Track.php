@@ -44,7 +44,7 @@ class Track
     private ?string $bitrate = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $note = null;
+    private ?float $note = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $youtubeKey = null;

@@ -1,5 +1,15 @@
 {% extends 'base.html.twig' %}
 
 {%  block body %}
-
+    <div class="row">
+        <table id="container-{{ display_mode }}" class="display">
+            <thead>
+            <tr>
+                {% for column in columns_db %}
+                    <th>{{ column|capitalize }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+        </table>
+    </div>
 {% endblock %}

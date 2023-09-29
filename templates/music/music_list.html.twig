@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() :: Music List }}{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <section class="col-sm-12 col-md-12" style="background-color: black;">
+            <div id="player" {{ stimulus_controller('videos-couch', {
+                videos : list
+            }) }}></div>
+        </section>
+    </div>
+{% endblock %}
