@@ -58,21 +58,17 @@ class ShuflerRuntime implements RuntimeExtensionInterface
             $frame = $frame_prefix . $video . '" width=' . $width . ' />';
 
         } elseif ($platform === VideoHelper::VIMEO) {
-
             try {
-                $data = null;
-                if ($vid != 112297136) { // Exception sur id (pas le choix) --- #la merde
-                    $data = file_get_contents(VideoHelper::VIMEO_API . $vid . '.json');
-                }
+                $data = file_get_contents(VideoHelper::VIMEO_API . $vid . '.json');
             } catch (\Exception $e) {
                 error_log($e->getMessage());
             }
-            if ($data != null && $data = json_decode($data)) {
+            if ($data && $data = json_decode($data)) {
                 $frame = $frame_prefix . $data[0]->thumbnail_medium . '" width=' . $width . ' />';
             }
         } elseif (VideoHelper::DAILYMOTION === $platform) {
             try {
-                $vid = preg_replace('/^(https?)?(:)?(\/\/)?/', 'https://', $lien);
+                $vid = preg_replace('/^(https?:?)?(\/\/)?/', 'https://', $lien);
                 $data = file_get_contents(VideoHelper::DAILYMOTION_API . $vid);
             } catch (\Exception $e) {
                 error_log($e->getMessage());
