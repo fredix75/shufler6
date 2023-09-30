@@ -39,6 +39,15 @@ class MoodRepository extends ServiceEntityRepository
         }
     }
 
+    public function search(string $query): array
+    {
+        return $this->createQueryBuilder('m')
+            ->where('m.name like :query')
+            ->setParameter(':query', '%'.$query.'%')
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Mood[] Returns an array of Mood objects
 //     */

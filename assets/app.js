@@ -14,7 +14,18 @@ import './bootstrap';
 import $ from 'jquery';
 
 require('select2')
-$('.select2').select2();
+$('.select2').select2({
+    ajax: {
+        url: $('.select2').data('remote'),
+        dataType: 'json',
+        processResults: function (data) {
+            return {
+                results: data
+            };
+        }
+        // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
+    }
+});
 
 
 import { Modal, Tooltip, Toast, Popover } from 'bootstrap';

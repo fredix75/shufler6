@@ -15,14 +15,18 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints\Range;
 
 class VideoFormType extends AbstractType
 {
     private array $videoParameters;
 
-    public function __construct(ParameterBagInterface $parameterBag) {
+    private UrlGeneratorInterface $urlGenerator;
+
+    public function __construct(ParameterBagInterface $parameterBag, UrlGeneratorInterface $urlGenerator) {
         $this->videoParameters = $parameterBag->get('shufler_video');
+        $this->urlGenerator = $urlGenerator;
     }
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -102,11 +106,10 @@ class VideoFormType extends AbstractType
                     'class' => 'input-group mb-3'
                 ],
             ])
-            ->add('moods', EntityType::Class, [
+            ->add('moods', SearchableEntityType::Class, [
                 'class' => Mood::class,
-                'choice_label' => 'name',
-                'multiple' => true,
                 'required' => false,
+                'search' => $this->urlGenerator->generate('mood_get'),
                 'attr' => [
                     'class' => 'select2'
                 ],

@@ -47,4 +47,9 @@ class Mood
     {
         return $this->videos;
     }
+
+    public function __toString(): string
+    {
+        return $this->name;
+    }
 }
