@@ -2,17 +2,21 @@
 namespace App\Controller;
 
 use App\Repository\MusicCollection\ArtistRepository;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\MusicCollection\AlbumRepository;
 use App\Repository\MusicCollection\TrackRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/music', name: 'music')]
 #[IsGranted('ROLE_ADMIN')]
 class MusicCollectionController extends AbstractController
 {
 
-    #[Route('/all/{mode}', name: '_all', requirements: ['mode' => '/^[tracks|albums]$/'], default: 'tracks')]
+    #[Route('/all/{mode}', name: '_all', requirements: ['mode' => 'tracks|albums'], defaults: ['mode' => 'tracks'])]
     public function getAll(
         Request $request,
         ParameterBagInterface $parameters,
@@ -20,10 +24,9 @@ class MusicCollectionController extends AbstractController
         string $mode = 'tracks'
     ): Response
     {
-
-        $columnsToDisplay = $parameters->get('music_collection')['track_columns'];
+        $columnsToDisplay = $parameters->get('music_collection')['track_fields'];
         if ($mode === 'albums') {
-            $columnsToDisplay = $parameters->get('music_collection')['album_columns'];
+            $columnsToDisplay = $parameters->get('music_collection')['album_fields'];
         }
 
         if ($request->isXmlHttpRequest()) {
@@ -50,7 +53,7 @@ class MusicCollectionController extends AbstractController
                 $output = [
                     'data' => [],
                     'recordsFiltered' => count($trackRepository->getTracksAjax($filters, 0, false)),
-                    'recordsTotal' => count($trackRepository->count([])),
+                    'recordsTotal' => $trackRepository->count([]),
                 ];
 
                 foreach ($tracks as $track) {
@@ -66,7 +69,7 @@ class MusicCollectionController extends AbstractController
                         'duree' => $track->getDuree(),
                         'pays' => $track->getPays(),
                         'bitrate' => $track->getBitrate(),
-                        'note' => $track->getNote()
+                        'note' => $track->getNote() != 0 ? $track->getNote() : ''
                     ];
                 }
             } elseif ($mode === 'albums') {
@@ -75,32 +78,37 @@ class MusicCollectionController extends AbstractController
 
                 $output = [
                     'data' => [],
-                    'recordsFiltered' => count($trackRepository->getAlbumsAjax($filters, 0, false)),
-                    'recordsTotal' => count($trackRepository->count([])),
+                    'recordsFiltered' => count($trackRepository->getTracksByAlbumsAjax($filters, 0, false)),
+                    'recordsTotal' => $trackRepository->count([]),
                 ];
 
                 foreach ($albums as $album) {
+                    $annees = array_unique(json_decode($album['annees'], true));
+                    sort($annees);
+                    $genres = array_unique(json_decode($album['genres'], true));
                     $output['data'][] = [
-                        'album' => '<a href="#" class="album_tracks" data-toggle="modal" data-target="#musicModal" data-artiste="' . $album->getArtiste() . '" data-album="' . $album->getAlbum() . '" ><span class="glyphicon glyphicon-chevron-right"></span></a> ' . $album->getAlbum(),
-                        'annee' => $album->getAnnee(),
-                        'artiste' => strtoupper($album->getArtiste()) !== 'DIVERS' ? '<a href="#" class="artiste_track" data-toggle="modal" data-target="#musicModal" data-artiste="' . $album->getArtiste() . '" ><span class="glyphicon glyphicon-chevron-right"></span></a> ' . $album->getArtiste() : $album->getArtiste(),
-                        'genre' => $album->getGenre()
+                        'album' => '<a href="#" class="album_tracks" data-toggle="modal" data-target="#musicModal" data-artiste="' . $album['artiste']. '" data-album="' . $album['album'] . '" ><span class="glyphicon glyphicon-chevron-right"></span></a> ' . $album['album'],
+                        'annee' => implode(', ', $annees),
+                        'artiste' => strtoupper($album['artiste']) !== 'DIVERS' ? '<a href="#" class="artiste_track" data-toggle="modal" data-target="#musicModal" data-artiste="' . $album['artiste'] . '" ><span class="glyphicon glyphicon-chevron-right"></span></a> ' . $album['artiste'] : $album['artiste'],
+                        'genre' => implode(', ', $genres),
                     ];
                 }
             }
-            return new Response(json_encode($output), Response::HTTP_OK, [
+
+            return new Response($this->json($output)->getContent(), Response::HTTP_OK, [
                 'Content-Type' => 'application/json'
             ]);
         }
 
         return $this->render('music/music.html.twig', [
-            'display_mode' => $mode,
+            'path_url' => $this->generateUrl('music_all', ['mode'=> $mode]),
+            'page_length' => $parameters->get('music_collection')['music_all_nb_b_page'],
             'columns_db' => $columnsToDisplay,
         ]);
     }
 
     #[Route('/tracks_album', name: '_tracks_album')]
-    public function getTracksByAlbumAjax(Request $request, TrackRepository $trackRepository)
+    public function getTracksByAlbumAjax(Request $request, TrackRepository $trackRepository): Response
     {
         $artist = $request->get('artist');
         $album = $request->get('album');

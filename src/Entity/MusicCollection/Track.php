@@ -26,7 +26,7 @@ class Track
     private ?int $numero = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $annee = null;
+    private ?string $annee = null;
 
     #[ORM\Column(length: 255)]
     private ?string $artiste = null;
@@ -102,12 +102,12 @@ class Track
         return $this;
     }
 
-    public function getAnnee(): ?int
+    public function getAnnee(): ?string
     {
         return $this->annee;
     }
 
-    public function setAnnee(?int $annee): self
+    public function setAnnee(?string $annee): self
     {
         $this->annee = $annee;
 
@@ -174,12 +174,12 @@ class Track
         return $this;
     }
 
-    public function getNote(): ?int
+    public function getNote(): ?float
     {
         return $this->note;
     }
 
-    public function setNote(?int $note): self
+    public function setNote(?float $note): self
     {
         $this->note = $note;
 

@@ -110,6 +110,7 @@ parameters:
     music_collection:
         batch_size: 20
         csv_path: '%uploads%csv/music.csv'
+        music_all_nb_b_page: 250
         max_nb_albums: 20
         max_nb_artists: 500
         max_random: 100

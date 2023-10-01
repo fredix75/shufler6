@@ -4,6 +4,7 @@ namespace App\Repository\MusicCollection;
 
 use App\Entity\MusicCollection\Track;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -116,14 +117,21 @@ class TrackRepository extends ServiceEntityRepository
 
         $qb->orderBy('t.' . $sort, $dir);
 
-        if ($sort !== 'annee')
+        if ($sort !== 'annee') {
             $qb->addOrderBy('t.annee', $dir);
-        if ($sort !== 'album')
+        }
+
+        if ($sort !== 'album') {
             $qb->addOrderBy('t.album', $dir);
-        if ($sort !== 'auteur')
+        }
+
+        if ($sort !== 'auteur') {
             $qb->addOrderBy('t.auteur', $dir);
-        if ($sort !== 'artiste')
+        }
+
+        if ($sort !== 'artiste') {
             $qb->addOrderBy('t.artiste', $dir);
+        }
 
         $qb->addOrderBy('t.numero', $dir);
 
@@ -138,39 +146,44 @@ class TrackRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    /**
+     * @throws Exception
+     */
     public function getTracksByAlbumsAjax(
         array $data,
         int $page = 0,
-        int $max = null,
+        int $max = 250,
         string $sort = 'album',
         string $dir = 'ASC',
     ): array
     {
-        $qb = $this->createQueryBuilder('t');
 
-        $qb->groupBy("t.album")
-            ->addGroupBy("t.artiste");
-
+        $params['sort'] = $sort;
+        $params['dir'] = $dir;
+        //$params['max'] = $max;
+       // $params['offset'] = $page ? $page * $max - 1 : 0;
+        $conn = $this->getEntityManager()->getConnection();
+        $rawSQL = 'SELECT album, artiste, json_arrayagg(annee) as annees, json_arrayagg(genre) as genres FROM track';
         if (!empty($data['query'])) {
-            $qb->andWhere('t.auteur like :query OR t.artiste like :query OR t.titre like :query OR t.album like :query')
-                ->setParameter('query', "%" . $data['query'] . "%");
+            $rawSQL .= ' WHERE auteur like :query OR artiste like :query OR titre like :query OR album like :query';
+            $params['query'] = '%'.$data['query'].'%';
         }
+        $rawSQL .= ' GROUP BY album, artiste ORDER BY :sort :dir ';
 
-        $qb->orderBy('t.' . $sort, $dir);
+        // TODO Gérer les params SORT, MAX et OFFSET (j s p pqoi ca marche pas)
 
-        if ($sort !== 'annee')
-            $qb->addOrderBy('t.annee', $dir);
-        if ($sort !== 'album')
-            $qb->addOrderBy('t.album', $dir);
-        if ($sort !== 'artiste')
-            $qb->addOrderBy('t.artiste', $dir);
-
-        if ($max) {
-            $qb->setMaxResults($max)
-                ->setFirstResult($page * $max);
+        if ($sort !== 'album') {
+            $rawSQL .= ' ,album ' . $dir;
         }
+        if ($sort !== 'artiste') {
+            $rawSQL .= ',artiste ' . $dir;
+        }
+        $offset = $page ? $page * $max - 1 : 0;
+        $rawSQL .= ' LIMIT ' . $max . ' OFFSET ' .$offset;
 
-        return $qb->getQuery()->getResult();
+        $stmt = $conn->prepare($rawSQL);
+
+        return  $stmt->executeQuery($params)->fetchAllAssociative();
     }
 
 //    /**

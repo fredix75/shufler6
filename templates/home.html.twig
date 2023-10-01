@@ -2,7 +2,7 @@
 
 {% block body %}
     <div class="row">
-        <section class="col col-12 col-sm-12 col-md-12 col-lg-9 ">
+        <section class="col col-12 col-sm-12 col-md-12 col-lg-9">
             {% for video in anims|slice(0, 1) %}
                 <div class="ratio ratio-16x9">
                     <iframe  class="media embed-responsive-item" src="{{  video.lien }}" allowfullscreen></iframe>
