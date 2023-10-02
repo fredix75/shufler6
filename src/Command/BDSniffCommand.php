@@ -36,6 +36,7 @@ class BDSniffCommand extends Command
         $this
             ->addArgument('revue', InputArgument::REQUIRED, 'Nom de la Revue')
             ->addArgument('pattern', InputArgument::REQUIRED, 'Pattern')
+            ->addArgument('limite', InputArgument::REQUIRED, 'Limite')
         ;
     }
 
@@ -44,8 +45,9 @@ class BDSniffCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $revue = $input->getArgument('revue');
         $pattern = $input->getArgument('pattern');
+        $limit = $input->getArgument('limite');
 
-        $url = 'Url root';
+        $url = 'URL';
 
         $browser = new HttpBrowser(HttpClient::create());
 
@@ -89,7 +91,11 @@ class BDSniffCommand extends Command
             }
 
             $index++;
+            if ($index >= $limit) {
+                break;
+            }
             $pattern= preg_replace( '~(.*)[0-9]+~su', '${1}'.$index, $pattern);
+            sleep(3);
         }
 
 
