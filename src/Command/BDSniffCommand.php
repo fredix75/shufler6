@@ -47,7 +47,7 @@ class BDSniffCommand extends Command
         $pattern = $input->getArgument('pattern');
         $limit = $input->getArgument('limite');
 
-        $url = 'URL';
+        $url = 'URL root';
 
         $browser = new HttpBrowser(HttpClient::create());
 
