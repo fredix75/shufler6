@@ -104,7 +104,7 @@ class ImportTracksCommand extends Command
         }
 
         // TRUNCATE INITIAL DB -- désactivé pour le moment
-        $query = 'TRUNCATE music_track;';
+        $query = 'TRUNCATE track;';
 
 
         // Define the size of record, the frequency for persisting the data and the current index of records
@@ -135,7 +135,7 @@ class ImportTracksCommand extends Command
 
             if ($track->getNote() == 5) {
                 try {
-                    $search = str_replace(' ', '%20', $row[0] . ' ' . $row[2]);
+                    $search = $row[0] . ' ' . $row[2];
                     $response = $this->httpClient->request('GET', sprintf('%s/search', $this->apiUrl), [
                         'query' => [
                             'key'       => $this->apiKey,
@@ -149,13 +149,10 @@ class ImportTracksCommand extends Command
                         ]
                     ]);
 
-
                     $resultYouToube = json_decode($response->getContent(), true)['items'] ?? [];
-
-                    // @todo à tester
-                    //$track->setKey($resultYouToube['items'][0]['videoId']);
+                    $track->setYoutubeKey($resultYouToube[0]['id']['videoId']);
                 } catch (\Exception $e) {
-
+                    $output->writeln($e->getMessage());
                 }
             }
 
@@ -202,26 +199,29 @@ class ImportTracksCommand extends Command
         // Starting progress
         $progress = new ProgressBar($output, $size);
         $progress->start();
+
         foreach ($this->artistes as $artisteName => $value) {
             $artiste = new Artist();
             $artiste->setName($artisteName);
             try {
-/*                $response = $this->httpClient->request('GET',  sprintf('%s', $this->getParameter('lastfm_api_url')), [
+                $response = $this->httpClient->request('GET',  $this->parameters['last_fm_api_url'], [
                     'query' => [
-                        'api_key'  => $this->getParameter('youtube_key'),
+                        'api_key'  => $this->parameters['last_fm_key'],
                         'artist'   => $artisteName,
                         'method' => 'artist.getInfo',
+                        'format' => 'json',
                     ],
                     'headers' => [
                         'Content-Type: application/json',
                         'Accept: application/json',
                     ]
                 ]);
+                $response = json_decode($response->getContent(), true) ?? [];
 
-                $artiste->setImageUrl($response->artist->image[4]->{'#text'});
-                $artiste->setBio($response->artist->bio->content);*/
+                $artiste->setImageUrl($response['artist']['image'][4]['#text']);
+                $artiste->setBio($response['artist']['bio']['content']);
             } catch(\Exception $e) {
-
+                $output->writeln($e->getMessage());
             }
             $this->entityManager->persist($artiste);
 
@@ -234,8 +234,10 @@ class ImportTracksCommand extends Command
 
             $i ++;
         }
+
         $this->entityManager->flush();
         $this->entityManager->clear();
+
         $progress->finish();
 
         return true;
@@ -253,6 +255,7 @@ class ImportTracksCommand extends Command
         // Starting progress
         $progress = new ProgressBar($output, $size);
         $progress->start();
+
         foreach ($this->albums as $artisteName => $albums) {
             foreach ($albums as $albumName => $features) {
                 $album = new Album();
@@ -263,7 +266,6 @@ class ImportTracksCommand extends Command
 
                 if (strtolower($albumName) != 'divers' && strtolower($artisteName) != 'divers') {
                     $search = $artisteName . " " . $albumName;
-                    $search = str_replace(" ", "%20", $search);
 
                     try {
                         $response = $this->httpClient->request('GET', sprintf('%s/search', $this->apiUrl), [
@@ -279,9 +281,10 @@ class ImportTracksCommand extends Command
                                 'Accept: application/json',
                             ]
                         ]);
-                        $album->setYoutubeKey($response['items'][0]['playlistId']);
+                        $response = json_decode($response->getContent(), true);
+                        $album->setYoutubeKey($response['items'][0]['id']['playlistId']);
                     } catch (\Exception $e) {
-
+                        $output->writeln($e->getMessage());
                     }
                 }
 
