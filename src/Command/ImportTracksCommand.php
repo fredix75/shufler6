@@ -29,6 +29,8 @@ class ImportTracksCommand extends Command
 
     private string $apiKey;
 
+	private array $tracks = []; 
+
     private array $artistes = [];
 
     private array $albums = [];
@@ -43,7 +45,7 @@ class ImportTracksCommand extends Command
         $this->parameters = $parameterBag->get('music_collection');
         $this->apiUrl = $parameterBag->get('youtube_api_url');
         $this->apiKey = $parameterBag->get('youtube_key');
-
+		$this->tracks = $this->trackRepository->findAll();
         parent::__construct();
     }
 
@@ -111,6 +113,9 @@ class ImportTracksCommand extends Command
         header('Content-type: text/html; charset=UTF-8');
         // Processing on each row of data
         foreach ($data as $row) {
+			
+			$continue = false;
+			
             $track = new Track();
             $track->setAuteur($row[0]);
             $track->setNumero($row[1]);
@@ -125,15 +130,38 @@ class ImportTracksCommand extends Command
             $track->setDuree($row[8]);
             $track->setBitrate($row[9]);
             $track->setNote((int)$row[10]);
+			// TODO implements setHash() & getHash() + hashMethod
+			$track->setHash = 'hAsH';
 
+			foreach ($this>tracks as &$trackInBase) {
+				if ($trackInBase->getHash() === $track->getHash()) {
+					$continue = true;
+					if (!$trackInBase->getYoutubeKey()) {
+						$track->setId($trackInBase->getId());
+						$continue = false;
+					}
+					unset($trackInBase)
+					break;
+				}
+				
+				if (($trackInBase->getNumero() === $track->getNumero() || $trackInBase->getTitre() === $track->getTitre())
+					&& $trackInBase->getAuteur() === $track->getAuteur()
+					&& $trackInBase->getAlbum() === $track->getAlbum()
+				) {
+					if ($trackInBase->getYoutubeKey()) {
+						$track->getYoutubeKey($trackInBase->getYoutubeKey());
+					}
+					$track->setId($trackInBase->getId());
+					unset($trackInBase);
+					break;
+				}
+			}
+			
+			if ($continue) {
+				continue;
+			}
 
-            $this->trackRepository->findOneBy([
-                'auteur' => $track->getAuteur(),
-                'titre' => $track->getTitre(),
-                'titre' => $track->getTitre(),
-            ]);
-
-            if ($track->getNote() == 5) {
+            if ($track->getNote() == 5 && !$track->getYoutubeKey()) {
                 try {
                     $search = $row[0] . ' ' . $row[2];
                     $response = $this->httpClient->request('GET', sprintf('%s/search', $this->apiUrl), [
@@ -180,7 +208,14 @@ class ImportTracksCommand extends Command
         }
 
         $this->entityManager->flush();
-        $this->entityManager->clear();
+		
+		// Suppression du vieux reliquat en base non identifié
+		foreach($this->tracks as $trackInBase) {
+			$this->entityManager->remove($trackInBase);
+		}
+		$this->entityManager->flush();
+        
+		$this->entityManager->clear();
 
         $progress->finish();
 
