@@ -6,6 +6,7 @@ use App\Entity\MusicCollection\Album;
 use App\Entity\MusicCollection\Artist;
 use App\Entity\MusicCollection\Track;
 use App\Helper\CsvConverter;
+use App\Repository\MusicCollection\TrackRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -22,12 +23,6 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 )]
 class ImportTracksCommand extends Command
 {
-    private EntityManagerInterface $entityManager;
-
-    private CsvConverter $converter;
-
-    private HttpClientInterface $httpClient;
-
     private array $parameters;
 
     private string $apiUrl;
@@ -39,14 +34,12 @@ class ImportTracksCommand extends Command
     private array $albums = [];
 
     public function __construct(
-        EntityManagerInterface $entityManager,
-        CsvConverter $csvConverter,
-        HttpClientInterface $httpClient,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly CsvConverter $converter,
+        private readonly HttpClientInterface $httpClient,
+        private readonly TrackRepository $trackRepository,
         ParameterBagInterface $parameterBag
     ) {
-        $this->entityManager = $entityManager;
-        $this->converter = $csvConverter;
-        $this->httpClient = $httpClient;
         $this->parameters = $parameterBag->get('music_collection');
         $this->apiUrl = $parameterBag->get('youtube_api_url');
         $this->apiKey = $parameterBag->get('youtube_key');
@@ -133,6 +126,13 @@ class ImportTracksCommand extends Command
             $track->setBitrate($row[9]);
             $track->setNote((int)$row[10]);
 
+
+            $this->trackRepository->findOneBy([
+                'auteur' => $track->getAuteur(),
+                'titre' => $track->getTitre(),
+                'titre' => $track->getTitre(),
+            ]);
+
             if ($track->getNote() == 5) {
                 try {
                     $search = $row[0] . ' ' . $row[2];
@@ -169,7 +169,7 @@ class ImportTracksCommand extends Command
                 ];
             }
 
-            // Each 20 users persisted we flush everything
+            // Each 20 items persisted we flush everything
             if (($i%$this->parameters['batch_size']) === 0) {
                 $this->entityManager->flush();
                 $this->entityManager->clear();
@@ -225,7 +225,7 @@ class ImportTracksCommand extends Command
             }
             $this->entityManager->persist($artiste);
 
-            // Each 20 users persisted we flush everything
+            // Each 20 items persisted we flush everything
             if (($i%$this->parameters['batch_size']) === 0) {
                 $this->entityManager->flush();
                 $this->entityManager->clear();
@@ -289,7 +289,7 @@ class ImportTracksCommand extends Command
                 }
 
                 $this->entityManager->persist($album);
-                // Each 20 users persisted we flush everything
+                // Each 20 items persisted we flush everything
                 if (($i%$this->parameters['batch_size']) === 0) {
                     $this->entityManager->flush();
                     $this->entityManager->clear();
