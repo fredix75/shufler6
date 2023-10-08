@@ -8,6 +8,9 @@ use App\Entity\MusicCollection\Track;
 use App\Helper\CsvConverter;
 use App\Repository\MusicCollection\TrackRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Id\AssignedGenerator;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -98,10 +101,6 @@ class ImportTracksCommand extends Command
             return false;
         }
 
-        // TRUNCATE INITIAL DB -- désactivé pour le moment
-        $query = 'TRUNCATE track;';
-
-
         // Define the size of record, the frequency for persisting the data and the current index of records
         $size = count($data);
         $i = 1;
@@ -129,30 +128,23 @@ class ImportTracksCommand extends Command
             $track->setPays($row[7]);
             $track->setDuree($row[8]);
             $track->setBitrate($row[9]);
-            $track->setNote((int)$row[10]);
-			// TODO implements setHash() & getHash() + hashMethod
-			$track->setHash = 'hAsH';
+            $track->setNote(trim($row[10]) === 'No Rating' ? null : (int)$row[10]);
 
-			foreach ($this>tracks as &$trackInBase) {
-				if ($trackInBase->getHash() === $track->getHash()) {
-					$continue = true;
-					if (!$trackInBase->getYoutubeKey()) {
-						$track->setId($trackInBase->getId());
-						$continue = false;
-					}
-					unset($trackInBase)
+			$hash = hash('sha256', $track->stringify());
+			foreach ($this->tracks as $key => &$trackInBase) {
+				if ($trackInBase->getHash() && $trackInBase->getHash() === $hash) {
+					if ($trackInBase->getYoutubeKey()) {
+                        $continue = true;
+                        unset($this->tracks[$key]);
+                    }
 					break;
 				}
 				
 				if (($trackInBase->getNumero() === $track->getNumero() || $trackInBase->getTitre() === $track->getTitre())
-					&& $trackInBase->getAuteur() === $track->getAuteur()
-					&& $trackInBase->getAlbum() === $track->getAlbum()
+					&& $trackInBase->getAuteur() === $track->getAuteur() && $trackInBase->getAlbum() === $track->getAlbum()
 				) {
-					if ($trackInBase->getYoutubeKey()) {
-						$track->getYoutubeKey($trackInBase->getYoutubeKey());
-					}
-					$track->setId($trackInBase->getId());
-					unset($trackInBase);
+                    dump('ok');
+                    $track->setYoutubeKey($trackInBase->getYoutubeKey() ?? '');
 					break;
 				}
 			}
@@ -208,7 +200,7 @@ class ImportTracksCommand extends Command
         }
 
         $this->entityManager->flush();
-		
+
 		// Suppression du vieux reliquat en base non identifié
 		foreach($this->tracks as $trackInBase) {
 			$this->entityManager->remove($trackInBase);

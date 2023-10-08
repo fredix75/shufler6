@@ -2,10 +2,13 @@
 
 namespace App\Entity\MusicCollection;
 
+use App\EventListener\TrackListener;
 use App\Repository\MusicCollection\TrackRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\EntityListeners;
 
 #[ORM\Entity(repositoryClass: TrackRepository::class)]
+#[EntityListeners([TrackListener::class])]
 class Track
 {
     #[ORM\Id]
@@ -49,9 +52,19 @@ class Track
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $youtubeKey = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $hash = null;
+
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getTitre(): ?string
@@ -196,5 +209,23 @@ class Track
         $this->youtubeKey = $youtubeKey;
 
         return $this;
+    }
+
+    public function getHash(): ?string
+    {
+        return $this->hash;
+    }
+
+    public function setHash(?string $hash): self
+    {
+        $this->hash = $hash;
+
+        return $this;
+    }
+
+    public function stringify(): string
+    {
+        return $this->numero.$this->titre.$this->auteur.$this->album.$this->artiste
+            .$this->annee.$this->bitrate.$this->duree.$this->genre.$this->note.$this->pays;
     }
 }
