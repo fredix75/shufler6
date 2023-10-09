@@ -99,7 +99,7 @@ class BDSniffCommand extends Command
         }
 
 
-        $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
+        $io->success('On a bien snifffffffféééééé.');
 
         return Command::SUCCESS;
     }
