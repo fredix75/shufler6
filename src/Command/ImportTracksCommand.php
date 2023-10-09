@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Id\AssignedGenerator;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use phpDocumentor\Reflection\DocBlock\Serializer;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -18,6 +19,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[AsCommand(
@@ -43,6 +47,7 @@ class ImportTracksCommand extends Command
         private readonly CsvConverter $converter,
         private readonly HttpClientInterface $httpClient,
         private readonly TrackRepository $trackRepository,
+        private SerializerInterface $serializer,
         ParameterBagInterface $parameterBag
     ) {
         $this->parameters = $parameterBag->get('music_collection');
@@ -70,12 +75,13 @@ class ImportTracksCommand extends Command
 
         $output->writeln('<comment>Step 2. Importing Artists</comment>');
 
+
         if (!$this->importArtists($input, $output)) {
             $io->error('No Import');
 
             return Command::FAILURE;
         }
-
+        /**
         $output->writeln('<comment>Step 3. Importing Albums</comment>');
 
         if (!$this->importAlbums($input, $output)) {
@@ -83,7 +89,7 @@ class ImportTracksCommand extends Command
 
             return Command::FAILURE;
         }
-
+**/
         $now = new \DateTime();
         $io->writeln(sprintf('<comment>--- End: %s ---</comment>', $now->format('d-m-Y G:i:s')));
 
@@ -129,23 +135,30 @@ class ImportTracksCommand extends Command
             $track->setDuree($row[8]);
             $track->setBitrate($row[9]);
             $track->setNote(trim($row[10]) === 'No Rating' ? null : (int)$row[10]);
-
+            
 			$hash = hash('sha256', $track->stringify());
 			foreach ($this->tracks as $key => &$trackInBase) {
 				if ($trackInBase->getHash() && $trackInBase->getHash() === $hash) {
-					if ($trackInBase->getYoutubeKey()) {
-                        $continue = true;
-                        unset($this->tracks[$key]);
+                    $continue = true;
+                    if (!$trackInBase->getYoutubeKey()) {
+                        $continue = false;
+                        $track->setId($trackInBase->getId());
+                        $serializedTrack = $this->serializer->serialize($track, 'json');
+                        $track = $this->serializer->deserialize($serializedTrack, Track::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $trackInBase]);
                     }
+                    unset($this->tracks[$key]);
 					break;
 				}
 				
 				if (($trackInBase->getNumero() === $track->getNumero() || $trackInBase->getTitre() === $track->getTitre())
 					&& $trackInBase->getAuteur() === $track->getAuteur() && $trackInBase->getAlbum() === $track->getAlbum()
 				) {
-                    dump('ok');
+                    $track->setId($trackInBase->getId());
                     $track->setYoutubeKey($trackInBase->getYoutubeKey() ?? '');
-					break;
+                    $serializedTrack = $this->serializer->serialize($track, 'json');
+                    $track = $this->serializer->deserialize($serializedTrack, Track::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $trackInBase]);
+                    unset($this->tracks[$key]);
+                    break;
 				}
 			}
 			
