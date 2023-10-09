@@ -6,6 +6,7 @@ use App\Entity\MusicCollection\Album;
 use App\Entity\MusicCollection\Artist;
 use App\Entity\MusicCollection\Track;
 use App\Helper\CsvConverter;
+use App\Repository\MusicCollection\ArtistRepository;
 use App\Repository\MusicCollection\TrackRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Id\AssignedGenerator;
@@ -36,24 +37,32 @@ class ImportTracksCommand extends Command
 
     private string $apiKey;
 
-	private array $tracks = []; 
+	private array $tracks;
 
-    private array $artistes = [];
+    private array $artists;
 
-    private array $albums = [];
+    private array $albums;
+
+    private array $artistsTmp = [];
+
+    private array $albumsTmp = [];
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly CsvConverter $converter,
         private readonly HttpClientInterface $httpClient,
         private readonly TrackRepository $trackRepository,
+        private readonly ArtistRepository $artistRepository,
+        private readonly AlbumRepository $albumRepository,
         private SerializerInterface $serializer,
         ParameterBagInterface $parameterBag
     ) {
         $this->parameters = $parameterBag->get('music_collection');
-        $this->apiUrl = $parameterBag->get('youtube_api_url');
-        $this->apiKey = $parameterBag->get('youtube_key');
-		$this->tracks = $this->trackRepository->findAll();
+        $this->apiUrl  = $parameterBag->get('youtube_api_url');
+        $this->apiKey  = $parameterBag->get('youtube_key');
+		$this->tracks  = $this->trackRepository->findAll();
+		$this->artists = $this->artistRepository->findAll();
+		$this->albums  = $this->albumRepository->findAll();
         parent::__construct();
     }
 
@@ -135,7 +144,7 @@ class ImportTracksCommand extends Command
             $track->setDuree($row[8]);
             $track->setBitrate($row[9]);
             $track->setNote(trim($row[10]) === 'No Rating' ? null : (int)$row[10]);
-            
+
 			$hash = hash('sha256', $track->stringify());
 			foreach ($this->tracks as $key => &$trackInBase) {
 				if ($trackInBase->getHash() && $trackInBase->getHash() === $hash) {
@@ -191,14 +200,14 @@ class ImportTracksCommand extends Command
 
             $this->entityManager->persist($track);
 
-            if (empty($this->artistes[$row[0]])) {
-                $this->artistes[$row[0]] = 1;
+            if (empty($this->artistsTmp[$track->getAuteur()])) {
+                $this->artistsTmp[$track->getAuteur()] = 1;
             }
 
-            if (empty($this->albums[$row[5]][$row[4]])) {
-                $this->albums[$row[5]][$row[4]] = [
-                    "genre" => $row[6],
-                    "annee" => $row[3]
+            if (empty($this->albumsTmp[$track->getArtiste()][$track->getAlbum()])) {
+                $this->albumsTmp[$track->getArtiste()][$track->getAlbum()] = [
+                    "genre" => $track->getGenre(),
+                    "annee" => $track->getAnnee()
                 ];
             }
 
@@ -233,14 +242,14 @@ class ImportTracksCommand extends Command
         $query = 'TRUNCATE artist;';
 
         // Define the size of record, the frequency for persisting the data and the current index of records
-        $size = count($this->artistes);
+        $size = count($this->artistsTmp);
         $i = 1;
 
         // Starting progress
         $progress = new ProgressBar($output, $size);
         $progress->start();
 
-        foreach ($this->artistes as $artisteName => $value) {
+        foreach ($this->artistsTmp as $artisteName => $value) {
             $artiste = new Artist();
             $artiste->setName($artisteName);
             try {
@@ -289,14 +298,14 @@ class ImportTracksCommand extends Command
         $query = 'TRUNCATE album;';
 
         // Define the size of record, the frequency for persisting the data and the current index of records
-        $size = count($this->albums);
+        $size = count($this->albumsTmp);
         $i = 1;
 
         // Starting progress
         $progress = new ProgressBar($output, $size);
         $progress->start();
 
-        foreach ($this->albums as $artisteName => $albums) {
+        foreach ($this->albumsTmp as $artisteName => $albums) {
             foreach ($albums as $albumName => $features) {
                 $album = new Album();
                 $album->setAuteur($artisteName);
