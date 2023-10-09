@@ -6,13 +6,10 @@ use App\Entity\MusicCollection\Album;
 use App\Entity\MusicCollection\Artist;
 use App\Entity\MusicCollection\Track;
 use App\Helper\CsvConverter;
+use App\Repository\MusicCollection\AlbumRepository;
 use App\Repository\MusicCollection\ArtistRepository;
 use App\Repository\MusicCollection\TrackRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Id\AssignedGenerator;
-use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\ORM\Mapping\ClassMetadataInfo;
-use phpDocumentor\Reflection\DocBlock\Serializer;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -20,7 +17,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -54,16 +50,14 @@ class ImportTracksCommand extends Command
         private readonly TrackRepository $trackRepository,
         private readonly ArtistRepository $artistRepository,
         private readonly AlbumRepository $albumRepository,
-        private SerializerInterface $serializer,
-        ParameterBagInterface $parameterBag
+        private readonly SerializerInterface $serializer,
+        ParameterBagInterface $parameterBag,
+        string $name = null
     ) {
         $this->parameters = $parameterBag->get('music_collection');
         $this->apiUrl  = $parameterBag->get('youtube_api_url');
         $this->apiKey  = $parameterBag->get('youtube_key');
-		$this->tracks  = $this->trackRepository->findAll();
-		$this->artists = $this->artistRepository->findAll();
-		$this->albums  = $this->albumRepository->findAll();
-        parent::__construct();
+        parent::__construct($name);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -71,10 +65,8 @@ class ImportTracksCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $now = new \DateTime();
         $io->writeln(sprintf('<comment>--- Start: %s ---</comment>', $now->format('d-m-Y G:i:s')));
-
-        $output->writeln('<comment>Searchin\' File music.csv</comment>');
-
-        $output->writeln('<comment>Step 1. Importing Tracks</comment>');
+        $io->writeln('<comment>Searchin\' File music.csv</comment>');
+        $io->writeln('<comment>Step 1. Importing Tracks</comment>');
 
         if (!$this->importTracks($input, $output)) {
             $io->error('No Import : Check the File, Dude!');
@@ -82,26 +74,24 @@ class ImportTracksCommand extends Command
             return Command::FAILURE;
         }
 
-        $output->writeln('<comment>Step 2. Importing Artists</comment>');
-
+        $io->writeln('<comment>Step 2. Importing Artists</comment>');
 
         if (!$this->importArtists($input, $output)) {
             $io->error('No Import');
 
             return Command::FAILURE;
         }
-        /**
-        $output->writeln('<comment>Step 3. Importing Albums</comment>');
+
+        $io->writeln('<comment>Step 3. Importing Albums</comment>');
 
         if (!$this->importAlbums($input, $output)) {
             $io->error('No Import');
 
             return Command::FAILURE;
         }
-**/
+
         $now = new \DateTime();
         $io->writeln(sprintf('<comment>--- End: %s ---</comment>', $now->format('d-m-Y G:i:s')));
-
         $io->success('Process ending !');
 
         return Command::SUCCESS;
@@ -118,7 +108,8 @@ class ImportTracksCommand extends Command
 
         // Define the size of record, the frequency for persisting the data and the current index of records
         $size = count($data);
-        $i = 1;
+        $i = 0;
+        $this->tracks  = $this->trackRepository->findAll();
 
         // Starting progress
         $progress = new ProgressBar($output, $size);
@@ -128,29 +119,30 @@ class ImportTracksCommand extends Command
         // Processing on each row of data
         foreach ($data as $row) {
 			
-			$continue = false;
+			$trackExists = false;
 			
             $track = new Track();
             $track->setAuteur($row[0]);
-            $track->setNumero($row[1]);
+            $track->setNumero(is_numeric($row[1]) ? (int)$row[1] : null);
             $track->setTitre($row[2]);
             $row[3] = ((int)$row[3] * 1 == 0) ? '' : $row[3];
-            $track->setAnnee((int)$row[3]);
+            $track->setAnnee(is_numeric($row[3]) ? (int)$row[3] : '');
             $track->setAlbum($row[4]);
             $track->setArtiste($row[5]);
-            $track->setGenre($row[6]);
+            $track->setGenre(strtolower($row[6]));
             $row[7] = (trim($row[7]) === 'Éditeur Inconnu') ? '' : $row[7];
             $track->setPays($row[7]);
             $track->setDuree($row[8]);
             $track->setBitrate($row[9]);
             $track->setNote(trim($row[10]) === 'No Rating' ? null : (int)$row[10]);
 
-			$hash = hash('sha256', $track->stringify());
+			$track->setHash($track->doHash());
+
 			foreach ($this->tracks as $key => &$trackInBase) {
-				if ($trackInBase->getHash() && $trackInBase->getHash() === $hash) {
-                    $continue = true;
+				if ($trackInBase->getHash() && $trackInBase->getHash() === $track->getHash()) {
+                    $trackExists = true;
                     if (!$trackInBase->getYoutubeKey()) {
-                        $continue = false;
+                        $trackExists = false;
                         $track->setId($trackInBase->getId());
                         $serializedTrack = $this->serializer->serialize($track, 'json');
                         $track = $this->serializer->deserialize($serializedTrack, Track::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $trackInBase]);
@@ -158,9 +150,9 @@ class ImportTracksCommand extends Command
                     unset($this->tracks[$key]);
 					break;
 				}
-				
-				if (($trackInBase->getNumero() === $track->getNumero() || $trackInBase->getTitre() === $track->getTitre())
-					&& $trackInBase->getAuteur() === $track->getAuteur() && $trackInBase->getAlbum() === $track->getAlbum()
+
+				if (((int)$trackInBase->getNumero() === (int)$track->getNumero() || strtolower($trackInBase->getTitre()) === strtolower($track->getTitre()))
+					&& strtolower($trackInBase->getAuteur()) === strtolower($track->getAuteur()) && strtolower($trackInBase->getAlbum()) === strtolower($track->getAlbum())
 				) {
                     $track->setId($trackInBase->getId());
                     $track->setYoutubeKey($trackInBase->getYoutubeKey() ?? '');
@@ -169,10 +161,6 @@ class ImportTracksCommand extends Command
                     unset($this->tracks[$key]);
                     break;
 				}
-			}
-			
-			if ($continue) {
-				continue;
 			}
 
             if ($track->getNote() == 5 && !$track->getYoutubeKey()) {
@@ -192,13 +180,16 @@ class ImportTracksCommand extends Command
                     ]);
 
                     $resultYouToube = json_decode($response->getContent(), true)['items'] ?? [];
-                    $track->setYoutubeKey($resultYouToube[0]['id']['videoId']);
+                    $track->setYoutubeKey($resultYouToube[0]['id']['videoId'] ?? '');
                 } catch (\Exception $e) {
                     $output->writeln($e->getMessage());
                 }
             }
 
-            $this->entityManager->persist($track);
+            if (!$trackExists) {
+                $i ++;
+                $this->entityManager->persist($track);
+            }
 
             if (empty($this->artistsTmp[$track->getAuteur()])) {
                 $this->artistsTmp[$track->getAuteur()] = 1;
@@ -217,20 +208,24 @@ class ImportTracksCommand extends Command
                 $this->entityManager->clear();
                 $progress->advance($this->parameters['batch_size']);
             }
-
-            $i ++;
         }
 
         $this->entityManager->flush();
 
 		// Suppression du vieux reliquat en base non identifié
+
+        $i = 0;
 		foreach($this->tracks as $trackInBase) {
+            $i++;
 			$this->entityManager->remove($trackInBase);
+            if (($i%$this->parameters['batch_size']) === 0) {
+                $this->entityManager->flush();
+            }
 		}
 		$this->entityManager->flush();
-        
-		$this->entityManager->clear();
 
+		$this->entityManager->clear();
+        unset($this->tracks);
         $progress->finish();
 
         return true;
@@ -238,25 +233,30 @@ class ImportTracksCommand extends Command
 
     protected function importArtists(InputInterface $input, OutputInterface $output): bool
     {
-        // TRUNCATE INITIAL DB
-        $query = 'TRUNCATE artist;';
-
         // Define the size of record, the frequency for persisting the data and the current index of records
         $size = count($this->artistsTmp);
         $i = 1;
+        $this->artists = $this->artistRepository->findAll();
 
         // Starting progress
         $progress = new ProgressBar($output, $size);
         $progress->start();
 
-        foreach ($this->artistsTmp as $artisteName => $value) {
-            $artiste = new Artist();
-            $artiste->setName($artisteName);
+        foreach ($this->artists as $key => &$artist) {
+            if (\key_exists($artist->getName(), $this->artistsTmp)) {
+                unset($this->artistsTmp[$artist->getName()]);
+                unset($this->artists[$key]);
+            }
+        }
+
+        foreach ($this->artistsTmp as $artistName => $value) {
+            $artist = new Artist();
+            $artist->setName($artistName);
             try {
                 $response = $this->httpClient->request('GET',  $this->parameters['last_fm_api_url'], [
                     'query' => [
                         'api_key'  => $this->parameters['last_fm_key'],
-                        'artist'   => $artisteName,
+                        'artist'   => $artistName,
                         'method' => 'artist.getInfo',
                         'format' => 'json',
                     ],
@@ -267,12 +267,12 @@ class ImportTracksCommand extends Command
                 ]);
                 $response = json_decode($response->getContent(), true) ?? [];
 
-                $artiste->setImageUrl($response['artist']['image'][4]['#text']);
-                $artiste->setBio($response['artist']['bio']['content']);
+                $artist->setImageUrl($response['artist']['image'][4]['#text']);
+                $artist->setBio($response['artist']['bio']['content']);
             } catch(\Exception $e) {
                 $output->writeln($e->getMessage());
             }
-            $this->entityManager->persist($artiste);
+            $this->entityManager->persist($artist);
 
             // Each 20 items persisted we flush everything
             if (($i%$this->parameters['batch_size']) === 0) {
@@ -285,8 +285,20 @@ class ImportTracksCommand extends Command
         }
 
         $this->entityManager->flush();
-        $this->entityManager->clear();
 
+        // Suppression du vieux reliquat en base non identifié
+        $i = 0;
+        foreach($this->artists as $artist) {
+            $i++;
+            $this->entityManager->remove($artist);
+            if (($i%$this->parameters['batch_size']) === 0) {
+                $this->entityManager->flush();
+            }
+        }
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+        unset($this->artists);
+        unset($this->artistsTmp);
         $progress->finish();
 
         return true;
@@ -294,16 +306,23 @@ class ImportTracksCommand extends Command
 
     protected function importAlbums(InputInterface $input, OutputInterface $output): bool
     {
-        // TRUNCATE INITIAL DB
-        $query = 'TRUNCATE album;';
-
         // Define the size of record, the frequency for persisting the data and the current index of records
         $size = count($this->albumsTmp);
         $i = 1;
+        $this->albums  = $this->albumRepository->findAll();
 
         // Starting progress
         $progress = new ProgressBar($output, $size);
         $progress->start();
+
+        foreach($this->albums as $key => &$album) {
+            if (\array_key_exists($album->getAuteur(), $this->albumsTmp)) {
+                if (\array_key_exists($album->getName(), $this->albumsTmp[$album->getAuteur()])) {
+                    unset($this->albumsTmp[$album->getAuteur()][$album->getName()]);
+                    unset($this->albums[$key]);
+                }
+            }
+        }
 
         foreach ($this->albumsTmp as $artisteName => $albums) {
             foreach ($albums as $albumName => $features) {
@@ -335,6 +354,27 @@ class ImportTracksCommand extends Command
                     } catch (\Exception $e) {
                         $output->writeln($e->getMessage());
                     }
+
+                    try {
+                        $response = $this->httpClient->request('GET',  $this->parameters['last_fm_api_url'], [
+                            'query' => [
+                                'api_key'  => $this->parameters['last_fm_key'],
+                                'artist'   => $album->getAuteur(),
+                                'album'   => $album->getName(),
+                                'method' => 'album.getInfo',
+                                'format' => 'json',
+                            ],
+                            'headers' => [
+                                'Content-Type: application/json',
+                                'Accept: application/json',
+                            ]
+                        ]);
+                        $response = json_decode($response->getContent(), true) ?? [];
+
+                        $album->setPicture($response['album']['image'][4]['#text']);
+                    } catch(\Exception $e) {
+                        $output->writeln($e->getMessage());
+                    }
                 }
 
                 $this->entityManager->persist($album);
@@ -350,7 +390,20 @@ class ImportTracksCommand extends Command
         }
 
         $this->entityManager->flush();
+
+        // Suppression du vieux reliquat en base non identifié
+        $i = 0;
+        foreach($this->albums as $album) {
+            $i++;
+            $this->entityManager->remove($album);
+            if (($i%$this->parameters['batch_size']) === 0) {
+                $this->entityManager->flush();
+            }
+        }
+        $this->entityManager->flush();
         $this->entityManager->clear();
+        unset($this->album);
+        unset($this->albumTmp);
         $progress->finish();
 
         return true;
@@ -358,7 +411,7 @@ class ImportTracksCommand extends Command
 
     protected function getDatas(): array
     {
-        $datas = $this->converter->setFilePath($this->parameters['csv_path'])->convert(false, ';');
-        return $datas;
+        return $this->converter->setFilePath($this->parameters['csv_path'])
+            ->convert(false, ';');
     }
 }

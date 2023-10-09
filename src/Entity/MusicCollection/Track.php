@@ -6,6 +6,7 @@ use App\EventListener\TrackListener;
 use App\Repository\MusicCollection\TrackRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\EntityListeners;
+use Symfony\Component\Serializer\Serializer;
 
 #[ORM\Entity(repositoryClass: TrackRepository::class)]
 #[EntityListeners([TrackListener::class])]
@@ -223,9 +224,9 @@ class Track
         return $this;
     }
 
-    public function stringify(): string
+    public function doHash(): string
     {
-        return $this->numero.$this->titre.$this->auteur.$this->album.$this->artiste
-            .$this->annee.$this->bitrate.$this->duree.$this->genre.$this->note.$this->pays;
+        return hash('sha256', $this->numero.$this->titre.$this->auteur.$this->album.$this->artiste
+            .$this->annee.$this->bitrate.$this->duree.$this->genre.$this->note.$this->pays);
     }
 }

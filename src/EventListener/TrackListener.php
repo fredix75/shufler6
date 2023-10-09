@@ -9,17 +9,17 @@ class TrackListener
 
     public function prePersist(Track $track): void
     {
-        $this->doHash($track);
+        $this->setHash($track);
     }
 
     public function preUpdate(Track $track): void
     {
-        $this->doHash($track);
+        $this->setHash($track);
     }
 
-    private function doHash(Track $track)
+    private function setHash(Track $track): void
     {
-        $track->setHash(hash('sha256', $track->stringify()));
+        $track->setHash($track->doHash());
     }
 
 }
