@@ -19,6 +19,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[AsCommand(
@@ -109,7 +113,13 @@ class ImportTracksCommand extends Command
         // Define the size of record, the frequency for persisting the data and the current index of records
         $size = count($data);
         $i = 0;
-        $this->tracks  = $this->trackRepository->findAll();
+        $this->tracks  = $this->trackRepository
+            ->createQueryBuilder('t')
+            ->orderBy('t.titre', 'ASC')
+            ->addOrderBy('t.auteur', 'ASC')
+            ->addOrderBy('t.numero', 'ASC')
+            ->addOrderBy('t.album', 'ASC')
+            ->getQuery()->getResult();
 
         // Starting progress
         $progress = new ProgressBar($output, $size);
@@ -131,9 +141,9 @@ class ImportTracksCommand extends Command
             $track->setArtiste($row[5]);
             $track->setGenre(strtolower($row[6]));
             $row[7] = (trim($row[7]) === 'Éditeur Inconnu') ? '' : $row[7];
-            $track->setPays($row[7]);
-            $track->setDuree($row[8]);
-            $track->setBitrate($row[9]);
+            $track->setPays(substr($row[7], 0, 3));
+            $track->setDuree(substr($row[8], 0, 10));
+            $track->setBitrate(substr($row[9], 0, 10));
             $track->setNote(trim($row[10]) === 'No Rating' ? null : (int)$row[10]);
 
 			$track->setHash($track->doHash());
@@ -159,6 +169,7 @@ class ImportTracksCommand extends Command
                     $serializedTrack = $this->serializer->serialize($track, 'json');
                     $track = $this->serializer->deserialize($serializedTrack, Track::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $trackInBase]);
                     unset($this->tracks[$key]);
+                    $track->setYoutubeKey($trackInBase->getYoutubeKey() ?? '');
                     break;
 				}
 			}
@@ -205,7 +216,6 @@ class ImportTracksCommand extends Command
             // Each 20 items persisted we flush everything
             if (($i%$this->parameters['batch_size']) === 0) {
                 $this->entityManager->flush();
-                $this->entityManager->clear();
                 $progress->advance($this->parameters['batch_size']);
             }
         }
@@ -213,7 +223,6 @@ class ImportTracksCommand extends Command
         $this->entityManager->flush();
 
 		// Suppression du vieux reliquat en base non identifié
-
         $i = 0;
 		foreach($this->tracks as $trackInBase) {
             $i++;
@@ -265,10 +274,11 @@ class ImportTracksCommand extends Command
                         'Accept: application/json',
                     ]
                 ]);
+
                 $response = json_decode($response->getContent(), true) ?? [];
 
-                $artist->setImageUrl($response['artist']['image'][4]['#text']);
-                $artist->setBio($response['artist']['bio']['content']);
+                $artist->setImageUrl($response['artist'] ? $response['artist']['image'][4]['#text'] : '');
+                $artist->setBio($response['artist'] ? $response['artist']['bio']['content'] : '');
             } catch(\Exception $e) {
                 $output->writeln($e->getMessage());
             }
@@ -277,7 +287,6 @@ class ImportTracksCommand extends Command
             // Each 20 items persisted we flush everything
             if (($i%$this->parameters['batch_size']) === 0) {
                 $this->entityManager->flush();
-                $this->entityManager->clear();
                 $progress->advance($this->parameters['batch_size']);
             }
 
@@ -285,6 +294,7 @@ class ImportTracksCommand extends Command
         }
 
         $this->entityManager->flush();
+        $this->entityManager->clear();
 
         // Suppression du vieux reliquat en base non identifié
         $i = 0;
@@ -317,10 +327,13 @@ class ImportTracksCommand extends Command
 
         foreach($this->albums as $key => &$album) {
             if (\array_key_exists($album->getAuteur(), $this->albumsTmp)) {
-                if (\array_key_exists($album->getName(), $this->albumsTmp[$album->getAuteur()])) {
+                if (\array_key_exists($album->getName(), $this->albumsTmp[$album->getAuteur()]) && $album->getYoutubeKey()) {
                     unset($this->albumsTmp[$album->getAuteur()][$album->getName()]);
                     unset($this->albums[$key]);
+                } elseif(\array_key_exists($album->getName(), $this->albumsTmp[$album->getAuteur()]) && $album->getPicture()) {
+                    $this->albumsTmp[$album->getAuteur()][$album->getName()]['picture'] = $album->getPicture();
                 }
+
             }
         }
 
@@ -355,25 +368,29 @@ class ImportTracksCommand extends Command
                         $output->writeln($e->getMessage());
                     }
 
-                    try {
-                        $response = $this->httpClient->request('GET',  $this->parameters['last_fm_api_url'], [
-                            'query' => [
-                                'api_key'  => $this->parameters['last_fm_key'],
-                                'artist'   => $album->getAuteur(),
-                                'album'   => $album->getName(),
-                                'method' => 'album.getInfo',
-                                'format' => 'json',
-                            ],
-                            'headers' => [
-                                'Content-Type: application/json',
-                                'Accept: application/json',
-                            ]
-                        ]);
-                        $response = json_decode($response->getContent(), true) ?? [];
+                    if (empty($features['picture'])) {
+                        try {
+                            $response = $this->httpClient->request('GET',  $this->parameters['last_fm_api_url'], [
+                                'query' => [
+                                    'api_key'  => $this->parameters['last_fm_key'],
+                                    'artist'   => $album->getAuteur(),
+                                    'album'   => $album->getName(),
+                                    'method' => 'album.getInfo',
+                                    'format' => 'json',
+                                ],
+                                'headers' => [
+                                    'Content-Type: application/json',
+                                    'Accept: application/json',
+                                ]
+                            ]);
+                            $response = json_decode($response->getContent(), true) ?? [];
 
-                        $album->setPicture($response['album']['image'][4]['#text']);
-                    } catch(\Exception $e) {
-                        $output->writeln($e->getMessage());
+                            $album->setPicture($response['album'] ? $response['album']['image'][4]['#text'] : '');
+                        } catch(\Exception $e) {
+                            $output->writeln($e->getMessage());
+                        }
+                    } else {
+                        $album->setPicture($features['picture']);
                     }
                 }
 
@@ -381,7 +398,6 @@ class ImportTracksCommand extends Command
                 // Each 20 items persisted we flush everything
                 if (($i%$this->parameters['batch_size']) === 0) {
                     $this->entityManager->flush();
-                    $this->entityManager->clear();
                     $progress->advance($this->parameters['batch_size']);
                 }
 
@@ -390,6 +406,7 @@ class ImportTracksCommand extends Command
         }
 
         $this->entityManager->flush();
+        $this->entityManager->clear();
 
         // Suppression du vieux reliquat en base non identifié
         $i = 0;
