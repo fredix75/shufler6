@@ -13,7 +13,7 @@
         </a>
     {% endif %}
 </div>
-<ul>
+<ul style="list-style: none;">
     {% for track in tracks %}
         <li>{{ track.numero }} - <strong>{{ track.titre }}</strong>
             {% if track.auteur != album.auteur %}

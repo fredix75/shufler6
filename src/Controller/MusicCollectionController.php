@@ -80,7 +80,7 @@ class MusicCollectionController extends AbstractController
                 $output = [
                     'data' => [],
                     'recordsFiltered' => count($trackRepository->getTracksByAlbumsAjax($filters, 0, false)),
-                    'recordsTotal' => $trackRepository->getCountTracksByAlbumsAjax(),
+                    'recordsTotal' => count($trackRepository->getTracksByAlbumsAjax([], 0, false)),
                 ];
 
                 foreach ($albums as $album) {
@@ -88,9 +88,9 @@ class MusicCollectionController extends AbstractController
                     sort($annees);
                     $genres = array_unique(json_decode($album['genres'], true));
                     $output['data'][] = [
-                        'album' => '<a href="#" class="album_tracks" data-toggle="modal" data-target="#musicModal" data-artiste="' . $album['artiste']. '" data-album="' . $album['album'] . '" ><span class="glyphicon glyphicon-chevron-right"></span></a> ' . $album['album'],
+                        'album' => '<a href="#" data-action="music#openModal" data-artist="' . $album['artiste']. '" data-album="' . $album['album'] . '" ><i class="bi bi-chevron-right"></i></a> ' . $album['album'],
                         'annee' => implode(', ', $annees),
-                        'artiste' => strtoupper($album['artiste']) !== 'DIVERS' ? '<a href="#" class="artiste_track" data-toggle="modal" data-target="#musicModal" data-artiste="' . $album['artiste'] . '" ><span class="glyphicon glyphicon-chevron-right"></span></a> ' . $album['artiste'] : $album['artiste'],
+                        'artiste' => strtoupper($album['artiste']) !== 'DIVERS' ? '<a href="#" data-action="music#openModal" data-artist="' . $album['artiste'] . '" ><i class="bi bi-chevron-right"></i></a> ' . $album['artiste'] : $album['artiste'],
                         'genre' => implode(', ', $genres),
                     ];
                 }

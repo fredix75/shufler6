@@ -5,6 +5,7 @@ namespace App\Repository\MusicCollection;
 use App\Entity\MusicCollection\Track;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -157,45 +158,37 @@ class TrackRepository extends ServiceEntityRepository
         string $dir = 'ASC',
     ): array
     {
-
-
-
-        //$params['max'] = $max;
-       // $params['offset'] = $page ? $page * $max - 1 : 0;
+        $params[':sort'] = $sort;
+        $params[':dir'] = $dir;
         $conn = $this->getEntityManager()->getConnection();
         $rawSQL = 'SELECT album, artiste, json_arrayagg(annee) as annees, json_arrayagg(genre) as genres FROM track';
         if (!empty($data['query'])) {
             $rawSQL .= ' WHERE artiste like "%'.$data['query'].'%" OR album like "%'.$data['query'].'%"';
-//            $params['query'] = '%'..'%';
+            $params[':query'] = '%'.$data['query'].'%';
         }
-        $rawSQL .= ' GROUP BY album, artiste ORDER BY '.$sort.' '.$dir;
+        $rawSQL .= " GROUP BY album, artiste ORDER BY $sort $dir";
 
-        // TODO Gérer les params SORT, MAX et OFFSET (j s p pqoi ca marche pas)
+        // TODO Gérer les params à bind (j s p pqoi ca marche pas)
 
         if ($sort !== 'album') {
-            $rawSQL .= ' ,album ' . $dir;
+            $rawSQL .= " ,album ".$dir;
         }
         if ($sort !== 'artiste') {
-            $rawSQL .= ',artiste ' . $dir;
+            $rawSQL .= " ,artiste ".$dir;
         }
         if ($max) {
             $offset = $page ? $page * $max - 1 : 0;
-            $rawSQL .= ' LIMIT ' . $max . ' OFFSET ' .$offset;
+            $rawSQL .= " LIMIT $max OFFSET $offset ";
+            $params[':max'] = $max;
+            $params[':offset'] = $offset;
         }
 
         $stmt = $conn->prepare($rawSQL);
+        foreach($params as $param => $value) {
+            //$stmt->bindValue($param, $value, ParameterType::STRING);
+        }
 
-        return  $stmt->executeQuery($params ?? [])->fetchAllAssociative();
-    }
-
-    public function getCountTracksByAlbumsAjax(): int
-    {
-        $result = $this->createQueryBuilder('t')
-            ->select('t.album, t.artiste')
-            ->groupBy('t.album')
-            ->addgroupBy('t.artiste')
-            ->getQuery()->getResult();
-        return count($result);
+        return $stmt->executeQuery()->fetchAllAssociative();
     }
 
 //    /**
