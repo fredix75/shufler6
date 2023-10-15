@@ -42,7 +42,7 @@ export default class extends Controller {
     }
 
     editChannel(event) {
-        let key = $(event.target).closest('.list-group-item').find('.lienPl').data('id');
+        let key = $(event.target).closest('.list-group-item').find('.playlist-link').data('id');
         let image = $(event.target).closest('.channel').find('.channel-picture img').attr('src');
         $('input[name="channelkey"]').val(key);
         $('input[name="channelpicture"]').val(image);

@@ -91,11 +91,11 @@ class TrackRepository extends ServiceEntityRepository
     public function getTracksByAlbum(string $artiste, string $album): array
     {
         return $this->createQueryBuilder('t')
-            ->orderBy('t.numero', 'ASC')
             ->andWhere('t.artiste =  :artiste')
             ->setParameter(':artiste', $artiste)
             ->andWhere('t.album = :album')
             ->setParameter(':album', $album)
+            ->orderBy('t.numero', 'ASC')
             ->getQuery()
             ->getResult();
     }
@@ -152,23 +152,23 @@ class TrackRepository extends ServiceEntityRepository
     public function getTracksByAlbumsAjax(
         array $data,
         int $page = 0,
-        int $max = 250,
+        int $max = null,
         string $sort = 'album',
         string $dir = 'ASC',
     ): array
     {
 
-        $params['sort'] = $sort;
-        $params['dir'] = $dir;
+
+
         //$params['max'] = $max;
        // $params['offset'] = $page ? $page * $max - 1 : 0;
         $conn = $this->getEntityManager()->getConnection();
         $rawSQL = 'SELECT album, artiste, json_arrayagg(annee) as annees, json_arrayagg(genre) as genres FROM track';
         if (!empty($data['query'])) {
-            $rawSQL .= ' WHERE auteur like :query OR artiste like :query OR titre like :query OR album like :query';
-            $params['query'] = '%'.$data['query'].'%';
+            $rawSQL .= ' WHERE artiste like "%'.$data['query'].'%" OR album like "%'.$data['query'].'%"';
+//            $params['query'] = '%'..'%';
         }
-        $rawSQL .= ' GROUP BY album, artiste ORDER BY :sort :dir ';
+        $rawSQL .= ' GROUP BY album, artiste ORDER BY '.$sort.' '.$dir;
 
         // TODO Gérer les params SORT, MAX et OFFSET (j s p pqoi ca marche pas)
 
@@ -178,12 +178,24 @@ class TrackRepository extends ServiceEntityRepository
         if ($sort !== 'artiste') {
             $rawSQL .= ',artiste ' . $dir;
         }
-        $offset = $page ? $page * $max - 1 : 0;
-        $rawSQL .= ' LIMIT ' . $max . ' OFFSET ' .$offset;
+        if ($max) {
+            $offset = $page ? $page * $max - 1 : 0;
+            $rawSQL .= ' LIMIT ' . $max . ' OFFSET ' .$offset;
+        }
 
         $stmt = $conn->prepare($rawSQL);
 
-        return  $stmt->executeQuery($params)->fetchAllAssociative();
+        return  $stmt->executeQuery($params ?? [])->fetchAllAssociative();
+    }
+
+    public function getCountTracksByAlbumsAjax(): int
+    {
+        $result = $this->createQueryBuilder('t')
+            ->select('t.album, t.artiste')
+            ->groupBy('t.album')
+            ->addgroupBy('t.artiste')
+            ->getQuery()->getResult();
+        return count($result);
     }
 
 //    /**

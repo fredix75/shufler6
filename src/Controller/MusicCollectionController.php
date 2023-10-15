@@ -58,13 +58,14 @@ class MusicCollectionController extends AbstractController
 
                 foreach ($tracks as $track) {
                     $output['data'][] = [
+                        'youtubeKey' => $track->getYoutubeKey() ? '<a href="https://www.youtube.com/watch?v='.$track->getYoutubeKey().'" class="video-link icon-youtube"><i class="bi bi-youtube"></i></a>' : '',
                         'id' => $track->getId(),
-                        'auteur' => strtoupper($track->getAuteur()) !== 'DIVERS' ? '<a href="#" class="artiste_track" data-action="modal-music#openModal" data-artist="' . $track->getAuteur() . '" ><i class="bi bi-chevron-right"></i></a> ' . $track->getAuteur() : $track->getAuteur(),
+                        'auteur' => strtoupper($track->getAuteur()) !== 'DIVERS' ? '<a href="#" data-action="music#openModal" data-artist="' . $track->getAuteur() . '" ><i class="bi bi-chevron-right"></i></a> ' . $track->getAuteur() : $track->getAuteur(),
                         'titre' => $track->getTitre(),
                         'numero' => $track->getNumero(),
-                        'album' => '<a href="#" class="album_tracks" data-action="modal-music#openModal" data-artist="' . $track->getArtiste() . '" data-album="' . $track->getAlbum() . '" ><i class="bi bi-chevron-right"></i></a> ' . $track->getAlbum(),
+                        'album' => '<a href="#" data-action="music#openModal" data-artist="' . $track->getArtiste() . '" data-album="' . $track->getAlbum() . '" ><i class="bi bi-chevron-right"></i></a> ' . $track->getAlbum(),
                         'annee' => $track->getAnnee(),
-                        'artiste' => strtoupper($track->getArtiste()) !== 'DIVERS' ? '<a href="#" class="artiste_track" data-action="modal-music#openModal" data-artist="' . $track->getArtiste() . '" ><i class="bi bi-chevron-right"></i></a> ' . $track->getArtiste() : $track->getArtiste(),
+                        'artiste' => strtoupper($track->getArtiste()) !== 'DIVERS' ? '<a href="#" data-action="music#openModal" data-artist="' . $track->getArtiste() . '" ><i class="bi bi-chevron-right"></i></a> ' . $track->getArtiste() : $track->getArtiste(),
                         'genre' => $track->getGenre(),
                         'duree' => $track->getDuree(),
                         'pays' => $track->getPays(),
@@ -79,7 +80,7 @@ class MusicCollectionController extends AbstractController
                 $output = [
                     'data' => [],
                     'recordsFiltered' => count($trackRepository->getTracksByAlbumsAjax($filters, 0, false)),
-                    'recordsTotal' => $trackRepository->count([]),
+                    'recordsTotal' => $trackRepository->getCountTracksByAlbumsAjax(),
                 ];
 
                 foreach ($albums as $album) {
@@ -107,26 +108,27 @@ class MusicCollectionController extends AbstractController
         ]);
     }
 
+    #[Route('/artist', name:'_artist')]
+    public function getArtist(Request $request, ArtistRepository $artistRepository): Response
+    {
+        $artist = $request->get('artist');
+        $artist = $artistRepository->findOneBy(['name' => $artist]);
+
+        return $this->render('music/part/_artist.html.twig', [
+            'artist' => $artist
+        ]);
+    }
+
     #[Route('/tracks_album', name: '_tracks_album')]
-    public function getTracksByAlbumAjax(Request $request, TrackRepository $trackRepository): Response
+    public function getTracksByAlbumAjax(Request $request, TrackRepository $trackRepository, AlbumRepository $albumRepository): Response
     {
         $artist = $request->get('artist');
         $album = $request->get('album');
         $tracks = $trackRepository->getTracksByAlbum($artist, $album);
-        $output = [
-            'data' => []
-        ];
-        foreach ($tracks as $track) {
-            $output['data'][] = [
-                'numero' => $track->getNumero(),
-                'titre'  => $track->getTitre(),
-                'auteur' => $track->getAuteur(),
-                'duree'  => $track->getDuree(),
-                'annee'  => $track->getAnnee()
-            ];
-        }
-        return new Response(json_encode($output), Response::HTTP_OK, [
-            'Content-Type' => 'application/json'
+        $album = $albumRepository->findOneBy(['auteur'=>$artist, 'name' => $album]);
+        return $this->render('music/part/_album.html.twig', [
+            'tracks' => $tracks,
+            'album' => $album,
         ]);
     }
 

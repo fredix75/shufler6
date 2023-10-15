@@ -6,10 +6,10 @@
         data-modal-form-target="modal"
 >
     <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content {{ class ?? '' }}">
             <div class="modal-header">
                 <h5 class="modal-title">{{ modalTitle }}</h5>
-                <button type="button" class="btn-close"
+                <button type="button" class="btn-close" data-bs-dismiss="modal" style="background-color:white"
                         aria-label="Close"></button>
             </div>
             <div class="modal-body" data-modal-form-target="modalBody">

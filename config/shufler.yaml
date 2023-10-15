@@ -118,6 +118,7 @@ parameters:
         max_nb_artists: 500
         max_random: 100
         track_fields:
+            - youtubeKey
             - auteur
             - titre
             - numero

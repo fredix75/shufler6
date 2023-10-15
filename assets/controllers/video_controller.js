@@ -1,12 +1,12 @@
 import { Controller } from '@hotwired/stimulus';
 import $ from 'jquery';
-import 'magnific-popup'
+import 'magnific-popup';
 
 export default class extends Controller {
-
     connect() {
-        if ($('.video-link').length > 0) {
-            $('.video-link').magnificPopup({
+        $(document).on('click', '.video-link', function(event) {
+            $(document).magnificPopup({
+                delegate: '.video-link',
                 type: 'iframe',
                 iframe: {
                     patterns: {
@@ -16,7 +16,7 @@ export default class extends Controller {
                                 var m = url.match(/^.+dailymotion.com\/(embed\/video|hub)\/([^_]+)[^#]*(#video=([^_&]+))?/);
                                 if (m !== null) {
                                     console.log(m);
-                                    if(m[4] !== undefined) {
+                                    if (m[4] !== undefined) {
                                         return m[4];
                                     }
                                     return m[2];
@@ -33,23 +33,25 @@ export default class extends Controller {
                     }
                 }
             });
-        }
+            event.preventDefault();
+        });
 
-
-    }
-
-    popupPlaylist(event) {
-        $(document).ready(function() {
-            let key = $(event.target).closest('a').data('id');
-            $(event.target).closest('a').magnificPopup({
-                items: {
-                    index: 'youtube.com',
-                    src: '<iframe style="margin:auto;" width="800" height="500" src="https://www.youtube.com/embed/videoseries?list=' + key + '" frameborder="0" allowfullscreen></iframe>',
-                    type: 'inline'
+        $(document).on('click', '.playlist-link', function(event) {
+            $(document).magnificPopup({
+                delegate: '.playlist-link',
+                type: 'iframe',
+                iframe: {
+                    patterns: {
+                        youtube: {
+                            index: 'youtube.com/',
+                            id: 'v=',
+                            src: '//www.youtube.com/embed/videoseries?list=%id%'
+                        }
+                    }
                 }
             });
+            event.preventDefault();
         });
-        event.preventDefault();
     }
 
     edit(event) {
