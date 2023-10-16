@@ -68,16 +68,18 @@ class OtherController extends AbstractController
                 ]
             ]);
 
-            $resultYouToube = json_decode($response->getContent(), true)['items'] ?? [];
+            if ($response->getStatusCode() === Response::HTTP_OK) {
+                $resultYouToube = json_decode($response->getContent(), true)['items'] ?? [];
 
-            foreach ($resultYouToube as $item) {
-                $resultat['youtube']['items'][] = [
-                    'link' => $item['snippet']['thumbnails']['high']['url'] ?? null,
-                    'name' => $item['snippet']['title'] ?? null,
-                    'url'  => 'https://www.youtube.com/watch?v='.($item['id']['videoId'] ?? ''),
-                    'author' => $item['snippet']['channelTitle'] ?? null,
-                    'date' => date("d-m-Y", strtotime($item['snippet']['publishedAt'])),
-                ];
+                foreach ($resultYouToube as $item) {
+                    $resultat['youtube']['items'][] = [
+                        'link' => $item['snippet']['thumbnails']['high']['url'] ?? null,
+                        'name' => $item['snippet']['title'] ?? null,
+                        'url' => 'https://www.youtube.com/watch?v=' . ($item['id']['videoId'] ?? ''),
+                        'author' => $item['snippet']['channelTitle'] ?? null,
+                        'date' => date("d-m-Y", strtotime($item['snippet']['publishedAt'])),
+                    ];
+                }
             }
 
             // Vimeo

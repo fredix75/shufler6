@@ -182,7 +182,7 @@ class ImportTracksCommand extends Command
                             'key'       => $this->apiKey,
                             'q'         => $search,
                             'part'      => 'snippet',
-                            'maxResults'=> 5,
+                            'maxResults'=> 1,
                         ],
                         'headers' => [
                             'Content-Type: application/json',
