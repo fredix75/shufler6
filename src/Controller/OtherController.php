@@ -143,7 +143,8 @@ class OtherController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function searchApiChannel(Request $request, HttpClientInterface $httpClient): Response
     {
-        $resultat = $search = $idChannel = null;
+        $search = $idChannel = null;
+        $resultat = [];
         if ($request->get('search_api')) {
             $search = $request->get('search_api');
 
@@ -161,16 +162,18 @@ class OtherController extends AbstractController
                 ]
             ]);
 
-            $resultYouToube = json_decode($response->getContent(), true)['items'] ?? [];
-            foreach ($resultYouToube as $item) {
-                $resultat[] = [
-                    'link' => $item['snippet']['thumbnails']['high']['url'] ?? null,
-                    'name' => $item['snippet']['title'] ?? null,
-                    'url'  => 'https://www.youtube.com/watch?v='.($item['id']['videoId'] ?? ''),
-                    'author' => $item['snippet']['channelTitle'] ?? null,
-                    'date' => date("d-m-Y", strtotime($item['snippet']['publishedAt'])),
-                    'channelId' => $item['snippet']['channelId'],
-                ];
+            if ($response->getStatusCode() === Response::HTTP_OK) {
+                $resultYouToube = json_decode($response->getContent(), true)['items'] ?? [];
+                foreach ($resultYouToube as $item) {
+                    $resultat[] = [
+                        'link' => $item['snippet']['thumbnails']['high']['url'] ?? null,
+                        'name' => $item['snippet']['title'] ?? null,
+                        'url' => 'https://www.youtube.com/watch?v=' . ($item['id']['videoId'] ?? ''),
+                        'author' => $item['snippet']['channelTitle'] ?? null,
+                        'date' => date("d-m-Y", strtotime($item['snippet']['publishedAt'])),
+                        'channelId' => $item['snippet']['channelId'],
+                    ];
+                }
             }
         }
         return $this->render('other/channelsAPI.html.twig', [
