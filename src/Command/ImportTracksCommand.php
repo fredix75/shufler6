@@ -151,6 +151,7 @@ class ImportTracksCommand extends Command
 			foreach ($this->tracks as $key => &$trackInBase) {
 				if ($trackInBase->getHash() && $trackInBase->getHash() === $track->getHash()) {
                     $trackExists = true;
+
                     if (!$trackInBase->getYoutubeKey()) {
                         $trackExists = false;
                         $track->setId($trackInBase->getId());
@@ -169,12 +170,11 @@ class ImportTracksCommand extends Command
                     $serializedTrack = $this->serializer->serialize($track, 'json');
                     $track = $this->serializer->deserialize($serializedTrack, Track::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $trackInBase]);
                     unset($this->tracks[$key]);
-                    $track->setYoutubeKey($trackInBase->getYoutubeKey() ?? '');
                     break;
 				}
 			}
 
-            if ($track->getNote() == 5 && !$track->getYoutubeKey()) {
+            if ($track->getNote() == 5 && !$track->getYoutubeKey() && !$trackExists) {
                 try {
                     $search = $row[0] . ' ' . $row[2];
                     $response = $this->httpClient->request('GET', sprintf('%s/search', $this->apiUrl), [
