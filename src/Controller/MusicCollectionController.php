@@ -64,7 +64,7 @@ class MusicCollectionController extends AbstractController
                         'youtubeKey' => '<a id="track-youtube-'.$track->getId().'" href="https://www.youtube.com/watch?v='.$track->getYoutubeKey().'" class="video-link icon-youtube">'.($track->getYoutubeKey() ? '<i class="bi bi-youtube"></i>' : '').'</a>',
                         'id' => $track->getId(),
                         'auteur' => strtoupper($track->getAuteur()) !== 'DIVERS' ? '<a href="#" data-action="music#openModal" data-artist="' . $track->getAuteur() . '" ><i class="bi bi-eye-fill"></i></a> ' . $track->getAuteur() : $track->getAuteur(),
-                        'titre' => '<a href="#track-youtube-'.$track->getId().'" data-id='.$track->getId().' class="edit-tracks" data-action="music#openEditModal"><i class="bi bi-pencil-square"></i></a>' . $track->getTitre(),
+                        'titre' => '<a href="#track-youtube-'.$track->getId().'" data-id='.$track->getId().' class="edit-tracks" data-action="music#openEditModal"><i class="bi bi-pencil-square"></i></a> ' . $track->getTitre(),
                         'numero' => $track->getNumero(),
                         'album' => '<a href="#" data-action="music#openModal" data-artist="' . $track->getArtiste() . '" data-album="' . $track->getAlbum() . '" ><i class="bi bi-filter-circle-fill"></i></a> ' . $track->getAlbum(),
                         'annee' => $track->getAnnee(),
@@ -173,7 +173,11 @@ class MusicCollectionController extends AbstractController
         ]);
     }
 
+    #[Route('/couch/', name:'_couch')]
+    public function couch(): Response
+    {
 
+    }
 
 
     // FRONTIERE DU TODO

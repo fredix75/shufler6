@@ -7,12 +7,24 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Vimeo\Exceptions\VimeoRequestException;
 use Vimeo\Vimeo;
 
 #[Route('/other', name: 'other')]
 class OtherController extends AbstractController
 {
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws VimeoRequestException
+     * @throws ClientExceptionInterface
+     */
     #[Route('/api_video', name: '_api_video')]
     #[IsGranted('ROLE_ADMIN')]
     public function searchApiVideo(Request $request, HttpClientInterface $httpClient): Response
@@ -119,6 +131,12 @@ class OtherController extends AbstractController
         return $this->render('other/videosAPI.html.twig', $params);
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ClientExceptionInterface
+     */
     #[Route('/api_channel', name: '_api_channel')]
     #[IsGranted('ROLE_ADMIN')]
     public function searchApiChannel(Request $request, HttpClientInterface $httpClient): Response
@@ -160,6 +178,12 @@ class OtherController extends AbstractController
         ]);
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ClientExceptionInterface
+     */
     #[Route('/channel/handle', name: '_handle_channel')]
     public function handleChannel(Request $request, HttpClientInterface $httpClient): Response
     {

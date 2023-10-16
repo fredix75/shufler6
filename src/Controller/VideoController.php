@@ -57,7 +57,7 @@ class VideoController extends AbstractController
     }
 
     #[Route('/search/{page}', name: '_search', requirements: ['id' => '\d+'])]
-    public function search(Request $request, VideoRepository $videoRepository, int $page = 1)
+    public function search(Request $request, VideoRepository $videoRepository, int $page = 1): Response
     {
         $search = $request->get('search_field');
 
@@ -177,6 +177,7 @@ class VideoController extends AbstractController
         string $videoKey
     ): Response
     {
+        $result = [];
         if ('youtube' === $plateforme) {
             $response = $httpClient->request('GET', sprintf('%s/videos', $this->getParameter('youtube_api_url')), [
                 'query' => [
