@@ -36,6 +36,7 @@ export default class extends Controller {
             order: [[1, 'asc']]
         });
 
+
         $(document).on('click', '.video-link', function(event) {
             $(document).magnificPopup({
                 delegate: '.video-link',
@@ -69,6 +70,35 @@ export default class extends Controller {
             });
             event.preventDefault();
         });
+
+        $(document).on('click', '.save-track', async function(){
+            const $form = $('#formModal').find('form');
+            await $.ajax({
+                url: $form.prop('action'),
+                method: $form.prop('method'),
+                data:  new FormData($form[0]),
+                processData: false,
+                contentType: false,
+                dataType	: 'json', // what type of data do we expect back from the server
+                encode		: true,
+                error       : function(data) {
+                    console.log(data.responseText);
+                }
+            }).done(function(result) {
+                let icon = '<i class="bi bi-youtube"></i>';
+                $('a#track-youtube-' + result.id).attr('href', 'https://www.youtube.com/watch?v=' + result.youtube_key);
+                $('a#track-youtube-' + result.id).html(icon);
+                $('#formModal').modal('hide');
+            });
+        });
+
+        $(document).on('click', '#track-xchange', function() {
+            let id = $('#track-xchange').data('id');
+            let search = $('#track-xchange').data('search');
+            $('input[name="search_api"]').val(search);
+            $('input[name="id_track"]').val(id);
+            $('form[name="form_api_search"]').submit();
+        });
     }
 
     async openModal(event) {
@@ -88,6 +118,16 @@ export default class extends Controller {
         const modal = new Modal('#formModal', {keyboard: false});
         modal.show();
         $(document).find('.modal-body').html(await $.ajax(url + query));
+        event.preventDefault()
+    }
+
+    async openEditModal(event) {
+        if ($(event.target).closest('a').data('id')) {
+            let id = $(event.target).closest('a').data('id');
+            const modal = new Modal('#formModal', {keyboard: false});
+            modal.show();
+            $(document).find('.modal-body').html(await $.ajax('/fr/music/track/edit/' + id));
+        }
         event.preventDefault()
     }
 }

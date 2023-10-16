@@ -57,14 +57,20 @@ export default class extends Controller {
     edit(event) {
         let url = $(event.target).closest('a').data('url');
         $('input[name="videokey"]').val(url);
-        $('form[name="form_edit"]').submit();
+        $('form[name="form_video_edit"]').submit();
+    }
+
+    editTrack(event) {
+        let url = $(event.target).closest('a').data('url');
+        $('input[name="trackkey"]').val(url);
+        $('form[name="form_track_edit"]').submit();
     }
 
     deleteKey(event) {
         $('input[name="id_video"]').val(0);
         $('.link_edit').find('i').removeClass('bi-arrow-left-right');
         $('.link_edit').find('i').addClass('bi-patch-plus');
-        $('form[name="form_edit"]').attr('action', '/fr/video/edit/0');
+        $('form[name="form_video_edit"]').attr('action', '/fr/video/edit/0');
         $(event.target).closest('a').hide();
         event.preventDefault();
     }

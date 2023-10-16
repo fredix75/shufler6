@@ -42,11 +42,11 @@ export default class extends Controller {
     }
 
     editChannel(event) {
-        let key = $(event.target).closest('.list-group-item').find('.playlist-link').data('id');
+        let key = $(event.target).closest('.list-group-item').find('.playlist-link').attr('href');
         let image = $(event.target).closest('.channel').find('.channel-picture img').attr('src');
         $('input[name="channelkey"]').val(key);
         $('input[name="channelpicture"]').val(image);
-        $('form[name="form_edit"]').submit();
+        $('form[name="form_video_edit"]').submit();
         event.preventDefault();
     }
 }

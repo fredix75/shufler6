@@ -12,7 +12,7 @@ export default class extends Controller {
 
     async submitForm() {
         const $form = $('#formModal').find('form');
-        $('#formModal').find('.form-body').innerHTML = await $.ajax({
+        await $.ajax({
             url: $form.prop('action'),
             method: $form.prop('method'),
             data:  new FormData($form[0]),

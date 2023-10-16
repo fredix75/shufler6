@@ -17,7 +17,7 @@ class OtherController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function searchApiVideo(Request $request, HttpClientInterface $httpClient): Response
     {
-        $search = $idVideo = $wiki = null;
+        $search = $idVideo = $idTrack = $wiki = null;
         $resultat = [];
 
         if ($request->get('search_api')) {
@@ -25,6 +25,10 @@ class OtherController extends AbstractController
 
             if ($request->get('id_video')) {
                 $idVideo = $request->get('id_video');
+            }
+
+            if ($request->get('id_track')) {
+                $idTrack = $request->get('id_track');
             }
 
             $resultat = [
@@ -103,13 +107,16 @@ class OtherController extends AbstractController
              * }
              */
         }
-
-        return $this->render('other/videosAPI.html.twig', [
+        $params = [
             'search' => $search,
             'resultat' => $resultat,
             'idVideo' => $idVideo ?? 0,
             'wiki' => $wiki
-        ]);
+        ];
+        if ($idTrack) {
+            $params['idTrack'] = $idTrack;
+        }
+        return $this->render('other/videosAPI.html.twig', $params);
     }
 
     #[Route('/api_channel', name: '_api_channel')]

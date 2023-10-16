@@ -1,6 +1,9 @@
 <?php
 namespace App\Controller;
 
+use App\Entity\MusicCollection\Track;
+use App\Form\TrackType;
+use App\Helper\VideoHelper;
 use App\Repository\MusicCollection\ArtistRepository;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -58,14 +61,14 @@ class MusicCollectionController extends AbstractController
 
                 foreach ($tracks as $track) {
                     $output['data'][] = [
-                        'youtubeKey' => $track->getYoutubeKey() ? '<a href="https://www.youtube.com/watch?v='.$track->getYoutubeKey().'" class="video-link icon-youtube"><i class="bi bi-youtube"></i></a>' : '',
+                        'youtubeKey' => '<a id="track-youtube-'.$track->getId().'" href="https://www.youtube.com/watch?v='.$track->getYoutubeKey().'" class="video-link icon-youtube">'.($track->getYoutubeKey() ? '<i class="bi bi-youtube"></i>' : '').'</a>',
                         'id' => $track->getId(),
-                        'auteur' => strtoupper($track->getAuteur()) !== 'DIVERS' ? '<a href="#" data-action="music#openModal" data-artist="' . $track->getAuteur() . '" ><i class="bi bi-chevron-right"></i></a> ' . $track->getAuteur() : $track->getAuteur(),
-                        'titre' => $track->getTitre(),
+                        'auteur' => strtoupper($track->getAuteur()) !== 'DIVERS' ? '<a href="#" data-action="music#openModal" data-artist="' . $track->getAuteur() . '" ><i class="bi bi-eye-fill"></i></a> ' . $track->getAuteur() : $track->getAuteur(),
+                        'titre' => '<a href="#track-youtube-'.$track->getId().'" data-id='.$track->getId().' class="edit-tracks" data-action="music#openEditModal"><i class="bi bi-pencil-square"></i></a>' . $track->getTitre(),
                         'numero' => $track->getNumero(),
-                        'album' => '<a href="#" data-action="music#openModal" data-artist="' . $track->getArtiste() . '" data-album="' . $track->getAlbum() . '" ><i class="bi bi-chevron-right"></i></a> ' . $track->getAlbum(),
+                        'album' => '<a href="#" data-action="music#openModal" data-artist="' . $track->getArtiste() . '" data-album="' . $track->getAlbum() . '" ><i class="bi bi-filter-circle-fill"></i></a> ' . $track->getAlbum(),
                         'annee' => $track->getAnnee(),
-                        'artiste' => strtoupper($track->getArtiste()) !== 'DIVERS' ? '<a href="#" data-action="music#openModal" data-artist="' . $track->getArtiste() . '" ><i class="bi bi-chevron-right"></i></a> ' . $track->getArtiste() : $track->getArtiste(),
+                        'artiste' => strtoupper($track->getArtiste()) !== 'DIVERS' ? '<a href="#" data-action="music#openModal" data-artist="' . $track->getArtiste() . '" ><i class="bi bi-eye-fill"></i></a> ' . $track->getArtiste() : $track->getArtiste(),
                         'genre' => $track->getGenre(),
                         'duree' => $track->getDuree(),
                         'pays' => $track->getPays(),
@@ -88,9 +91,9 @@ class MusicCollectionController extends AbstractController
                     sort($annees);
                     $genres = array_unique(json_decode($album['genres'], true));
                     $output['data'][] = [
-                        'album' => '<a href="#" data-action="music#openModal" data-artist="' . $album['artiste']. '" data-album="' . $album['album'] . '" ><i class="bi bi-chevron-right"></i></a> ' . $album['album'],
+                        'album' => '<a href="#" data-action="music#openModal" data-artist="' . $album['artiste']. '" data-album="' . $album['album'] . '" ><i class="bi bi-filter-circle-fill"></i></a> ' . $album['album'],
                         'annee' => implode(', ', $annees),
-                        'artiste' => strtoupper($album['artiste']) !== 'DIVERS' ? '<a href="#" data-action="music#openModal" data-artist="' . $album['artiste'] . '" ><i class="bi bi-chevron-right"></i></a> ' . $album['artiste'] : $album['artiste'],
+                        'artiste' => strtoupper($album['artiste']) !== 'DIVERS' ? '<a href="#" data-action="music#openModal" data-artist="' . $album['artiste'] . '" ><i class="bi bi-eye-fill"></i></a> ' . $album['artiste'] : $album['artiste'],
                         'genre' => implode(', ', $genres),
                     ];
                 }
@@ -131,6 +134,49 @@ class MusicCollectionController extends AbstractController
             'album' => $album,
         ]);
     }
+
+    #[Route('/track/edit/{id}', name: '_track_edit', requirements: ['id' => '\d+'])]
+    public function editTrack(Track $track, Request $request, TrackRepository $trackRepository, VideoHelper $videoHelper): Response
+    {
+        if ($request->get('trackkey')) {
+            $platform = $videoHelper->getPlatform($request->get('trackkey'));
+            $key = $videoHelper->getIdentifer($request->get('trackkey'), $platform);
+            $track->setYoutubeKey($key);
+            $trackRepository->save($track, true);
+
+            return $this->redirectToRoute('music_all', ['mode' => 'tracks']);
+        }
+
+        $form = $this->createForm(TrackType::class, $track, [
+            'action' => $this->generateUrl(
+                $request->attributes->get('_route'),
+                $request->attributes->get('_route_params')
+            ),
+        ]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $youtubeKey = $form->get('youtubeKey')->getData();
+            $track->setYoutubeKey($youtubeKey);
+            $trackRepository->save($track, true);
+
+            return new Response(json_encode([
+                'youtube_key' => $track->getYoutubeKey(),
+                'id' => $track->getId(),
+            ]), 200);
+        }
+
+        return $this->render('music/track_edit.html.twig', [
+            'track' => $track,
+            'form' => $form
+        ]);
+    }
+
+
+
+
+    // FRONTIERE DU TODO
 
     #[Route('/artists', name: '_artists')]
     public function getArtists(ArtistRepository $artistRepository)
