@@ -42,6 +42,8 @@ class TrackRepository extends ServiceEntityRepository
     }
 
     public function getTracks(
+        string $auteur = null,
+        string $album = null,
         string $genre = null,
         float $note = null,
         int $annee = null,
@@ -49,13 +51,25 @@ class TrackRepository extends ServiceEntityRepository
     ): array
     {
         $q = $this->createQueryBuilder('t')
-            ->orderBy('t.titre', 'ASC');
-
+            ->orderBy('t.titre', 'ASC')
+            ->andwhere('t.youtubeKey IS NOT NULL');
+        if ($auteur) {
+            $orModule = $q->expr()
+                ->orx()
+                ->add($q->expr()
+                    ->like('t.auteur', ':auteur'))
+                ->add($q->expr()
+                    ->like('t.artiste', ':auteur'));
+            $q->andWhere($orModule)->setParameter(':auteur', '%'.$auteur.'%');
+        }
+        if ($album) {
+            $q->andWhere($q->expr()->like('t.album', ':album'))->setParameter(':album', '%'.$album.'%');
+        }
         if ($genre) {
             $q->andWhere('t.genre = :genre')->setParameter(':genre', $genre);
         }
         if ($note) {
-            $q->andWhere('t.note = :note')->setParameter(':note', $note);
+            $q->andWhere('t.note >= :note')->setParameter(':note', $note);
         }
         if ($annee) {
             if (substr_count($annee, '-')) {
@@ -66,7 +80,7 @@ class TrackRepository extends ServiceEntityRepository
                     $q->andWhere('t.annee <= :annee2')->setParameter(':annee2', $annee2);
                 }
             } elseif (is_numeric($annee)) {
-                $q->andWhere('a.annee = :annee')->setParameter('annee', $annee);
+                $q->andWhere('t.annee = :annee')->setParameter('annee', $annee);
             }
         }
 
@@ -85,6 +99,8 @@ class TrackRepository extends ServiceEntityRepository
             $q->andWhere($orModule)
                 ->setParameter(':search', '%' . $search . '%');
         }
+
+        $q->setMaxResults(500);
 
         return $q->getQuery()->getResult();
     }

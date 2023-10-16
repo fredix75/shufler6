@@ -173,10 +173,27 @@ class MusicCollectionController extends AbstractController
         ]);
     }
 
-    #[Route('/couch/', name:'_couch')]
-    public function couch(): Response
+    #[Route('/couch', name:'_couch')]
+    public function couch(Request $request, TrackRepository $trackRepository): Response
     {
+        $auteur = $request->get('auteur') ?? null;
+        $album = $request->get('album') ?? null;
+        $genre = $request->get('genre') ?? null;
+        $note = $request->get('note') ?? null;
+        $annee = $request->get('annee') ?? null;
+        $search = $request->get('search') ?? null;
 
+        $tracks = $trackRepository->getTracks($auteur, $album, $genre, $note, $annee, $search);
+        //shuffle($tracks);
+        $videoParameters = $this->getParameter('shufler_video');
+        $playlist = [$videoParameters['intro_couch']];
+        foreach($tracks as $track) {
+            $playlist[] = $track->getYoutubeKey();
+        }
+
+        return $this->render('video/couch.html.twig', [
+            'videos' => $playlist ?? [],
+        ]);
     }
 
 
@@ -234,35 +251,6 @@ class MusicCollectionController extends AbstractController
         }
 
         return $this->render('music/artistes_api.html.twig', [
-            'liste' => $liste,
-        ]);
-    }
-
-    public function getRandomTracks(Request $request, TrackRepository $trackRepository, ParameterBagInterface $parameterBag)
-    {
-        $genre = $request->query->get('genre');
-        $note = $request->query->get('note');
-        $annee = $request->query->get('annee');
-        $search = $request->query->get('search');
-
-        $tracks = $trackRepository->getTracks($genre, $note, $annee, $search);
-
-        shuffle($tracks);
-
-        $liste = "";
-        foreach ($tracks as $key => $track) {
-            if ($key == 1) {
-                $single = $track->getYoutubeKey();
-                continue;
-            }
-            if ($key > $parameterBag->get('music_collection')['max_random'])
-                break;
-
-            $liste .= $track->getYoutubeKey() . ',';
-        }
-
-        return $this->render('music/music_list.html.twig', [
-            'single' => $single,
             'liste' => $liste,
         ]);
     }

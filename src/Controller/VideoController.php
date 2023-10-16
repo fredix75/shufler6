@@ -95,7 +95,8 @@ class VideoController extends AbstractController
         $playlist = [$videoParameters['intro_couch']];
         $i = 0;
         foreach ($videos as $video) {
-            $playlist[] = $videoHelper->getIdentifer($video->getLien(), 'youtube.com');
+            dump($video->getLien());
+            $playlist[] = $videoHelper->getIdentifer($video->getLien(), 'youtube');
             if ($i >= $videoParameters['max_list_couch']) {
                 break;
             }
