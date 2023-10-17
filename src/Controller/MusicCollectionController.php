@@ -3,7 +3,6 @@ namespace App\Controller;
 
 use App\Entity\MusicCollection\Track;
 use App\Form\TrackType;
-use App\Helper\VideoHelper;
 use App\Repository\MusicCollection\ArtistRepository;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -136,12 +135,10 @@ class MusicCollectionController extends AbstractController
     }
 
     #[Route('/track/edit/{id}', name: '_track_edit', requirements: ['id' => '\d+'])]
-    public function editTrack(Track $track, Request $request, TrackRepository $trackRepository, VideoHelper $videoHelper): Response
+    public function editTrack(Track $track, Request $request, TrackRepository $trackRepository): Response
     {
         if ($request->get('trackkey')) {
-            $platform = $videoHelper->getPlatform($request->get('trackkey'));
-            $key = $videoHelper->getIdentifer($request->get('trackkey'), $platform);
-            $track->setYoutubeKey($key);
+            $track->setYoutubeKey($request->get('trackkey'));
             $trackRepository->save($track, true);
 
             return $this->redirectToRoute('music_all', ['mode' => 'tracks']);
@@ -185,10 +182,17 @@ class MusicCollectionController extends AbstractController
 
         $tracks = $trackRepository->getTracks($auteur, $album, $genre, $note, $annee, $search);
         //shuffle($tracks);
+        $musicParameters = $this->getParameter('music_collection');
         $videoParameters = $this->getParameter('shufler_video');
         $playlist = [$videoParameters['intro_couch']];
+
+        $i = 0;
         foreach($tracks as $track) {
             $playlist[] = $track->getYoutubeKey();
+            if ($i >= $musicParameters['max_random']) {
+                break;
+            }
+            $i++;
         }
 
         return $this->render('video/couch.html.twig', [

@@ -95,7 +95,6 @@ class VideoController extends AbstractController
         $playlist = [$videoParameters['intro_couch']];
         $i = 0;
         foreach ($videos as $video) {
-            dump($video->getLien());
             $playlist[] = $videoHelper->getIdentifer($video->getLien(), 'youtube');
             if ($i >= $videoParameters['max_list_couch']) {
                 break;
@@ -104,7 +103,7 @@ class VideoController extends AbstractController
         }
 
         return $this->render('video/couch.html.twig', [
-            'videos' => $playlist
+            'videos' => $playlist,
         ]);
     }
 
