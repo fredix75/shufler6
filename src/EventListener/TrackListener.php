@@ -23,7 +23,7 @@ class TrackListener
     {
         $this->setHash($track);
         $key = $track->getYoutubeKey();
-        if (($platform = $this->videoHelper->getPlatform($key)) === VideoHelper::YOUTUBE) {
+        if ($key && ($platform = $this->videoHelper->getPlatform($key)) === VideoHelper::YOUTUBE) {
             $key = $this->videoHelper->getIdentifer($key, $platform);
         }
         $track->setYoutubeKey($key);

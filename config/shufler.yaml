@@ -114,7 +114,7 @@ parameters:
         last_fm_secret: '%env(LAST_FM_SECRET)%'
         last_fm_api_url: 'http://ws.audioscrobbler.com/2.0'
         music_all_nb_b_page: 250
-        max_nb_albums: 20
+        max_nb_albums: 60
         max_nb_artists: 500
         max_random: 100
         track_fields:

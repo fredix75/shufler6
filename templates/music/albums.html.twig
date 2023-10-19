@@ -4,15 +4,12 @@
 
 {%  block body %}
     <div class="row">
-        <section class="col-sm-12 col-md-12" style="background-color: white;">
-            <table id="table">
-                {% for album in albums %}
-                    <tr>
-                        <td>{{ album.id }}</td>
-                        <td class="nom">{{ album.auteur ~ ' ' ~ album.name}}</td>
-                    </tr>
-                {% endfor %}
-            </table>
+        <section class="col-sm-12 col-md-12">
+            {% for album in albums %}
+                {% if album.picture is not null %}
+                    <img src="{{ album.picture }}" alt="{{ album.name }}" title="{{ album.name }}" />
+                {% endif %}
+            {% endfor %}
         </section>
     </div>
 {% endblock %}

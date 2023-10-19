@@ -110,9 +110,10 @@ class ImportTracksCommand extends Command
             return false;
         }
 
-        // Define the size of record, the frequency for persisting the data and the current index of records
+        $minimalNoteToRequest = 4;
         $size = count($data);
-        $i = 0;
+        $i = $n = 0;
+
         $this->tracks  = $this->trackRepository
             ->createQueryBuilder('t')
             ->orderBy('t.titre', 'ASC')
@@ -128,9 +129,6 @@ class ImportTracksCommand extends Command
         header('Content-type: text/html; charset=UTF-8');
         // Processing on each row of data
         foreach ($data as $row) {
-			
-			$trackExists = false;
-			
             $track = new Track();
             $track->setAuteur($row[0]);
             $track->setNumero(is_numeric($row[1]) ? (int)$row[1] : null);
@@ -148,15 +146,16 @@ class ImportTracksCommand extends Command
 
 			$track->setHash($track->doHash());
 
-			foreach ($this->tracks as $key => &$trackInBase) {
+            $trackExists = false;
+			foreach ($this->tracks as $key => $trackInBase) {
 				if ($trackInBase->getHash() && $trackInBase->getHash() === $track->getHash()) {
-                    $trackExists = true;
-
-                    if (!$trackInBase->getYoutubeKey()) {
-                        $trackExists = false;
+                    if (!$trackInBase->getYoutubeKey() && $track->getNote() == $minimalNoteToRequest) {
                         $track->setId($trackInBase->getId());
                         $serializedTrack = $this->serializer->serialize($track, 'json');
                         $track = $this->serializer->deserialize($serializedTrack, Track::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $trackInBase]);
+                    } else {
+                        $trackExists = true;
+                        $n++;
                     }
                     unset($this->tracks[$key]);
 					break;
@@ -174,7 +173,7 @@ class ImportTracksCommand extends Command
 				}
 			}
 
-            if ($track->getNote() == 5 && !$track->getYoutubeKey() && !$trackExists) {
+            if ($track->getNote() == $minimalNoteToRequest && !$track->getYoutubeKey() && !$trackExists) {
                 try {
                     $search = $row[0] . ' ' . $row[2];
                     $response = $this->httpClient->request('GET', sprintf('%s/search', $this->apiUrl), [
@@ -190,15 +189,16 @@ class ImportTracksCommand extends Command
                         ]
                     ]);
 
-                    $resultYouToube = json_decode($response->getContent(), true)['items'] ?? [];
-                    $track->setYoutubeKey($resultYouToube[0]['id']['videoId'] ?? '');
+                    $resultYouTube = json_decode($response->getContent(), true)['items'] ?? [];
+                    $track->setYoutubeKey($resultYouTube[0]['id']['videoId'] ?? '');
                 } catch (\Exception $e) {
                     $output->writeln($e->getMessage());
                 }
             }
 
             if (!$trackExists) {
-                $i ++;
+                $i++;
+                $n++;
                 $this->entityManager->persist($track);
             }
 
@@ -214,9 +214,13 @@ class ImportTracksCommand extends Command
             }
 
             // Each 20 items persisted we flush everything
-            if (($i%$this->parameters['batch_size']) === 0) {
+            if ($i%$this->parameters['batch_size'] === 0) {
                 $this->entityManager->flush();
-                $progress->advance($this->parameters['batch_size']);
+            }
+
+            if ($n%$this->parameters['batch_size'] === 0) {
+                $progress->advance($n);
+                $n=0;
             }
         }
 
@@ -251,7 +255,7 @@ class ImportTracksCommand extends Command
         $progress = new ProgressBar($output, $size);
         $progress->start();
 
-        foreach ($this->artists as $key => &$artist) {
+        foreach ($this->artists as $key => $artist) {
             if (\key_exists($artist->getName(), $this->artistsTmp)) {
                 unset($this->artistsTmp[$artist->getName()]);
                 unset($this->artists[$key]);

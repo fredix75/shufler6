@@ -39,14 +39,13 @@ class AlbumRepository extends ServiceEntityRepository
         }
     }
 
-    public function getAlbums(bool $api = false): array
+    public function getAlbums(int $page, int $max): array
     {
         $query = $this->createQueryBuilder('a')
-            ->orderBy('a.name', 'ASC');
+            ->orderBy('a.name', 'ASC')
+            ->setMaxResults($max)->setFirstResult(($page-1)*$max);
 
-        if ($api){
-            $query->andWhere('a.youtubeKey is not null');
-        }
+        $query->andWhere($query->expr()->notIn('a.picture', ['']));
 
         return $query->getQuery()->getResult();
     }

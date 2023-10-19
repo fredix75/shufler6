@@ -200,62 +200,14 @@ class MusicCollectionController extends AbstractController
         ]);
     }
 
-
-    // FRONTIERE DU TODO
-
-    #[Route('/artists', name: '_artists')]
-    public function getArtists(ArtistRepository $artistRepository)
+    #[Route('/albums/{page}', name: '_albums', requirements: ['page' => '\d+'], defaults: ['page' => 1])]
+    public function getAlbums(AlbumRepository $albumRepository, int $page = 1): Response
     {
-        $artists = $artistRepository->getArtistes();
-        return $this->render('music/artists.html.twig', [
-            'artists' => $artists,
-        ]);
-    }
-
-    #[Route('/albums', name: '_albums')]
-    public function getAlbums(AlbumRepository $albumRepository)
-    {
-        $albums = $albumRepository->getAlbums();
+        $max = $this->getParameter('music_collection')['max_nb_albums'];
+        $albums = $albumRepository->getAlbums($page, $max);
+        shuffle($albums);
         return $this->render('music/albums.html.twig', [
             'albums' => $albums,
-        ]);
-    }
-
-    #[Route('/albums_api', name: '_albums_api')]
-    public function albumsApi(AlbumRepository $albumRepository, ParameterBagInterface $parameterBag)
-    {
-        $albums = $albumRepository->getAlbums(true);
-        shuffle($albums);
-
-        $liste = [];
-        foreach ($albums as $key => $album) {
-            if ($key > $parameterBag->get('music_collection')['max_nb_albums'] - 1)
-                break;
-            $liste[$album->getId()] = $album->getYoutubeKey();
-        }
-
-        return $this->render('music/albums_api.html.twig', [
-            'liste' => $liste,
-        ]);
-    }
-
-    #[Route('/artists_api', name: '_artists_api')]
-    public function artistsApi(ArtistRepository $artistRepository, ParameterBagInterface $parameterBag): Response
-    {
-        $artists = $artistRepository->getArtistes();
-
-        shuffle($artists);
-
-        $liste = [];
-        foreach ($artists as $key => $artist) {
-            if ($key > $parameterBag->get('music_collection')['max_nb_artists'])
-                break;
-
-            $liste[] = $artist;
-        }
-
-        return $this->render('music/artistes_api.html.twig', [
-            'liste' => $liste,
         ]);
     }
 }
