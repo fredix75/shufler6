@@ -7,17 +7,29 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Vimeo\Exceptions\VimeoRequestException;
 use Vimeo\Vimeo;
 
 #[Route('/other', name: 'other')]
 class OtherController extends AbstractController
 {
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws VimeoRequestException
+     * @throws ClientExceptionInterface
+     */
     #[Route('/api_video', name: '_api_video')]
     #[IsGranted('ROLE_ADMIN')]
     public function searchApiVideo(Request $request, HttpClientInterface $httpClient): Response
     {
-        $search = $idVideo = $wiki = null;
+        $search = $idVideo = $idTrack = $wiki = null;
         $resultat = [];
 
         if ($request->get('search_api')) {
@@ -25,6 +37,10 @@ class OtherController extends AbstractController
 
             if ($request->get('id_video')) {
                 $idVideo = $request->get('id_video');
+            }
+
+            if ($request->get('id_track')) {
+                $idTrack = $request->get('id_track');
             }
 
             $resultat = [
@@ -52,16 +68,18 @@ class OtherController extends AbstractController
                 ]
             ]);
 
-            $resultYouToube = json_decode($response->getContent(), true)['items'] ?? [];
+            if ($response->getStatusCode() === Response::HTTP_OK) {
+                $resultYouToube = json_decode($response->getContent(), true)['items'] ?? [];
 
-            foreach ($resultYouToube as $item) {
-                $resultat['youtube']['items'][] = [
-                    'link' => $item['snippet']['thumbnails']['high']['url'] ?? null,
-                    'name' => $item['snippet']['title'] ?? null,
-                    'url'  => 'https://www.youtube.com/watch?v='.($item['id']['videoId'] ?? ''),
-                    'author' => $item['snippet']['channelTitle'] ?? null,
-                    'date' => date("d-m-Y", strtotime($item['snippet']['publishedAt'])),
-                ];
+                foreach ($resultYouToube as $item) {
+                    $resultat['youtube']['items'][] = [
+                        'link' => $item['snippet']['thumbnails']['high']['url'] ?? null,
+                        'name' => $item['snippet']['title'] ?? null,
+                        'url' => 'https://www.youtube.com/watch?v=' . ($item['id']['videoId'] ?? ''),
+                        'author' => $item['snippet']['channelTitle'] ?? null,
+                        'date' => date("d-m-Y", strtotime($item['snippet']['publishedAt'])),
+                    ];
+                }
             }
 
             // Vimeo
@@ -103,20 +121,30 @@ class OtherController extends AbstractController
              * }
              */
         }
-
-        return $this->render('other/videosAPI.html.twig', [
+        $params = [
             'search' => $search,
             'resultat' => $resultat,
             'idVideo' => $idVideo ?? 0,
             'wiki' => $wiki
-        ]);
+        ];
+        if ($idTrack) {
+            $params['idTrack'] = $idTrack;
+        }
+        return $this->render('other/videosAPI.html.twig', $params);
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ClientExceptionInterface
+     */
     #[Route('/api_channel', name: '_api_channel')]
     #[IsGranted('ROLE_ADMIN')]
     public function searchApiChannel(Request $request, HttpClientInterface $httpClient): Response
     {
-        $resultat = $search = $idChannel = null;
+        $search = $idChannel = null;
+        $resultat = [];
         if ($request->get('search_api')) {
             $search = $request->get('search_api');
 
@@ -134,16 +162,18 @@ class OtherController extends AbstractController
                 ]
             ]);
 
-            $resultYouToube = json_decode($response->getContent(), true)['items'] ?? [];
-            foreach ($resultYouToube as $item) {
-                $resultat[] = [
-                    'link' => $item['snippet']['thumbnails']['high']['url'] ?? null,
-                    'name' => $item['snippet']['title'] ?? null,
-                    'url'  => 'https://www.youtube.com/watch?v='.($item['id']['videoId'] ?? ''),
-                    'author' => $item['snippet']['channelTitle'] ?? null,
-                    'date' => date("d-m-Y", strtotime($item['snippet']['publishedAt'])),
-                    'channelId' => $item['snippet']['channelId'],
-                ];
+            if ($response->getStatusCode() === Response::HTTP_OK) {
+                $resultYouToube = json_decode($response->getContent(), true)['items'] ?? [];
+                foreach ($resultYouToube as $item) {
+                    $resultat[] = [
+                        'link' => $item['snippet']['thumbnails']['high']['url'] ?? null,
+                        'name' => $item['snippet']['title'] ?? null,
+                        'url' => 'https://www.youtube.com/watch?v=' . ($item['id']['videoId'] ?? ''),
+                        'author' => $item['snippet']['channelTitle'] ?? null,
+                        'date' => date("d-m-Y", strtotime($item['snippet']['publishedAt'])),
+                        'channelId' => $item['snippet']['channelId'],
+                    ];
+                }
             }
         }
         return $this->render('other/channelsAPI.html.twig', [
@@ -153,6 +183,12 @@ class OtherController extends AbstractController
         ]);
     }
 
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ClientExceptionInterface
+     */
     #[Route('/channel/handle', name: '_handle_channel')]
     public function handleChannel(Request $request, HttpClientInterface $httpClient): Response
     {

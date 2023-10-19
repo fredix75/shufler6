@@ -83,10 +83,11 @@ class ShuflerRuntime implements RuntimeExtensionInterface
         return $frame;
     }
 
-    public function getYoutubeChannelIdFilter(string $lien): string
+    public function getYoutubeChannelLinkFilter(string $lien): string
     {
         $pos = mb_strpos($lien, 'list=');
-        return mb_substr($lien, $pos + 5);
+        $pos = $pos !== false ? $pos+5 : 0;
+        return VideoHelper::YOUTUBE_WATCH.mb_substr($lien, $pos);
     }
 
     /**

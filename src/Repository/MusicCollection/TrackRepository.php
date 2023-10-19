@@ -4,6 +4,8 @@ namespace App\Repository\MusicCollection;
 
 use App\Entity\MusicCollection\Track;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -37,6 +39,172 @@ class TrackRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function getTracks(
+        string $auteur = null,
+        string $album = null,
+        string $genre = null,
+        float $note = null,
+        int $annee = null,
+        string $search = null
+    ): array
+    {
+        $q = $this->createQueryBuilder('t')
+            ->orderBy('t.titre', 'ASC')
+            ->andwhere('t.youtubeKey IS NOT NULL');
+        if ($auteur) {
+            $orModule = $q->expr()
+                ->orx()
+                ->add($q->expr()
+                    ->like('t.auteur', ':auteur'))
+                ->add($q->expr()
+                    ->like('t.artiste', ':auteur'));
+            $q->andWhere($orModule)->setParameter(':auteur', '%'.$auteur.'%');
+        }
+        if ($album) {
+            $q->andWhere($q->expr()->like('t.album', ':album'))->setParameter(':album', '%'.$album.'%');
+        }
+        if ($genre) {
+            $q->andWhere('t.genre = :genre')->setParameter(':genre', $genre);
+        }
+        if ($note) {
+            $q->andWhere('t.note >= :note')->setParameter(':note', $note);
+        }
+        if ($annee) {
+            if (substr_count($annee, '-')) {
+                $annee1 = (explode('-', $annee)[0] && is_numeric(explode('-', $annee)[0])) ? explode('-', $annee)[0] : 1;
+                $annee2 = (explode('-', $annee)[1] && is_numeric(explode('-', $annee)[1])) ? explode('-', $annee)[1] : date('Y');
+                if ($annee1 && $annee2) {
+                    $q->andWhere('t.annee >= :annee1')->setParameter(':annee1', $annee1);
+                    $q->andWhere('t.annee <= :annee2')->setParameter(':annee2', $annee2);
+                }
+            } elseif (is_numeric($annee)) {
+                $q->andWhere('t.annee = :annee')->setParameter('annee', $annee);
+            }
+        }
+
+        if ($search) {
+            $orModule = $q->expr()
+                ->orx()
+                ->add($q->expr()
+                    ->like('t.auteur', ':search'))
+                ->add($q->expr()
+                    ->like('t.titre', ':search'))
+                ->add($q->expr()
+                    ->like('t.album', ':search'))
+                ->add($q->expr()
+                    ->like('t.artiste', ':search'));
+
+            $q->andWhere($orModule)
+                ->setParameter(':search', '%' . $search . '%');
+        }
+
+        $q->setMaxResults(500);
+
+        return $q->getQuery()->getResult();
+    }
+
+    public function getTracksByAlbum(string $artiste, string $album): array
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.artiste =  :artiste')
+            ->setParameter(':artiste', $artiste)
+            ->andWhere('t.album = :album')
+            ->setParameter(':album', $album)
+            ->orderBy('t.numero', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getTracksAjax(
+        array $data,
+        int $page = 0,
+        int $max = null,
+        string $sort = 'titre',
+        string $dir = 'ASC'
+    ): array
+    {
+        $qb = $this->createQueryBuilder('t');
+
+        if (!empty($data['query'])) {
+            $qb->andWhere('t.auteur like :query OR t.artiste like :query OR t.titre like :query OR t.album like :query')
+                ->setParameter(':query', "%" . $data['query'] . "%");
+        }
+
+        $qb->orderBy('t.' . $sort, $dir);
+
+        if ($sort !== 'annee') {
+            $qb->addOrderBy('t.annee', $dir);
+        }
+
+        if ($sort !== 'album') {
+            $qb->addOrderBy('t.album', $dir);
+        }
+
+        if ($sort !== 'auteur') {
+            $qb->addOrderBy('t.auteur', $dir);
+        }
+
+        if ($sort !== 'artiste') {
+            $qb->addOrderBy('t.artiste', $dir);
+        }
+
+        $qb->addOrderBy('t.numero', $dir);
+
+        if ($sort !== 'titre')
+            $qb->addOrderBy('t.titre', $dir);
+
+        if ($max) {
+            $qb->setMaxResults($max)
+                ->setFirstResult($page * $max);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getTracksByAlbumsAjax(
+        array $data,
+        int $page = 0,
+        int $max = null,
+        string $sort = 'album',
+        string $dir = 'ASC',
+    ): array
+    {
+        $params[':sort'] = $sort;
+        $params[':dir'] = $dir;
+        $conn = $this->getEntityManager()->getConnection();
+        $rawSQL = 'SELECT album, artiste, json_arrayagg(annee) as annees, json_arrayagg(genre) as genres FROM track';
+        if (!empty($data['query'])) {
+            $rawSQL .= ' WHERE artiste like "%'.$data['query'].'%" OR album like "%'.$data['query'].'%"';
+            $params[':query'] = '%'.$data['query'].'%';
+        }
+        $rawSQL .= " GROUP BY album, artiste ORDER BY $sort $dir";
+
+        // TODO Gérer les params à bind (j s p pqoi ca marche pas)
+
+        if ($sort !== 'album') {
+            $rawSQL .= " ,album ".$dir;
+        }
+        if ($sort !== 'artiste') {
+            $rawSQL .= " ,artiste ".$dir;
+        }
+        if ($max) {
+            $offset = $page ? $page * $max - 1 : 0;
+            $rawSQL .= " LIMIT $max OFFSET $offset ";
+            $params[':max'] = $max;
+            $params[':offset'] = $offset;
+        }
+
+        $stmt = $conn->prepare($rawSQL);
+        foreach($params as $param => $value) {
+            //$stmt->bindValue($param, $value, ParameterType::STRING);
+        }
+
+        return $stmt->executeQuery()->fetchAllAssociative();
     }
 
 //    /**

@@ -1,0 +1,13 @@
+{{ form_start(form) }}
+{{ form_widget(form) }}
+<a id="track-xchange" class="btn btn-secondary" href="#" data-search="{{ track.auteur }} {{ track.titre }}" data-id="{{ track.id }}"><i class="bi bi-arrow-left-right"></i>&nbsp;Exchange on Api</a>
+<button class="btn btn-primary save-track"
+        type="button"
+>
+    <i class="bi bi-save-fill"></i>&nbsp;Save
+</button>&nbsp;
+{{ form_end(form) }}
+<form name="form_api_search" action="{{ path('other_api_video') }}" method="POST">
+    <input type="hidden" name="search_api">
+    <input type="hidden" name="id_track">
+</form>

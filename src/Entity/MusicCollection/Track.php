@@ -2,10 +2,14 @@
 
 namespace App\Entity\MusicCollection;
 
+use App\EventListener\TrackListener;
 use App\Repository\MusicCollection\TrackRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\EntityListeners;
+use Symfony\Component\Serializer\Serializer;
 
 #[ORM\Entity(repositoryClass: TrackRepository::class)]
+#[EntityListeners([TrackListener::class])]
 class Track
 {
     #[ORM\Id]
@@ -26,7 +30,7 @@ class Track
     private ?int $numero = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $annee = null;
+    private ?string $annee = null;
 
     #[ORM\Column(length: 255)]
     private ?string $artiste = null;
@@ -44,14 +48,24 @@ class Track
     private ?string $bitrate = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $note = null;
+    private ?float $note = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $youtubeKey = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $hash = null;
+
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getTitre(): ?string
@@ -102,12 +116,12 @@ class Track
         return $this;
     }
 
-    public function getAnnee(): ?int
+    public function getAnnee(): ?string
     {
         return $this->annee;
     }
 
-    public function setAnnee(?int $annee): self
+    public function setAnnee(?string $annee): self
     {
         $this->annee = $annee;
 
@@ -174,12 +188,12 @@ class Track
         return $this;
     }
 
-    public function getNote(): ?int
+    public function getNote(): ?float
     {
         return $this->note;
     }
 
-    public function setNote(?int $note): self
+    public function setNote(?float $note): self
     {
         $this->note = $note;
 
@@ -196,5 +210,23 @@ class Track
         $this->youtubeKey = $youtubeKey;
 
         return $this;
+    }
+
+    public function getHash(): ?string
+    {
+        return $this->hash;
+    }
+
+    public function setHash(?string $hash): self
+    {
+        $this->hash = $hash;
+
+        return $this;
+    }
+
+    public function doHash(): string
+    {
+        return hash('sha256', $this->numero.$this->titre.$this->auteur.$this->album.$this->artiste
+            .$this->annee.$this->bitrate.$this->duree.$this->genre.$this->note.$this->pays);
     }
 }

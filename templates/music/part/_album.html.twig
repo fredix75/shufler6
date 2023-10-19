@@ -1,0 +1,28 @@
+{% if album.picture is not empty %}
+    <img src="{{ album.picture }}" style="width:100%"/>
+{% endif %}
+<p class="music-title">
+    <span class="music-album">{{ album.name }}</span><br/>
+    by <span class="music-auteur">{{ album.auteur }}</span> ({{ album.annee }})
+    <span class="badge bg-primary">{{ album.genre }}</span>
+</p>
+<div data-controller="">
+    {% if album.youtubeKey is not empty %}
+        <a class="playlist-link icon-youtube" href="{{ album.youtubeKey|youtubeChannelLink }}" data-id="{{ album.youtubeKey }}">
+            <i class="bi bi-youtube"></i>
+        </a>
+    {% endif %}
+</div>
+<ul style="list-style: none;">
+    {% for track in tracks %}
+        <li>{{ track.numero }} - <strong>{{ track.titre }}</strong>
+            {% if track.auteur != album.auteur %}
+                <small>{{ track.auteur }}</small>
+            {% endif %}
+            {% if track.annee != album.annee %}
+                <small>({{ track.annee }})</small>
+            {% endif %}
+            - <small>{{ track.duree }}</small>
+        </li>
+    {% endfor %}
+</ul>

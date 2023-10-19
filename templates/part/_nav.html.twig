@@ -47,6 +47,14 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('video_trash') }}"><i class="bi bi-trash"></i>&nbsp;Trash</a>
                     </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><i class="bi bi-vinyl-fill"></i> Musique</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ path('music_couch', {'note' : 5}) }}"><i class="bi bi-music-player-fill"></i> Player</a></li>
+                            <li><a class="dropdown-item" href="{{ path('music_all', {'mode' : 'tracks'}) }}"><i class="bi bi-music-note-list"></i> Tracks</a></li>
+                            <li><a class="dropdown-item" href="{{ path('music_all', {'mode' : 'albums'}) }}"><i class="bi bi-disc-fill"></i> Albums</a></li>
+                        </ul>
+                    </li>
                 {% endif %}
                 {% if is_granted('IS_AUTHENTICATED') %}
                     <li class="nav-item dropdown">

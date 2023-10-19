@@ -27,6 +27,7 @@ yarn-error.log
 ###< symfony/webpack-encore-bundle ###
 
 /public/uploads/
+/public/sniffer/
 .idea/
 .buildpath
 .project
