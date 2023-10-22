@@ -1,83 +1,84 @@
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
+<nav class="navbar navbar-expand-lg bg-dark navbar-dark fixed-top">
     <div class="container-fluid">
-        <a class="navbar-brand" href="{{ path('home') }}"><img src="{{ asset('build/images/shufler_logo.png') }}" width=150px /></a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
+        <a class="navbar-brand" href="{{ path('home') }}" aria-label="Go to Homepage"><img src="{{ asset('build/images/shufler_logo.png') }}" width=150px alt="logo Shufler" title="Back to Home" /></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar" role="button" aria-label="Menu">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="mynavbar">
             <ul class="navbar-nav me-auto">
                 {% if is_granted('ROLE_USER') %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('video_list') }}"><i class="bi bi-film"></i>&nbsp;Videos</a>
+                        <a class="nav-link" href="{{ path('video_list') }}" aria-label="Videos"><i class="bi bi-film"></i>&nbsp;Videos</a>
                     </li>
                 {% endif %}
                 {% if is_granted('ROLE_AUTEUR') %}
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><i class="bi bi-pencil"></i> {{ 'menu.edit'|trans }}</a>
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-label="Edit"><i class="bi bi-pencil"></i> {{ 'menu.edit'|trans }}</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{ path('video_edit', { 'id' : 0 }) }}"><i class="bi bi-film"></i> Ajouter une Vidéo</a></li>
-                            <li><a class="dropdown-item" href="{{ path('flux_edit', { 'id' : 0 }) }}"><i class="bi bi-rss"></i> Ajouter un Flux</a></li>
+                            <li><a class="dropdown-item" href="{{ path('video_edit', { 'id' : 0 }) }}" aria-label="Add a Video"><i class="bi bi-film"></i> Ajouter une Vidéo</a></li>
+                            <li><a class="dropdown-item" href="{{ path('flux_edit', { 'id' : 0 }) }}" aria-label="Add a Flow"><i class="bi bi-rss"></i> Ajouter un Flux</a></li>
                         </ul>
                     </li>
                 {% endif %}
                 {% if is_granted('ROLE_USER') %}
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><i class="bi bi-archive"></i> Divers</a>
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-label="Misc"><i class="bi bi-archive"></i> Divers</a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ path('flux_news') }}"><i class="bi bi-newspaper"></i> News</a></li>
+                        <li><a class="dropdown-item" href="{{ path('flux_news') }}" aria-label="News (rss)"><i class="bi bi-newspaper"></i> News</a></li>
                         {% if is_granted('ROLE_ADMIN') %}
-                            <li><a class="dropdown-item" href="{{ path('flux_podcasts') }}"><i class="bi bi-broadcast-pin"></i> Podcast</a></li>
-                            <li><a class="dropdown-item" href="{{ path('flux_playlists') }}"><i class="bi bi-youtube"></i> Video Playlists</a></li>
-                            <li><a class="dropdown-item" href="{{ path('flux_liens') }}"><i class="bi bi-hand-thumbs-up"></i> Liens</a></li>
-                            <li><a class="dropdown-item" href="{{ path('flux_radios') }}"><i class="bi bi-speaker-fill"></i> Radios</a></li>
+                            <li><a class="dropdown-item" href="{{ path('flux_podcasts') }}" aria-label="Podcasts"><i class="bi bi-broadcast-pin"></i> Podcast</a></li>
+                            <li><a class="dropdown-item" href="{{ path('flux_playlists') }}" aria-label="Video playlists"><i class="bi bi-youtube"></i> Video Playlists</a></li>
+                            <li><a class="dropdown-item" href="{{ path('flux_liens') }}" aria-label="Links"><i class="bi bi-hand-thumbs-up"></i> Liens</a></li>
+                            <li><a class="dropdown-item" href="{{ path('flux_radios') }}" aria-label="Radios"><i class="bi bi-speaker-fill"></i> Radios</a></li>
                         {% endif %}
                     </ul>
                 </li>
                 {% endif %}
                 {% if is_granted('ROLE_AUTEUR') %}
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><i class="bi bi-cloud"></i> Apis</a>
+                    <a class="nav-link dropdown-toggle" href="#" role="button" aria-label="Apis" data-bs-toggle="dropdown"><i class="bi bi-cloud"></i> Apis</a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ path('other_api_video') }}"><i class="bi bi-vimeo"></i> Recherche Vidéos API</a></li>
-                        <li><a class="dropdown-item" href="{{ path('other_api_channel') }}"><i class="bi bi-youtube"></i> Recherche Channels API</a></li>
+                        <li><a class="dropdown-item" href="{{ path('other_api_video') }}" aria-label="Videos search by Api"><i class="bi bi-vimeo"></i> Recherche Vidéos API</a></li>
+                        <li><a class="dropdown-item" href="{{ path('other_api_channel') }}" aria-label="Channel search by Api"><i class="bi bi-youtube"></i> Recherche Channels API</a></li>
                     </ul>
                 </li>
                 {% endif %}
                 {% if is_granted('ROLE_ADMIN') %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('video_trash') }}"><i class="bi bi-trash"></i>&nbsp;Trash</a>
+                        <a class="nav-link" href="{{ path('video_trash') }}" aria-label="Trash"><i class="bi bi-trash"></i>&nbsp;Trash</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><i class="bi bi-vinyl-fill"></i> Musique</a>
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-label="Music"><i class="bi bi-vinyl-fill"></i> Musique</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{ path('music_couch', {'note' : 5}) }}"><i class="bi bi-music-player-fill"></i> Player</a></li>
-                            <li><a class="dropdown-item" href="{{ path('music_all', {'mode' : 'tracks'}) }}"><i class="bi bi-music-note-list"></i> Tracks</a></li>
-                            <li><a class="dropdown-item" href="{{ path('music_all', {'mode' : 'albums'}) }}"><i class="bi bi-disc-fill"></i> Albums</a></li>
+                            <li><a class="dropdown-item" href="{{ path('music_couch', {'note' : 5}) }}" aria-label="Music player"><i class="bi bi-music-player-fill"></i> Player</a></li>
+                            <li><a class="dropdown-item" href="{{ path('music_all', {'mode' : 'tracks'}) }}" aria-label="Tracks"><i class="bi bi-music-note-list"></i> Tracks</a></li>
+                            <li><a class="dropdown-item" href="{{ path('music_all', {'mode' : 'albums'}) }}" aria-label="Albums"><i class="bi bi-disc-fill"></i> Albums</a></li>
+                            <li><a class="dropdown-item" href="{{ path('music_albums') }}" aria-label="Albums viewer"><i class="bi bi-wallet2"></i> Albums Viewer</a></li>
                         </ul>
                     </li>
                 {% endif %}
                 {% if is_granted('IS_AUTHENTICATED') %}
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><i class="bi bi-person-vcard"></i> Mon compte</a>
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-label="My account"><i class="bi bi-person-vcard"></i> Mon compte</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{ path('account') }}"><i class="bi bi-person-circle"></i> Mon profil</a></li>
-                            <li><a class="dropdown-item" href="{{ path('app_logout') }}"><i class="bi bi-door-closed"></i> Me déconnecter</a></li>
+                            <li><a class="dropdown-item" href="{{ path('account') }}" aria-label="My profile"><i class="bi bi-person-circle"></i> Mon profil</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_logout') }}" aria-label="Disconnect"><i class="bi bi-door-closed"></i> Me déconnecter</a></li>
                         </ul>
                     </li>
                 {% else %}
                     <li class="nav-item">
                         <a class="nav-link" href="#" {{ stimulus_controller('modal-form', {
                             formUrl: path('app_login')
-                        }) }} data-action="click->modal-form#openModal"><i class="bi bi-power"></i>&nbsp;Connexion</a>
+                        }) }} data-action="click->modal-form#openModal" aria-label="Connect"><i class="bi bi-power"></i>&nbsp;Connexion</a>
                     </li>
                 {% endif %}
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"><img src="{{ asset('build/images/flags/flag-'~ app.request.locale ~'.png')}}" width="30px" />&nbsp;<b class="caret"></b></a>
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-label="Switch language"><img src="{{ asset('build/images/flags/flag-'~ app.request.locale ~'.png')}}" width="30px" alt="language-{{ app.request.locale }}" title="language-{{ app.request.locale }}" />&nbsp;<b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li><a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale' : 'en'})) }}" class="dropdown-item"><img src="{{ asset('build/images/flags/flag-en.png')}}" width="30px" />&nbsp;English</a></li>
-                        <li><a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale' : 'fr'})) }}" class="dropdown-item"><img src="{{ asset('build/images/flags/flag-fr.png')}}" width="30px" />&nbsp;Français</a></li>
+                        <li><a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale' : 'en'})) }}" class="dropdown-item" aria-label="switch language english"><img src="{{ asset('build/images/flags/flag-en.png')}}" width="30px" alt="language-en" title="language-en" />&nbsp;English</a></li>
+                        <li><a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale' : 'fr'})) }}" class="dropdown-item" aria-label="switch language french"><img src="{{ asset('build/images/flags/flag-fr.png')}}" width="30px" alt="language-fr" title="language-fr" />&nbsp;Français</a></li>
                     </ul>
                 </li>
             </ul>
@@ -87,7 +88,7 @@
                     <input type="hidden" name="video_id" data-autocomplete-target="hidden"/>
                     <ul class="list-group" data-autocomplete-target="results" style="position:absolute;"></ul>
                 </div>&nbsp;&nbsp;
-                <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
+                <button class="btn btn-primary" type="submit" role="button" aria-label="Search"><i class="bi bi-search"></i></button>
             </form>
         </div>
     </div>
