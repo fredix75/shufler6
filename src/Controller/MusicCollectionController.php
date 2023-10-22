@@ -2,7 +2,9 @@
 namespace App\Controller;
 
 use App\Entity\MusicCollection\Track;
+use App\Form\FilterTracksType;
 use App\Form\TrackType;
+use App\Helper\VideoHelper;
 use App\Repository\MusicCollection\ArtistRepository;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -60,7 +62,7 @@ class MusicCollectionController extends AbstractController
 
                 foreach ($tracks as $track) {
                     $output['data'][] = [
-                        'youtubeKey' => '<a id="track-youtube-'.$track->getId().'" href="https://www.youtube.com/watch?v='.$track->getYoutubeKey().'" class="video-link icon-youtube">'.($track->getYoutubeKey() ? '<i class="bi bi-youtube"></i>' : '').'</a>',
+                        'youtubeKey' => '<a href="'.VideoHelper::YOUTUBE_WATCH.$track->getYoutubeKey().'" class="video-link icon-youtube" onclick="return false;">'.($track->getYoutubeKey() ? '<i class="bi bi-youtube"></i>' : '').'</a>',
                         'id' => $track->getId(),
                         'auteur' => strtoupper($track->getAuteur()) !== 'DIVERS' ? '<a href="#" data-action="music#openModal" data-artist="' . $track->getAuteur() . '" ><i class="bi bi-eye-fill"></i></a> ' . $track->getAuteur() : $track->getAuteur(),
                         'titre' => '<a href="#track-youtube-'.$track->getId().'" data-id='.$track->getId().' class="edit-tracks" data-action="music#openEditModal"><i class="bi bi-pencil-square"></i></a> ' . $track->getTitre(),
@@ -125,9 +127,17 @@ class MusicCollectionController extends AbstractController
     public function getTracksByAlbumAjax(Request $request, TrackRepository $trackRepository, AlbumRepository $albumRepository): Response
     {
         $artist = $request->get('artist');
-        $album = $request->get('album');
-        $tracks = $trackRepository->getTracksByAlbum($artist, $album);
-        $album = $albumRepository->findOneBy(['auteur'=>$artist, 'name' => $album]);
+        $albumName = $request->get('album');
+        $tracks = $trackRepository->getTracksByAlbum($artist, $albumName);
+        $album = $albumRepository->findOneBy(['auteur'=>$artist, 'name' => $albumName]);
+        if (empty($album)) {
+            $album['auteur'] = $artist;
+            $album['name'] = $albumName;
+            $album['annee'] = null;
+            $album['genre'] = null;
+            $album['picture'] = null;
+            $album['youtubeKey'] = null;
+        }
         return $this->render('music/part/_album.html.twig', [
             'tracks' => $tracks,
             'album' => $album,
@@ -173,15 +183,22 @@ class MusicCollectionController extends AbstractController
     #[Route('/couch', name:'_couch')]
     public function couch(Request $request, TrackRepository $trackRepository): Response
     {
-        $auteur = $request->get('auteur') ?? null;
-        $album = $request->get('album') ?? null;
-        $genre = $request->get('genre') ?? null;
-        $note = $request->get('note') ?? null;
-        $annee = $request->get('annee') ?? null;
-        $search = $request->get('search') ?? null;
+        $params = [
+            'auteur'        => $request->get('auteur') ?? null,
+            'album'         => $request->get('album') ?? null,
+            'genre'         => $request->get('genre') ?? null,
+            'note'          => $request->get('note') ?? null,
+            'annee'         => $request->get('annee') ?? null,
+            'search'        => $request->get('search') ?? null,
+            'hasYoutubeKey' => true,
+        ];
 
-        $tracks = $trackRepository->getTracks($auteur, $album, $genre, $note, $annee, $search);
-        //shuffle($tracks);
+        $form = $this->createForm(FilterTracksType::class, $params);
+
+        $tracks = $trackRepository->getTracks($params);
+        if (empty($params['album'])) {
+            shuffle($tracks);
+        }
         $musicParameters = $this->getParameter('music_collection');
         $videoParameters = $this->getParameter('shufler_video');
         $playlist = [$videoParameters['intro_couch']];
@@ -197,6 +214,7 @@ class MusicCollectionController extends AbstractController
 
         return $this->render('video/couch.html.twig', [
             'videos' => $playlist ?? [],
+            'form' => $form,
         ]);
     }
 

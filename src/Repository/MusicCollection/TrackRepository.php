@@ -41,37 +41,37 @@ class TrackRepository extends ServiceEntityRepository
         }
     }
 
-    public function getTracks(
-        string $auteur = null,
-        string $album = null,
-        string $genre = null,
-        float $note = null,
-        int $annee = null,
-        string $search = null
-    ): array
+    public function getTracks(array $params = []): array
     {
-        $q = $this->createQueryBuilder('t')
-            ->orderBy('t.titre', 'ASC')
-            ->andwhere('t.youtubeKey IS NOT NULL');
-        if ($auteur) {
+        $q = $this->createQueryBuilder('t');
+
+        if (!empty($params['hasYoutubeKey'])) {
+            $q->andwhere("t.youtubeKey <> '' ");
+        }
+
+        if (!empty($params['auteur'])) {
             $orModule = $q->expr()
                 ->orx()
                 ->add($q->expr()
                     ->like('t.auteur', ':auteur'))
                 ->add($q->expr()
                     ->like('t.artiste', ':auteur'));
-            $q->andWhere($orModule)->setParameter(':auteur', '%'.$auteur.'%');
+            $q->andWhere($orModule)->setParameter(':auteur', '%'.$params['auteur'].'%');
         }
-        if ($album) {
-            $q->andWhere($q->expr()->like('t.album', ':album'))->setParameter(':album', '%'.$album.'%');
+        if (!empty($params['album'])) {
+            $q->andWhere($q->expr()->like('t.album', ':album'))->setParameter(':album', '%'.$params['album'].'%');
+            $q->orderBy('t.numero', 'ASC');
+        } else {
+            $q->orderBy('t.titre', 'ASC');
         }
-        if ($genre) {
-            $q->andWhere('t.genre = :genre')->setParameter(':genre', $genre);
+        if (!empty($params['genre'])) {
+            $q->andWhere('t.genre = :genre')->setParameter(':genre', $params['genre']);
         }
-        if ($note) {
-            $q->andWhere('t.note >= :note')->setParameter(':note', $note);
+        if (!empty($params['note'])) {
+            $q->andWhere('t.note >= :note')->setParameter(':note', $params['note']);
         }
-        if ($annee) {
+        if (!empty($params['annee'])) {
+            $annee = $params['annee'];
             if (substr_count($annee, '-')) {
                 $annee1 = (explode('-', $annee)[0] && is_numeric(explode('-', $annee)[0])) ? explode('-', $annee)[0] : 1;
                 $annee2 = (explode('-', $annee)[1] && is_numeric(explode('-', $annee)[1])) ? explode('-', $annee)[1] : date('Y');
@@ -84,7 +84,7 @@ class TrackRepository extends ServiceEntityRepository
             }
         }
 
-        if ($search) {
+        if (!empty($params['search'])) {
             $orModule = $q->expr()
                 ->orx()
                 ->add($q->expr()
@@ -97,10 +97,8 @@ class TrackRepository extends ServiceEntityRepository
                     ->like('t.artiste', ':search'));
 
             $q->andWhere($orModule)
-                ->setParameter(':search', '%' . $search . '%');
+                ->setParameter(':search', '%' . $params['search'] . '%');
         }
-
-        $q->setMaxResults(500);
 
         return $q->getQuery()->getResult();
     }
@@ -205,6 +203,13 @@ class TrackRepository extends ServiceEntityRepository
         }
 
         return $stmt->executeQuery()->fetchAllAssociative();
+    }
+
+    public function getGenres(): array
+    {
+        return $this->createQueryBuilder('t')->select('distinct t.genre')
+            ->orderBy('t.genre')
+            ->getQuery()->getResult();
     }
 
 //    /**

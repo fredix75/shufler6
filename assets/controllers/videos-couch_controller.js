@@ -36,11 +36,16 @@ export default class extends Controller {
         let player;
 
         player = YouTubePlayer('player', {
-            width: '100%'
+            width: '100%',
+            height: '500px'
         });
 
         player.on('ready', e => {
             e.target.loadPlaylist(this.videosValue);
         })
+    }
+
+    toggleFilters(event) {
+        $('.filter-form').slideToggle();
     }
 }

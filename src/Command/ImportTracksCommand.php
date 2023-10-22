@@ -17,6 +17,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -46,6 +47,8 @@ class ImportTracksCommand extends Command
     private array $artistsTmp = [];
 
     private array $albumsTmp = [];
+
+    private $albumsCount = 0;
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
@@ -113,6 +116,7 @@ class ImportTracksCommand extends Command
         $minimalNoteToRequest = 4;
         $size = count($data);
         $i = $n = 0;
+        $forbiddenRequest = false;
 
         $this->tracks  = $this->trackRepository
             ->createQueryBuilder('t')
@@ -173,7 +177,7 @@ class ImportTracksCommand extends Command
 				}
 			}
 
-            if ($track->getNote() == $minimalNoteToRequest && !$track->getYoutubeKey() && !$trackExists) {
+            if ($track->getNote() == $minimalNoteToRequest && !$track->getYoutubeKey() && !$trackExists && !$forbiddenRequest) {
                 try {
                     $search = $row[0] . ' ' . $row[2];
                     $response = $this->httpClient->request('GET', sprintf('%s/search', $this->apiUrl), [
@@ -191,7 +195,9 @@ class ImportTracksCommand extends Command
 
                     $resultYouTube = json_decode($response->getContent(), true)['items'] ?? [];
                     $track->setYoutubeKey($resultYouTube[0]['id']['videoId'] ?? '');
+
                 } catch (\Exception $e) {
+                    $forbiddenRequest = true;
                     $output->writeln($e->getMessage());
                 }
             }
@@ -207,6 +213,7 @@ class ImportTracksCommand extends Command
             }
 
             if (empty($this->albumsTmp[$track->getArtiste()][$track->getAlbum()])) {
+                $this->albumsCount ++;
                 $this->albumsTmp[$track->getArtiste()][$track->getAlbum()] = [
                     "genre" => $track->getGenre(),
                     "annee" => $track->getAnnee()
@@ -218,7 +225,7 @@ class ImportTracksCommand extends Command
                 $this->entityManager->flush();
             }
 
-            if ($n%$this->parameters['batch_size'] === 0) {
+            if ($n === $this->parameters['batch_size']) {
                 $progress->advance($n);
                 $n=0;
             }
@@ -320,16 +327,15 @@ class ImportTracksCommand extends Command
 
     protected function importAlbums(InputInterface $input, OutputInterface $output): bool
     {
-        // Define the size of record, the frequency for persisting the data and the current index of records
-        $size = count($this->albumsTmp);
         $i = 1;
+        $forbiddenRequest = false;
         $this->albums  = $this->albumRepository->findAll();
 
         // Starting progress
-        $progress = new ProgressBar($output, $size);
+        $progress = new ProgressBar($output, $this->albumsCount);
         $progress->start();
 
-        foreach($this->albums as $key => &$album) {
+        foreach($this->albums as $key => $album) {
             if (\array_key_exists($album->getAuteur(), $this->albumsTmp)) {
                 if (\array_key_exists($album->getName(), $this->albumsTmp[$album->getAuteur()]) && $album->getYoutubeKey()) {
                     unset($this->albumsTmp[$album->getAuteur()][$album->getName()]);
@@ -337,10 +343,10 @@ class ImportTracksCommand extends Command
                 } elseif(\array_key_exists($album->getName(), $this->albumsTmp[$album->getAuteur()]) && $album->getPicture()) {
                     $this->albumsTmp[$album->getAuteur()][$album->getName()]['picture'] = $album->getPicture();
                 }
-
             }
         }
 
+        $this->entityManager->beginTransaction();
         foreach ($this->albumsTmp as $artisteName => $albums) {
             foreach ($albums as $albumName => $features) {
                 $album = new Album();
@@ -352,24 +358,29 @@ class ImportTracksCommand extends Command
                 if (strtolower($albumName) != 'divers' && strtolower($artisteName) != 'divers') {
                     $search = $artisteName . " " . $albumName;
 
-                    try {
-                        $response = $this->httpClient->request('GET', sprintf('%s/search', $this->apiUrl), [
-                            'query' => [
-                                'key'       => $this->apiKey,
-                                'q'         => $search,
-                                'part'      => 'snippet',
-                                'type'      => 'playlist',
-                                'maxResults'=> 1,
-                            ],
-                            'headers' => [
-                                'Content-Type: application/json',
-                                'Accept: application/json',
-                            ]
-                        ]);
-                        $response = json_decode($response->getContent(), true);
-                        $album->setYoutubeKey($response['items'][0]['id']['playlistId']);
-                    } catch (\Exception $e) {
-                        $output->writeln($e->getMessage());
+                    if (!$forbiddenRequest) {
+                        try {
+                            $response = $this->httpClient->request('GET', sprintf('%s/search', $this->apiUrl), [
+                                'query' => [
+                                    'key'       => $this->apiKey,
+                                    'q'         => $search,
+                                    'part'      => 'snippet',
+                                    'type'      => 'playlist',
+                                    'maxResults'=> 1,
+                                ],
+                                'headers' => [
+                                    'Content-Type: application/json',
+                                    'Accept: application/json',
+                                ]
+                            ]);
+
+                            $response = json_decode($response->getContent(), true);
+                            $album->setYoutubeKey($response['items'][0]['id']['playlistId']);
+
+                        } catch (\Exception $e) {
+                            $forbiddenRequest = true;
+                            $output->writeln($e->getMessage());
+                        }
                     }
 
                     if (empty($features['picture'])) {
@@ -388,7 +399,6 @@ class ImportTracksCommand extends Command
                                 ]
                             ]);
                             $response = json_decode($response->getContent(), true) ?? [];
-
                             $album->setPicture($response['album'] ? $response['album']['image'][4]['#text'] : '');
                         } catch(\Exception $e) {
                             $output->writeln($e->getMessage());
@@ -397,6 +407,7 @@ class ImportTracksCommand extends Command
                         $album->setPicture($features['picture']);
                     }
                 }
+
 
                 $this->entityManager->persist($album);
                 // Each 20 items persisted we flush everything
@@ -418,11 +429,23 @@ class ImportTracksCommand extends Command
             $i++;
             $this->entityManager->remove($album);
             if (($i%$this->parameters['batch_size']) === 0) {
-                $this->entityManager->flush();
+                try {
+                    $this->entityManager->flush();
+                } catch (\Exception $e) {
+                    dump($e->getMessage());
+                    $this->entityManager->rollback();
+                }
+
             }
         }
-        $this->entityManager->flush();
+        try {
+            $this->entityManager->flush();
+        } catch (\Exception $e) {
+            dump($e->getMessage());
+            $this->entityManager->rollback();
+        }
         $this->entityManager->clear();
+        $this->entityManager->commit();
         unset($this->album);
         unset($this->albumTmp);
         $progress->finish();
