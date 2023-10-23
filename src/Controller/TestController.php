@@ -12,7 +12,7 @@ class TestController extends AbstractController
     #[Route('/test', name: 'test')]
     public function test(): Response
     {
-        return new Response('ok');
+        return new Response('test');
 
     }
 }

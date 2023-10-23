@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} :: Music Albums{% endblock %}
+
+{%  block body %}
+    <div class="row">
+        <section class="col-sm-12 col-md-12">
+            {% for album in albums %}
+                {% if album.picture is not null %}
+                    <img src="{{ album.picture }}" alt="{{ album.name }}" title="{{ album.name }}" />
+                {% endif %}
+            {% endfor %}
+        </section>
+    </div>
+{% endblock %}

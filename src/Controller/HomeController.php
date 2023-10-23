@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'home')]
-    public function homeAction(VideoRepository $videoRepository, FluxRepository $fluxRepository): Response
+    public function home(VideoRepository $videoRepository, FluxRepository $fluxRepository): Response
     {
         $videos = $videoRepository->getRandomVideos();
         $anims = $musics = $stranges = [];

@@ -5,3 +5,4 @@ video.videos_number: >-
       =1    {1 vidéo}
       other {# vidéos}
   }
+global.confirmation: "Etes-vous sûr de vouloir supprimer cette ressource ?"

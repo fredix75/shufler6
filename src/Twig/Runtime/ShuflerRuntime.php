@@ -44,9 +44,9 @@ class ShuflerRuntime implements RuntimeExtensionInterface
     /**
      * Display Frames
      */
-    public function convertFrameFilter(string $lien): string
+    public function convertFrameFilter(string $lien, string $name): string
     {
-        $frame_prefix = '<img class="embed-responsive-item" src="';
+        $frame_prefix = '<img class="embed-responsive-item" alt="'.$name.'" title="'.$name.'" src="';
         $width = '100%';
         $frame = $frame_prefix . $this->videoParameters['no_signal'] . '" width=' . $width . ' />';
 
@@ -83,10 +83,11 @@ class ShuflerRuntime implements RuntimeExtensionInterface
         return $frame;
     }
 
-    public function getYoutubeChannelIdFilter(string $lien): string
+    public function getYoutubeChannelLinkFilter(string $lien): string
     {
         $pos = mb_strpos($lien, 'list=');
-        return mb_substr($lien, $pos + 5);
+        $pos = $pos !== false ? $pos+5 : 0;
+        return VideoHelper::YOUTUBE_WATCH.mb_substr($lien, $pos);
     }
 
     /**
@@ -98,12 +99,17 @@ class ShuflerRuntime implements RuntimeExtensionInterface
         $id = $this->videoHelper->getIdentifer($link, $platform);
 
         if (VideoHelper::YOUTUBE === $platform) {
-            $link = VideoHelper::YOUTUBE_WATCH . $id;
+            $link = $this->popUpYoutubeFilter($id);
         } elseif (VideoHelper::DAILYMOTION === $platform) {
             $link = VideoHelper::DAILYMOTION_EMBED . $id;
         }
 
         return $link;
+    }
+
+    public function popUpYoutubeFilter(string $id): string
+    {
+        return VideoHelper::YOUTUBE_WATCH . $id;
     }
 
     public function toIconAlertFilter(string $string): string

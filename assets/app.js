@@ -20,6 +20,7 @@ $('.select2').select2();
 import { Modal, Tooltip, Toast, Popover } from 'bootstrap';
 import { Application } from '@hotwired/stimulus'
 import Autocomplete from 'stimulus-autocomplete'
+import 'datatables.net-dt/css/jquery.dataTables.css';
 
 const application = Application.start()
 application.register('autocomplete', Autocomplete)

@@ -4,7 +4,7 @@
         <li class="list-group-item" data-page="{{ page }}">
             <div class="row flex">
                 <div class="col col-3" style="overflow: hidden">
-                    <a class="lienPl" href="#" data-id="{{ playlist.id }}" data-toggle="tooltip" data-action="video#popupPlaylist">
+                    <a class="playlist-link" href="{{ playlist.id|youtubeChannelLink }}" data-toggle="tooltip">
                         <img src="{{ playlist.snippet.thumbnails.default.url }}" />
                     </a>
                 </div>

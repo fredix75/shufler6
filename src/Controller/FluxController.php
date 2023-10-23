@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Flux;
 use App\Form\FluxFormType;
 use App\Repository\FluxRepository;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -83,8 +84,8 @@ class FluxController extends AbstractController
                 if (@simplexml_load_file($url, null, LIBXML_NOCDATA)->{'channel'}->{'item'}) {
                     $contenu = @simplexml_load_file($url)->{'channel'}->{'item'};
                 }
-            } catch (\Exception $e) {
-                return new Response('No data');
+            } catch (Exception $e) {
+                return new Response('No data - ' . $e->getMessage());
             }
 
             $page = $request->get('page');

@@ -15,9 +15,9 @@ class ShuflerExtension extends AbstractExtension
             new TwigFilter('categorieDisplay', [ShuflerRuntime::class, 'categoryFilter']),
             new TwigFilter('genreDisplay', [ShuflerRuntime::class, 'genreFilter']),
             new TwigFilter('yearDisplay', [ShuflerRuntime::class, 'yearFilter']),
-            new TwigFilter('convertFrame', [ShuflerRuntime::class, 'convertFrameFilter'], ['is_safe' => ['html']]),
-            new TwigFilter('youtubeChannelId', [ShuflerRuntime::class, 'getYoutubeChannelIdFilter']),
+            new TwigFilter('youtubeChannelLink', [ShuflerRuntime::class, 'getYoutubeChannelLinkFilter']),
             new TwigFilter('popUp', [ShuflerRuntime::class, 'popUpFilter']),
+            new TwigFilter('popUpYoutube', [ShuflerRuntime::class, 'popUpYoutubeFilter']),
             new TwigFilter('toIconAlert', [ShuflerRuntime::class, 'toIconAlertFilter'])
         ];
     }
@@ -29,7 +29,7 @@ class ShuflerExtension extends AbstractExtension
             new TwigFunction('genreDisplay', [ShuflerRuntime::class, 'genreFilter']),
             new TwigFunction('yearDisplay', [ShuflerRuntime::class, 'yearFilter']),
             new TwigFunction('convertFrame', [ShuflerRuntime::class, 'convertFrameFilter'], ['is_safe' => ['html']]),
-            new TwigFunction('youtubeChannelId', [ShuflerRuntime::class, 'getYoutubeChannelIdFilter']),
+            new TwigFunction('youtubeChannelLink', [ShuflerRuntime::class, 'getYoutubeChannelLinkFilter']),
             new TwigFunction('popUp', [ShuflerRuntime::class, 'popUpFilter']),
             new TwigFunction('toIconAlert', [ShuflerRuntime::class, 'toIconAlertFilter'])
         ];

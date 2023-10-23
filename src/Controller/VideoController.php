@@ -57,7 +57,7 @@ class VideoController extends AbstractController
     }
 
     #[Route('/search/{page}', name: '_search', requirements: ['id' => '\d+'])]
-    public function search(Request $request, VideoRepository $videoRepository, int $page = 1)
+    public function search(Request $request, VideoRepository $videoRepository, int $page = 1): Response
     {
         $search = $request->get('search_field');
 
@@ -95,7 +95,7 @@ class VideoController extends AbstractController
         $playlist = [$videoParameters['intro_couch']];
         $i = 0;
         foreach ($videos as $video) {
-            $playlist[] = $videoHelper->getIdentifer($video->getLien(), 'youtube.com');
+            $playlist[] = $videoHelper->getIdentifer($video->getLien(), 'youtube');
             if ($i >= $videoParameters['max_list_couch']) {
                 break;
             }
@@ -103,7 +103,7 @@ class VideoController extends AbstractController
         }
 
         return $this->render('video/couch.html.twig', [
-            'videos' => $playlist
+            'videos' => $playlist,
         ]);
     }
 
@@ -177,6 +177,7 @@ class VideoController extends AbstractController
         string $videoKey
     ): Response
     {
+        $result = [];
         if ('youtube' === $plateforme) {
             $response = $httpClient->request('GET', sprintf('%s/videos', $this->getParameter('youtube_api_url')), [
                 'query' => [

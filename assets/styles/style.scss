@@ -69,12 +69,12 @@ a:hover, a:active {
   color: #B27300;
 }
 
-a.video-link img, a.lienPl img{
+a.video-link img, a.playlist-link img{
   transition: all 1s ease;
   max-width: 100%;
 }
 
-a.video-link:hover img, a.lienPl:hover img {
+a.video-link:hover img, a.playlist-link:hover img {
   scale: 1.3;
 }
 
@@ -123,4 +123,51 @@ a.video-link:hover img, a.lienPl:hover img {
 .flux-titre {
   color: white;
   font-weight: bold;
+}
+
+.datas-white {
+  background-color: white;
+  padding: 10px;
+}
+
+.icon-youtube {
+  font-size: 2em;
+  color: red;
+}
+
+.modal-header {
+  color: yellow;
+  background-color: #061e49;
+}
+
+.modal-footer {
+  color: yellow;
+  background-color: #061e49;
+}
+
+.music-modal {
+  background-color: black;
+  color: white;
+}
+
+.music-title {
+  border-top : 2px solid white;
+  border-bottom : 2px solid white;
+  padding: 1em;
+}
+
+.music-album {
+  font-size: 2.5em;
+  color: orange;
+  line-height: 1;
+}
+
+.music-auteur {
+  font-size: 1.5em;
+  color: red;
+}
+
+.filters {
+  border-top:1px solid white;
+  background-color:darkgrey;
 }
