@@ -13,8 +13,12 @@ import './bootstrap';
 
 import $ from 'jquery';
 
-require('select2')
-$('.select2').select2();
+import 'tom-select'
+import TomSelect from "tom-select"
+document.querySelectorAll('.select2').forEach((el)=>{
+    let settings = {};
+    new TomSelect(el,settings);
+});
 
 
 import { Modal, Tooltip, Toast, Popover } from 'bootstrap';

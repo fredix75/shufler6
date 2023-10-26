@@ -45,7 +45,7 @@ export default class extends Controller {
             $('#file').hide();
             $('#channel').hide();
             this.handleMoodSelect(liens);
-        } else if ('5' === type) {
+        } else {
             $('#file').hide();
             $('#channel').hide();
             $('#mood').hide();

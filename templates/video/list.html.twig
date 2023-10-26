@@ -6,7 +6,7 @@
     <section class="col col-sm-12 col-md-12 medias-bande" data-controller="video">
         <div class="col col-12 col-sm-6 col-md-6 col-lg-3 media-select" style="">
             {% if search is defined %}
-                <h1>{% if videos_count >0 %}
+                <h1>{% if videos_count > 0 or tracks is not empty %}
                         Trouvé&nbsp;<i class="bi bi-binoculars"></i>&nbsp;
                     {% else %}
                         Désolé&nbsp;<i class="bi bi-emoji-frown"></i>&nbsp;
@@ -84,11 +84,41 @@
         {% if search is defined and 0 == videos_count %}
             <div class="col col-12 col-sm-6 col-md-6 col-lg-3 media-vignette">
                 <div class="media topcol embed-responsive-16by9" style="margin-bottom:30px;">
-                    <img src="{{ asset('build/images/tv_brouillage.gif') }}" />
+                    <img src="{{ asset('build/images/tv_brouillage.gif') }}" height="250px" />
                 </div>
             </div>
         {% endif %}
     </section>
 
     {% include "part/_pagination.html.twig" %}
+
+    {% if tracks is defined and tracks is not empty %}
+        <br/><br/><br/><br/>
+        <a type="button" class="btn btn-primary" href="{{ path('music_couch', {'search' : search }) }}" role="button" aria-label="Enchainer la liste"><i class="bi bi-youtube icon-youtube"></i> Enchaîner la liste</a>
+        <br/><br/>
+        <section data-controller="track" style="background-color:white; padding: 10px;">
+            <table id="tracks">
+                <thead>
+                    <tr>
+                        {% for column in track_columns %}
+                            <th>{{ column|capitalize }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for track in tracks %}
+                        <tr>
+                            {% for column in track_columns %}
+                                {% if column == 'youtubeKey' and attribute(track, column) is not empty %}
+                                    <td><a href="https://www.youtube.com/watch?v={{ track.youtubeKey }}" class="video-link icon-youtube" onclick="return false;"><i class="bi bi-youtube"></i></a></td>
+                                {% else %}
+                                    <td>{{ attribute(track, column)}}</td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    {% endif %}
 {% endblock %}

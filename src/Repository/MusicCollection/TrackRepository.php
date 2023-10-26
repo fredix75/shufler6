@@ -205,6 +205,59 @@ class TrackRepository extends ServiceEntityRepository
         return $stmt->executeQuery()->fetchAllAssociative();
     }
 
+    function searchAjax(string $search): array
+    {
+        $auteurs = $this->createQueryBuilder('t')
+            ->select('t.auteur')
+            ->andWhere('t.auteur like :search')
+            ->setParameter('search', '%' . $search . '%')
+            ->orderBy('t.auteur', 'ASC')
+            ->groupBy('t.auteur')
+            ->setMaxResults(7)
+            ->getQuery()
+            ->getResult();
+
+        $titres = $this->createQueryBuilder('t')
+            ->select('t.titre')
+            ->andWhere('t.titre like :search')
+            ->setParameter('search', '%' . $search . '%')
+            ->orderBy('t.titre', 'ASC')
+            ->groupBy('t.titre')
+            ->setMaxResults(7)
+            ->getQuery()
+            ->getResult();
+
+        $albums = $this->createQueryBuilder('t')
+            ->select('t.album')
+            ->andWhere('t.album like :search')
+            ->setParameter('search', '%' . $search . '%')
+            ->orderBy('t.album', 'ASC')
+            ->groupBy('t.album')
+            ->setMaxResults(7)
+            ->getQuery()
+            ->getResult();
+
+        $suggestions = [];
+
+        foreach ($auteurs as $auteur) {
+            $suggestions[] = $auteur['auteur'];
+        }
+        foreach ($titres as $titre) {
+            if (\in_array($titre['titre'], $suggestions)) {
+                continue;
+            }
+            $suggestions[] = $titre['titre'];
+        }
+        foreach ($albums as $album) {
+            if (\in_array($album['album'], $suggestions)) {
+                continue;
+            }
+            $suggestions[] = $album['album'];
+        }
+
+        return $suggestions;
+    }
+
     public function getGenres(): array
     {
         return $this->createQueryBuilder('t')->select('distinct t.genre')

@@ -19,39 +19,48 @@ class FilterTracksType extends AbstractType
     {
         $builder
             ->add('search', TextType::class, [
-                'label' => 'Search',
+                'label' => false,
                 'required' => false,
+                'attr' => [
+                    'placeholder' => 'Search',
+                ],
                 'row_attr' => [
                     'class' => 'col-6 col-md-4 col-lg-2'
                 ],
             ])
             ->add('auteur', TextType::class, [
-                'label' => 'Auteur',
+                'label' => false,
                 'required' => false,
+                'attr' => [
+                    'placeholder' => 'Auteur',
+                ],
                 'row_attr' => [
                     'class' => 'col-6 col-md-4 col-lg-2'
                 ],
             ])
             ->add('album', TextType::class, [
-                'label' => 'Album',
+                'label' => false,
                 'required' => false,
+                'attr' => [
+                    'placeholder' => 'Album',
+                ],
                 'row_attr' => [
                     'class' => 'col-6 col-md-4 col-lg-2'
                 ],
             ])
             ->add('annee', TextType::class, [
-                'label' => 'Année ou Période',
+                'label' => false,
                 'required' => false,
-                'help' => 'Ex: 1968 ou 1914-1918',
                 'row_attr' => [
                     'class' => 'col-6 col-md-4 col-lg-2',
                 ],
                 'attr' => [
                     'pattern' => '\d{4}(-\d{4})?',
+                    'placeholder' => 'Ex: 1968 ou 1914-1918',
                 ],
             ])
             ->add('genre', ChoiceType::class, [
-                'label' => 'Genre',
+                'label' => false,
                 'placeholder' => 'Choisissez un genre',
                 'required' => false,
                 'choices' => $this->getGenres(),
@@ -60,8 +69,8 @@ class FilterTracksType extends AbstractType
                 ],
             ])
             ->add('note', ChoiceType::class, [
-                'label' => 'Note',
-                'placeholder' => '',
+                'label' => false,
+                'placeholder' => 'Rating',
                 'required' => false,
                 'choices' => $this->getNotes(),
                 'row_attr' => [
@@ -73,9 +82,6 @@ class FilterTracksType extends AbstractType
                 'row_attr' => [
                     'class' => 'col-3 col-md-4 col-lg-1'
                 ],
-                'attr' => [
-                    'style' => 'margin-top: 31px;'
-                ]
             ])
         ;
     }
@@ -87,7 +93,7 @@ class FilterTracksType extends AbstractType
         ));
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return '';
     }

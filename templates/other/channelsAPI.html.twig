@@ -3,12 +3,10 @@
 {% block title %}{{ parent() }} :: API Channels{% endblock %}
 
 {% block body %}
-    <h1><i class="bi bi-youtube"></i> Search a Youtube Channel</h1>
-    <br />
     <div class="row">
         <form name="form_search" action="{{ path('other_api_channel') }}" method="POST" class="row justify-content-center">
             <div class="col col-10 col-sm-10 col-lg-6">
-                <input type="search" id="search_api" name="search_api" value="{{ search|trim }}" class="input-sm form-control" placeholder="search on Youtube" style="background-color:#666666;color:white;font-size:200%;height:50px;" />
+                <input type="search" id="search_api" name="search_api" value="{{ search|trim }}" class="input-sm form-control big-input" placeholder="channels on youtube" />
             </div>
             <div class="col col-2 col-sm-2 col-lg-2">
                 <button type="submit" id="enter_search" class="btn btn-primary btn-sm" style="height:50px;width:50px;"><i class="bi bi-binoculars"></i></button>

@@ -44,8 +44,4 @@ export default class extends Controller {
             e.target.loadPlaylist(this.videosValue);
         })
     }
-
-    toggleFilters(event) {
-        $('.filter-form').slideToggle();
-    }
 }

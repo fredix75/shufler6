@@ -45,7 +45,8 @@ class FluxFormType extends AbstractType
                 'placeholder' => 'Choose a Type',
                 'choices' => array_flip($this->fluxParameters['types']),
                 'attr' => [
-                    'data-action' => 'change->flux-edit#typeChange'
+                    'data-action' => 'change->flux-edit#typeChange',
+                    'class' => 'select2',
                 ],
                 'row_attr' => [
                     'class' => 'input-group mb-3'
@@ -89,7 +90,8 @@ class FluxFormType extends AbstractType
                 },
                 'choice_label' => 'name',
                 'attr' => [
-                      'data-action' => 'modal-channel-form#openModal'
+                    'data-action' => 'modal-channel-form#openModal',
+                    'class' => 'select2',
                 ],
                 'row_attr' => [
                     'id' => 'channel',

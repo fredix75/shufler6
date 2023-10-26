@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Video;
 use App\Form\VideoFormType;
 use App\Helper\VideoHelper;
+use App\Repository\MusicCollection\TrackRepository;
 use App\Repository\VideoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,7 +58,7 @@ class VideoController extends AbstractController
     }
 
     #[Route('/search/{page}', name: '_search', requirements: ['id' => '\d+'])]
-    public function search(Request $request, VideoRepository $videoRepository, int $page = 1): Response
+    public function search(Request $request, VideoRepository $videoRepository, TrackRepository $trackRepository, int $page = 1): Response
     {
         $search = $request->get('search_field');
 
@@ -73,11 +74,15 @@ class VideoController extends AbstractController
             ]
         ];
 
+        $tracks = $trackRepository->getTracks(['search' => $search]);
+
         return $this->render('video/list.html.twig', [
             'search' => $search,
             'pagination' => $pagination,
             'videos_count' => $videosCount,
-            'videos' => $videos
+            'videos' => $videos,
+            'tracks' => $tracks,
+            'track_columns' => $this->getParameter('music_collection')['track_fields'],
         ]);
     }
 
@@ -215,22 +220,29 @@ class VideoController extends AbstractController
     }
 
     #[Route('/autocomplete', name: '_autocomplete')]
-    public function autocomplete(Request $request, VideoRepository $videoRepository): Response
+    public function autocomplete(Request $request, VideoRepository $videoRepository, TrackRepository $trackRepository): Response
     {
         if ($request->isXmlHttpRequest()) {
             $search = $request->query->get('q');
             $videos = $videoRepository->searchAjax($search);
+            $tracks = $trackRepository->searchAjax($search);
             $suggestions = [];
-            $suggestions['suggestions'] = [];
-
             if ($videos) {
                 foreach ($videos as $video) {
-                    $suggestions['suggestions'][] = $video;
+                    $suggestions[] = $video;
                 }
             }
 
+            if ($tracks) {
+                foreach ($tracks as $track) {
+                    if (!\in_array($track, $suggestions)) {
+                        $suggestions[] = $track;
+                    }
+                }
+            }
+            sort($suggestions);
             return $this->render('video/autocomplete.html.twig', [
-                'suggestions' => $suggestions['suggestions']
+                'suggestions' => $suggestions
             ]);
         }
 

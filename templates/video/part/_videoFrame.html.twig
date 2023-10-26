@@ -3,7 +3,7 @@
 	<div class="media-body">
 		{% if is_granted('VIDEO_EDIT', video) %}
 			<div class="link_edit">
-				<a href="{{ path('video_edit',{'id':video.id}) }}" role="button" aria-label="Edit video {{ playlist.name }}">
+				<a href="{{ path('video_edit',{'id':video.id}) }}" role="button" aria-label="Edit video {{ video.titre }}">
 					<i class="bi bi-pencil-square"></i>
 				</a>
 			</div>

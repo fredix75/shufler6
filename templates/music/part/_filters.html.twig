@@ -1,13 +1,8 @@
-<div class="filters sticky-bottom" data-controller="videos-couch">
-    <div class="row justify-content-center">
-        <div class="col-4 col-md-4 col-lg-2">
-            <a href="#" class="btn btn-secondary toggle-btn" data-action="videos-couch#toggleFilters" role="button" aria-label="Toggle Filters">
-                <i class="bi bi-arrow-up-circle"></i> Filters
-            </a>
-        </div>
-    </div>
+{% extends 'part/_slider.html.twig' %}
+
+{% block slider_content %}
     {{ form_start(form, {'method' : 'GET'}) }}
-    <div class="row justify-content-center filter-form" style="display: none">
+    <div class="row justify-content-center filter-form">
         {{ form_row(form.genre) }}
         {{ form_row(form.search) }}
         {{ form_row(form.auteur) }}
@@ -17,4 +12,4 @@
         {{ form_row(form.submit) }}
     </div>
     {{ form_end(form) }}
-</div>
+{% endblock %}

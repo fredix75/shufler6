@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg bg-dark navbar-dark fixed-top">
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
     <div class="container-fluid">
         <a class="navbar-brand" href="{{ path('home') }}" aria-label="Go to Homepage"><img src="{{ asset('build/images/shufler_logo.png') }}" width=150px alt="logo Shufler" title="Back to Home" /></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar" role="button" aria-label="Menu">
@@ -6,9 +6,22 @@
         </button>
         <div class="collapse navbar-collapse" id="mynavbar">
             <ul class="navbar-nav me-auto">
-                {% if is_granted('ROLE_USER') %}
+                {% if is_granted('ROLE_AUTEUR') %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-label="Videos"><i class="bi bi-film"></i>&nbsp;Videos</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ path('video_list') }}" aria-label="Videos"><i class="bi bi-film"></i> Vidéos</a></li>
+                            <li><a class="dropdown-item" href="{{ path('flux_playlists') }}" aria-label="Video playlists"><i class="bi bi-youtube"></i> Video Playlists</a></li>
+                            <li><a class="dropdown-item" href="{{ path('other_api_video') }}" aria-label="Videos search by Api"><i class="bi bi-vimeo"></i> Recherche Vidéos API</a></li>
+                            <li><a class="dropdown-item" href="{{ path('other_api_channel') }}" aria-label="Channel search by Api"><i class="bi bi-youtube"></i> Recherche Channels API</a></li>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <li><a class="dropdown-item" href="{{ path('video_trash') }}" aria-label="Trash"><i class="bi bi-trash"></i>&nbsp;Trash</a></li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                {% elseif is_granted('ROLE_USER') %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('video_list') }}" aria-label="Videos"><i class="bi bi-film"></i>&nbsp;Videos</a>
+                        <a class="nav-link" href="{{ path('video_list') }}" aria-label="Videos"><i class="bi bi-film"></i> Vidéos</a>
                     </li>
                 {% endif %}
                 {% if is_granted('ROLE_AUTEUR') %}
@@ -27,26 +40,13 @@
                         <li><a class="dropdown-item" href="{{ path('flux_news') }}" aria-label="News (rss)"><i class="bi bi-newspaper"></i> News</a></li>
                         {% if is_granted('ROLE_ADMIN') %}
                             <li><a class="dropdown-item" href="{{ path('flux_podcasts') }}" aria-label="Podcasts"><i class="bi bi-broadcast-pin"></i> Podcast</a></li>
-                            <li><a class="dropdown-item" href="{{ path('flux_playlists') }}" aria-label="Video playlists"><i class="bi bi-youtube"></i> Video Playlists</a></li>
                             <li><a class="dropdown-item" href="{{ path('flux_liens') }}" aria-label="Links"><i class="bi bi-hand-thumbs-up"></i> Liens</a></li>
                             <li><a class="dropdown-item" href="{{ path('flux_radios') }}" aria-label="Radios"><i class="bi bi-speaker-fill"></i> Radios</a></li>
                         {% endif %}
                     </ul>
                 </li>
                 {% endif %}
-                {% if is_granted('ROLE_AUTEUR') %}
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" aria-label="Apis" data-bs-toggle="dropdown"><i class="bi bi-cloud"></i> Apis</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ path('other_api_video') }}" aria-label="Videos search by Api"><i class="bi bi-vimeo"></i> Recherche Vidéos API</a></li>
-                        <li><a class="dropdown-item" href="{{ path('other_api_channel') }}" aria-label="Channel search by Api"><i class="bi bi-youtube"></i> Recherche Channels API</a></li>
-                    </ul>
-                </li>
-                {% endif %}
                 {% if is_granted('ROLE_ADMIN') %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('video_trash') }}" aria-label="Trash"><i class="bi bi-trash"></i>&nbsp;Trash</a>
-                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-label="Music"><i class="bi bi-vinyl-fill"></i> Musique</a>
                         <ul class="dropdown-menu">

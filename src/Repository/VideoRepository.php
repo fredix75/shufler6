@@ -170,6 +170,7 @@ class VideoRepository extends ServiceEntityRepository
             ->setParameter('search', '%' . $search . '%')
             ->orderBy('a.auteur', 'ASC')
             ->groupBy('a.auteur')
+            ->setMaxResults(7)
             ->getQuery()
             ->getResult();
 
@@ -182,6 +183,7 @@ class VideoRepository extends ServiceEntityRepository
             ->setParameter('search', '%' . $search . '%')
             ->orderBy('a.titre', 'ASC')
             ->groupBy('a.titre')
+            ->setMaxResults(7)
             ->getQuery()
             ->getResult();
 
