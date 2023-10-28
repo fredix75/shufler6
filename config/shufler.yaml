@@ -60,53 +60,6 @@ parameters:
     vimeo_id: '%env(VIMEO_ID)%'
     vimeo_access_token: '%env(VIMEO_ACCESS_TOKEN)%'
 
-    shufler_flux:
-        types:
-            1: news
-            2: podcast
-            3: radio
-            4: lien
-            5: playlist
-
-        radios:
-            1: généraliste
-            2: rock
-            3: jazz
-            4: groove
-            5: reggae
-            6: disco
-            7: funk
-            8: classique
-            9: electro
-            10: bossa-nova
-            11: infos
-            99: autre
-
-        liens:
-            101: Animation
-            102: Artistes
-            103: BD
-            104: Blogs
-            105: Emissions
-            106: Humour
-            107: Jeux
-            108: Liens divers
-            109: Outils
-            110: Presse
-            111: Radios
-            112: Tumbler
-            113: Web dev
-            114: Webdocs
-            115: Musique
-
-        news:
-            201: Info
-            202: PQR
-            203: Sciences et techniques
-            204: Dev et Informatique
-            205: Divertissements
-            299: Autres
-
     music_collection:
         batch_size: 20
         csv_path: '%uploads%csv/music.csv'

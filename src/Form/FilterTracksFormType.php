@@ -12,7 +12,7 @@ use Symfony\Component\Form\Util\StringUtil;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Regex;
 
-class FilterTracksType extends AbstractType
+class FilterTracksFormType extends AbstractType
 {
     public function __construct(private readonly TrackRepository $trackRepository){}
     public function buildForm(FormBuilderInterface $builder, array $options): void

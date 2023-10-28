@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Flux;
 use App\Form\FluxFormType;
+use App\Repository\FluxMoodRepository;
 use App\Repository\FluxRepository;
+use App\Repository\FluxTypeRepository;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,6 +18,9 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_USER')]
 class FluxController extends AbstractController
 {
+
+    public function __construct(private readonly FluxTypeRepository $fluxTypeRepository) {}
+
     #[Route('/podcasts', name: '_podcasts')]
     public function podcasts(FluxRepository $fluxRepository):Response
     {
@@ -27,13 +32,13 @@ class FluxController extends AbstractController
     }
 
     #[Route('/news/{category}', name: '_news', requirements: ['category' => '\d+'])]
-    public function news(FluxRepository $fluxRepository, int $category = 201): Response
+    public function news(FluxRepository $fluxRepository, FluxMoodRepository $fluxMoodRepository, int $category = 201): Response
     {
         $news = $fluxRepository->getNews($category);
 
         return $this->render('/flux/news.html.twig', [
             'news' => $news,
-            'categories' => $this->getParameter('shufler_flux')['news'],
+            'categories' => $fluxMoodRepository->findBy(['type' => 1]),
         ]);
     }
 
@@ -50,25 +55,25 @@ class FluxController extends AbstractController
 
     #[Route('/liens', name: '_liens')]
     #[IsGranted('ROLE_ADMIN')]
-    public function links(FluxRepository $fluxRepository): Response
+    public function links(FluxRepository $fluxRepository, FluxMoodRepository $fluxMoodRepository): Response
     {
         $liens = $fluxRepository->getLinks();
 
         return $this->render('flux/liens.html.twig', [
             'liens' => $liens,
-            'categories' => $this->getParameter('shufler_flux')['liens'],
+            'categories' => $fluxMoodRepository->findBy(['type' => 4]),
         ]);
     }
 
     #[Route('/radios', name: '_radios')]
     #[IsGranted('ROLE_ADMIN')]
-    public function radios(FluxRepository $fluxRepository): Response
+    public function radios(FluxRepository $fluxRepository, FluxMoodRepository $fluxMoodRepository): Response
     {
         $radios = $fluxRepository->getRadios();
 
         return $this->render('/flux/radios.html.twig', [
             'radios' => $radios,
-            'categories' => $this->getParameter('shufler_flux')['radios'],
+            'categories' => $fluxMoodRepository->findBy(['type' => 3]),
         ]);
     }
 
@@ -121,6 +126,7 @@ class FluxController extends AbstractController
     public function edit(
         Request $request,
         FluxRepository $fluxRepository,
+        FluxMoodRepository $fluxMoodRepository,
         Flux $flux = null
     ): Response
     {
@@ -153,12 +159,33 @@ class FluxController extends AbstractController
             return $this->redirectToRoute($routeToRedirect);
         }
 
+        $fluxMoods = $fluxMoodRepository->findAll();
+        $news = array_filter($fluxMoods, function($item) {
+            return $item->getType()->getId() === 1;
+        });
+
+        array_walk_recursive($news, function($a) use (&$tabNews) {
+            $tabNews[$a->getCode()] = $a->getName();
+        });
+        $radios = array_filter($fluxMoods, function($item) {
+            return $item->getType()->getId() === 3;
+        });
+        array_walk_recursive($radios, function($a) use (&$tabRadios) {
+            $tabRadios[$a->getCode()] = $a->getName();
+        });
+        $liens = array_filter($fluxMoods, function($item) {
+            return $item->getType()->getId() === 4;
+        });
+        array_walk_recursive($liens, function($a) use (&$tabLiens) {
+            $tabLiens[$a->getCode()] = $a->getName();
+        });
+
         return $this->render('flux/edit.html.twig', [
             'form'      => $form,
             'flux'      => $flux,
-            'news'      => $this->getParameter('shufler_flux')['news'],
-            'radios'    => $this->getParameter('shufler_flux')['radios'],
-            'liens'     => $this->getParameter('shufler_flux')['liens'],
+            'news'      => $tabNews,
+            'radios'    => $tabRadios,
+            'liens'     => $tabLiens,
         ]);
     }
 
@@ -193,8 +220,12 @@ class FluxController extends AbstractController
 
     private function getRouteToRedirect(int $type): string
     {
-        $routeToRedirect = !empty($this->getParameter('shufler_flux')['types'][$type]) ? sprintf('flux_%s', $this->getParameter('shufler_flux')['types'][$type]) : 'home';
+        $fluxType = $this->fluxTypeRepository->find($type);
+        if ($fluxType) {
+            $routeToRedirect = sprintf('flux_%s', $fluxType->getName());
+            return $routeToRedirect !== 'flux_news' ? $routeToRedirect.'s' : $routeToRedirect;
+        }
 
-        return $routeToRedirect !== 'flux_news' ? $routeToRedirect.'s' : $routeToRedirect;
+        return 'home';
     }
 }

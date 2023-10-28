@@ -2,8 +2,8 @@
 namespace App\Controller;
 
 use App\Entity\MusicCollection\Track;
-use App\Form\FilterTracksType;
-use App\Form\TrackType;
+use App\Form\FilterTracksFormType;
+use App\Form\TrackFormType;
 use App\Helper\VideoHelper;
 use App\Repository\MusicCollection\ArtistRepository;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -154,7 +154,7 @@ class MusicCollectionController extends AbstractController
             return $this->redirectToRoute('music_all', ['mode' => 'tracks']);
         }
 
-        $form = $this->createForm(TrackType::class, $track, [
+        $form = $this->createForm(TrackFormType::class, $track, [
             'action' => $this->generateUrl(
                 $request->attributes->get('_route'),
                 $request->attributes->get('_route_params')
@@ -192,7 +192,7 @@ class MusicCollectionController extends AbstractController
             'hasYoutubeKey' => true,
         ];
 
-        $form = $this->createForm(FilterTracksType::class, $params);
+        $form = $this->createForm(FilterTracksFormType::class, $params);
 
         $params['note'] = $request->get('note') ?? null;
         $tracks = $trackRepository->getTracks($params);
