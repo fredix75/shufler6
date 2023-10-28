@@ -13,24 +13,18 @@ import './bootstrap';
 
 import $ from 'jquery';
 
-require('select2')
-$('.select2').select2({
-    ajax: {
-        url: $('.select2').data('remote'),
-        dataType: 'json',
-        processResults: function (data) {
-            return {
-                results: data
-            };
-        }
-        // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-    }
+import 'tom-select'
+import TomSelect from "tom-select"
+document.querySelectorAll('.select2').forEach((el)=>{
+    let settings = {};
+    new TomSelect(el,settings);
 });
 
 
 import { Modal, Tooltip, Toast, Popover } from 'bootstrap';
 import { Application } from '@hotwired/stimulus'
 import Autocomplete from 'stimulus-autocomplete'
+import 'datatables.net-dt/css/jquery.dataTables.css';
 
 const application = Application.start()
 application.register('autocomplete', Autocomplete)

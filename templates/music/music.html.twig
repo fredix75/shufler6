@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{%  block body %}
+    <div class="row">
+        <div class="datas-white">
+            <table id="container-datas" class="display" {{ stimulus_controller('music', {
+                columns: columns_db,
+                pathUrl: path_url,
+                pageLength: page_length
+            }) }}>
+                <thead>
+                    <tr>
+                        {% for column in columns_db %}
+                            <th>{{ column|capitalize }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+    {{ include('part/_modal.html.twig', { modalTitle: 'Music', class: 'music-modal'}) }}
+{% endblock %}

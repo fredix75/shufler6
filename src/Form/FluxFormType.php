@@ -5,8 +5,9 @@ namespace App\Form;
 use App\Entity\ChannelFlux;
 use App\Entity\Flux;
 use App\Repository\ChannelFluxRepository;
+use App\Repository\FluxMoodRepository;
+use App\Repository\FluxTypeRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -19,11 +20,10 @@ use Symfony\Component\Validator\Constraints\File;
 
 class FluxFormType extends AbstractType
 {
-    private array $fluxParameters;
-
-    public function __construct(ParameterBagInterface $parameterBag) {
-        $this->fluxParameters = $parameterBag->get('shufler_flux');
-    }
+    public function __construct(
+        private readonly FluxTypeRepository $fluxTypeRepository,
+        private readonly FluxMoodRepository $fluxMoodRepository
+    ) {}
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -43,9 +43,10 @@ class FluxFormType extends AbstractType
             ])
             ->add('type', ChoiceType::class, [
                 'placeholder' => 'Choose a Type',
-                'choices' => array_flip($this->fluxParameters['types']),
+                'choices' => $this->getTypes(),
                 'attr' => [
-                    'data-action' => 'change->flux-edit#typeChange'
+                    'data-action' => 'change->flux-edit#typeChange',
+                    'class' => 'select2',
                 ],
                 'row_attr' => [
                     'class' => 'input-group mb-3'
@@ -74,7 +75,10 @@ class FluxFormType extends AbstractType
             ->add('mood',ChoiceType::class, [
                 'placeholder' => 'Choose a Category',
                 'required' => false,
-                'choices' => array_flip($this->fluxParameters['news'] + $this->fluxParameters['radios'] + $this->fluxParameters['liens']),
+                'choices' => $this->getMoods(),
+                'attr' => [
+                    'class' => 'select2',
+                ],
                 'row_attr' => [
                     'id' => 'mood',
                     'class' => 'input-group mb-3'
@@ -89,7 +93,8 @@ class FluxFormType extends AbstractType
                 },
                 'choice_label' => 'name',
                 'attr' => [
-                      'data-action' => 'modal-channel-form#openModal'
+                    'data-action' => 'modal-channel-form#openModal',
+                    'class' => 'select2',
                 ],
                 'row_attr' => [
                     'id' => 'channel',
@@ -97,6 +102,33 @@ class FluxFormType extends AbstractType
                 ]
             ])
         ;
+    }
+
+    private function getTypes(): array
+    {
+        $types = $this->fluxTypeRepository->findAll();
+        $types = array_map(function($item) {
+            return [$item->getId() => $item->getName()];
+        }, $types);
+        array_walk_recursive($types, function($k, $a) use (&$return) {
+            $return[$k] = $a;
+        });
+        return $return;
+    }
+
+    private function getMoods(): array
+    {
+        $moods = $this->fluxMoodRepository->findAll();
+        $moods = array_map(function($item) {
+            $key = $item->getCode();
+            $item = $item->getName();
+            return [$key => $item];
+        }, $moods);
+        array_walk_recursive($moods, function($k, $a) use (&$return) {
+            $return[$k] = $a;
+        });
+
+        return $return;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

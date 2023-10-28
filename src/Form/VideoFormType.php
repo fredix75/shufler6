@@ -39,7 +39,7 @@ class VideoFormType extends AbstractType
             ->add('auteur', TextType::class, [
                 'row_attr' => [
                     'class' => 'input-group mb-3'
-                ]
+                ],
             ])
             ->add('lien', UrlType::class, [
                 'row_attr' => [
@@ -82,6 +82,9 @@ class VideoFormType extends AbstractType
                     $this->videoParameters['periods'],
                     $this->videoParameters['periods']
                 ),
+                'attr' => [
+                    'class' => 'select2'
+                ],
                 'row_attr' => [
                     'class' => 'input-group mb-3'
                 ]
@@ -91,6 +94,7 @@ class VideoFormType extends AbstractType
                 'placeholder' => 'Choose a category',
                 'choices' => array_flip($this->videoParameters['categories']),
                 'attr' => [
+                    'class' => 'select2',
                     'data-action' => 'change->video-edit#categorieChange'
                 ],
                 'row_attr' => [
@@ -101,6 +105,9 @@ class VideoFormType extends AbstractType
                 'required' => false,
                 'placeholder' => 'Choose a genre',
                 'choices' => array_flip($this->videoParameters['genres']),
+                'attr' => [
+                    'class' => 'select2'
+                ],
                 'row_attr' => [
                     'id' => 'genre',
                     'class' => 'input-group mb-3'
@@ -123,6 +130,9 @@ class VideoFormType extends AbstractType
                     $this->videoParameters['priorities'],
                     $this->videoParameters['priorities']
                 ),
+                'attr' => [
+                    'class' => 'select2'
+                ],
                 'row_attr' => [
                     'class' => 'input-group mb-3'
                 ]

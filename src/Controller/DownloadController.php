@@ -14,6 +14,9 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class DownloadController extends AbstractController
 {
 
+    /**
+     * @throws \Exception
+     */
     #[Route('/resource', name: '_resource')]
     public function downloadResource(Request $request, FileHelper $fileHelper): JsonResponse
     {

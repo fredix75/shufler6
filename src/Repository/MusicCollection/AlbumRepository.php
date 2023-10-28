@@ -39,6 +39,17 @@ class AlbumRepository extends ServiceEntityRepository
         }
     }
 
+    public function getAlbums(int $page, int $max): array
+    {
+        $query = $this->createQueryBuilder('a')
+            ->orderBy('a.name', 'ASC')
+            ->setMaxResults($max)->setFirstResult(($page-1)*$max);
+
+        $query->andWhere($query->expr()->notIn('a.picture', ['']));
+
+        return $query->getQuery()->getResult();
+    }
+
 //    /**
 //     * @return Album[] Returns an array of Album objects
 //     */

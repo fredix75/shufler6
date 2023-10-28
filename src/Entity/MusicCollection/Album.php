@@ -26,6 +26,9 @@ class Album
     private ?string $genre = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    private ?string $picture = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $youtubeKey = null;
 
     public function getId(): ?int
@@ -91,5 +94,15 @@ class Album
         $this->youtubeKey = $youtubeKey;
 
         return $this;
+    }
+
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?string $picture): void
+    {
+        $this->picture = $picture;
     }
 }

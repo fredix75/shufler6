@@ -4,8 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Video;
 use App\Form\VideoFormType;
+use App\Helper\VideoHelper;
+use App\Repository\MusicCollection\TrackRepository;
 use App\Repository\VideoRepository;
-use App\Twig\Runtime\ShuflerRuntime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -57,7 +58,7 @@ class VideoController extends AbstractController
     }
 
     #[Route('/search/{page}', name: '_search', requirements: ['id' => '\d+'])]
-    public function search(Request $request, VideoRepository $videoRepository, int $page = 1)
+    public function search(Request $request, VideoRepository $videoRepository, TrackRepository $trackRepository, int $page = 1): Response
     {
         $search = $request->get('search_field');
 
@@ -73,18 +74,22 @@ class VideoController extends AbstractController
             ]
         ];
 
+        $tracks = $trackRepository->getTracks(['search' => $search]);
+
         return $this->render('video/list.html.twig', [
             'search' => $search,
             'pagination' => $pagination,
             'videos_count' => $videosCount,
-            'videos' => $videos
+            'videos' => $videos,
+            'tracks' => $tracks,
+            'track_columns' => $this->getParameter('music_collection')['track_fields'],
         ]);
     }
 
     #[Route('/couch/{categorie}/{genre}/{periode}', name: '_couch', requirements: ['categorie' => '\d+', 'genre' => '\d+|-\d+'])]
     public function couch(
         VideoRepository $videoRepository,
-        ShuflerRuntime $shuflerExtension,
+        VideoHelper $videoHelper,
         int $categorie = 0,
         int $genre = 0,
         string $periode = '0'
@@ -95,7 +100,7 @@ class VideoController extends AbstractController
         $playlist = [$videoParameters['intro_couch']];
         $i = 0;
         foreach ($videos as $video) {
-            $playlist[] = $shuflerExtension->getIdentifer($video->getLien(), 'youtube.com');
+            $playlist[] = $videoHelper->getIdentifer($video->getLien(), 'youtube');
             if ($i >= $videoParameters['max_list_couch']) {
                 break;
             }
@@ -103,7 +108,7 @@ class VideoController extends AbstractController
         }
 
         return $this->render('video/couch.html.twig', [
-            'videos' => $playlist
+            'videos' => $playlist,
         ]);
     }
 
@@ -177,6 +182,7 @@ class VideoController extends AbstractController
         string $videoKey
     ): Response
     {
+        $result = [];
         if ('youtube' === $plateforme) {
             $response = $httpClient->request('GET', sprintf('%s/videos', $this->getParameter('youtube_api_url')), [
                 'query' => [
@@ -214,22 +220,29 @@ class VideoController extends AbstractController
     }
 
     #[Route('/autocomplete', name: '_autocomplete')]
-    public function autocomplete(Request $request, VideoRepository $videoRepository): Response
+    public function autocomplete(Request $request, VideoRepository $videoRepository, TrackRepository $trackRepository): Response
     {
         if ($request->isXmlHttpRequest()) {
             $search = $request->query->get('q');
             $videos = $videoRepository->searchAjax($search);
+            $tracks = $trackRepository->searchAjax($search);
             $suggestions = [];
-            $suggestions['suggestions'] = [];
-
             if ($videos) {
                 foreach ($videos as $video) {
-                    $suggestions['suggestions'][] = $video;
+                    $suggestions[] = $video;
                 }
             }
 
+            if ($tracks) {
+                foreach ($tracks as $track) {
+                    if (!\in_array($track, $suggestions)) {
+                        $suggestions[] = $track;
+                    }
+                }
+            }
+            sort($suggestions);
             return $this->render('video/autocomplete.html.twig', [
-                'suggestions' => $suggestions['suggestions']
+                'suggestions' => $suggestions
             ]);
         }
 

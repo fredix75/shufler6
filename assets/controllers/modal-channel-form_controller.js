@@ -6,13 +6,14 @@ export default class extends Controller {
     static targets = ['modal', 'modalBody'];
 
     connect() {
-        $('select[name="flux_form[channel]"]')
-            .append($('<option>', {value : 'new', text: 'Add new Channel'}));
+        let select = document.getElementById('flux_form_channel');
+        let control = select.tomselect;
+        control.addOption({value : 'new', text: 'Add new Channel'});
     }
 
     async submitForm() {
         const $form = $('#formModal').find('form');
-        $('#formModal').find('.form-body').innerHTML = await $.ajax({
+        await $.ajax({
             url: $form.prop('action'),
             method: $form.prop('method'),
             data:  new FormData($form[0]),
@@ -24,11 +25,10 @@ export default class extends Controller {
                 console.log(data.responseText);
             }
         }).done(function(result) {
-            if ($('select[name="flux_form[channel]"] option[value="' + result.id + '"]').length === 0) {
-                $('select[name="flux_form[channel]"]').append('<option value="' + result.id + '">' + result.name + '</option>');
-                $('select[name="flux_form[channel]"]').val(result.id);
-            }
-            $('#formModal').modal.hide();
+            let select = document.getElementById('flux_form_channel');
+            let control = select.tomselect;
+            control.addOption({value: result.id, text: result.name});
+            $('#formModal').modal('hide');
         });
 
     }

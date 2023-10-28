@@ -22,16 +22,19 @@
                 {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
                 {{ form_errors(form) }}
                 {{ form_widget(form) }}
-                <div class="text-end">
-                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-circle-fill"></i> OK</button>
-                    &nbsp;
+                <div class="row justify-content-center">
+                    <div class="col-3">
+                        <button type="submit" class="btn btn-primary" style="width: 100%;"><i class="bi bi-check-circle-fill"></i> OK</button>
+                    </div>
                     {% if flux.id is defined and flux.id != 0 and is_granted("FLUX_DELETE", flux)  %}
+                    <div class="col-3">
                         <a class="btn btn-danger"
                            href="{{ path('flux_delete', {'id': flux.id}) }}"
                            onclick="return confirm('global.confirmation');"
                         >
                             <i class="bi bi-trash-fill"></i>&nbsp;Delete
                         </a>
+                    </div>
                     {% endif %}
                 </div>
                 {{ form_end(form) }}

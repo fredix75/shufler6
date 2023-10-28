@@ -15,8 +15,10 @@
                 {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
                 {{ form_errors(form) }}
                 {{ form_widget(form) }}
-                <div class="text-end">
-                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-circle-fill"></i> OK</button>
+                <div class="row justify-content-center">
+                    <div class="col-3">
+                        <button type="submit" class="btn btn-primary" style="width: 100%;"><i class="bi bi-check-circle-fill"></i> OK</button>
+                    </div>
                 </div>
                 {{ form_end(form) }}
             </div>

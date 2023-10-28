@@ -1,9 +1,9 @@
-<a class="video-link" href="{{ video.lien|popUp }}">
-	{{ video.lien|convertFrame|raw}}
+<a class="video-link" href="{{ video.lien|popUp }}" aria-label="Launch video {{ video.titre }}">
+	{{ convertFrame(video.lien, video.auteur ~ '-' ~ video.titre)}}
 	<div class="media-body">
 		{% if is_granted('VIDEO_EDIT', video) %}
 			<div class="link_edit">
-				<a href="{{ path('video_edit',{'id':video.id}) }}">
+				<a href="{{ path('video_edit',{'id':video.id}) }}" role="button" aria-label="Edit video {{ video.titre }}">
 					<i class="bi bi-pencil-square"></i>
 				</a>
 			</div>

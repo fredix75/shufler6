@@ -2,34 +2,15 @@
 
 namespace App\Twig\Runtime;
 
+use App\Helper\VideoHelper;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Twig\Extension\RuntimeExtensionInterface;
 
 class ShuflerRuntime implements RuntimeExtensionInterface
 {
-    const PATTERN_HTTP = '/^(http)?(s)?(:)?(\/\/)?';
-    const YOUTUBE = 'youtube.com';
-    const YOUTUBE_WWW = 'www.' . self::YOUTUBE;
-    const YOUTUBE_API = 'https://img.' . self::YOUTUBE . '/vi/';
-    const YOUTUBE_WATCH = 'https://' . self::YOUTUBE_WWW . '/watch?v=';
-
-    /**
-     * *********************************
-     */
-    const DAILYMOTION = 'dailymotion.com';
-    const DAILYMOTION_EMBED = '//' . self::DAILYMOTION . '/embed/video';
-    const DAILYMOTION_API = 'https://' . self::DAILYMOTION . '/services/oembed?url=';
-
-    /**
-     * *********************************
-     */
-    const VIMEO = 'vimeo.com';
-    const VIMEO_PLAYER = 'player.' . self::VIMEO;
-    const VIMEO_API = 'https://' . self::VIMEO . '/api/v2/video/';
-
     private array $videoParameters;
 
-    public function __construct(ParameterBagInterface $parameterBag)
+    public function __construct(ParameterBagInterface $parameterBag, private readonly VideoHelper $videoHelper)
     {
         $this->videoParameters = $parameterBag->get('shufler_video');
     }
@@ -61,89 +42,34 @@ class ShuflerRuntime implements RuntimeExtensionInterface
     }
 
     /**
-     * Sanitize URL terms for regexp
-     */
-    private function sanitize(string $terme): string
-    {
-        return str_replace('/', '\/', $terme);
-    }
-
-    /**
-     * Retourne la plateforme
-     */
-    public function getPlatform(string $lien): string
-    {
-        //@todo parait cheulou ce truc
-        if (preg_match(self::PATTERN_HTTP . $this->sanitize(self::YOUTUBE_WWW) . '/', $lien)) {
-            return self::YOUTUBE;
-        } elseif (strripos($lien,self::VIMEO) || preg_match(self::PATTERN_HTTP . $this->sanitize(self::VIMEO_PLAYER) . '/', $lien)) {
-            return self::VIMEO;
-        } elseif (strripos($lien,self::DAILYMOTION)) {
-            return self::DAILYMOTION;
-        }
-
-        return 'unknown';
-    }
-
-    /**
-     * Retoune la clé selon la plateforme
-     */
-    public function getIdentifer(string $lien, string $platform): string
-    {
-        $vid = mb_strrchr($lien, '/');
-        if (self::YOUTUBE === $platform) {
-            if (mb_strrchr($lien, '=')) {
-                $vid = mb_strrchr($lien, '=');
-            }
-            $vid = substr($vid, - strlen($vid) + 1);
-        } elseif (self::VIMEO === $platform){
-            $vid =  substr($vid, - strlen($vid) + 1);
-        }
-
-        return $vid;
-    }
-
-    /**
      * Display Frames
      */
-    public function convertFrameFilter(string $lien): string
+    public function convertFrameFilter(string $lien, string $name): string
     {
-        $frame_prefix = '<img class="embed-responsive-item" src="';
+        $frame_prefix = '<img class="embed-responsive-item" alt="'.$name.'" title="'.$name.'" src="';
         $width = '100%';
         $frame = $frame_prefix . $this->videoParameters['no_signal'] . '" width=' . $width . ' />';
 
-        $platform = $this->getPlatform($lien);
+        $platform = $this->videoHelper->getPlatform($lien);
+        $vid = $this->videoHelper->getIdentifer($lien, $platform);
 
-        $vid = $this->getIdentifer($lien, $platform);
-
-        if ($platform === self::YOUTUBE) {
-            $video = self::YOUTUBE_API . $vid .  '/0.jpg';
+        if ($platform === VideoHelper::YOUTUBE) {
+            $video = VideoHelper::YOUTUBE_API . $vid .  '/0.jpg';
             $frame = $frame_prefix . $video . '" width=' . $width . ' />';
 
-        } elseif ($platform === self::VIMEO) {
-
+        } elseif ($platform === VideoHelper::VIMEO) {
             try {
-                $data = null;
-                if ($vid != 112297136) { // Exception sur id (pas le choix) --- #la merde
-                    $data = file_get_contents(self::VIMEO_API . $vid . '.json');
-                }
+                $data = file_get_contents(VideoHelper::VIMEO_API . $vid . '.json');
             } catch (\Exception $e) {
                 error_log($e->getMessage());
             }
-            if ($data != null && $data = json_decode($data)) {
+            if ($data && $data = json_decode($data)) {
                 $frame = $frame_prefix . $data[0]->thumbnail_medium . '" width=' . $width . ' />';
             }
-        } elseif (self::DAILYMOTION === $platform) {
+        } elseif (VideoHelper::DAILYMOTION === $platform) {
             try {
-                if (strstr($lien, 'http')) {
-                    $vid = $lien;
-                } elseif (strstr($lien, '//')) {
-                    $vid = 'https:' . $lien;
-                } else {
-                    $vid = 'https://' . $lien;
-                }
-
-                $data = file_get_contents(self::DAILYMOTION_API . $vid);
+                $vid = preg_replace('/^(https?:?)?(\/\/)?/', 'https://', $lien);
+                $data = file_get_contents(VideoHelper::DAILYMOTION_API . $vid);
             } catch (\Exception $e) {
                 error_log($e->getMessage());
                 $data = null;
@@ -157,28 +83,33 @@ class ShuflerRuntime implements RuntimeExtensionInterface
         return $frame;
     }
 
-    public function getYoutubeChannelId(string $lien): string
+    public function getYoutubeChannelLinkFilter(string $lien): string
     {
         $pos = mb_strpos($lien, 'list=');
-        return mb_substr($lien, $pos + 5);
+        $pos = $pos !== false ? $pos+5 : 0;
+        return VideoHelper::YOUTUBE_WATCH.mb_substr($lien, $pos);
     }
 
     /**
      * Display Video Pop-up
      */
-    public function popUpFilter(string $lien): string
+    public function popUpFilter(string $link): string
     {
-        $link = $lien;
-        $platform = $this->getPlatform($lien);
-        $id = $this->getIdentifer($lien, $platform);
+        $platform = $this->videoHelper->getPlatform($link);
+        $id = $this->videoHelper->getIdentifer($link, $platform);
 
-        if (self::YOUTUBE === $platform) {
-            $link = self::YOUTUBE_WATCH . $id;
-        } elseif (self::DAILYMOTION === $platform) {
-            $link = self::DAILYMOTION_EMBED . $id;
+        if (VideoHelper::YOUTUBE === $platform) {
+            $link = $this->popUpYoutubeFilter($id);
+        } elseif (VideoHelper::DAILYMOTION === $platform) {
+            $link = VideoHelper::DAILYMOTION_EMBED . $id;
         }
 
         return $link;
+    }
+
+    public function popUpYoutubeFilter(string $id): string
+    {
+        return VideoHelper::YOUTUBE_WATCH . $id;
     }
 
     public function toIconAlertFilter(string $string): string
@@ -193,7 +124,5 @@ class ShuflerRuntime implements RuntimeExtensionInterface
             default:
                 return $string;
         }
-
-        return $icon;
     }
 }
