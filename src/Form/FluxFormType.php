@@ -76,6 +76,9 @@ class FluxFormType extends AbstractType
                 'placeholder' => 'Choose a Category',
                 'required' => false,
                 'choices' => $this->getMoods(),
+                'attr' => [
+                    'class' => 'select2',
+                ],
                 'row_attr' => [
                     'id' => 'mood',
                     'class' => 'input-group mb-3'
@@ -91,6 +94,7 @@ class FluxFormType extends AbstractType
                 'choice_label' => 'name',
                 'attr' => [
                     'data-action' => 'modal-channel-form#openModal',
+                    'class' => 'select2',
                 ],
                 'row_attr' => [
                     'id' => 'channel',

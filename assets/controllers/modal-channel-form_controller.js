@@ -1,16 +1,14 @@
 import { Controller } from '@hotwired/stimulus';
 import { Modal } from 'bootstrap';
 import $ from 'jquery';
-import TomSelect from "tom-select"
 
 export default class extends Controller {
     static targets = ['modal', 'modalBody'];
 
     connect() {
-        let control = new TomSelect('#flux_form_channel', {});
+        let select = document.getElementById('flux_form_channel');
+        let control = select.tomselect;
         control.addOption({value : 'new', text: 'Add new Channel'});
-        //control.addItem('test');
-
     }
 
     async submitForm() {

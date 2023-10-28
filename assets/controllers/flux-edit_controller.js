@@ -1,10 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import $ from 'jquery';
 
-const news = [];
-const radios = [];
-const liens = [];
-
 export default class extends Controller {
 
     static values = {
@@ -14,37 +10,22 @@ export default class extends Controller {
     };
 
     connect() {
-        news.push('<option value="">Choose a Category</option>');
-        $.each(this.newsValue, function(key, value) {
-            news.push('<option value="' + key + '">' + value + '</option>');
-        });
-
-        radios.push('<option value="">Choose a Category</option>');
-        $.each(this.radiosValue, function(key, value) {
-            radios.push('<option value="' + key + '">' + value + '</option>');
-        });
-
-        liens.push('<option value="">Choose a Category</option>');
-        $.each(this.liensValue, function(key, value) {
-            liens.push('<option value="' + key + '">' + value + '</option>');
-        });
-
         let type = $('select[name="flux_form[type]"]').val();
 
         if ('1' === type) {
             $('#channel').hide();
-            this.handleMoodSelect(news);
+            this.handleMoodSelect(this.newsValue);
         } else if ('2' === type ) {
             $('#file').hide();
             $('#mood').hide();
         } else if ('3' === type) {
             $('#file').hide();
             $('#channel').hide();
-            this.handleMoodSelect(radios);
+            this.handleMoodSelect(this.radiosValue);
         } else if ('4' === type) {
             $('#file').hide();
             $('#channel').hide();
-            this.handleMoodSelect(liens);
+            this.handleMoodSelect(this.liensValue);
         } else {
             $('#file').hide();
             $('#channel').hide();
@@ -57,7 +38,7 @@ export default class extends Controller {
             $('#file').fadeIn('slow');
             $('[name="flux_form[channel]"]').val(null);
             $('#channel').fadeOut('slow');
-            $('[name="flux_form[mood]"]').empty().append(news);
+            this.handleMoodSelect(this.newsValue, true);
             $('#mood').fadeIn('slow');
         } else if ('2' === $('[name="flux_form[type]"]').val()) {
             $('[name="flux_form[file]"]').val(null);
@@ -70,14 +51,14 @@ export default class extends Controller {
             $('#file').fadeOut('slow');
             $('[name="flux_form[channel]"]').val(null);
             $('#channel').fadeOut('slow');
-            $('[name="flux_form[mood]"]').empty().append(radios);
+            this.handleMoodSelect(this.radiosValue, true);
             $('#mood').fadeIn('slow');
         } else if ('4' === $('[name="flux_form[type]"]').val()) {
             $('[name="flux_form[file]"]').val(null);
             $('#file').fadeOut('slow');
             $('[name="flux_form[channel]"]').val(null);
             $('#channel').fadeOut('slow');
-            $('[name="flux_form[mood]"]').empty().append(liens);
+            this.handleMoodSelect(this.liensValue, true);
             $('#mood').fadeIn('slow');
         } else if ('5' === $('[name="flux_form[type]"]').val()) {
             $('[name="flux_form[file]"]').val(null);
@@ -89,9 +70,17 @@ export default class extends Controller {
         }
     }
 
-    handleMoodSelect(type) {
-        let val = $('[name="flux_form[mood]"]').val();
-        $('[name="flux_form[mood]"]').empty().append(type);
-        $('[name="flux_form[mood]"]').val(val);
+    handleMoodSelect(optionsByType, clear = false) {
+        let select = document.getElementById('flux_form_mood');
+        let control = select.tomselect;
+        if (clear) {
+            control.clear();
+        }
+        control.clearOptions();
+        let tab = [];
+        Object.entries(optionsByType).forEach(([key, value]) => {
+            tab.push({'value': key, text: value});
+        });
+        control.addOptions(Object.entries(tab));
     }
 }
