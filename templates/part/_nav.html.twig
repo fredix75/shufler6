@@ -67,9 +67,9 @@
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="#" {{ stimulus_controller('modal-form', {
+                        <a class="nav-link" href="#" {{ stimulus_controller('main', {
                             formUrl: path('app_login')
-                        }) }} data-action="click->modal-form#openModal" aria-label="Connect"><i class="bi bi-power"></i>&nbsp;Connexion</a>
+                        }) }} data-action="click->main#openModal" aria-label="Connect"><i class="bi bi-power"></i>&nbsp;Connexion</a>
                     </li>
                 {% endif %}
             </ul>
