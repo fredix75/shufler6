@@ -213,7 +213,7 @@ class TrackRepository extends ServiceEntityRepository
             ->setParameter('search', '%' . $search . '%')
             ->orderBy('t.auteur', 'ASC')
             ->groupBy('t.auteur')
-            ->setMaxResults(7)
+            ->setMaxResults(3)
             ->getQuery()
             ->getResult();
 
@@ -223,7 +223,7 @@ class TrackRepository extends ServiceEntityRepository
             ->setParameter('search', '%' . $search . '%')
             ->orderBy('t.titre', 'ASC')
             ->groupBy('t.titre')
-            ->setMaxResults(7)
+            ->setMaxResults(3)
             ->getQuery()
             ->getResult();
 
@@ -233,7 +233,7 @@ class TrackRepository extends ServiceEntityRepository
             ->setParameter('search', '%' . $search . '%')
             ->orderBy('t.album', 'ASC')
             ->groupBy('t.album')
-            ->setMaxResults(7)
+            ->setMaxResults(3)
             ->getQuery()
             ->getResult();
 

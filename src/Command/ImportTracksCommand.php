@@ -113,7 +113,6 @@ class ImportTracksCommand extends Command
             return false;
         }
 
-        $minimalNoteToRequest = 4;
         $size = count($data);
         $i = $n = 0;
         $forbiddenRequest = false;
@@ -125,6 +124,12 @@ class ImportTracksCommand extends Command
             ->addOrderBy('t.numero', 'ASC')
             ->addOrderBy('t.album', 'ASC')
             ->getQuery()->getResult();
+
+        array_walk_recursive($this->tracks, function($a) use (&$return) {
+            $return[$a->getHash()] = $a;
+        });
+
+        $this->tracks = $return;
 
         // Starting progress
         $progress = new ProgressBar($output, $size);
@@ -151,33 +156,33 @@ class ImportTracksCommand extends Command
 			$track->setHash($track->doHash());
 
             $trackExists = false;
-			foreach ($this->tracks as $key => $trackInBase) {
-				if ($trackInBase->getHash() && $trackInBase->getHash() === $track->getHash()) {
-                    if (!$trackInBase->getYoutubeKey() && $track->getNote() == $minimalNoteToRequest) {
+
+            if (array_key_exists($track->getHash(), $this->tracks)) {
+                if (!$this->tracks[$track->getHash()]->getYoutubeKey()) {
+                    $track->setId($this->tracks[$track->getHash()]->getId());
+                    $serializedTrack = $this->serializer->serialize($track, 'json');
+                    $track = $this->serializer->deserialize($serializedTrack, Track::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $this->tracks[$track->getHash()]]);
+                } else {
+                    $trackExists = true;
+                    $n++;
+                }
+                unset($this->tracks[$track->getHash()]);
+            } else {
+                foreach ($this->tracks as $key => $trackInBase) {
+                    if (((int)$trackInBase->getNumero() === (int)$track->getNumero() || strtolower($trackInBase->getTitre()) === strtolower($track->getTitre()))
+                        && strtolower($trackInBase->getAuteur()) === strtolower($track->getAuteur()) && strtolower($trackInBase->getAlbum()) === strtolower($track->getAlbum())
+                    ) {
                         $track->setId($trackInBase->getId());
+                        $track->setYoutubeKey($trackInBase->getYoutubeKey() ?? '');
                         $serializedTrack = $this->serializer->serialize($track, 'json');
                         $track = $this->serializer->deserialize($serializedTrack, Track::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $trackInBase]);
-                    } else {
-                        $trackExists = true;
-                        $n++;
+                        unset($this->tracks[$key]);
+                        break;
                     }
-                    unset($this->tracks[$key]);
-					break;
-				}
+                }
+            }
 
-				if (((int)$trackInBase->getNumero() === (int)$track->getNumero() || strtolower($trackInBase->getTitre()) === strtolower($track->getTitre()))
-					&& strtolower($trackInBase->getAuteur()) === strtolower($track->getAuteur()) && strtolower($trackInBase->getAlbum()) === strtolower($track->getAlbum())
-				) {
-                    $track->setId($trackInBase->getId());
-                    $track->setYoutubeKey($trackInBase->getYoutubeKey() ?? '');
-                    $serializedTrack = $this->serializer->serialize($track, 'json');
-                    $track = $this->serializer->deserialize($serializedTrack, Track::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $trackInBase]);
-                    unset($this->tracks[$key]);
-                    break;
-				}
-			}
-
-            if ($track->getNote() == $minimalNoteToRequest && !$track->getYoutubeKey() && !$trackExists && !$forbiddenRequest) {
+            if (!$track->getYoutubeKey() && !$trackExists && !$forbiddenRequest) {
                 try {
                     $search = $row[0] . ' ' . $row[2];
                     $response = $this->httpClient->request('GET', sprintf('%s/search', $this->apiUrl), [
@@ -244,7 +249,6 @@ class ImportTracksCommand extends Command
 		}
 		$this->entityManager->flush();
 
-		$this->entityManager->clear();
         unset($this->tracks);
         $progress->finish();
 
@@ -263,8 +267,10 @@ class ImportTracksCommand extends Command
         $progress->start();
 
         foreach ($this->artists as $key => $artist) {
-            if (\key_exists($artist->getName(), $this->artistsTmp)) {
-                unset($this->artistsTmp[$artist->getName()]);
+            $name = $artist->getName();
+            if (\array_key_exists($name, $this->artistsTmp)) {
+                unset($artist);
+                unset($this->artistsTmp[$name]);
                 unset($this->artists[$key]);
             }
         }
@@ -305,7 +311,6 @@ class ImportTracksCommand extends Command
         }
 
         $this->entityManager->flush();
-        $this->entityManager->clear();
 
         // Suppression du vieux reliquat en base non identifié
         $i = 0;
@@ -317,7 +322,6 @@ class ImportTracksCommand extends Command
             }
         }
         $this->entityManager->flush();
-        $this->entityManager->clear();
         unset($this->artists);
         unset($this->artistsTmp);
         $progress->finish();
@@ -337,11 +341,17 @@ class ImportTracksCommand extends Command
 
         foreach($this->albums as $key => $album) {
             if (\array_key_exists($album->getAuteur(), $this->albumsTmp)) {
-                if (\array_key_exists($album->getName(), $this->albumsTmp[$album->getAuteur()]) && $album->getYoutubeKey()) {
+                if (\array_key_exists($album->getName(), $this->albumsTmp[$album->getAuteur()]) && $album->getYoutubeKey() && $album->getPicture()) {
                     unset($this->albumsTmp[$album->getAuteur()][$album->getName()]);
+                    unset($album);
                     unset($this->albums[$key]);
-                } elseif(\array_key_exists($album->getName(), $this->albumsTmp[$album->getAuteur()]) && $album->getPicture()) {
-                    $this->albumsTmp[$album->getAuteur()][$album->getName()]['picture'] = $album->getPicture();
+                } elseif(\array_key_exists($album->getName(), $this->albumsTmp[$album->getAuteur()])) {
+                    if ($album->getPicture()) {
+                        $this->albumsTmp[$album->getAuteur()][$album->getName()]['picture'] = $album->getPicture();
+                    }
+                    if ($album->getYoutubeKey()) {
+                        $this->albumsTmp[$album->getAuteur()][$album->getName()]['youtubeKey'] = $album->getYoutubeKey();
+                    }
                 }
             }
         }
@@ -358,7 +368,7 @@ class ImportTracksCommand extends Command
                 if (strtolower($albumName) != 'divers' && strtolower($artisteName) != 'divers') {
                     $search = $artisteName . " " . $albumName;
 
-                    if (!$forbiddenRequest) {
+                    if (!$forbiddenRequest && empty($features['youtubeKey'])) {
                         try {
                             $response = $this->httpClient->request('GET', sprintf('%s/search', $this->apiUrl), [
                                 'query' => [
@@ -381,6 +391,8 @@ class ImportTracksCommand extends Command
                             $forbiddenRequest = true;
                             $output->writeln($e->getMessage());
                         }
+                    } elseif (!empty($features['youtubeKey'])) {
+                        $album->setYoutubeKey($features['youtubeKey']);
                     }
 
                     if (empty($features['picture'])) {
@@ -408,7 +420,6 @@ class ImportTracksCommand extends Command
                     }
                 }
 
-
                 $this->entityManager->persist($album);
                 // Each 20 items persisted we flush everything
                 if (($i%$this->parameters['batch_size']) === 0) {
@@ -421,7 +432,6 @@ class ImportTracksCommand extends Command
         }
 
         $this->entityManager->flush();
-        $this->entityManager->clear();
 
         // Suppression du vieux reliquat en base non identifié
         $i = 0;

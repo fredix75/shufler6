@@ -205,11 +205,13 @@ class MusicCollectionController extends AbstractController
 
         $i = 0;
         foreach($tracks as $track) {
-            $playlist[] = $track->getYoutubeKey();
+            if (!\in_array($track->getYoutubeKey(), $playlist)) {
+                $playlist[] = $track->getYoutubeKey();
+                $i++;
+            }
             if ($i >= $musicParameters['max_random']) {
                 break;
             }
-            $i++;
         }
 
         return $this->render('video/couch.html.twig', [

@@ -100,11 +100,14 @@ class VideoController extends AbstractController
         $playlist = [$videoParameters['intro_couch']];
         $i = 0;
         foreach ($videos as $video) {
-            $playlist[] = $videoHelper->getIdentifer($video->getLien(), 'youtube');
+            if (!\in_array($videoHelper->getIdentifer($video->getLien(), 'youtube'), $playlist)) {
+                $playlist[] = $videoHelper->getIdentifer($video->getLien(), 'youtube');
+                $i++;
+            }
+
             if ($i >= $videoParameters['max_list_couch']) {
                 break;
             }
-            $i++;
         }
 
         return $this->render('video/couch.html.twig', [
@@ -229,18 +232,24 @@ class VideoController extends AbstractController
             $suggestions = [];
             if ($videos) {
                 foreach ($videos as $video) {
-                    $suggestions[] = $video;
+                    $suggestions[] = [
+                        'suggestion' => $video,
+                        'class' => 'video'
+                    ];
                 }
             }
 
             if ($tracks) {
                 foreach ($tracks as $track) {
                     if (!\in_array($track, $suggestions)) {
-                        $suggestions[] = $track;
+                        $suggestions[] = [
+                            'suggestion' => $track,
+                            'class' => 'track'
+                        ];
                     }
                 }
             }
-            sort($suggestions);
+
             return $this->render('video/autocomplete.html.twig', [
                 'suggestions' => $suggestions
             ]);

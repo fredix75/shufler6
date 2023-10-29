@@ -106,10 +106,12 @@ export default class extends Controller {
         let url = '/fr/music/tracks_album';
         if ($(event.target).closest('a').data('artist')) {
             let artist = $(event.target).closest('a').data('artist') ?? 0;
+            artist = artist.replaceAll('&', '%26');
             query += 'artist=' + artist;
         }
         if ($(event.target).closest('a').data('album')) {
             let album = $(event.target).closest('a').data('album') ?? 0;
+            album = album.replaceAll('&', '%26');
             query += query != '?' ? '&' : '';
             query += 'album=' + album;
         } else {

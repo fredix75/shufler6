@@ -145,6 +145,19 @@ a.video-link:hover img, a.playlist-link:hover img {
   font-weight: bold;
 }
 
+.list-group-item.video {
+  background-color: #f9f9e7;
+}
+
+.list-group-item.track {
+  background-color: #ffe8e8;
+}
+
+.list-group-item.active  {
+  background-color: var(--bs-list-group-active-bg);
+  color: white;
+}
+
 .datas-white {
   background-color: white;
   padding: 10px;
