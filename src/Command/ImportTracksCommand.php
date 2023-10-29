@@ -158,7 +158,7 @@ class ImportTracksCommand extends Command
             $trackExists = false;
 
             if (array_key_exists($track->getHash(), $this->tracks)) {
-                if (!$this->tracks[$track->getHash()]->getYoutubeKey()) {
+                if (!$this->tracks[$track->getHash()]->getYoutubeKey() && !$forbiddenRequest) {
                     $track->setId($this->tracks[$track->getHash()]->getId());
                     $serializedTrack = $this->serializer->serialize($track, 'json');
                     $track = $this->serializer->deserialize($serializedTrack, Track::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $this->tracks[$track->getHash()]]);

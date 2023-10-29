@@ -52,9 +52,6 @@ use Symfony\Component\Validator\Constraints as Assert;
             uriTemplate: '/video/{id}',
             requirements: ['id' => '\d+'],
             security: "is_granted('ROLE_AUTEUR')",
-            extraProperties: [
-                'standard_put' => true
-            ]
         ),
         new Patch(
             uriTemplate: '/video/{id}',
@@ -67,7 +64,6 @@ use Symfony\Component\Validator\Constraints as Assert;
             security: "is_granted('ROLE_ADMIN')"
         )
     ],
-    formats: ['json' => ['application/json']],
     security: "is_granted('ROLE_USER')",
 )]
 #[ApiFilter(SearchFilter::class, properties: ['categorie' => 'exact', 'genre' => 'exact', 'periode' => 'exact'])]

@@ -5,4 +5,10 @@ video.videos_number: >-
       =1    {1 video}
       other {# videos}
   }
+track.tracks_number: >-
+  {count, plural,
+      =0    {No track}
+      =1    {1 track}
+      other {# tracks}
+  }
 global.confirmation: "Are you sure to delete this resource ?"
