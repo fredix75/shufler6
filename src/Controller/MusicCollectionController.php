@@ -14,6 +14,7 @@ use App\Repository\MusicCollection\TrackRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[Route('/music', name: 'music')]
 #[IsGranted('ROLE_ADMIN')]
@@ -62,10 +63,10 @@ class MusicCollectionController extends AbstractController
 
                 foreach ($tracks as $track) {
                     $output['data'][] = [
-                        'youtubeKey' => '<a href="'.VideoHelper::YOUTUBE_WATCH.$track->getYoutubeKey().'" class="video-link icon-youtube" onclick="return false;">'.($track->getYoutubeKey() ? '<i class="bi bi-youtube"></i>' : '').'</a>',
+                        'youtubeKey' => '<a id="track-youtube-'.$track->getId().'" href="'.VideoHelper::YOUTUBE_WATCH.$track->getYoutubeKey().'" class="' . ($track->getYoutubeKey() ? 'video-link icon-youtube' : 'no-link') . '" data-id="' . $track->getId() . '" data-auteur="' . $track->getAuteur() . '" data-titre="' . $track->getTitre() . '" onclick="return false;"><i class="bi bi-youtube"></i></a>',
                         'id' => $track->getId(),
                         'auteur' => strtoupper($track->getAuteur()) !== 'DIVERS' ? '<a href="#" data-action="music#openModal" data-artist="' . $track->getAuteur() . '" onclick="return false;"><i class="bi bi-eye-fill"></i></a> ' . $track->getAuteur() : $track->getAuteur(),
-                        'titre' => '<a href="#track-youtube-'.$track->getId().'" data-id='.$track->getId().' class="edit-tracks" data-action="music#openEditModal" onclick="return false;"><i class="bi bi-pencil-square"></i></a> ' . $track->getTitre(),
+                        'titre' => '<a href="#" data-id='.$track->getId().' class="edit-tracks" data-action="music#openEditModal" onclick="return false;"><i class="bi bi-pencil-square"></i></a> ' . $track->getTitre(),
                         'numero' => $track->getNumero(),
                         'album' => '<a href="#" data-action="music#openModal" data-artist="' . $track->getArtiste() . '" data-album="' . $track->getAlbum() . '" onclick="return false;"><i class="bi bi-filter-circle-fill"></i></a> ' . $track->getAlbum(),
                         'annee' => $track->getAnnee(),
@@ -237,5 +238,34 @@ class MusicCollectionController extends AbstractController
             'albums' => $albums,
             'pagination' => $pagination,
         ]);
+    }
+
+    #[Route('/link/{id}', name:'_link')]
+    public function getLink(Track $track, TrackRepository $trackRepository, Request $request, HttpClientInterface $httpClient): Response
+    {
+        $search = $request->get('auteur') . ' ' . $request->get('titre');
+        $response = $httpClient->request('GET', sprintf('%s/search', $this->getParameter('youtube_api_url')), [
+            'query' => [
+                'key'       => $this->getParameter('youtube_key'),
+                'q'         => $search,
+                'part'      => 'snippet',
+                'maxResults'=> 1,
+            ],
+            'headers' => [
+                'Content-Type: application/json',
+                'Accept: application/json',
+            ]
+        ]);
+
+        if ($response->getStatusCode() === Response::HTTP_OK) {
+            $resultYouTube = json_decode($response->getContent(), true)['items'] ?? [];
+
+            $track->setYoutubeKey($resultYouTube[0]['id']['videoId']);
+            $trackRepository->save($track, true);
+
+            return new Response(json_encode(['youtube_key' => $resultYouTube[0]['id']['videoId']]), 200);
+        }
+
+        return new Response(json_encode(['fail : ' . $response->getStatusCode()]), $response->getStatusCode());
     }
 }

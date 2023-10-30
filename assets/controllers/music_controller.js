@@ -71,7 +71,31 @@ export default class extends Controller {
             event.preventDefault();
         });
 
-        $(document).on('click', '.save-track', async function(){
+        $(document).on('click', '.no-link', async function(event) {
+            let id = $(event.target).closest('a').data('id');
+            let auteur = $(event.target).closest('a').data('auteur');
+            let titre = $(event.target).closest('a').data('titre');
+            await $.ajax({
+                url: '/fr/music/link/' + id,
+                method: 'POST',
+                data:  {auteur: auteur, titre: titre},
+                processData: true,
+                dataType	: 'json', // what type of data do we expect back from the server
+                error       : function(data) {
+                    console.log(data.responseText);
+                },
+                success     : function(data, textStatus, xhr) {
+                    if (xhr.status === 200) {
+                        $(event.target).closest('a').attr('href', 'https://www.youtube.com/watch?v=' + data.youtube_key);
+                        $(event.target).closest('a').removeClass('no-link');
+                        $(event.target).closest('a').addClass('video-link icon-youtube');
+                        $('#formModal').modal('hide');
+                    }
+                }
+            });
+        });
+
+        $(document).on('click', '.save-track', async function(event){
             const $form = $('#formModal').find('form');
             await $.ajax({
                 url: $form.prop('action'),
@@ -85,9 +109,13 @@ export default class extends Controller {
                     console.log(data.responseText);
                 }
             }).done(function(result) {
-                let icon = '<i class="bi bi-youtube"></i>';
                 $('a#track-youtube-' + result.id).attr('href', 'https://www.youtube.com/watch?v=' + result.youtube_key);
-                $('a#track-youtube-' + result.id).html(icon);
+                if ($('a#track-youtube-' + result.id).hasClass('no-link')) {
+                    $('a#track-youtube-' + result.id).removeClass('no-link');
+                }
+                if (!$('a#track-youtube-' + result.id).hasClass('video-link icon-youtube')) {
+                    $('a#track-youtube-' + result.id).addClass('video-link icon-youtube');
+                }
                 $('#formModal').modal('hide');
             });
         });
