@@ -63,7 +63,7 @@ class MusicCollectionController extends AbstractController
 
                 foreach ($tracks as $track) {
                     $output['data'][] = [
-                        'youtubeKey' => '<a id="track-youtube-'.$track->getId().'" href="'.VideoHelper::YOUTUBE_WATCH.$track->getYoutubeKey().'" class="' . ($track->getYoutubeKey() ? 'video-link icon-youtube' : 'no-link') . '" data-id="' . $track->getId() . '" data-auteur="' . $track->getAuteur() . '" data-titre="' . $track->getTitre() . '" onclick="return false;"><i class="bi bi-youtube"></i></a>',
+                        'youtubeKey' => '<a id="track-youtube-'.$track->getId().'" href="'.VideoHelper::YOUTUBE_WATCH.$track->getYoutubeKey().'" class="' . ($track->getYoutubeKey() ? 'video-link icon-youtube' : 'no-link') . '" data-id="' . $track->getId() . '" data-auteur="' . $track->getAuteur() . '" data-titre="' . $track->getTitre() . '" '. (!$track->getYoutubeKey() ? 'data-action="music#getLink"' :'') . ' onclick="return false;"><i class="bi bi-youtube"></i></a>',
                         'id' => $track->getId(),
                         'auteur' => strtoupper($track->getAuteur()) !== 'DIVERS' ? '<a href="#" data-action="music#openModal" data-artist="' . $track->getAuteur() . '" onclick="return false;"><i class="bi bi-eye-fill"></i></a> ' . $track->getAuteur() : $track->getAuteur(),
                         'titre' => '<a href="#" data-id='.$track->getId().' class="edit-tracks" data-action="music#openEditModal" onclick="return false;"><i class="bi bi-pencil-square"></i></a> ' . $track->getTitre(),
