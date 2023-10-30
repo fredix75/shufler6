@@ -25,7 +25,7 @@ export default class extends Controller {
             serverSide: true,
             select: true,
             responsive: {
-                details: false
+                details: true
             },
             ajax: this.pathUrlValue,
             sAjaxDataProp: "data",
