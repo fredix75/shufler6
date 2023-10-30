@@ -4,6 +4,8 @@ namespace App\Repository\MusicCollection;
 
 use App\Entity\MusicCollection\Album;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\CountWalker;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -39,15 +41,18 @@ class AlbumRepository extends ServiceEntityRepository
         }
     }
 
-    public function getAlbums(int $page, int $max): array
+    public function getAlbums(int $page, int $max): Paginator
     {
         $query = $this->createQueryBuilder('a')
             ->orderBy('a.name', 'ASC')
             ->setMaxResults($max)->setFirstResult(($page-1)*$max);
 
         $query->andWhere($query->expr()->notIn('a.picture', ['']));
+        $query->getQuery()->setHint(CountWalker::HINT_DISTINCT, true);
+        $paginator = new Paginator($query, false);
+        $paginator->setUseOutputWalkers(false);
 
-        return $query->getQuery()->getResult();
+        return $paginator;
     }
 
 //    /**

@@ -221,13 +221,21 @@ class MusicCollectionController extends AbstractController
     }
 
     #[Route('/albums/{page}', name: '_albums', requirements: ['page' => '\d+'], defaults: ['page' => 1])]
-    public function getAlbums(AlbumRepository $albumRepository, int $page = 1): Response
+    public function getAlbums(Request $request, AlbumRepository $albumRepository, int $page = 1): Response
     {
         $max = $this->getParameter('music_collection')['max_nb_albums'];
         $albums = $albumRepository->getAlbums($page, $max);
-        shuffle($albums);
+
+        $pagination = [
+            'page' => $page,
+            'route' => 'music_albums',
+            'pages_count' => (int)ceil(count($albums) / $max),
+            'route_params' => $request->attributes->get('_route_params')
+        ];
+
         return $this->render('music/albums.html.twig', [
             'albums' => $albums,
+            'pagination' => $pagination,
         ]);
     }
 }
