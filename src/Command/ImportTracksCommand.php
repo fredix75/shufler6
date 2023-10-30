@@ -365,8 +365,9 @@ class ImportTracksCommand extends Command
                 $album->setAnnee((int)$features['annee']);
                 $album->setGenre($features['genre']);
 
-                if (strtolower($albumName) != 'divers' && strtolower($artisteName) != 'divers') {
-                    $search = $artisteName . " " . $albumName;
+                if (strtolower($albumName) != 'divers') {
+                    $search = strtolower($artisteName) === 'divers' ? '' : $artisteName;
+                    $search .= " " . $albumName;
 
                     if (!$forbiddenRequest && empty($features['youtubeKey'])) {
                         try {
@@ -395,12 +396,14 @@ class ImportTracksCommand extends Command
                         $album->setYoutubeKey($features['youtubeKey']);
                     }
 
+                    $artiste = strtolower($artisteName) === 'divers' ? 'Various Artists' : $artisteName;
+
                     if (empty($features['picture'])) {
                         try {
                             $response = $this->httpClient->request('GET',  $this->parameters['last_fm_api_url'], [
                                 'query' => [
                                     'api_key'  => $this->parameters['last_fm_key'],
-                                    'artist'   => $album->getAuteur(),
+                                    'artist'   => $artiste,
                                     'album'   => $album->getName(),
                                     'method' => 'album.getInfo',
                                     'format' => 'json',
