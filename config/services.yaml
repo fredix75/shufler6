@@ -34,15 +34,20 @@ services:
     App\EventListener\UploadListener:
         arguments:
             $fileHelper: '@App\Helper\FileHelper'
-#           $exempleParameters: '@=parameter("shufler_video")'
         tags:
             - { name: 'doctrine.event_listener', event: 'prePersist' }
             - { name: 'doctrine.event_listener', event: 'preUpdate' }
             - { name: 'doctrine.event_listener', event: 'preRemove' }
 
-    App\EventListener\TrackListener:
+    App\EntityListener\TrackListener:
         arguments:
             $videoHelper: '@App\Helper\VideoHelper'
         tags:
             - { name: 'doctrine.orm.entity_listener', event: 'prePersist' }
             - { name: 'doctrine.orm.entity_listener', event: 'preUpdate' }
+
+    App\EntityListener\AlbumListener:
+        arguments:
+            $parameters: '@=parameter("music_collection")'
+        tags:
+            - { name: 'doctrine.orm.entity_listener', event: 'postLoad' }

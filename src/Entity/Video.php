@@ -12,7 +12,7 @@ use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Controller\Api\VideoController;
-use App\EventListener\VideoListener;
+use App\EntityListener\VideoListener;
 use App\Repository\VideoRepository;
 use App\Validator\VideoValidator;
 use Doctrine\Common\Collections\ArrayCollection;

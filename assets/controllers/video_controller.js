@@ -4,53 +4,46 @@ import 'magnific-popup';
 
 export default class extends Controller {
     connect() {
-        $(document).on('click', '.video-link', function(event) {
-            $(document).magnificPopup({
-                delegate: '.video-link',
-                type: 'iframe',
-                iframe: {
-                    patterns: {
-                        dailymotion: {
-                            index: 'dailymotion.com',
-                            id: function (url) {
-                                var m = url.match(/^.+dailymotion.com\/(embed\/video|hub)\/([^_]+)[^#]*(#video=([^_&]+))?/);
-                                if (m !== null) {
-                                    console.log(m);
-                                    if (m[4] !== undefined) {
-                                        return m[4];
-                                    }
-                                    return m[2];
+        $('.video-link').magnificPopup({
+            type: 'iframe',
+            iframe: {
+                patterns: {
+                    dailymotion: {
+                        index: 'dailymotion.com',
+                        id: function (url) {
+                            var m = url.match(/^.+dailymotion.com\/(embed\/video|hub)\/([^_]+)[^#]*(#video=([^_&]+))?/);
+                            if (m !== null) {
+                                console.log(m);
+                                if (m[4] !== undefined) {
+                                    return m[4];
                                 }
-                                return null;
-                            },
-                            src: 'https://www.dailymotion.com/embed/video/%id%'
+                                return m[2];
+                            }
+                            return null;
                         },
-                        youtube: {
-                            index: 'youtube.com',
-                            id: 'v=',
-                            src: '//www.youtube.com/embed/%id%?autoplay=1&iv_load_policy=3',
-                        }
+                        src: 'https://www.dailymotion.com/embed/video/%id%'
+                    },
+                    youtube: {
+                        index: 'youtube.com',
+                        id: 'v=',
+                        src: '//www.youtube.com/embed/%id%?autoplay=1&iv_load_policy=3',
                     }
                 }
-            });
-            event.preventDefault();
+            }
         });
 
-        $(document).on('click', '.playlist-link', function(event) {
-            $(document).magnificPopup({
-                delegate: '.playlist-link',
-                type: 'iframe',
-                iframe: {
-                    patterns: {
-                        youtube: {
-                            index: 'youtube.com/',
-                            id: 'v=',
-                            src: '//www.youtube.com/embed/videoseries?list=%id%'
-                        }
+        $(document).magnificPopup({
+            delegate: '.playlist-link',
+            type: 'iframe',
+            iframe: {
+                patterns: {
+                    youtube: {
+                        index: 'youtube.com/',
+                        id: 'v=',
+                        src: '//www.youtube.com/embed/videoseries?list=%id%'
                     }
                 }
-            });
-            event.preventDefault();
+            }
         });
     }
 

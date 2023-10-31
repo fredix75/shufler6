@@ -48,7 +48,7 @@
             <section class="col col-12 col-sm-12 col-md-6 col-lg-6 medias-bande">
 			{% if playlist is not empty %}
                 <div id="vu-widget" class="col col-12">
-                    <div class="col col-12 col-sm-12 col-md-6 col-lg-6 media" data-controller="video">
+                    <div class="col col-12 col-sm-12 col-md-6 col-lg-6 media">
                         <a class="playlist-link" href="{{ playlist.url|youtubeChannelLink }}" data-toggle="tooltip" aria-label="Launch video {{ playlist.name }}">
                             <img src="{{ playlist.image }}" width=60% alt="{{ playlist.name }}" title="{{ playlist.name }}" />
                         </a>

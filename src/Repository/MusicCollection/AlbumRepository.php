@@ -45,10 +45,8 @@ class AlbumRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('a')
             ->orderBy('a.name', 'ASC')
-            ->setMaxResults($max)->setFirstResult(($page-1)*$max);
-
-        $query->andWhere($query->expr()->notIn('a.picture', ['']));
-        $query->getQuery()->setHint(CountWalker::HINT_DISTINCT, true);
+            ->setMaxResults($max)->setFirstResult(($page-1)*$max)
+            ->getQuery()->setHint(CountWalker::HINT_DISTINCT, true);
         $paginator = new Paginator($query, false);
         $paginator->setUseOutputWalkers(false);
 

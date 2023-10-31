@@ -2,11 +2,10 @@
 
 namespace App\Entity\MusicCollection;
 
-use App\EventListener\TrackListener;
+use App\EntityListener\TrackListener;
 use App\Repository\MusicCollection\TrackRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\EntityListeners;
-use Symfony\Component\Serializer\Serializer;
 
 #[ORM\Entity(repositoryClass: TrackRepository::class)]
 #[EntityListeners([TrackListener::class])]

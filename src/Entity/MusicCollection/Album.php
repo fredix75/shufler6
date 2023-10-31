@@ -2,9 +2,12 @@
 
 namespace App\Entity\MusicCollection;
 
+use App\EntityListener\AlbumListener;
 use App\Repository\MusicCollection\AlbumRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\EntityListeners;
 
+#[EntityListeners([AlbumListener::class])]
 #[ORM\Entity(repositoryClass: AlbumRepository::class)]
 class Album
 {
