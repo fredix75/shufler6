@@ -36,18 +36,17 @@ class Flux implements UploadInterface
 
     private ?string $oldImage = null;
 
-    #[ORM\Column]
-    #[Assert\NotBlank]
-    private ?int $type = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $mood = null;
-
     #[ORM\ManyToOne(inversedBy:"flux")]
     private ?ChannelFlux $channel = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateInsert = null;
+
+    #[ORM\ManyToOne(inversedBy: 'flux')]
+    private ?FluxMood $mood = null;
+
+    #[ORM\ManyToOne(inversedBy: 'flux')]
+    private ?FluxType $type = null;
 
     public function getId(): ?int
     {
@@ -115,30 +114,6 @@ class Flux implements UploadInterface
         return $this;
     }
 
-    public function getType(): ?int
-    {
-        return $this->type;
-    }
-
-    public function setType(?int $type): self
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    public function getMood(): ?int
-    {
-        return $this->mood;
-    }
-
-    public function setMood(?int $mood): self
-    {
-        $this->mood = $mood;
-
-        return $this;
-    }
-
     public function getChannel(): ?ChannelFlux
     {
         return $this->channel;
@@ -160,6 +135,30 @@ class Flux implements UploadInterface
     public function setDateInsert(): self
     {
         $this->dateInsert = new \DateTime();
+
+        return $this;
+    }
+
+    public function getMood(): ?FluxMood
+    {
+        return $this->mood;
+    }
+
+    public function setMood(?FluxMood $moods): static
+    {
+        $this->mood = $moods;
+
+        return $this;
+    }
+
+    public function getType(): ?FluxType
+    {
+        return $this->type;
+    }
+
+    public function setType(?FluxType $type): static
+    {
+        $this->type = $type;
 
         return $this;
     }

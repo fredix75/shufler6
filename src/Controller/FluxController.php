@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Flux;
+use App\Entity\FluxType;
 use App\Form\FluxFormType;
 use App\Repository\FluxMoodRepository;
 use App\Repository\FluxRepository;
@@ -32,13 +33,21 @@ class FluxController extends AbstractController
     }
 
     #[Route('/news/{category}', name: '_news', requirements: ['category' => '\d+'])]
-    public function news(FluxRepository $fluxRepository, FluxMoodRepository $fluxMoodRepository, int $category = 201): Response
+    public function news(FluxRepository $fluxRepository, FluxMoodRepository $fluxMoodRepository, int $category = null): Response
     {
-        $news = $fluxRepository->getNews($category);
+
+        $defaultCategory = $category;
+        $mood = $fluxMoodRepository->findOneBy(['name' => 'info', 'type' => 1]);
+        if ($mood) {
+            $defaultCategory = $mood->getId();
+        }
+
+        $news = $fluxRepository->getNews($category ?? $defaultCategory);
 
         return $this->render('/flux/news.html.twig', [
             'news' => $news,
             'categories' => $fluxMoodRepository->findBy(['type' => 1]),
+            'default_categorie' => $defaultCategory
         ]);
     }
 
@@ -73,7 +82,6 @@ class FluxController extends AbstractController
 
         return $this->render('/flux/radios.html.twig', [
             'radios' => $radios,
-            'categories' => $fluxMoodRepository->findBy(['type' => 3]),
         ]);
     }
 
@@ -154,7 +162,7 @@ class FluxController extends AbstractController
 
             $fluxRepository->save($flux, true);
             $this->addFlash('success', 'Flux enregistré');
-            $routeToRedirect = $this->getRouteToRedirect($flux->getType());
+            $routeToRedirect = $this->getRouteToRedirect($flux->getType()->getName());
 
             return $this->redirectToRoute($routeToRedirect);
         }
@@ -163,21 +171,20 @@ class FluxController extends AbstractController
         $news = array_filter($fluxMoods, function($item) {
             return $item->getType()->getId() === 1;
         });
-
         array_walk_recursive($news, function($a) use (&$tabNews) {
-            $tabNews[$a->getCode()] = $a->getName();
+            $tabNews[$a->getId()] = $a->getName();
         });
         $radios = array_filter($fluxMoods, function($item) {
             return $item->getType()->getId() === 3;
         });
         array_walk_recursive($radios, function($a) use (&$tabRadios) {
-            $tabRadios[$a->getCode()] = $a->getName();
+            $tabRadios[$a->getId()] = $a->getName();
         });
         $liens = array_filter($fluxMoods, function($item) {
             return $item->getType()->getId() === 4;
         });
         array_walk_recursive($liens, function($a) use (&$tabLiens) {
-            $tabLiens[$a->getCode()] = $a->getName();
+            $tabLiens[$a->getId()] = $a->getName();
         });
 
         return $this->render('flux/edit.html.twig', [
@@ -196,7 +203,7 @@ class FluxController extends AbstractController
         Flux $flux
     ): Response
     {
-        $type = $flux->getType();
+        $type = $flux->getType()->getName();
         $fluxRepository->remove($flux, true);
         $this->addFlash('success', 'Flux bien supprimé');
         $routeToRedirect = $this->getRouteToRedirect($type);
@@ -218,14 +225,9 @@ class FluxController extends AbstractController
         return $this->redirectToRoute('flux_edit', ['id' => $flux->getId()]);
     }
 
-    private function getRouteToRedirect(int $type): string
+    private function getRouteToRedirect(string $type): string
     {
-        $fluxType = $this->fluxTypeRepository->find($type);
-        if ($fluxType) {
-            $routeToRedirect = sprintf('flux_%s', $fluxType->getName());
-            return $routeToRedirect !== 'flux_news' ? $routeToRedirect.'s' : $routeToRedirect;
-        }
-
-        return 'home';
+        $routeToRedirect = sprintf('flux_%s', $type);
+        return $routeToRedirect !== 'flux_news' ? $routeToRedirect.'s' : $routeToRedirect;
     }
 }

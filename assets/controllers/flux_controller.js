@@ -17,6 +17,7 @@ export default class extends Controller {
         let text, audio;
         if ('radio' === type) {
             audio = '<iframe src="' + url + '" style="width:100%;height:100px;"></iframe>';
+            $('#slider').show();
         } else {
             let title = $(event.target).closest('.accordion-item').find('.accordion-button');
             let podcast = title.closest('.flux-widget').data('title');

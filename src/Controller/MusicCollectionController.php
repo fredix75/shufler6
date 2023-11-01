@@ -63,7 +63,10 @@ class MusicCollectionController extends AbstractController
 
                 foreach ($tracks as $track) {
                     $output['data'][] = [
-                        'youtubeKey' => '<a id="track-youtube-'.$track->getId().'" href="'.VideoHelper::YOUTUBE_WATCH.$track->getYoutubeKey().'" class="' . ($track->getYoutubeKey() ? 'video-link icon-youtube' : 'no-link') . '" data-id="' . $track->getId() . '" data-auteur="' . $track->getAuteur() . '" data-titre="' . $track->getTitre() . '" '. (!$track->getYoutubeKey() ? 'data-action="music#getLink"' :'') . ' onclick="return false;"><i class="bi bi-youtube"></i></a>',
+                        'youtubeKey' => $this->renderView('music/part/_youtube_link.html.twig', [
+                            'track' => $track,
+                            'youtube_key' => VideoHelper::YOUTUBE_WATCH.$track->getYoutubeKey(),
+                        ]),
                         'id' => $track->getId(),
                         'auteur' => strtoupper($track->getAuteur()) !== 'DIVERS' ? '<a href="#" data-action="music#openModal" data-artist="' . $track->getAuteur() . '" onclick="return false;"><i class="bi bi-eye-fill"></i></a> ' . $track->getAuteur() : $track->getAuteur(),
                         'titre' => '<a href="#" data-id='.$track->getId().' class="edit-tracks" data-action="music#openEditModal" onclick="return false;"><i class="bi bi-pencil-square"></i></a> ' . $track->getTitre(),
@@ -71,7 +74,7 @@ class MusicCollectionController extends AbstractController
                         'album' => '<a href="#" data-action="music#openModal" data-artist="' . $track->getArtiste() . '" data-album="' . $track->getAlbum() . '" onclick="return false;"><i class="bi bi-filter-circle-fill"></i></a> ' . $track->getAlbum(),
                         'annee' => $track->getAnnee(),
                         'artiste' => strtoupper($track->getArtiste()) !== 'DIVERS' ? '<a href="#" data-action="music#openModal" data-artist="' . $track->getArtiste() . '" onclick="return false;"><i class="bi bi-eye-fill"></i></a> ' . $track->getArtiste() : $track->getArtiste(),
-                        'genre' => $track->getGenre(),
+                        'genre' => '<span class="badge bg-dark">' . $track->getGenre() . '</span>',
                         'duree' => $track->getDuree(),
                         'pays' => $track->getPays(),
                         'bitrate' => $track->getBitrate(),

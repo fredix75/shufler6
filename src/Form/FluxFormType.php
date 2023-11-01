@@ -4,6 +4,8 @@ namespace App\Form;
 
 use App\Entity\ChannelFlux;
 use App\Entity\Flux;
+use App\Entity\FluxMood;
+use App\Entity\FluxType;
 use App\Repository\ChannelFluxRepository;
 use App\Repository\FluxMoodRepository;
 use App\Repository\FluxTypeRepository;
@@ -41,9 +43,10 @@ class FluxFormType extends AbstractType
                     'class' => 'input-group mb-3'
                 ]
             ])
-            ->add('type', ChoiceType::class, [
+            ->add('type', EntityType::class, [
+                'class' => FluxType::class,
                 'placeholder' => 'Choose a Type',
-                'choices' => $this->getTypes(),
+                'choice_label' => 'name',
                 'attr' => [
                     'data-action' => 'change->flux-edit#typeChange',
                     'class' => 'select2',
@@ -72,10 +75,11 @@ class FluxFormType extends AbstractType
                 ]
             ])
             ->add('image', HiddenType::class)
-            ->add('mood',ChoiceType::class, [
+            ->add('mood',EntityType::class, [
+                'class' => FluxMood::class,
                 'placeholder' => 'Choose a Category',
                 'required' => false,
-                'choices' => $this->getMoods(),
+                'choice_label' => 'name',
                 'attr' => [
                     'class' => 'select2',
                 ],
@@ -102,33 +106,6 @@ class FluxFormType extends AbstractType
                 ]
             ])
         ;
-    }
-
-    private function getTypes(): array
-    {
-        $types = $this->fluxTypeRepository->findAll();
-        $types = array_map(function($item) {
-            return [$item->getId() => $item->getName()];
-        }, $types);
-        array_walk_recursive($types, function($k, $a) use (&$return) {
-            $return[$k] = $a;
-        });
-        return $return;
-    }
-
-    private function getMoods(): array
-    {
-        $moods = $this->fluxMoodRepository->findAll();
-        $moods = array_map(function($item) {
-            $key = $item->getCode();
-            $item = $item->getName();
-            return [$key => $item];
-        }, $moods);
-        array_walk_recursive($moods, function($k, $a) use (&$return) {
-            $return[$k] = $a;
-        });
-
-        return $return;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

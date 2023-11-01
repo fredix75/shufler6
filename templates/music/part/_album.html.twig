@@ -8,7 +8,7 @@
 </p>
 <div>
     {% if album.youtubeKey is not empty %}
-        <a class="playlist-link icon-youtube" href="{{ album.youtubeKey|youtubeChannelLink }}" data-id="{{ album.youtubeKey }}">
+        <a class="playlist-link icon-youtube" href="{{ album.youtubeKey|youtubeChannelLink }}" data-id="{{ album.youtubeKey }}" data-action="music#popupPlaylist">
             <i class="bi bi-youtube"></i>
         </a>
     {% endif %}
@@ -18,7 +18,7 @@
         {% for track in tracks %}
             <tr>
                 <td>{% if track.youtubeKey is not empty %}
-                        <a class="video-link" href="{{ track.youtubeKey|popUpYoutube }}"><i class="bi bi-youtube"></i></a>
+                        <a class="video-link" href="{{ track.youtubeKey|popUpYoutube }}" data-action="music#popup"><i class="bi bi-youtube"></i></a>
                     {% endif %}
                 </td>
                 <td>{{ track.numero }}</td>

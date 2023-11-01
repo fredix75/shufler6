@@ -36,72 +36,71 @@ export default class extends Controller {
             order: [[1, 'asc']]
         });
 
-
-        $(document).on('click', '.video-link', function(event) {
-            $(document).magnificPopup({
-                delegate: '.video-link',
-                type: 'iframe',
-                iframe: {
-                    patterns: {
-                        youtube: {
-                            index: 'youtube.com',
-                            id: 'v=',
-                            src: '//www.youtube.com/embed/%id%?autoplay=1&iv_load_policy=3'
-                        }
-                    }
-                }
-            });
-            event.preventDefault();
-        });
-
-        $(document).on('click', '.playlist-link', function(event) {
-            $(document).magnificPopup({
-                delegate: '.playlist-link',
-                type: 'iframe',
-                iframe: {
-                    patterns: {
-                        youtube: {
-                            index: 'youtube.com',
-                            id: 'v=',
-                            src: '//www.youtube.com/embed/videoseries?list=%id%'
-                        }
-                    }
-                }
-            });
-            event.preventDefault();
-        });
-
-        $(document).on('click', '.save-track', async function(event){
-            const $form = $('#formModal').find('form');
-            await $.ajax({
-                url: $form.prop('action'),
-                method: $form.prop('method'),
-                data:  new FormData($form[0]),
-                processData: false,
-                contentType: false,
-                dataType	: 'json', // what type of data do we expect back from the server
-                encode		: true,
-                error       : function(data) {
-                    console.log(data.responseText);
-                }
-            }).done(function(result) {
-                $('a#track-youtube-' + result.id).attr('href', 'https://www.youtube.com/watch?v=' + result.youtube_key);
-                if ($('a#track-youtube-' + result.id).hasClass('no-link')) {
-                    $('a#track-youtube-' + result.id).removeClass('no-link');
-                }
-                if (!$('a#track-youtube-' + result.id).hasClass('video-link icon-youtube')) {
-                    $('a#track-youtube-' + result.id).addClass('video-link icon-youtube');
-                }
-                $('#formModal').modal('hide');
-            });
-        });
-
         $(document).on('click', '#track-xchange', function() {
             let id = $('#track-xchange').data('id');
             let search = $('#track-xchange').data('search');
             $('input[name="search_api"]').val(search);
             $('input[name="id_track"]').val(id);
             $('form[name="form_api_search"]').submit();
+        });
+    }
+
+    popup(event) {
+        $(document).magnificPopup({
+            delegate: '.video-link',
+            type: 'iframe',
+            iframe: {
+                patterns: {
+                    youtube: {
+                        index: 'youtube.com',
+                        id: 'v=',
+                        src: '//www.youtube.com/embed/%id%?autoplay=1&iv_load_policy=3'
+                    }
+                }
+            }
+        });
+        $('#formModal').modal('hide');
+    }
+
+    popupPlaylist(event) {
+        $(document).magnificPopup({
+            delegate: '.playlist-link',
+            type: 'iframe',
+            iframe: {
+                patterns: {
+                    youtube: {
+                        index: 'youtube.com',
+                        id: 'v=',
+                        src: '//www.youtube.com/embed/videoseries?list=%id%'
+                    }
+                }
+            }
+        });
+        $('#formModal').modal('hide');
+    }
+
+    async saveTrack(event){
+        const $form = $('#formModal').find('form');
+        await $.ajax({
+            url: $form.prop('action'),
+            method: $form.prop('method'),
+            data:  new FormData($form[0]),
+            processData: false,
+            contentType: false,
+            dataType	: 'json', // what type of data do we expect back from the server
+            encode		: true,
+            error       : function(data) {
+                console.log(data.responseText);
+            }
+        }).done(function(result) {
+            $('a#track-youtube-' + result.id).attr('href', 'https://www.youtube.com/watch?v=' + result.youtube_key);
+            if ($('a#track-youtube-' + result.id).hasClass('no-link')) {
+                $('a#track-youtube-' + result.id).removeClass('no-link');
+            }
+            if (!$('a#track-youtube-' + result.id).hasClass('video-link icon-youtube')) {
+                $('a#track-youtube-' + result.id).addClass('video-link icon-youtube');
+            }
+            $('#formModal').modal('hide');
         });
     }
 
