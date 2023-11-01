@@ -8,7 +8,9 @@
         {{ form_row(form.auteur) }}
         {{ form_row(form.album) }}
         {{ form_row(form.annee) }}
-        {{ form_row(form.note) }}
+        {% if form.note is defined %}
+            {{ form_row(form.note) }}
+        {% endif %}
         {{ form_row(form.submit) }}
     </div>
     {{ form_end(form) }}

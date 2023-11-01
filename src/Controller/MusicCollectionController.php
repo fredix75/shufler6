@@ -235,19 +235,37 @@ class MusicCollectionController extends AbstractController
     #[Route('/albums/{page}', name: '_albums', requirements: ['page' => '\d+'], defaults: ['page' => 1])]
     public function getAlbums(Request $request, AlbumRepository $albumRepository, int $page = 1): Response
     {
+        $params = [
+            'auteur'        => $request->get('auteur') ?? null,
+            'album'         => $request->get('album') ?? null,
+            'genre'         => $request->get('genre') ?? null,
+            'annee'         => $request->get('annee') ?? null,
+            'search'        => $request->get('search') ?? null,
+        ];
+
+        $form = $this->createForm(FilterTracksFormType::class, $params, ['mode' => 'album']);
+        $form->handleRequest($request);
+
         $max = $this->getParameter('music_collection')['max_nb_albums'];
-        $albums = $albumRepository->getAlbums($page, $max);
+        $routeParams = $request->attributes->get('_route_params');
+        if (isset($request->query->all()['page'])) {
+            $page = 1;
+            $routeParams['page'] = 1;
+        }
+
+        $albums = $albumRepository->getAlbums($params, $page, $max);
 
         $pagination = [
             'page' => $page,
             'route' => 'music_albums',
             'pages_count' => (int)ceil(count($albums) / $max),
-            'route_params' => $request->attributes->get('_route_params')
+            'route_params' => array_merge($routeParams, $params)
         ];
 
         return $this->render('music/albums.html.twig', [
             'albums' => $albums,
             'pagination' => $pagination,
+            'form' => $form,
         ]);
     }
 

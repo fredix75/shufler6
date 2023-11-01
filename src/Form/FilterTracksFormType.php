@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Repository\MusicCollection\TrackRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -67,17 +68,25 @@ class FilterTracksFormType extends AbstractType
                 'row_attr' => [
                     'class' => 'col-6 col-md-4 col-lg-2'
                 ],
-            ])
-            ->add('note', ChoiceType::class, [
-                'label' => false,
-                'placeholder' => 'Rating',
-                'required' => false,
-                'choices' => $this->getNotes(),
-                'row_attr' => [
-                    'class' => 'col-6 col-md-4 col-lg-1'
-                ],
-            ])
-            ->add('submit', SubmitType::class, [
+            ]);
+
+            if ($options['mode'] !== 'album') {
+                $builder->add('note', ChoiceType::class, [
+                    'label' => false,
+                    'placeholder' => 'Rating',
+                    'required' => false,
+                    'choices' => $this->getNotes(),
+                    'row_attr' => [
+                        'class' => 'col-6 col-md-4 col-lg-1'
+                    ],
+                ]);
+            } else {
+                $builder->add('page', HiddenType::class, [
+                    'data' => 0,
+                ]);
+            }
+
+            $builder->add('submit', SubmitType::class, [
                 'label' => 'OK',
                 'row_attr' => [
                     'class' => 'col-3 col-md-4 col-lg-1'
@@ -88,9 +97,10 @@ class FilterTracksFormType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'csrf_protection' => false,
-        ));
+            'mode' => false,
+        ]);
     }
 
     public function getBlockPrefix(): string
