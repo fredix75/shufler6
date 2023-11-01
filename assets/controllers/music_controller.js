@@ -144,6 +144,7 @@ export default class extends Controller {
         } else {
             url = '/fr/music/artist';
         }
+        query += '&modal=true';
         const modal = new Modal('#formModal', {keyboard: false});
         modal.show();
         $(document).find('.modal-body').html(await $.ajax(url + query));

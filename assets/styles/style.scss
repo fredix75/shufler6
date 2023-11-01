@@ -219,3 +219,16 @@ a.video-link:hover img, a.playlist-link:hover img {
   background-color: $navbar-bg-color;
   color:white;
 }
+
+.block-content-album {
+  background-color: black;
+  min-height: 200px;
+  .div-img img {
+    width:50%;
+  }
+  @include media-breakpoint-up(lg) {
+    .div-img img {
+      width: 100%;
+    }
+  }
+}

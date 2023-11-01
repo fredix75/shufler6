@@ -132,6 +132,7 @@ class MusicCollectionController extends AbstractController
     {
         $artist = $request->get('artist');
         $albumName = $request->get('album');
+        $isModal = $request->get('modal') ?? false;
         $tracks = $trackRepository->getTracksByAlbum($artist, $albumName);
         $album = $albumRepository->findOneBy(['auteur'=>$artist, 'name' => $albumName]);
         if (empty($album)) {
@@ -142,7 +143,14 @@ class MusicCollectionController extends AbstractController
             $album['picture'] = null;
             $album['youtubeKey'] = null;
         }
-        return $this->render('music/part/_album.html.twig', [
+        if ($isModal) {
+            return $this->render('music/part/_album.html.twig', [
+                'tracks' => $tracks,
+                'album' => $album,
+            ]);
+        }
+
+        return $this->render('music/part/_album_content.html.twig', [
             'tracks' => $tracks,
             'album' => $album,
         ]);

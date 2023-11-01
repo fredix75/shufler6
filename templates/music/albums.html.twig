@@ -2,14 +2,17 @@
 
 {% block title %}{{ parent() }} :: Music Albums{% endblock %}
 
-{%  block body %}
-    <div class="row justify-content-center g-2 g-lg-3">
+{% block body %}
+    <div class="row justify-content-center g-2 g-lg-3" data-controller="album">
         {% for album in albums %}
             {% if album.picture is not null %}
-                <div class="col-6 col-md-4 col-lg-2" style="background-color: black; color:white;border:1px solid #052660;">
-                    <img src="{{ album.picture }}" alt="{{ album.name }}" title="{{ album.name }}" width="100%"/>
-                    <strong>{{ album.auteur }}</strong><br/>
-                    {{ album.name }} <small>({{ album.annee }})</small>
+                <div id="album-{{ album.id }}" class="col-6 col-md-4 col-lg-2 album"
+                     style="background-color: black; color:white;border:1px solid #052660;">
+                    <a href="#album-{{ album.id }}" data-action="album#displayContent" data-artist="{{ album.auteur }}" data-album="{{ album.name }}" onclick="">
+                        <img src="{{ album.picture }}" alt="{{ album.name }}" title="{{ album.name }}" width="100%"/>
+                        <strong>{{ album.auteur }}</strong><br/>
+                        {{ album.name }} <small>({{ album.annee }})</small>
+                    </a>
                 </div>
             {% endif %}
         {% endfor %}
