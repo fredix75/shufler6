@@ -16,10 +16,11 @@
                 </div>
             {% endif %}
         {% endfor %}
-
-        <section class="col-sm-12 col-md-12" style="margin-top: 20px;">
-            {% include "part/_pagination.html.twig" %}
-        </section>
+        {% if pagination is not empty %}
+            <section class="col-sm-12 col-md-12" style="margin-top: 20px;">
+                {% include "part/_pagination.html.twig" %}
+            </section>
+        {% endif %}
     </div>
     {% include 'music/part/_filters.html.twig' %}
 {% endblock %}

@@ -241,6 +241,7 @@ class MusicCollectionController extends AbstractController
             'genre'         => $request->get('genre') ?? null,
             'annee'         => $request->get('annee') ?? null,
             'search'        => $request->get('search') ?? null,
+            'random'        => $request->get('random') === '1',
         ];
 
         $form = $this->createForm(FilterTracksFormType::class, $params, ['mode' => 'album']);
@@ -255,17 +256,19 @@ class MusicCollectionController extends AbstractController
 
         $albums = $albumRepository->getAlbums($params, $page, $max);
 
-        $pagination = [
-            'page' => $page,
-            'route' => 'music_albums',
-            'pages_count' => (int)ceil(count($albums) / $max),
-            'route_params' => array_merge($routeParams, $params)
-        ];
+        if (false === $params['random']) {
+            $pagination = [
+                'page' => $page,
+                'route' => 'music_albums',
+                'pages_count' => (int)ceil(count($albums) / $max),
+                'route_params' => array_merge($routeParams, $params)
+            ];
+        }
 
         return $this->render('music/albums.html.twig', [
             'albums' => $albums,
-            'pagination' => $pagination,
-            'form' => $form,
+            'pagination' => $pagination ?? [],
+            'form_track' => $form,
         ]);
     }
 

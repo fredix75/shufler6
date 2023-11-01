@@ -41,11 +41,9 @@ class AlbumRepository extends ServiceEntityRepository
         }
     }
 
-    public function getAlbums(array $params, int $page, int $max): Paginator
+    public function getAlbums(array $params, int $page, int $max): Paginator|array
     {
-        $query = $this->createQueryBuilder('a')
-            ->orderBy('a.name', 'ASC')
-            ->setMaxResults($max)->setFirstResult(($page-1)*$max);
+        $query = $this->createQueryBuilder('a');
 
         if (!empty($params['search'])) {
             $orModule = $query->expr()
@@ -85,6 +83,15 @@ class AlbumRepository extends ServiceEntityRepository
             } elseif (is_numeric($annee)) {
                 $query->andWhere('a.annee = :annee')->setParameter('annee', $annee);
             }
+        }
+
+        if ($params['random']) {
+            $result = $query->getQuery()->getResult();
+            shuffle($result);
+            return $result;
+        } else {
+            $query->orderBy('a.name', 'ASC')
+                ->setMaxResults($max)->setFirstResult(($page-1)*$max);
         }
 
         $query->getQuery()->setHint(CountWalker::HINT_DISTINCT, true);

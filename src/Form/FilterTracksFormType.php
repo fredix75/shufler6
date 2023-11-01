@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Repository\MusicCollection\TrackRepository;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -82,14 +83,19 @@ class FilterTracksFormType extends AbstractType
                 ]);
             } else {
                 $builder->add('page', HiddenType::class, [
-                    'data' => 0,
-                ]);
+                        'data' => 0,
+                ])->add('random', CheckboxType::class, [
+                        'required' => false,
+                        'row_attr' => [
+                            'class' => 'form-check form-switch col-6 col-md-2 col-lg-1'
+                        ]
+                    ]);
             }
 
             $builder->add('submit', SubmitType::class, [
                 'label' => 'OK',
                 'row_attr' => [
-                    'class' => 'col-3 col-md-4 col-lg-1'
+                    'class' => 'col-3 col-md-2 col-lg-1'
                 ],
             ])
         ;

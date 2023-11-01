@@ -11,6 +11,9 @@
         {% if form_track.note is defined %}
             {{ form_row(form_track.note) }}
         {% endif %}
+        {% if form_track.random is defined %}
+            {{ form_row(form_track.random) }}
+        {% endif %}
         {{ form_row(form_track.submit) }}
     </div>
     {{ form_end(form_track) }}
