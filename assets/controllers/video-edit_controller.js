@@ -50,6 +50,9 @@ export default class extends Controller {
         }
 
         $('[name="video_form[periode]"]').val(periode);
+        let select = document.getElementById('video_form_periode');
+        let control = select.tomselect;
+        control.sync();
     }
 
     completeInfos() {

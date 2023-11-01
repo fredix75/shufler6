@@ -152,7 +152,6 @@ class VideoController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $video = $form->getData();
             $videoRepository->save($video, true);
             $this->addFlash('success', 'Vidéo enregistrée');
 

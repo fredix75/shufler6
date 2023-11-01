@@ -154,7 +154,6 @@ class FluxController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $flux = $form->getData();
             if ($flux->getFile()) {
                 // pour que ça persiste en cas de simple changement d'image
                 $flux->setImage('new file');
