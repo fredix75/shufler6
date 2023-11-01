@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Contract\UploadInterface;
 use App\Repository\FluxRepository;
+use App\Validator\FluxValidator;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;

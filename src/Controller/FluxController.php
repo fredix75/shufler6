@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Flux;
-use App\Entity\FluxType;
 use App\Form\FluxFormType;
 use App\Repository\FluxMoodRepository;
 use App\Repository\FluxRepository;
