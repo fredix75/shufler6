@@ -6,6 +6,7 @@ use App\Form\FilterTracksFormType;
 use App\Form\TrackFormType;
 use App\Helper\VideoHelper;
 use App\Repository\MusicCollection\ArtistRepository;
+use App\Twig\Runtime\ShuflerRuntime;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,6 +27,7 @@ class MusicCollectionController extends AbstractController
         Request $request,
         ParameterBagInterface $parameters,
         TrackRepository $trackRepository,
+        ShuflerRuntime $shuflerRuntime,
         string $mode = 'tracks'
     ): Response
     {
@@ -78,7 +80,7 @@ class MusicCollectionController extends AbstractController
                         'duree' => $track->getDuree(),
                         'pays' => $track->getPays(),
                         'bitrate' => $track->getBitrate(),
-                        'note' => $track->getNote() != 0 ? $track->getNote() : ''
+                        'note' => $shuflerRuntime->displayStarsFunction($track->getNote() ?? 0),
                     ];
                 }
             } elseif ($mode === 'albums') {

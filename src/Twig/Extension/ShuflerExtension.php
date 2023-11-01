@@ -31,7 +31,8 @@ class ShuflerExtension extends AbstractExtension
             new TwigFunction('convertFrame', [ShuflerRuntime::class, 'convertFrameFilter'], ['is_safe' => ['html']]),
             new TwigFunction('youtubeChannelLink', [ShuflerRuntime::class, 'getYoutubeChannelLinkFilter']),
             new TwigFunction('popUp', [ShuflerRuntime::class, 'popUpFilter']),
-            new TwigFunction('toIconAlert', [ShuflerRuntime::class, 'toIconAlertFilter'])
+            new TwigFunction('toIconAlert', [ShuflerRuntime::class, 'toIconAlertFilter']),
+            new TwigFunction('displayStars', [ShuflerRuntime::class, 'displayStarsFunction'])
         ];
     }
 }
