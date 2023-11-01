@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Video;
+use App\Form\FilterVideosFormType;
 use App\Form\VideoFormType;
 use App\Helper\VideoHelper;
 use App\Repository\MusicCollection\TrackRepository;
@@ -88,6 +89,7 @@ class VideoController extends AbstractController
 
     #[Route('/couch/{categorie}/{genre}/{periode}', name: '_couch', requirements: ['categorie' => '\d+', 'genre' => '\d+|-\d+'])]
     public function couch(
+        Request $request,
         VideoRepository $videoRepository,
         VideoHelper $videoHelper,
         int $categorie = 0,
@@ -95,7 +97,19 @@ class VideoController extends AbstractController
         string $periode = '0'
     ): Response
     {
-        $videos = $videoRepository->getRandomVideos($categorie, $genre, $periode, 'youtube');
+        $categorie = $request->query->get('categorie') ?? $categorie;
+        $genre = $request->query->get('genre') ?? $genre;
+        $periode = $request->query->get('periode') ?? $periode;
+        $search = $request->query->get('search') ?? null;
+
+        $form = $this->createForm(FilterVideosFormType::class, [
+            'categorie' => $categorie,
+            'genre' => $genre,
+            'periode' => $periode,
+            'search' => $search,
+        ]);
+
+        $videos = $videoRepository->getRandomVideos($search, $categorie, $genre, $periode, 'youtube');
         $videoParameters = $this->getParameter('shufler_video');
         $playlist = [$videoParameters['intro_couch']];
         $i = 0;
@@ -104,7 +118,6 @@ class VideoController extends AbstractController
                 $playlist[] = $videoHelper->getIdentifer($video->getLien(), 'youtube');
                 $i++;
             }
-
             if ($i >= $videoParameters['max_list_couch']) {
                 break;
             }
@@ -112,6 +125,7 @@ class VideoController extends AbstractController
 
         return $this->render('video/couch.html.twig', [
             'videos' => $playlist,
+            'form_video' => $form,
         ]);
     }
 

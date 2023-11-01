@@ -57,13 +57,14 @@ class VideoRepository extends ServiceEntityRepository
     }
 
     public function getRandomVideos(
+        string $search = null,
         int $categorie = null,
         int $genre = null,
         string $periode = '0',
         string $plateforme = null
     ): array
     {
-        $q = $this->getVideosQuery($categorie, $genre, $periode, $plateforme);
+        $q = $this->getVideosQuery($categorie, $genre, $periode, $search, $plateforme);
         $videos = $q->getQuery()->getResult();
         for ($i = 0; $i < 5; $i++) {
             shuffle($videos);
@@ -95,6 +96,7 @@ class VideoRepository extends ServiceEntityRepository
         int $categorie = null,
         int $genre = null,
         string $periode = '0',
+        string $search = null,
         string $plateforme = null
     ): QueryBuilder
     {
@@ -121,6 +123,11 @@ class VideoRepository extends ServiceEntityRepository
         if ($periode) {
             $q->andWhere('a.periode= :periode')
                 ->setParameter('periode', $periode);
+        }
+
+        if ($search) {
+            $q->andWhere("a.auteur like :search OR a.titre like :search OR a.chapo like :search")
+                ->setParameter('search', '%'.$search.'%');
         }
 
         return $q;

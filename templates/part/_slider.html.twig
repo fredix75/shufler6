@@ -1,8 +1,8 @@
-<div class="slider fixed-bottom" data-controller="videos-couch">
+<div class="slider fixed-bottom">
     <div class="row justify-content-center">
         <div class="col-4 col-md-4 col-lg-2" data-controller="main">
             {% block slider_button %}
-                <a href="#" class="btn btn-transparent toggle-btn" data-action="main#toggleSlide" title="toggle slider" role="button" aria-label="Toggle slider" style="width: 100%;">
+                <a href="#" class="btn btn-transparent toggle-btn" data-action="main#toggleSlide" title="toggle slider" role="button" aria-label="Toggle slider" style="width: 100%;" onclick="return false;">
                     <i class="bi bi-chevron-bar-contract"></i>
                 </a>
             {% endblock %}

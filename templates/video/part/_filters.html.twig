@@ -1,0 +1,13 @@
+{% extends 'part/_slider.html.twig' %}
+
+{% block slider_content %}
+    {{ form_start(form_video, {'method' : 'GET'}) }}
+    <div class="row justify-content-center filter-form">
+        {{ form_row(form_video.categorie) }}
+        {{ form_row(form_video.genre) }}
+        {{ form_row(form_video.search) }}
+        {{ form_row(form_video.periode) }}
+        {{ form_row(form_video.submit) }}
+    </div>
+    {{ form_end(form_video) }}
+{% endblock %}

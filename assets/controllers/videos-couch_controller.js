@@ -42,6 +42,21 @@ export default class extends Controller {
 
         player.on('ready', e => {
             e.target.loadPlaylist(this.videosValue);
-        })
+        });
+
+        if ('2' !== $('[name="categorie"]').val()) {
+            $('#genre').hide();
+        }
+
+        $(document).on('change', '#categorie', function() {
+            if ('2' !== $('[name="categorie"]').val()) {
+                $('[name="genre"]').val(null);
+                $('#genre').fadeOut('slow');
+            } else {
+                $('#genre').fadeIn('slow');
+            }
+        });
+
     }
+
 }

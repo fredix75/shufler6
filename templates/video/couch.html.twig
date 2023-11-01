@@ -3,14 +3,17 @@
 {% block title %}{{ parent() }} :: Couch'{% endblock %}
 
 {% block body %}
-	<div class="row justify-content-center">
+	<div class="row justify-content-center" {{ stimulus_controller('videos-couch', {
+		videos : videos
+	}) }}>
 		<div class="col-12 col-lg-6" style="height:500px">
-			<div id="player" {{ stimulus_controller('videos-couch', {
-				videos : videos
-			}) }}></div>
+			<div id="player"></div>
 		</div>
 	</div>
-	{% if form is defined %}
+	{% if form_track is defined %}
 		{% include 'music/part/_filters.html.twig' %}
+	{% endif %}
+	{% if form_video is defined %}
+		{% include 'video/part/_filters.html.twig' %}
 	{% endif %}
 {% endblock %}

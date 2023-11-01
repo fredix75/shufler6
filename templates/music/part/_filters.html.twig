@@ -1,17 +1,17 @@
 {% extends 'part/_slider.html.twig' %}
 
 {% block slider_content %}
-    {{ form_start(form, {'method' : 'GET'}) }}
+    {{ form_start(form_track, {'method' : 'GET'}) }}
     <div class="row justify-content-center filter-form">
-        {{ form_row(form.genre) }}
-        {{ form_row(form.search) }}
-        {{ form_row(form.auteur) }}
-        {{ form_row(form.album) }}
-        {{ form_row(form.annee) }}
-        {% if form.note is defined %}
-            {{ form_row(form.note) }}
+        {{ form_row(form_track.genre) }}
+        {{ form_row(form_track.search) }}
+        {{ form_row(form_track.auteur) }}
+        {{ form_row(form_track.album) }}
+        {{ form_row(form_track.annee) }}
+        {% if form_track.note is defined %}
+            {{ form_row(form_track.note) }}
         {% endif %}
-        {{ form_row(form.submit) }}
+        {{ form_row(form_track.submit) }}
     </div>
-    {{ form_end(form) }}
+    {{ form_end(form_track) }}
 {% endblock %}

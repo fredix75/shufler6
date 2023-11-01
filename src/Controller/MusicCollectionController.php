@@ -228,7 +228,7 @@ class MusicCollectionController extends AbstractController
 
         return $this->render('video/couch.html.twig', [
             'videos' => $playlist ?? [],
-            'form' => $form,
+            'form_track' => $form,
         ]);
     }
 
