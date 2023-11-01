@@ -198,9 +198,13 @@ class ImportTracksCommand extends Command
                         ]
                     ]);
 
-                    $resultYouTube = json_decode($response->getContent(), true)['items'] ?? [];
-                    $track->setYoutubeKey($resultYouTube[0]['id']['videoId'] ?? '');
-
+                    if ($response->getStatusCode() === Response::HTTP_OK) {
+                        $resultYouTube = json_decode($response->getContent(), true)['items'] ?? [];
+                        $track->setYoutubeKey($resultYouTube[0]['id']['videoId'] ?? '');
+                    } elseif ($response->getStatusCode() === Response::HTTP_NOT_FOUND) {
+                        $track->setYoutubeKey('nope');
+                    }
+                    
                 } catch (\Exception $e) {
                     $forbiddenRequest = true;
                     $output->writeln($e->getMessage());

@@ -4,5 +4,5 @@
    data-id="{{ track.id }}" data-auteur="{{ track.auteur }}" data-titre="{{ track.titre }}"
         {{ track.youtubeKey is not null ? 'data-action="music#popup"' : 'data-action="music#getLink"' }}
    onclick="return false;">
-    <i class="bi bi-youtube"></i>
+    {{ track.youtubeKey != 'nope' ? '<i class="bi bi-youtube"></i>' : '' }}
 </a>

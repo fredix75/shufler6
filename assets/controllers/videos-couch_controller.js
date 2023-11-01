@@ -44,19 +44,20 @@ export default class extends Controller {
             e.target.loadPlaylist(this.videosValue);
         });
 
-        if ('2' !== $('[name="categorie"]').val()) {
-            $('#genre').hide();
-        }
-
-        $(document).on('change', '#categorie', function() {
+        if ($('[name="categorie"]').length > 0) {
             if ('2' !== $('[name="categorie"]').val()) {
-                $('[name="genre"]').val(null);
-                $('#genre').fadeOut('slow');
-            } else {
-                $('#genre').fadeIn('slow');
+                $('#genre').hide();
             }
-        });
 
+            $(document).on('change', '#categorie', function() {
+                if ('2' !== $('[name="categorie"]').val()) {
+                    $('[name="genre"]').val(null);
+                    $('#genre').fadeOut('slow');
+                } else {
+                    $('#genre').fadeIn('slow');
+                }
+            });
+        }
     }
 
 }
