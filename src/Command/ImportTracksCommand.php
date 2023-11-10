@@ -193,6 +193,9 @@ class ImportTracksCommand extends Command
                         $track->setYoutubeKey($resultYouTube[0]['id']['videoId'] ?? 'nope');
                     } elseif ($response->getStatusCode() === Response::HTTP_NOT_FOUND) {
                         $track->setYoutubeKey('nope');
+                    } else {
+                        $forbiddenRequest = true;
+                        $output->writeln(sprintf('Requête inaccessible pour %s %s', $track->getAuteur(), $track->getTitre()));
                     }
                     
                 } catch (\Exception $e) {

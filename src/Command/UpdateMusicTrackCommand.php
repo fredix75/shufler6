@@ -38,12 +38,15 @@ class UpdateMusicTrackCommand extends ImportTracksCommand
                 if ($response->getStatusCode() === Response::HTTP_OK) {
                     $resultYouTube = json_decode($response->getContent(), true)['items'] ?? [];
                     $track->setYoutubeKey($resultYouTube[0]['id']['videoId'] ?? 'nope');
+                    $i++;
                 } elseif ($response->getStatusCode() === Response::HTTP_NOT_FOUND) {
                     $track->setYoutubeKey('nope');
+                } else {
+                    $output->writeln("No more request");
+                    break;
                 }
 
                 $this->entityManager->persist($track);
-                $i++;
 
             } catch (\Exception $e) {
                 $output->writeln($e->getMessage());
