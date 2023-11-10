@@ -216,4 +216,10 @@ class OtherController extends AbstractController
 
         return new Response("Method not allowed", 405);
     }
+
+    #[Route('/launch', name: 'launch')]
+    public function launchCommand(): Response
+    {
+        return new Response('Connecter la commande d import');
+    }
 }
