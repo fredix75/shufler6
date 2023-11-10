@@ -13,47 +13,48 @@
     {% endif %}
 
     <div class="well">
-    <div class="row justify-content-md-center txt-center">
-    <div class="col-12 col-lg-6" {{ stimulus_controller('video-edit', {'periods' : periods}) }} >
-        {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
-        {{ form_errors(form) }}
-        {{ form_widget(form) }}
-        <div class="row justify-content-center">
-            <div class="col-3">
-                <button type="submit" class="btn btn-primary" style="width: 100%"><i
-                            class="bi bi-check-circle-fill"></i> OK
-                </button>
-            </div>
-        </div>
-        {% if video.id is defined and video.id != 0 %}
-        <div class="row justify-content-end" style="margin-top:20px;">
-            <div class="col-4 col-md-3">
-                <a class="btn btn-secondary" href="#" data-action="video-edit#xchange"
-                        data-search="{{ video.auteur }} {{ video.titre }}" data-id="{{ video.id }}"><i
-                            class="bi bi-arrow-left-right"></i>&nbsp;Exchange on Api
-                </a>
-            </div>
-            <div class="col-4 col-md-3">
-                <a class="btn btn-secondary" href="{{ path('video_view', {'id':video.id}) }}"><i
-                            class="bi bi-eye-fill"></i>&nbsp;View
-                </a>
-            </div>
-
-            {% if is_granted('VIDEO_EDIT') %}&nbsp
-                <div class="col-4 col-md-3">
-                    <a class="btn btn-danger" href="{{ path('video_delete', {'id':video.id}) }}"
-                        onclick="return confirm('{% trans %}global.confirmation{% endtrans %}');"><i
-                            class="bi bi-trash-fill"></i>&nbsp;Delete
-                    </a>
+        <div class="row justify-content-md-center txt-center">
+            <div class="col-12 col-lg-6" {{ stimulus_controller('video-edit', {'periods' : periods}) }} >
+                {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+                {{ form_errors(form) }}
+                {{ form_widget(form) }}
+                <div class="row justify-content-center">
+                    <div class="col-3">
+                        <button type="submit" class="btn btn-primary" style="width: 100%"><i
+                                    class="bi bi-check-circle-fill"></i> OK
+                        </button>
+                    </div>
                 </div>
-            {% endif %}
-        </div>
-            {% endif %}
-            {{ form_end(form) }}
-        </div>
-        <form name="form_api_search" action="{{ path('other_api_video') }}" method="POST">
-            <input type="hidden" name="search_api">
-            <input type="hidden" name="id_video">
-        </form>
+                {% if video.id is defined and video.id != 0 %}
+                <div class="row justify-content-end" style="margin-top:20px;">
+                    <div class="col-4 col-md-3">
+                        <a class="btn btn-secondary" href="#" data-action="video-edit#xchange"
+                                data-search="{{ video.auteur }} {{ video.titre }}" data-id="{{ video.id }}"><i
+                                    class="bi bi-arrow-left-right"></i>&nbsp;Exchange on Api
+                        </a>
+                    </div>
+                    <div class="col-4 col-md-3">
+                        <a class="btn btn-secondary" href="{{ path('video_view', {'id':video.id}) }}"><i
+                                    class="bi bi-eye-fill"></i>&nbsp;View
+                        </a>
+                    </div>
+
+                    {% if is_granted('VIDEO_EDIT') %}&nbsp
+                        <div class="col-4 col-md-3">
+                            <a class="btn btn-danger" href="{{ path('video_delete', {'id':video.id}) }}"
+                                onclick="return confirm('{% trans %}global.confirmation{% endtrans %}');"><i
+                                    class="bi bi-trash-fill"></i>&nbsp;Delete
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+                    {% endif %}
+                    {{ form_end(form) }}
+                </div>
+                <form name="form_api_search" action="{{ path('other_api_video') }}" method="POST">
+                    <input type="hidden" name="search_api">
+                    <input type="hidden" name="id_video">
+                </form>
+            </div>
     </div>
 {% endblock %}

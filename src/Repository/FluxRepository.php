@@ -75,12 +75,18 @@ class FluxRepository extends ServiceEntityRepository
 
     function getRadios(): array
     {
-        return $this->createQueryBuilder('a')
-            ->where('a.type= :type')
+        $q = $this->createQueryBuilder('f')
+            ->select('f')
+            ->where('f.type= :type')
             ->setParameter('type', 3)
-            ->orderBy('a.id', 'ASC')
-            ->getQuery()
-            ->getResult();
+            ->join('f.type', 'type')
+            ->join('f.mood', 'mood')
+            ->addSelect('type')
+            ->addSelect('mood')
+            ->orderBy('f.id', 'ASC')
+            ->getQuery();
+
+            return $q->getResult();
     }
 
     function getLinks(): array

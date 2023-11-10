@@ -20,7 +20,7 @@
     <tbody>
         {% for track in tracks %}
             <tr>
-                <td>{% if track.youtubeKey is not empty %}
+                <td>{% if track.youtubeKey is not empty and track.youtubeKey != 'nope' %}
                         <a class="video-link" href="{{ track.youtubeKey|popUpYoutube }}" data-action="music#popup"><i class="bi bi-youtube"></i></a>
                     {% endif %}
                 </td>

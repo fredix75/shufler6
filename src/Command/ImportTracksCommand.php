@@ -200,7 +200,7 @@ class ImportTracksCommand extends Command
 
                     if ($response->getStatusCode() === Response::HTTP_OK) {
                         $resultYouTube = json_decode($response->getContent(), true)['items'] ?? [];
-                        $track->setYoutubeKey($resultYouTube[0]['id']['videoId'] ?? '');
+                        $track->setYoutubeKey($resultYouTube[0]['id']['videoId'] ?? 'nope');
                     } elseif ($response->getStatusCode() === Response::HTTP_NOT_FOUND) {
                         $track->setYoutubeKey('nope');
                     }

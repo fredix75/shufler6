@@ -16,7 +16,7 @@ body {
 .content {
   margin-top: 60px;
   padding: 20px;
-  min-height: 600px;
+  min-height: 900px;
 }
 
 .navbar {
@@ -30,9 +30,13 @@ body {
 
 footer {
   color: white;
-  background-color: #212529;
-  height: 300px;
+  height: 150px;
+  background: linear-gradient(to bottom, transparent, #00d736);
+  img {
+    opacity: 0.8;
+  }
 }
+
 
 h1 {
   color: $orange-simple;
@@ -205,7 +209,7 @@ a.video-link:hover img, a.playlist-link:hover img {
   border-top:1px solid white;
   background-color: $navbar-bg-color;
   border-radius: 10px 10px 0 0;
-  padding: 0 10px;
+  padding: 0 10px 10px 10px;
 }
 
 .big-input {

@@ -219,7 +219,7 @@ class MusicCollectionController extends AbstractController
 
         $i = 0;
         foreach($tracks as $track) {
-            if (!\in_array($track->getYoutubeKey(), $playlist)) {
+            if (!\in_array($track->getYoutubeKey(), $playlist) && $track->getYoutubeKey() !== 'nope') {
                 $playlist[] = $track->getYoutubeKey();
                 $i++;
             }
@@ -297,7 +297,7 @@ class MusicCollectionController extends AbstractController
             $track->setYoutubeKey($resultYouTube[0]['id']['videoId'] ?? '');
             $trackRepository->save($track, true);
 
-            return new Response(json_encode(['youtube_key' => $resultYouTube[0]['id']['videoId']]), 200);
+            return new Response(json_encode(['youtube_key' => $track->getYoutubeKey()]), 200);
         }
 
         return new Response(json_encode(['fail : ' . $response->getStatusCode()]), $response->getStatusCode());
