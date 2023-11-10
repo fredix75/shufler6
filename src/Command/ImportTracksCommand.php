@@ -25,6 +25,7 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 #[AsCommand(
     name: 'shufler:import-music-collection',
@@ -34,9 +35,9 @@ class ImportTracksCommand extends Command
 {
     private array $parameters;
 
-    private string $apiUrl;
+    protected string $apiUrl;
 
-    private string $apiKey;
+    protected string $apiKey;
 
 	private array $tracks;
 
@@ -48,13 +49,13 @@ class ImportTracksCommand extends Command
 
     private array $albumsTmp = [];
 
-    private $albumsCount = 0;
+    private int $albumsCount = 0;
 
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
+        protected readonly EntityManagerInterface $entityManager,
         private readonly CsvConverter $converter,
-        private readonly HttpClientInterface $httpClient,
-        private readonly TrackRepository $trackRepository,
+        protected readonly HttpClientInterface $httpClient,
+        protected readonly TrackRepository $trackRepository,
         private readonly ArtistRepository $artistRepository,
         private readonly AlbumRepository $albumRepository,
         private readonly SerializerInterface $serializer,
@@ -185,18 +186,7 @@ class ImportTracksCommand extends Command
             if (!$track->getYoutubeKey() && !$trackExists && !$forbiddenRequest) {
                 try {
                     $search = $row[0] . ' ' . $row[2];
-                    $response = $this->httpClient->request('GET', sprintf('%s/search', $this->apiUrl), [
-                        'query' => [
-                            'key'       => $this->apiKey,
-                            'q'         => $search,
-                            'part'      => 'snippet',
-                            'maxResults'=> 1,
-                        ],
-                        'headers' => [
-                            'Content-Type: application/json',
-                            'Accept: application/json',
-                        ]
-                    ]);
+                    $response = $this->requestTrack($search, 'video');
 
                     if ($response->getStatusCode() === Response::HTTP_OK) {
                         $resultYouTube = json_decode($response->getContent(), true)['items'] ?? [];
@@ -375,20 +365,7 @@ class ImportTracksCommand extends Command
 
                     if (!$forbiddenRequest && empty($features['youtubeKey'])) {
                         try {
-                            $response = $this->httpClient->request('GET', sprintf('%s/search', $this->apiUrl), [
-                                'query' => [
-                                    'key'       => $this->apiKey,
-                                    'q'         => $search,
-                                    'part'      => 'snippet',
-                                    'type'      => 'playlist',
-                                    'maxResults'=> 1,
-                                ],
-                                'headers' => [
-                                    'Content-Type: application/json',
-                                    'Accept: application/json',
-                                ]
-                            ]);
-
+                            $response = $this->requestTrack($search, 'playlist');
                             $response = json_decode($response->getContent(), true);
                             $album->setYoutubeKey($response['items'][0]['id']['playlistId']);
 
@@ -474,5 +451,25 @@ class ImportTracksCommand extends Command
     {
         return $this->converter->setFilePath($this->parameters['csv_path'])
             ->convert(false, ';');
+    }
+
+    /**
+     * @throws TransportExceptionInterface
+     */
+    protected function requestTrack(string $search, string $type): ResponseInterface
+    {
+        return $this->httpClient->request('GET', sprintf('%s/search', $this->apiUrl), [
+            'query' => [
+                'key'       => $this->apiKey,
+                'q'         => $search,
+                'part'      => 'snippet',
+                'type'      => $type,
+                'maxResults'=> 1,
+            ],
+            'headers' => [
+                'Content-Type: application/json',
+                'Accept: application/json',
+            ]
+        ]);
     }
 }
