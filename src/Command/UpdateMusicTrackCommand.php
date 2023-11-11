@@ -33,8 +33,6 @@ class UpdateMusicTrackCommand extends ImportTracksCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $io = new SymfonyStyle($input, $output);
-
         $tracks  = $this->trackRepository
             ->createQueryBuilder('t')
             ->orderBy('t.titre', 'ASC')
@@ -65,7 +63,7 @@ class UpdateMusicTrackCommand extends ImportTracksCommand
                 $this->entityManager->persist($track);
 
             } catch (\Exception $e) {
-                $output->writeln($e->getMessage());
+                $message = $e->getMessage();
                 break;
             }
         }

@@ -241,7 +241,6 @@ class OtherController extends AbstractController
         // return the output, don't use if you used NullOutput()
         $content = $output->fetch();
 
-
         return new Response($content);
     }
 }
