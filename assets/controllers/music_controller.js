@@ -138,8 +138,8 @@ export default class extends Controller {
         }
         if ($(event.target).closest('a').data('album')) {
             let album = $(event.target).closest('a').data('album') ?? 0;
-            album = album.replaceAll('&', '%26');
-            query += query != '?' ? '&' : '';
+            album = album.toString().replaceAll('&', '%26');
+            query += query !== '?' ? '&' : '';
             query += 'album=' + album;
         } else {
             url = '/fr/music/artist';
