@@ -19,5 +19,4 @@ export default class extends Controller {
         let content = await $.ajax(url + query);
         $(content).insertAfter($(event.target).closest('.album'));
     }
-
 }
