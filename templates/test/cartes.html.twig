@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="mx-auto" style="font-size: 0;width:1800px;">
+    {% for y in 3..4 %}
+        {% for x in 1..5 %}
+            <img src="{{ asset('uploads/cartes/21/Ufy' ~ x ~ '-' ~ y ~ '.jpg') }}" class="mx-auto img-fluid" style="">
+        {% endfor %}
+        <br/>
+    {% endfor %}
+    </div>
+    <a href="">-></a>
+{% endblock %}
