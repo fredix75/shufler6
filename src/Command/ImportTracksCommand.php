@@ -26,6 +26,7 @@ use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
+use Twig\Environment;
 
 #[AsCommand(
     name: 'shufler:import-music-collection',
@@ -59,6 +60,7 @@ class ImportTracksCommand extends Command
         private readonly ArtistRepository $artistRepository,
         private readonly AlbumRepository $albumRepository,
         private readonly SerializerInterface $serializer,
+        protected readonly Environment $twig,
         ParameterBagInterface $parameterBag,
         string $name = null
     ) {

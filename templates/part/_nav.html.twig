@@ -72,16 +72,21 @@
                         }) }} data-action="click->main#openModal" aria-label="Connect"><i class="bi bi-power"></i>&nbsp;Connexion</a>
                     </li>
                 {% endif %}
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-label="Switch language"><img src="{{ asset('build/images/flags/flag-'~ app.request.locale ~'.png')}}" width="30px" alt="language-{{ app.request.locale }}" title="language-{{ app.request.locale }}" />&nbsp;<b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale' : 'en'})) }}" class="dropdown-item" aria-label="switch language english"><img src="{{ asset('build/images/flags/flag-en.png')}}" width="30px" alt="language-en" title="language-en" />&nbsp;English</a></li>
-                        <li><a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale' : 'fr'})) }}" class="dropdown-item" aria-label="switch language french"><img src="{{ asset('build/images/flags/flag-fr.png')}}" width="30px" alt="language-fr" title="language-fr" />&nbsp;Français</a></li>
-                    </ul>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('other_launch') }}"><i class="bi bi-gift"></i></a>
                 </li>
             </ul>
+            {% if app.request.attributes.get('_route_params') is not null and app.request.attributes.get('_route') is not null %}
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-label="Switch language"><img src="{{ asset('build/images/flags/flag-'~ app.request.locale ~'.png')}}" width="30px" alt="language-{{ app.request.locale }}" title="language-{{ app.request.locale }}" />&nbsp;<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale' : 'en'})) }}" class="dropdown-item" aria-label="switch language english"><img src="{{ asset('build/images/flags/flag-en.png')}}" width="30px" alt="language-en" title="language-en" />&nbsp;English</a></li>
+                            <li><a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale' : 'fr'})) }}" class="dropdown-item" aria-label="switch language french"><img src="{{ asset('build/images/flags/flag-fr.png')}}" width="30px" alt="language-fr" title="language-fr" />&nbsp;Français</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            {% endif %}
             <form class="d-flex" role="form" action="{{ url('video_search') }}">
                 <div data-controller="autocomplete" data-autocomplete-url-value="/fr/video/autocomplete" role="combobox" style="flex-direction: column;">
                     <input class="form-control me-2" type="search" id="search_field" name="search_field" data-autocomplete-target="input" placeholder="Y'en a ou pas?">

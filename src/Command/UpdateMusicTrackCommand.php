@@ -8,6 +8,13 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 #[AsCommand(
     name: 'shufler:update-music-track',
@@ -15,6 +22,15 @@ use Symfony\Component\HttpFoundation\Response;
 )]
 class UpdateMusicTrackCommand extends ImportTracksCommand
 {
+    /**
+     * @throws RedirectionExceptionInterface
+     * @throws RuntimeError
+     * @throws LoaderError
+     * @throws ClientExceptionInterface
+     * @throws TransportExceptionInterface
+     * @throws SyntaxError
+     * @throws ServerExceptionInterface
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -42,7 +58,7 @@ class UpdateMusicTrackCommand extends ImportTracksCommand
                 } elseif ($response->getStatusCode() === Response::HTTP_NOT_FOUND) {
                     $track->setYoutubeKey('nope');
                 } else {
-                    $output->writeln("No more request");
+                    $message = sprintf('No more request : %s %s', $track->getAuteur(), $track->getTitre());
                     break;
                 }
 
@@ -56,7 +72,12 @@ class UpdateMusicTrackCommand extends ImportTracksCommand
 
         $this->entityManager->flush();
 
-        $io->success('Process fini: ' . $i . ' updated tracks.');
+        $html = $this->twig->render('other/updateTracks.html.twig', [
+            'message' => $message,
+            'nb' => $i
+        ]);
+
+        $output->writeln($html);
 
         return Command::SUCCESS;
     }

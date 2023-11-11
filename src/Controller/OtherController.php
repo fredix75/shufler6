@@ -2,9 +2,13 @@
 
 namespace App\Controller;
 
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -217,9 +221,27 @@ class OtherController extends AbstractController
         return new Response("Method not allowed", 405);
     }
 
-    #[Route('/launch', name: 'launch')]
-    public function launchCommand(): Response
+    /**
+     * @throws \Exception
+     */
+    #[Route('/launch', name: '_launch')]
+    public function launchCommand(KernelInterface $kernel): Response
     {
-        return new Response('Connecter la commande d import');
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput([
+            'command' => 'shufler:update-music-track',
+        ]);
+
+        // You can use NullOutput() if you don't need the output
+        $output = new BufferedOutput();
+        $application->run($input, $output);
+
+        // return the output, don't use if you used NullOutput()
+        $content = $output->fetch();
+
+
+        return new Response($content);
     }
 }
