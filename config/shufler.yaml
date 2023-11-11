@@ -65,7 +65,7 @@ parameters:
         csv_path: '%uploads%csv/music.csv'
         last_fm_key: '%env(LAST_FM_KEY)%'
         last_fm_secret: '%env(LAST_FM_SECRET)%'
-        last_fm_api_url: 'http://ws.audioscrobbler.com/2.0'
+        last_fm_api_url: 'https://ws.audioscrobbler.com/2.0'
         no_cover_path: '/build/images/no_cover.jpeg'
         music_all_nb_b_page: 250
         max_nb_albums: 60
