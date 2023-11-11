@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Video;
 use App\Form\FilterVideosFormType;
 use App\Form\VideoFormType;
+use App\Helper\ApiRequester;
 use App\Helper\VideoHelper;
 use App\Repository\MusicCollection\TrackRepository;
 use App\Repository\VideoRepository;
@@ -17,7 +18,6 @@ use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[Route('/video', name: 'video')]
 #[IsGranted("ROLE_USER")]
@@ -193,23 +193,16 @@ class VideoController extends AbstractController
      */
     #[Route('/getVideoInfos/{plateforme}/{videoKey}', name: '_getVideoInfos')]
     public function getVideoInfos(
-        HttpClientInterface $httpClient,
+        ApiRequester $apiRequester,
         string $plateforme,
         string $videoKey
     ): Response
     {
         $result = [];
         if ('youtube' === $plateforme) {
-            $response = $httpClient->request('GET', sprintf('%s/videos', $this->getParameter('youtube_api_url')), [
-                'query' => [
-                    'key'  => $this->getParameter('youtube_key'),
-                    'id'   => $videoKey,
-                    'part' => 'snippet'
-                ],
-                'headers' => [
-                    'Content-Type: application/json',
-                    'Accept: application/json',
-                ]
+            $response = $apiRequester->sendRequest('youtube','/videos', [
+                'id'   => $videoKey,
+                'part' => 'snippet'
             ]);
 
             $result = json_decode($response->getContent(), true)['items'][0]['snippet'] ?? null;
@@ -218,12 +211,7 @@ class VideoController extends AbstractController
                 return new Response('No data', Response::HTTP_NOT_FOUND);
             }
 
-            $response = $httpClient->request('GET', sprintf('%s/video/%s.json', $this->getParameter('vimeo_api_url'), $videoKey), [
-                'headers' => [
-                    'Content-Type: application/json',
-                    'Accept: application/json',
-                ]
-            ]);
+            $response = $apiRequester->sendRequest('vimeo', sprintf('/video/%s.json', $videoKey));
 
             $result = json_decode($response->getContent(), true)[0] ?? null;
         }

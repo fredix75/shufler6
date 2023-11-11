@@ -6,7 +6,6 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -47,7 +46,9 @@ class UpdateMusicTrackCommand extends ImportTracksCommand
         foreach ($tracks as $track) {
             try {
                 $search = $track->getAuteur() . ' ' . $track->getTitre();
-                $response = $this->requestTrack($search, 'video');
+                $response = $this->apiRequester->sendRequest('youtube','/search', [
+                    'q' => $search,
+                ]);
 
                 if ($response->getStatusCode() === Response::HTTP_OK) {
                     $resultYouTube = json_decode($response->getContent(), true)['items'] ?? [];

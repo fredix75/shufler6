@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Entity\MusicCollection\Track;
 use App\Form\FilterTracksFormType;
 use App\Form\TrackFormType;
+use App\Helper\ApiRequester;
 use App\Helper\VideoHelper;
 use App\Repository\MusicCollection\ArtistRepository;
 use App\Twig\Runtime\ShuflerRuntime;
@@ -15,7 +16,6 @@ use App\Repository\MusicCollection\TrackRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[Route('/music', name: 'music')]
 #[IsGranted('ROLE_ADMIN')]
@@ -275,20 +275,11 @@ class MusicCollectionController extends AbstractController
     }
 
     #[Route('/link/{id}', name:'_link')]
-    public function getLink(Track $track, TrackRepository $trackRepository, Request $request, HttpClientInterface $httpClient): Response
+    public function getLink(Track $track, TrackRepository $trackRepository, Request $request, ApiRequester $apiRequester): Response
     {
         $search = $request->get('auteur') . ' ' . $request->get('titre');
-        $response = $httpClient->request('GET', sprintf('%s/search', $this->getParameter('youtube_api_url')), [
-            'query' => [
-                'key'       => $this->getParameter('youtube_key'),
-                'q'         => $search,
-                'part'      => 'snippet',
-                'maxResults'=> 1,
-            ],
-            'headers' => [
-                'Content-Type: application/json',
-                'Accept: application/json',
-            ]
+        $response = $apiRequester->sendRequest('youtube', '/search', [
+            'q' => $search,
         ]);
 
         if ($response->getStatusCode() === Response::HTTP_OK) {

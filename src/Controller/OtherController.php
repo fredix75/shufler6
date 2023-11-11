@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Helper\ApiRequester;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -15,7 +16,6 @@ use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Vimeo\Exceptions\VimeoRequestException;
 use Vimeo\Vimeo;
 
@@ -26,12 +26,11 @@ class OtherController extends AbstractController
      * @throws TransportExceptionInterface
      * @throws ServerExceptionInterface
      * @throws RedirectionExceptionInterface
-     * @throws VimeoRequestException
-     * @throws ClientExceptionInterface
+     * @throws VimeoRequestException|ClientExceptionInterface
      */
     #[Route('/api_video', name: '_api_video')]
     #[IsGranted('ROLE_ADMIN')]
-    public function searchApiVideo(Request $request, HttpClientInterface $httpClient): Response
+    public function searchApiVideo(Request $request, ApiRequester $apiRequester): Response
     {
         $search = $idVideo = $idTrack = $wiki = null;
         $resultat = [];
@@ -59,17 +58,9 @@ class OtherController extends AbstractController
             ];
 
             // Youtube
-            $response = $httpClient->request('GET', sprintf('%s/search', $this->getParameter('youtube_api_url')), [
-                'query' => [
-                    'key'  => $this->getParameter('youtube_key'),
-                    'q'   => $search,
-                    'part' => 'snippet',
-                    'maxResults' => 25,
-                ],
-                'headers' => [
-                    'Content-Type: application/json',
-                    'Accept: application/json',
-                ]
+            $response = $apiRequester->sendRequest('youtube', '/search', [
+                'q'   => $search,
+                'maxResults' => 25,
             ]);
 
             if ($response->getStatusCode() === Response::HTTP_OK) {
@@ -145,25 +136,17 @@ class OtherController extends AbstractController
      */
     #[Route('/api_channel', name: '_api_channel')]
     #[IsGranted('ROLE_ADMIN')]
-    public function searchApiChannel(Request $request, HttpClientInterface $httpClient): Response
+    public function searchApiChannel(Request $request, ApiRequester $apiRequester): Response
     {
         $search = $idChannel = null;
         $resultat = [];
         if ($request->get('search_api')) {
             $search = $request->get('search_api');
 
-            $response = $httpClient->request('GET',  sprintf('%s/search', $this->getParameter('youtube_api_url')), [
-                'query' => [
-                    'key'  => $this->getParameter('youtube_key'),
-                    'q'   => $search,
-                    'part' => 'snippet',
-                    'type' => 'channel',
-                    'maxResults' => 50,
-                ],
-                'headers' => [
-                    'Content-Type: application/json',
-                    'Accept: application/json',
-                ]
+            $response = $apiRequester->sendRequest('youtube', '/search', [
+                'q'   => $search,
+                'type' => 'channel',
+                'maxResults' => 50,
             ]);
 
             if ($response->getStatusCode() === Response::HTTP_OK) {
@@ -194,21 +177,14 @@ class OtherController extends AbstractController
      * @throws ClientExceptionInterface
      */
     #[Route('/channel/handle', name: '_handle_channel')]
-    public function handleChannel(Request $request, HttpClientInterface $httpClient): Response
+    public function handleChannel(Request $request, ApiRequester $apiRequester): Response
     {
         if ($request->isXmlHttpRequest()) {
             $channelId = $request->get('id');
-            $response = $httpClient->request('GET', sprintf('%s/playlists', $this->getParameter('youtube_api_url')), [
-                'query' => [
-                    'key'  => $this->getParameter('youtube_key'),
-                    'channelId'   => $channelId,
-                    'part' => 'snippet, contentDetails',
-                    'maxResults' => 75,
-                ],
-                'headers' => [
-                    'Content-Type: application/json',
-                    'Accept: application/json',
-                ]
+            $response = $apiRequester->sendRequest('youtube', '/playlists', [
+                'channelId'   => $channelId,
+                'part' => 'snippet, contentDetails',
+                'maxResults' => 75,
             ]);
 
             $playlists = json_decode($response->getContent(), true)['items'] ?? [];
