@@ -93,12 +93,16 @@ export default class extends Controller {
                 console.log(data.responseText);
             }
         }).done(function(result) {
-            $('a#track-youtube-' + result.id).attr('href', 'https://www.youtube.com/watch?v=' + result.youtube_key);
-            if ($('a#track-youtube-' + result.id).hasClass('no-link')) {
-                $('a#track-youtube-' + result.id).removeClass('no-link');
+            let element = $('a#track-youtube-' + result.id);
+            element.attr('href', 'https://www.youtube.com/watch?v=' + result.youtube_key);
+            if (element.hasClass('no-link')) {
+                element.removeClass('no-link');
             }
-            if (!$('a#track-youtube-' + result.id).hasClass('video-link icon-youtube')) {
-                $('a#track-youtube-' + result.id).addClass('video-link icon-youtube');
+            if (!element.hasClass('video-link icon-youtube')) {
+                element.addClass('video-link icon-youtube');
+            }
+            if (element.children('i').length === 0) {
+                element.html('<i class="bi bi-youtube"></i>');
             }
             $('#formModal').modal('hide');
         });
@@ -122,7 +126,6 @@ export default class extends Controller {
                     $(event.target).closest('a').attr('href', 'https://www.youtube.com/watch?v=' + data.youtube_key);
                     $(event.target).closest('a').removeClass('no-link');
                     $(event.target).closest('a').addClass('video-link icon-youtube');
-                    $('#formModal').modal('hide');
                 }
             }
         });

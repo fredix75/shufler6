@@ -17,6 +17,7 @@ body {
   margin-top: 60px;
   padding: 20px;
   min-height: 900px;
+  color: white;
 }
 
 .navbar {
@@ -121,7 +122,6 @@ a.video-link:hover img, a.playlist-link:hover img {
 
 .well {
   background-color: #6882a475;
-  color:white;
   padding:40px;
   border-radius: 12px;
   border: 1px solid $border-color-2;
@@ -134,7 +134,6 @@ a.video-link:hover img, a.playlist-link:hover img {
 
 .flux-header {
   background-color:#1b7780;
-  color:white;
   font-size: 1.6em;
 }
 
@@ -163,7 +162,7 @@ a.video-link:hover img, a.playlist-link:hover img {
 }
 
 .datas-white {
-  background-color: white;
+  background-color: #d9d3d3;
   padding: 10px;
 }
 
@@ -214,14 +213,12 @@ a.video-link:hover img, a.playlist-link:hover img {
 
 .big-input {
   background-color:#8f719140;
-  color:white;
   font-size:200%;
   height:50px;
 }
 
 .big-input:focus {
   background-color: $navbar-bg-color;
-  color:white;
 }
 
 .block-content-album {

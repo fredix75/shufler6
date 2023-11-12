@@ -97,8 +97,8 @@
         <br/><br/><br/><br/>
         <a type="button" class="btn btn-primary" href="{{ path('music_couch', {'search' : search }) }}" role="button" aria-label="Enchainer la liste"><i class="bi bi-youtube icon-youtube"></i> Enchaîner la liste</a>
         <br/><br/>
-        <section data-controller="track" style="background-color:white; padding: 10px;">
-            <table id="tracks">
+        <section data-controller="track" style="background-color:black; padding: 10px;">
+            <table id="tracks" class="table table-dark">
                 <thead>
                     <tr>
                         {% for column in track_columns %}

@@ -1,4 +1,4 @@
-{{ form_start(form) }}
+{{ form_start(form, {'attr' : {'onkeydown' : "return event.key != 'Enter';"}}) }}
 {{ form_widget(form) }}
 <a id="track-xchange" class="btn btn-secondary" href="#" data-search="{{ track.auteur }} {{ track.titre }}" data-id="{{ track.id }}"><i class="bi bi-arrow-left-right"></i>&nbsp;Exchange on Api</a>
 <button class="btn btn-primary save-track"
