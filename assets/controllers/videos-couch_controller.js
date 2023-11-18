@@ -48,6 +48,10 @@ export default class extends Controller {
             player.nextVideo();
         });
 
+        player.on('stateChange', e => {
+            $('#title').html(e.target.videoTitle);
+        });
+
         if ($('[name="categorie"]').length > 0) {
             if ('2' !== $('[name="categorie"]').val()) {
                 $('#genre').hide();
