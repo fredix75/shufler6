@@ -44,6 +44,10 @@ export default class extends Controller {
             e.target.loadPlaylist(this.videosValue);
         });
 
+        player.on('error', e => {
+            player.nextVideo();
+        });
+
         if ($('[name="categorie"]').length > 0) {
             if ('2' !== $('[name="categorie"]').val()) {
                 $('#genre').hide();
