@@ -6,9 +6,9 @@ use App\Entity\Flux;
 use App\Form\FluxFormType;
 use App\Repository\FluxMoodRepository;
 use App\Repository\FluxRepository;
-use App\Repository\FluxTypeRepository;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,23 +18,31 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_USER')]
 class FluxController extends AbstractController
 {
-
-    public function __construct(private readonly FluxTypeRepository $fluxTypeRepository) {}
-
     #[Route('/podcasts', name: '_podcasts')]
-    public function podcasts(FluxRepository $fluxRepository):Response
+    public function podcasts(FluxRepository $fluxRepository, Request $request, ParameterBagInterface $parameterBag):Response
     {
+        if ($request->get('resource')) {
+            $resources = scandir($parameterBag->get('uploads') . $parameterBag->get('resources')['downloads']);
+            $resources = array_filter($resources, function($item) {
+                return !is_dir($item);
+            });
+
+            return $this->render('flux/podcasts_resources.html.twig', [
+                'resources' => $resources,
+                'directory' => $parameterBag->get('resources')['downloads'],
+            ]);
+        }
+
         $podcasts = $fluxRepository->getPodcasts();
 
-        return $this->render('flux/podcasts.html.twig', [
-            'podcasts' => $podcasts
+        return $this->render('flux/podcasts_flux.html.twig', [
+            'podcasts' => $podcasts,
         ]);
     }
 
     #[Route('/news/{category}', name: '_news', requirements: ['category' => '\d+'])]
     public function news(FluxRepository $fluxRepository, FluxMoodRepository $fluxMoodRepository, int $category = null): Response
     {
-
         $defaultCategory = $category;
         $mood = $fluxMoodRepository->findOneBy(['name' => 'info', 'type' => 1]);
         if ($mood) {

@@ -19,10 +19,11 @@ export default class extends Controller {
             audio = '<iframe src="' + url + '" style="width:100%;height:100px;"></iframe>';
             $('#slider').show();
         } else {
+            $('#slider').show();
             let title = $(event.target).closest('.accordion-item').find('.accordion-button');
             let podcast = title.closest('.flux-widget').data('title');
             audio = '<audio controls="controls" autoplay class="col-12 col-xs-12 col-sm-12 col-md-12"><source src="' + url +'" type="' + type + '">Votre navigateur ne supporte pas l\'élément <code>audio</code>.</audio>';
-            text = '<div class="pres">' + podcast + '<br />' + title.html() + '</div>';
+            text = '<div class="pres">' + podcast + '<br />' + title.html()+ '</div>';
         }
         $('#audio-stick').html(audio).append(text);
         event.preventDefault();
@@ -62,18 +63,34 @@ export default class extends Controller {
 
     download(event) {
         let url = $(event.target).closest('a').data('url');
+        let title = $(event.target).closest('a').data('title');
         $(event.target).closest('a').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
-        $.get('/fr/download/resource',
-            {url: url},
+        $.get('/fr/resource/download',
+            {url: url, title: title},
             function(data){
                 $(event.target).closest('a').html('<i class="bi bi-download"></i>');
                 $(event.target).closest('a').attr('href', '/uploads/'+data);
-                $(event.target).closest('a').css('color', 'green');
+                $(event.target).closest('a').css('color', 'yellow');
                 $(event.target).closest('a').removeAttr('data-action');
             }
         );
         event.preventDefault();
     }
+
+    delete(event) {
+        let file = $(event.target).closest('a').data('file');
+        if (confirm('Are you sure ?')) {
+            $.get('/fr/resource/delete',
+                {file: file},
+                function(data){
+                    $(event.target).closest('.list-group-item').remove();
+                }
+            );
+            event.preventDefault();
+        }
+    }
+
+
 }
 function getData(url, id, page) {
     let type = $('#' + id).data('type');

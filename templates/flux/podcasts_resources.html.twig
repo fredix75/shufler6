@@ -1,0 +1,26 @@
+{% extends 'flux/podcasts.html.twig' %}
+
+{% block podcasts %}
+    <ul class="list-group" data-controller="flux">
+        {% for resource in resources %}
+            <li class="list-group-item flex-column">
+                <div class="d-flex">
+                    <div class="col-2">
+                        <a href="/uploads/{{ directory }}/{{ resource }}" type="button" class="btn btn-secondary" data-type="audio/mp3" data-action="flux#launch"><i class="bi bi-play-btn-fill"></i></a>&nbsp;
+                    </div>
+                    <div class="audio text-center col-6">
+                        {{ resource }}
+                    </div>
+                    <div class="col-4">
+                        {% if is_granted('FLUX_DOWNLOAD') %}
+                            <a href="/uploads/{{ directory }}/{{ resource }}" class="btn btn-secondary" download><i class="bi bi-download"></i></a>
+                            <a href="#" class="btn btn-danger" data-file="{{ resource }}" data-action="flux#delete"><i class="bi bi-trash"></i></a>
+                        {% endif %}
+                    </div>
+                </div>
+            </li>
+        {% else %}
+            no resources.
+        {% endfor %}
+    </ul>
+{% endblock %}
