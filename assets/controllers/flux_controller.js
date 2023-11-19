@@ -89,9 +89,8 @@ export default class extends Controller {
             event.preventDefault();
         }
     }
-
-
 }
+
 function getData(url, id, page) {
     let type = $('#' + id).data('type');
     getLoading(id);

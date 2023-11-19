@@ -1,6 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
 import $ from 'jquery';
-import TomSelect from "tom-select";
 import {Modal} from "bootstrap";
 
 export default class extends Controller {
