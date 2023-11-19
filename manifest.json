@@ -1,0 +1,15 @@
+{
+  "short_name": "SHUFLER",
+  "name": "SHUFLER",
+  "icons": [
+    {
+      "src": "icon.png",
+      "type": "image/png",
+      "sizes": "211x160"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#000000",
+  "display": "standalone",
+  "theme_color": "#ff0000"
+}

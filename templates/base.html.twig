@@ -9,6 +9,7 @@
         <meta name = "robots" content = "index, follow">
         <title>{% block title %}Shufler{% endblock %}</title>
         <link rel="icon" type="image/png" href="{{ asset('build/images/fav.png') }}" />
+        <link rel="manifest" href="/manifest.json" />
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
         {% endblock %}
