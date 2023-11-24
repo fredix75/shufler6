@@ -176,6 +176,10 @@ a.video-link:hover img, a.playlist-link:hover img {
   background-color: #061e49;
 }
 
+.modal-content {
+  color:black;
+}
+
 .modal-footer {
   color: yellow;
   background-color: #061e49;
@@ -213,12 +217,13 @@ a.video-link:hover img, a.playlist-link:hover img {
 
 .big-input {
   background-color:#8f719140;
+  color:white;
   font-size:200%;
   height:50px;
-}
-
-.big-input:focus {
-  background-color: $navbar-bg-color;
+    &:focus {
+      background-color: $navbar-bg-color;
+      color:white;
+    }
 }
 
 .block-content-album {

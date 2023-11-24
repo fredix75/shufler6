@@ -1,12 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ parent() }} :: API Channels{% endblock %}
+{% block title %}{{ parent() }} :: API Playlists{% endblock %}
 
 {% block body %}
     <div class="row">
-        <form name="form_search" action="{{ path('other_api_channel') }}" method="POST" class="row justify-content-center">
+        <form name="form_search" action="{{ path('other_api_playlist') }}" method="POST" class="row justify-content-center">
             <div class="col col-10 col-sm-10 col-lg-6">
-                <input type="search" id="search_api" name="search_api" value="{{ search|trim }}" class="input-sm form-control big-input" placeholder="channels on youtube" />
+                <input type="search" id="search_api" name="search_api" value="{{ search|trim }}" class="input-sm form-control big-input" placeholder="playlists on youtube" />
+                {% if idAlbum != 0 %}
+                    <input type="hidden" name="id_album" value="{{ idAlbum }}"/>
+                {% endif %}
             </div>
             <div class="col col-2 col-sm-2 col-lg-2">
                 <button type="submit" id="enter_search" class="btn btn-primary btn-sm" style="height:50px;width:50px;"><i class="bi bi-binoculars"></i></button>
@@ -14,16 +17,17 @@
         </form>
     </div>
     <br/>
-    <form name="form_video_edit" action="{{ path('flux_edit', {'id' : 0}) }}" method="POST">
-        <input type="hidden" name="channelkey" />
-        <input type="hidden" name="channelpicture" />
-    </form>
+    {% if idAlbum != 0 %}
+        <form name="form_album_edit" action="{{ path('music_album_edit', {'id' : idAlbum }) }}" method="POST">
+            <input type="hidden" name="albumkey" />
+        </form>
+    {% endif %}
     <div class="row justify-content-center txt-center" data-controller="other-channel">
         {% for result in resultats %}
             <section class="channel vignette-item row g-0 d-flex position-relative col col-12 col-md-6 col-lg-4" style="padding:5px;">
-                <div id="channel-{{ result.channelId }}" class="row bg-body-secondary">
+                <div id="playlist-{{ result.playlistId }}" class="row bg-body-secondary">
                     <div class="channel-picture col col-12 mb-md-0 p-md-4 center-block">
-                        <a href="https://www.youtube.com/channel/{{ result.channelId }}" target="_blank">
+                        <a href="https://www.youtube.com/channel/{{ result.playlistId }}" target="_blank">
                             <img src="{{ result.link }}" alt="{{ result.name }}" class="img-responsive center-block" style="max-height:100px; max-width:150px; margin: 0 auto;">
                             {{ result.name }}
                         </a>

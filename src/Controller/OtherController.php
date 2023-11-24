@@ -37,14 +37,8 @@ class OtherController extends AbstractController
 
         if ($request->get('search_api')) {
             $search = $request->get('search_api');
-
-            if ($request->get('id_video')) {
-                $idVideo = $request->get('id_video');
-            }
-
-            if ($request->get('id_track')) {
-                $idTrack = $request->get('id_track');
-            }
+            $idVideo = $request->get('id_video') ?? $idVideo;
+            $idTrack = $request->get('id_track') ?? $idTrack;
 
             $resultat = [
                 'youtube' => [
@@ -167,6 +161,43 @@ class OtherController extends AbstractController
             'resultats' => $resultat,
             'search' => $search,
             'idChannel' => $idChannel
+        ]);
+    }
+
+    #[Route('/api_playlist', name: '_api_playlist')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function searchApiPlaylist(Request $request, ApiRequester $apiRequester): Response
+    {
+        $search = $idAlbum = null;
+        $resultat = [];
+        if ($request->get('search_api')) {
+            $search = $request->get('search_api');
+            $idAlbum = $request->get('id_album') ?? null;
+
+            $response = $apiRequester->sendRequest('youtube', '/search', [
+                'q'   => $search,
+                'type' => 'playlist',
+                'maxResults' => 50,
+            ]);
+
+            if ($response->getStatusCode() === Response::HTTP_OK) {
+                $resultYouToube = json_decode($response->getContent(), true)['items'] ?? [];
+                foreach ($resultYouToube as $item) {
+                    $resultat[] = [
+                        'link' => $item['snippet']['thumbnails']['high']['url'] ?? null,
+                        'name' => $item['snippet']['title'] ?? null,
+                        'url' => 'https://www.youtube.com/watch?v=' . ($item['id']['videoId'] ?? ''),
+                        'author' => $item['snippet']['channelTitle'] ?? null,
+                        'date' => date("d-m-Y", strtotime($item['snippet']['publishedAt'])),
+                        'channelId' => $item['snippet']['channelId'],
+                    ];
+                }
+            }
+        }
+        return $this->render('other/channelsAPI.html.twig', [
+            'resultats' => $resultat,
+            'search' => $search,
+            'idAlbum' => $idAlbum ?? 0,
         ]);
     }
 

@@ -7,7 +7,7 @@ export default class extends Controller {
         $.each($('.accordion'), function (index, value) {
             let id = $(value).attr('id');
             let channelId = $(value).data('channel');
-            getData(channelId, id, 1);
+            getData(channelId, id);
         });
     }
 
