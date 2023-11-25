@@ -50,7 +50,7 @@ class ChannelFluxController extends AbstractController
                 'id' => $channelFlux->getId(),
                 'name' => $channelFlux->getName(),
                 'image' => $channelFlux->getImage(),
-            ]), 200);
+            ]), Response::HTTP_OK);
         }
         return $this->render('channel_flux/edit.html.twig', [
             'form' => $form,

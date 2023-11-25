@@ -327,7 +327,7 @@ class MusicCollectionController extends AbstractController
             $track->setYoutubeKey($resultYouTube[0]['id']['videoId'] ?? '');
             $trackRepository->save($track, true);
 
-            return new Response(json_encode(['youtube_key' => $track->getYoutubeKey()]), 200);
+            return new Response(json_encode(['youtube_key' => $track->getYoutubeKey()]), Response::HTTP_OK);
         }
 
         return new Response(json_encode(['fail : ' . $response->getStatusCode()]), $response->getStatusCode());
