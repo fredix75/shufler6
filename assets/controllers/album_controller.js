@@ -15,6 +15,7 @@ export default class extends Controller {
         artist = artist.replaceAll('&', '%26');
         let album = $(event.target).closest('a').data('album');
         album = album.toString().replaceAll('&', '%26');
+        album = album.toString().replaceAll('#', '%23');
         let url = '/fr/music/tracks_album';
         let query = '?artist=' + artist + '&album=' + album;
         let content = await $.ajax(url + query);
@@ -37,7 +38,7 @@ export default class extends Controller {
         }).done(function(result) {
             let picture = $('.album-picture-' + result.id);
             picture.attr('src', result.picture);
-            if (result.youtube_key != '') {
+            if (result.youtube_key != null) {
                 if ($('a#album-youtube-' + result.id).length > 0) {
                     $('a#album-youtube-' + result.id).attr('href', 'https://www.youtube.com/watch?v=' + result.youtube_key);
                 } else {
@@ -45,6 +46,10 @@ export default class extends Controller {
                         '<i class="bi bi-youtube"></i>\n' +
                         '</a>';
                     $('#album-btn').prepend(btn);
+                }
+            } else {
+                if ($('a#album-youtube-' + result.id).length > 0) {
+                    $('a#album-youtube-' + result.id).remove();
                 }
             }
             $('#formModal').modal('hide');

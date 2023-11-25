@@ -142,6 +142,7 @@ export default class extends Controller {
         if ($(event.target).closest('a').data('album')) {
             let album = $(event.target).closest('a').data('album') ?? 0;
             album = album.toString().replaceAll('&', '%26');
+            album = album.toString().replaceAll('#', '%23');
             query += query !== '?' ? '&' : '';
             query += 'album=' + album;
         } else {
