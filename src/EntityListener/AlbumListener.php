@@ -20,4 +20,12 @@ class AlbumListener
         }
 
     }
+
+    public function preUpdate(Album $album): void
+    {
+        if ($album->getPicture() === $this->noCoverPath) {
+            $album->setPicture('');
+        }
+
+    }
 }

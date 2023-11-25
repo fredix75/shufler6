@@ -1,7 +1,9 @@
 <?php
 namespace App\Controller;
 
+use App\Entity\MusicCollection\Album;
 use App\Entity\MusicCollection\Track;
+use App\Form\AlbumFormType;
 use App\Form\FilterTracksFormType;
 use App\Form\TrackFormType;
 use App\Helper\ApiRequester;
@@ -190,6 +192,43 @@ class MusicCollectionController extends AbstractController
 
         return $this->render('music/track_edit.html.twig', [
             'track' => $track,
+            'form' => $form
+        ]);
+    }
+
+    #[Route('/album/edit/{id}', name: '_album_edit', requirements: ['id' => '\d+'])]
+    public function editAlbum(Album $album, Request $request, AlbumRepository $albumRepository): Response
+    {
+        if ($request->get('albumkey')) {
+            $album->setYoutubeKey($request->get('albumkey'));
+            $albumRepository->save($album, true);
+
+            return $this->redirectToRoute('music_albums');
+        }
+
+        $form = $this->createForm(AlbumFormType::class, $album, [
+            'action' => $this->generateUrl(
+                $request->attributes->get('_route'),
+                $request->attributes->get('_route_params')
+            ),
+        ]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $album->setYoutubeKey($form->get('youtubeKey')->getData());
+            $album->setPicture($form->get('picture')->getData());
+            $albumRepository->save($album, true);
+
+            return new Response(json_encode([
+                'youtube_key' => $album->getYoutubeKey(),
+                'picture' => $album->getPicture(),
+                'id' => $album->getId(),
+            ]), 200);
+        }
+
+        return $this->render('music/album_edit.html.twig', [
+            'album' => $album,
             'form' => $form
         ]);
     }

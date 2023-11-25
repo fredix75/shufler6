@@ -1,6 +1,6 @@
 <div class="row block-content-album">
     <div class="col-12 col-md-4 col-lg-2 text-center div-img">
-        <img src="{{ album.picture }}"/>
+        <img class="album-picture-{{ album.id }}" src="{{ album.picture }}"/>
     </div>
     <div class="col-12 col-md-8 col-lg-10" data-controller="music">
         <p class="music-title" style="color:white; border:none;">
@@ -8,17 +8,24 @@
             by <span class="music-auteur">{{ album.auteur }}</span> ({{ album.annee }})
             <span class="badge bg-primary">{{ album.genre }}</span>
         </p>
-        {% if album.youtubeKey is not empty %}
-            <a class="playlist-link icon-youtube" href="{{ album.youtubeKey|youtubeChannelLink }}" data-id="{{ album.youtubeKey }}" data-action="music#popupPlaylist" title="video Playlist">
-                <i class="bi bi-youtube"></i>
-            </a>&nbsp;&nbsp;
-        {% endif %}
-        <a class="btn btn-primary" href="{{ path('music_couch', {'auteur' : album.auteur, 'album': album.name }) }}" style="margin-top: -10px;" title="Enchaîner les titres">
-            <i class="bi bi-youtube"></i> Enchainer les titres
-        </a>
-        <a class="btn btn-secondary" href="{{ path('other_api_playlist', {'search_api': (album.auteur|lower != 'divers' ? album.auteur : '') ~ album.name }) }}" style="margin-top: -10px;" title="Search on api">
-            <i class="bi bi-binoculars-fill"></i>
-        </a>
+        <div id="album-btn">
+            {% if album.youtubeKey is not empty %}
+                <a id="album-youtube-{{ album.id }}" class="playlist-link icon-youtube" href="{{ album.youtubeKey|youtubeChannelLink }}" data-id="{{ album.youtubeKey }}" data-action="music#popupPlaylist" title="video Playlist">
+                    <i class="bi bi-youtube"></i>
+                </a>&nbsp;&nbsp;
+            {% endif %}
+            <a class="btn btn-primary" href="{{ path('music_couch', {'auteur' : album.auteur, 'album': album.name }) }}" style="margin-top: -10px;" title="Enchaîner les titres">
+                <i class="bi bi-youtube"></i> Enchainer les titres
+            </a>
+            &nbsp;
+            <a class="btn btn-secondary" href="{{ path('other_api_playlist', {'search_api': (album.auteur|lower != 'divers' ? album.auteur : '') ~ album.name }) }}" style="margin-top: -10px;" title="Search on api">
+                <i class="bi bi-binoculars-fill"></i>
+            </a>
+            &nbsp;
+            <a class="btn btn-secondary edit-album" href="#" data-id="{{ album.id }}" data-action="album#openEditModal"  style="margin-top: -10px;" title="album edit">
+                <i class="bi bi-pencil-square"></i>
+            </a>
+        </div>
         <table class="table table-dark">
             <tbody>
                 {% for track in tracks %}

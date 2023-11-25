@@ -1,0 +1,14 @@
+{{ form_start(form, {'attr' : {'onkeydown' : "return event.key != 'Enter';", 'data-controller' : 'album' }}) }}
+{{ form_widget(form) }}
+<a id="album-xchange" class="btn btn-secondary" href="#" data-search="{{ album.auteur|lower != 'divers' ? album.auteur : '' }} {{ album.name }}" data-id="{{ album.id }}"><i class="bi bi-arrow-left-right"></i>&nbsp;Exchange on Api</a>
+<button class="btn btn-primary save-album"
+        type="button"
+        data-action="album#saveAlbum"
+>
+    <i class="bi bi-save-fill"></i>&nbsp;Save
+</button>&nbsp;
+{{ form_end(form) }}
+<form name="form_api_search" action="{{ path('other_api_playlist') }}" method="POST">
+    <input type="hidden" name="search_api">
+    <input type="hidden" name="id_album">
+</form>

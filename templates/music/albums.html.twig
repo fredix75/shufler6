@@ -9,9 +9,9 @@
                 <div id="album-{{ album.id }}" class="col-6 col-md-4 col-lg-2 album"
                      style="background-color: black; color:white;border:1px solid #052660;">
                     <a href="#album-{{ album.id }}" data-action="album#displayContent" data-artist="{{ album.auteur }}" data-album="{{ album.name }}">
-                        <img src="{{ album.picture }}" alt="{{ album.auteur ~ ' ' ~ album.name }}" title="{{ album.name }}" width="100%"/>
+                        <img class="album-picture-{{ album.id }}" src="{{ album.picture }}" alt="{{ album.auteur ~ ' ' ~ album.name }}" title="{{ album.name }}" width="100%"/>
                         <strong>{{ album.auteur }}</strong><br/>
-                        {{ album.name }} <small>({{ album.annee }})</small>
+                        {{ album.name }} <small>{{ album.annee  ? '('~ album.annee ~')' : '' }}</small>
                     </a>
                 </div>
             {% endif %}
@@ -22,5 +22,6 @@
             </section>
         {% endif %}
     </div>
+    {{ include('part/_modal.html.twig', { modalTitle: 'Music', class: 'music-modal'}) }}
     {% include 'music/part/_filters.html.twig' %}
 {% endblock %}

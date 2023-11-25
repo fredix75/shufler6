@@ -140,7 +140,7 @@ class OtherController extends AbstractController
             $response = $apiRequester->sendRequest('youtube', '/search', [
                 'q'   => $search,
                 'type' => 'channel',
-                'maxResults' => 50,
+                'maxResults' => 5,
             ]);
 
             if ($response->getStatusCode() === Response::HTTP_OK) {
@@ -194,7 +194,7 @@ class OtherController extends AbstractController
                 }
             }
         }
-        return $this->render('other/channelsAPI.html.twig', [
+        return $this->render('other/playlistsAPI.html.twig', [
             'resultats' => $resultat,
             'search' => $search,
             'idAlbum' => $idAlbum ?? 0,
@@ -227,6 +227,8 @@ class OtherController extends AbstractController
 
         return new Response("Method not allowed", 405);
     }
+
+
 
     /**
      * @throws \Exception
