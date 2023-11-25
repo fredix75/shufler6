@@ -19,8 +19,8 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Vimeo\Exceptions\VimeoRequestException;
 use Vimeo\Vimeo;
 
-#[Route('/other', name: 'other')]
-class OtherController extends AbstractController
+#[Route('/api', name: 'api')]
+class ApiController extends AbstractController
 {
     /**
      * @throws TransportExceptionInterface
@@ -28,7 +28,7 @@ class OtherController extends AbstractController
      * @throws RedirectionExceptionInterface
      * @throws VimeoRequestException|ClientExceptionInterface
      */
-    #[Route('/api_video', name: '_api_video')]
+    #[Route('/video', name: '_video')]
     #[IsGranted('ROLE_ADMIN')]
     public function searchApiVideo(Request $request, ApiRequester $apiRequester): Response
     {
@@ -119,7 +119,7 @@ class OtherController extends AbstractController
         if ($idTrack) {
             $params['idTrack'] = $idTrack;
         }
-        return $this->render('other/videosAPI.html.twig', $params);
+        return $this->render('api/videos.html.twig', $params);
     }
 
     /**
@@ -128,7 +128,7 @@ class OtherController extends AbstractController
      * @throws RedirectionExceptionInterface
      * @throws ClientExceptionInterface
      */
-    #[Route('/api_channel', name: '_api_channel')]
+    #[Route('/channel', name: '_channel')]
     #[IsGranted('ROLE_ADMIN')]
     public function searchApiChannel(Request $request, ApiRequester $apiRequester): Response
     {
@@ -157,14 +157,14 @@ class OtherController extends AbstractController
                 }
             }
         }
-        return $this->render('other/channelsAPI.html.twig', [
+        return $this->render('api/channels.html.twig', [
             'resultats' => $resultat,
             'search' => $search,
             'idChannel' => $idChannel
         ]);
     }
 
-    #[Route('/api_playlist', name: '_api_playlist')]
+    #[Route('/playlist', name: '_playlist')]
     #[IsGranted('ROLE_ADMIN')]
     public function searchApiPlaylist(Request $request, ApiRequester $apiRequester): Response
     {
@@ -194,7 +194,7 @@ class OtherController extends AbstractController
                 }
             }
         }
-        return $this->render('other/playlistsAPI.html.twig', [
+        return $this->render('api/playlists.html.twig', [
             'resultats' => $resultat,
             'search' => $search,
             'idAlbum' => $idAlbum ?? 0,
@@ -220,7 +220,7 @@ class OtherController extends AbstractController
 
             $playlists = json_decode($response->getContent(), true)['items'] ?? [];
 
-            return $this->render('other/part/_playlists.html.twig', [
+            return $this->render('api/part/_playlists.html.twig', [
                 'playlists' => $playlists,
             ]);
         }

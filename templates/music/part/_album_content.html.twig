@@ -18,7 +18,7 @@
                 <i class="bi bi-youtube"></i> Enchainer les titres
             </a>
             &nbsp;
-            <a class="btn btn-secondary" href="{{ path('other_api_playlist', {'search_api': (album.auteur|lower != 'divers' ? album.auteur : '') ~ album.name }) }}" style="margin-top: -10px;" title="Search on api">
+            <a class="btn btn-secondary" href="{{ path('api_playlist', {'search_api': (album.auteur|lower != 'divers' ? album.auteur : '') ~ album.name }) }}" style="margin-top: -10px;" title="Search on api">
                 <i class="bi bi-binoculars-fill"></i>
             </a>
             &nbsp;

@@ -12,8 +12,8 @@
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{{ path('video_list') }}" aria-label="Videos"><i class="bi bi-film"></i> Gallerie</a></li>
                             <li><a class="dropdown-item" href="{{ path('flux_playlists') }}" aria-label="Video playlists"><i class="bi bi-youtube"></i> Video Playlists</a></li>
-                            <li><a class="dropdown-item" href="{{ path('other_api_video') }}" aria-label="Videos search by Api"><i class="bi bi-vimeo"></i> Recherche Vidéos API</a></li>
-                            <li><a class="dropdown-item" href="{{ path('other_api_channel') }}" aria-label="Channel search by Api"><i class="bi bi-youtube"></i> Recherche Channels API</a></li>
+                            <li><a class="dropdown-item" href="{{ path('api_video') }}" aria-label="Videos search by Api"><i class="bi bi-vimeo"></i> Recherche Vidéos API</a></li>
+                            <li><a class="dropdown-item" href="{{ path('api_channel') }}" aria-label="Channel search by Api"><i class="bi bi-youtube"></i> Recherche Channels API</a></li>
                             {% if is_granted('ROLE_ADMIN') %}
                                 <li><a class="dropdown-item" href="{{ path('video_trash') }}" aria-label="Trash"><i class="bi bi-trash"></i> Trash</a></li>
                             {% endif %}
@@ -54,7 +54,7 @@
                             <li><a class="dropdown-item" href="{{ path('music_all', {'mode' : 'tracks'}) }}" aria-label="Tracks"><i class="bi bi-music-note-list"></i> Tracks</a></li>
                             <li><a class="dropdown-item" href="{{ path('music_all', {'mode' : 'albums'}) }}" aria-label="Albums"><i class="bi bi-disc-fill"></i> Albums</a></li>
                             <li><a class="dropdown-item" href="{{ path('music_albums') }}" aria-label="Albums viewer"><i class="bi bi-wallet2"></i> Albums Viewer</a></li>
-                            <li><a class="dropdown-item" href="{{ path('other_api_playlist') }}" aria-label="Recherche Playlist API"><i class="bi bi-youtube"></i> Recherche Playlists API</a></li>
+                            <li><a class="dropdown-item" href="{{ path('api_playlist') }}" aria-label="Recherche Playlist API"><i class="bi bi-youtube"></i> Recherche Playlists API</a></li>
                         </ul>
                     </li>
                 {% endif %}
@@ -74,7 +74,7 @@
                     </li>
                 {% endif %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ path('other_launch') }}"><i class="bi bi-gift"></i></a>
+                    <a class="nav-link" href="{{ path('api_launch') }}"><i class="bi bi-gift"></i></a>
                 </li>
             </ul>
             {% if app.request.attributes.get('_route_params') is not null and app.request.attributes.get('_route') is not null %}

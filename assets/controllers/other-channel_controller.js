@@ -52,7 +52,7 @@ export default class extends Controller {
 }
 
 function getData(channelId, id) {
-    $.get('/fr/other/channel/handle',
+    $.get('/fr/api/channel/handle',
         {id: channelId},
         function(data){
             bindContent(id, data);
