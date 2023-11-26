@@ -6,10 +6,10 @@
 
 {% block body %}
     {% if flux.id is defined and flux.id !=0  %}
-        <h1><i class="bi bi-pencil"></i>&nbsp;Editer le Flux {{ flux.id }}</h1>
+        <h1 class="minor"><i class="bi bi-pencil"></i>&nbsp;Editer le Flux {{ flux.id }}</h1>
         <span class="badge bg-secondary" style="float:right;">{{ flux.dateInsert|date("d/m/Y H:i:s") }}</span><br/>
     {% else %}
-        <h1><i class="bi bi-plus-circle"></i>&nbsp;Ajouter un Flux</h1>
+        <h1 class="minor"><i class="bi bi-plus-circle"></i>&nbsp;Ajouter un Flux</h1>
     {% endif %}
 
     <div class="well" data-controller="modal-channel-form">
