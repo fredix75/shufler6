@@ -35,7 +35,7 @@
             {% block body %}{% endblock %}
 
             {% if not is_granted('IS_AUTHENTICATED') %}
-                {{ include('part/_modal.html.twig', { modalTitle: 'Connexion'}) }}
+                {% include 'part/_modal.html.twig' with { modalTitle: 'Connexion' } %}
             {% endif %}
         </div>
         <footer>

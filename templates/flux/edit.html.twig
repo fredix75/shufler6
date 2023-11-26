@@ -74,7 +74,7 @@
                         </a>
                     {% endif %}
                 {% endif %}
-                {{ include('part/_modal.html.twig', { modalTitle: 'Edit Channel'}) }}
+                {% include 'part/_modal.html.twig' with { modalTitle: 'Edit Channel' } %}
             </div>
         </div>
     </div>

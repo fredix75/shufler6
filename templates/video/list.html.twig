@@ -112,7 +112,7 @@
                             {% for column in track_columns %}
                                 {% if column == 'youtubeKey' and attribute(track, column) is not empty %}
                                     {% set youtube_key = 'https://www.youtube.com/watch?v=' ~ track.youtubeKey  %}
-                                    <td>{{ include('music/part/_youtube_link.html.twig') }}</td>
+                                    <td>{% include 'music/part/_youtube_link.html.twig' %}</td>
                                 {% else %}
                                     <td>{{ attribute(track, column)}}</td>
                                 {% endif %}

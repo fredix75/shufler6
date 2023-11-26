@@ -22,6 +22,6 @@
             </section>
         {% endif %}
     </div>
-    {{ include('part/_modal.html.twig', { modalTitle: 'Music', class: 'music-modal'}) }}
+    {% include 'part/_modal.html.twig' with { modalTitle: 'Music', class: 'music-modal' } %}
     {% include 'music/part/_filters.html.twig' %}
 {% endblock %}

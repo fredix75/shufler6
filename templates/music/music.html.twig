@@ -24,6 +24,6 @@
                 </table>
             </div>
         </div>
-        {{ include('part/_modal.html.twig', { modalTitle: 'Music', class: 'music-modal'}) }}
+        {% include 'part/_modal.html.twig' with { modalTitle: 'Music', class: 'music-modal' } %}
     </div>
 {% endblock %}
