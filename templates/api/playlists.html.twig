@@ -4,7 +4,7 @@
 
 {% block body %}
     <div class="row">
-        <form name="form_search" action="{{ path('other_api_playlist') }}" method="POST" class="row justify-content-center">
+        <form name="form_search" action="{{ path('api_playlist') }}" method="POST" class="row justify-content-center">
             <div class="col col-10 col-sm-10 col-lg-6">
                 <input type="search" id="search_api" name="search_api" value="{{ search|trim }}" class="input-sm form-control big-input" placeholder="playlists on youtube" />
                 {% if idAlbum != 0 %}
@@ -22,34 +22,29 @@
             <input type="hidden" name="albumkey" />
         </form>
     {% endif %}
-    <div class="row justify-content-center txt-center" data-controller="other-channel">
-        {% for result in resultats %}
+    <div class="row justify-content-center txt-center" data-controller="video">
+        {% for key, result in resultats %}
             <section class="channel vignette-item row g-0 d-flex position-relative col col-12 col-md-6 col-lg-4" style="padding:5px;">
-                <div id="playlist-{{ result.playlistId }}" class="row bg-body-secondary">
-                    <div class="channel-picture col col-12 mb-md-0 p-md-4 center-block">
-                        <a href="https://www.youtube.com/channel/{{ result.playlistId }}" target="_blank">
-                            <img src="{{ result.link }}" alt="{{ result.name }}" class="img-responsive center-block" style="max-height:100px; max-width:150px; margin: 0 auto;">
-                            {{ result.name }}
-                        </a>
-                    </div>
-                    <div class="pod-nav row justify-content-center" style="padding:10px;">
-                        <div class="col col-2 col-sm-2 col-lg-2">
-                            <a href="#" class="left btn btn-secondary disabled" data-page="0" data-action="other-channel#prev"><i class="bi bi-chevron-left"></i></a>
+                <div class="row vignette-item g-0 bg-body-secondary position-relative">
+                    <div class="col-6 col-md-6 mb-md-0 p-md-4">
+                        <div class="media topcol embed-responsive-16by9">
+                            <a class="playlist-link" href="{{ result.url|youtubeChannelLink }}" onclick="return false;">
+                                <img src="{{ result.link }}" height=180px />
+                            </a>
                         </div>
-                        {% if is_granted('ROLE_ADMIN') %}
-                            <div class="col col-auto text-center">
-                                <a href="#" class="btn btn-secondary"><i class="bi bi-save-fill"></i>&nbsp;Enregistrer</a>
-                            </div>
+                    </div>
+                    <div class="col-6 col-md-6 p-4 ps-md-0">
+                        <strong>{{ result.name }}</strong>';
+                        {% if is_granted('ROLE_AUTEUR') %}
+                            {% if idAlbum != 0 %}
+                                <div class="playlist-link" style="position:relative;"><a href="#" class="btn btn-secondary" data-action="video#editAlbum" data-url="{{ result.url }}"><i class="bi bi-arrow-left-right"></i></a></div>
+                            {% endif %}
                         {% endif %}
-                        <div class="col col-2 col-sm-2 col-lg-2 text-end">
-                            <a href="#" class="right btn btn-secondary" data-page="2" data-action="other-channel#next"><i class="bi bi-chevron-right"></i></a>
-                        </div>
-                    </div>
-                    <div class="col-12 p-4 ps-md-0" data-controller="video">
-                        <div id="accordion-{{ result.channelId }}" class="accordion" data-channel="{{ result.channelId }}"></div>
+                        <span class="badge bg-secondary">{{ result.date }}</span>
                     </div>
                 </div>
             </section>
+            <br/><br/>
         {% endfor %}
     </div>
 {% endblock %}

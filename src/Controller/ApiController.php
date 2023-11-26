@@ -30,7 +30,7 @@ class ApiController extends AbstractController
      */
     #[Route('/video', name: '_video')]
     #[IsGranted('ROLE_ADMIN')]
-    public function searchApiVideo(Request $request, ApiRequester $apiRequester): Response
+    public function searchVideo(Request $request, ApiRequester $apiRequester): Response
     {
         $search = $idVideo = $idTrack = $wiki = null;
         $resultat = [];
@@ -130,7 +130,7 @@ class ApiController extends AbstractController
      */
     #[Route('/channel', name: '_channel')]
     #[IsGranted('ROLE_ADMIN')]
-    public function searchApiChannel(Request $request, ApiRequester $apiRequester): Response
+    public function searchChannel(Request $request, ApiRequester $apiRequester): Response
     {
         $search = $idChannel = null;
         $resultat = [];
@@ -166,7 +166,7 @@ class ApiController extends AbstractController
 
     #[Route('/playlist', name: '_playlist')]
     #[IsGranted('ROLE_ADMIN')]
-    public function searchApiPlaylist(Request $request, ApiRequester $apiRequester): Response
+    public function searchPlaylist(Request $request, ApiRequester $apiRequester): Response
     {
         $search = $idAlbum = null;
         $resultat = [];
@@ -177,19 +177,18 @@ class ApiController extends AbstractController
             $response = $apiRequester->sendRequest('youtube', '/search', [
                 'q'   => $search,
                 'type' => 'playlist',
-                'maxResults' => 50,
+                'maxResults' => 5,
             ]);
 
             if ($response->getStatusCode() === Response::HTTP_OK) {
                 $resultYouToube = json_decode($response->getContent(), true)['items'] ?? [];
+
                 foreach ($resultYouToube as $item) {
                     $resultat[] = [
                         'link' => $item['snippet']['thumbnails']['high']['url'] ?? null,
                         'name' => $item['snippet']['title'] ?? null,
-                        'url' => 'https://www.youtube.com/watch?v=' . ($item['id']['videoId'] ?? ''),
-                        'author' => $item['snippet']['channelTitle'] ?? null,
+                        'url' => $item['id']['playlistId'] ?? '',
                         'date' => date("d-m-Y", strtotime($item['snippet']['publishedAt'])),
-                        'channelId' => $item['snippet']['channelId'],
                     ];
                 }
             }

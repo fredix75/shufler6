@@ -59,6 +59,12 @@ export default class extends Controller {
         $('form[name="form_track_edit"]').submit();
     }
 
+    editAlbum(event) {
+        let url = $(event.target).closest('a').data('url');
+        $('input[name="albumkey"]').val(url);
+        $('form[name="form_album_edit"]').submit();
+    }
+
     deleteKey(event) {
         $('input[name="id_video"]').val(0);
         $('.link_edit').find('i').removeClass('bi-arrow-left-right');
