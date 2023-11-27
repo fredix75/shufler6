@@ -200,6 +200,44 @@ class ApiController extends AbstractController
         ]);
     }
 
+    #[Route('/album_picture', name: '_album_picture')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function searchPicture(Request $request, ApiRequester $apiRequester): Response
+    {
+        $album = $idAlbum = null;
+        $resultat = [];
+        if ($request->get('search_api')) {
+            $album = $request->get('search_api');
+            $idAlbum = $request->get('id_album') ?? null;
+
+            $response = $apiRequester->sendRequest('last_fm', '', [
+                'album'   => $album,
+                'method' => 'album.search',
+            ]);
+
+            if ($response->getStatusCode() === Response::HTTP_OK) {
+                $results = json_decode($response->getContent(), true)['results']['albummatches']['album'] ?? [];
+
+                foreach ($results as $item) {
+                    if (empty($item['image'][3]['#text'])) {
+                        continue;
+                    }
+                    $resultat[] = [
+                        'link' => $item['image'][3]['#text'] ?? null,
+                        'artist' => $item['artist'] ?? null,
+                        'name' => $item['name'] ?? null,
+                        'url' => $item['url'] ?? '',
+                    ];
+                }
+            }
+        }
+        return $this->render('api/album_pictures.html.twig', [
+            'resultats' => $resultat,
+            'search' => $album,
+            'idAlbum' => $idAlbum ?? 0,
+        ]);
+    }
+
     /**
      * @throws TransportExceptionInterface
      * @throws ServerExceptionInterface

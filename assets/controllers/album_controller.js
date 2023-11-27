@@ -76,4 +76,10 @@ export default class extends Controller {
             $(document).find('.modal-body').html(await $.ajax('/fr/music/album/edit/' + id));
         }
     }
+
+    editPicture(event) {
+        let url = $(event.target).closest('a').data('url');
+        $('input[name="albumpicture"]').val(url);
+        $('form[name="form_album_edit"]').submit();
+    }
 }

@@ -205,6 +205,13 @@ class MusicCollectionController extends AbstractController
             return $this->redirectToRoute('music_albums');
         }
 
+        if ($request->get('albumpicture')) {
+            $album->setPicture($request->get('albumpicture'));
+            $albumRepository->save($album, true);
+
+            return $this->redirectToRoute('music_albums');
+        }
+
         $form = $this->createForm(AlbumFormType::class, $album, [
             'action' => $this->generateUrl(
                 $request->attributes->get('_route'),
