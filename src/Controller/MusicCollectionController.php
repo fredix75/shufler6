@@ -81,7 +81,7 @@ class MusicCollectionController extends AbstractController
                         'duree' => $track->getDuree(),
                         'pays' => $track->getPays(),
                         'bitrate' => $track->getBitrate(),
-                        'note' => $shuflerRuntime->displayStarsFunction($track->getNote() ?? 0),
+                        'note' => $track->getNote() ? $shuflerRuntime->displayStarsFunction($track->getNote()) : '',
                     ];
                 }
             } elseif ($mode === 'albums') {

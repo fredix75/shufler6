@@ -113,8 +113,10 @@
                                 {% if column == 'youtubeKey' and attribute(track, column) is not empty %}
                                     {% set youtube_key = 'https://www.youtube.com/watch?v=' ~ track.youtubeKey  %}
                                     <td>{% include 'music/part/_youtube_link.html.twig' %}</td>
+                                {% elseif column in ["album", "auteur", "artiste"] %}
+                                    <td><a href="{{ path('video_search', {'search_field' : attribute(track, column)}) }}">{{ attribute(track, column) }}</a></td>
                                 {% else %}
-                                    <td>{{ attribute(track, column)}}</td>
+                                    <td>{{ attribute(track, column) }}</td>
                                 {% endif %}
                             {% endfor %}
                         </tr>
