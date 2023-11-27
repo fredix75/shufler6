@@ -1,6 +1,6 @@
 {{ form_start(form, {'attr' : {'onkeydown' : "return event.key != 'Enter';"}}) }}
 {{ form_widget(form) }}
-<a id="track-xchange" class="btn btn-secondary" href="#" data-search="{{ track.auteur }} {{ track.titre }}" data-id="{{ track.id }}"><i class="bi bi-arrow-left-right"></i>&nbsp;Exchange on Api</a>
+<a class="btn btn-secondary" href="{{ path('api_video', {'search_api': track.auteur ~ ' ' ~ track.titre, 'id_track': track.id }) }}"><i class="bi bi-arrow-left-right"></i>&nbsp;Exchange on Api</a>
 <button class="btn btn-primary save-track"
         type="button"
         data-action="music#saveTrack"
@@ -8,7 +8,3 @@
     <i class="bi bi-save-fill"></i>&nbsp;Save
 </button>&nbsp;
 {{ form_end(form) }}
-<form name="form_api_search" action="{{ path('api_video') }}" method="POST">
-    <input type="hidden" name="search_api">
-    <input type="hidden" name="id_track">
-</form>

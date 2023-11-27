@@ -28,9 +28,7 @@
                 {% if video.id is defined and video.id != 0 %}
                 <div class="row justify-content-end" style="margin-top:20px;">
                     <div class="col-4 col-md-3">
-                        <a class="btn btn-secondary" href="#" data-action="video-edit#xchange"
-                                data-search="{{ video.auteur }} {{ video.titre }}" data-id="{{ video.id }}"><i
-                                    class="bi bi-arrow-left-right"></i>&nbsp;Exchange on Api
+                        <a class="btn btn-secondary" href="{{ path('api_video', {'search_api': video.auteur ~ ' ' ~ video.titre, 'id_video': video.id }) }}"><i class="bi bi-arrow-left-right"></i>&nbsp;Exchange on Api
                         </a>
                     </div>
                     <div class="col-4 col-md-3">
@@ -51,10 +49,6 @@
                     {% endif %}
                     {{ form_end(form) }}
                 </div>
-                <form name="form_api_search" action="{{ path('api_video') }}" method="POST">
-                    <input type="hidden" name="search_api">
-                    <input type="hidden" name="id_video">
-                </form>
             </div>
     </div>
 {% endblock %}

@@ -87,12 +87,4 @@ export default class extends Controller {
             }, 'json');
         }
     }
-
-    xchange(event) {
-        let search = $(event.target).closest('a').data('search');
-        let id = $(event.target).closest('a').data('id');
-        $('input[name="search_api"]').val(search);
-        $('input[name="id_video"]').val(id);
-        $('form[name="form_api_search"]').submit();
-    }
 }
