@@ -1,9 +1,6 @@
 {{ form_start(form, {'attr' : {'onkeydown' : "return event.key != 'Enter';", 'data-controller' : 'album' }}) }}
 {{ form_widget(form) }}
-<button class="btn btn-primary save-album"
-        type="button"
-        data-action="album#saveAlbum"
->
+<button class="btn btn-primary save-album" type="button" data-action="album#saveAlbum">
     <i class="bi bi-save-fill"></i>&nbsp;Save
 </button>&nbsp;
 {{ form_end(form) }}

@@ -6,6 +6,7 @@ use App\Entity\Flux;
 use App\Form\FluxFormType;
 use App\Repository\FluxMoodRepository;
 use App\Repository\FluxRepository;
+use App\Repository\FluxTypeRepository;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -142,6 +143,7 @@ class FluxController extends AbstractController
         Request $request,
         FluxRepository $fluxRepository,
         FluxMoodRepository $fluxMoodRepository,
+        FluxTypeRepository $fluxTypeRepository,
         Flux $flux = null
     ): Response
     {
@@ -154,7 +156,8 @@ class FluxController extends AbstractController
         if ($request->get('channelkey')) {
             $flux->setUrl(sprintf('https://www.youtube.com/playlist?list=%s', $request->get('channelkey')));
             $flux->setImage($request->get('channelpicture'));
-            $flux->setType(5);
+            $fluxType = $fluxTypeRepository->find(5);
+            $flux->setType($fluxType);
         }
 
         $form = $this->createForm(FluxFormType::class, $flux);

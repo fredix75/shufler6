@@ -322,12 +322,12 @@ class ImportTracksCommand extends Command
 
         foreach($this->albums as $key => $album) {
             if (\array_key_exists($album->getAuteur(), $this->albumsTmp)) {
-                if (\array_key_exists($album->getName(), $this->albumsTmp[$album->getAuteur()]) && $album->getYoutubeKey() && $album->getPicture() && $album->getPicture() !== $this->parameters['no_cover_path']) {
+                if (\array_key_exists($album->getName(), $this->albumsTmp[$album->getAuteur()]) && $album->getYoutubeKey() && $album->getPicture() !== $this->parameters['no_cover_path']) {
                     unset($this->albumsTmp[$album->getAuteur()][$album->getName()]);
                     unset($album);
                     unset($this->albums[$key]);
                 } elseif(\array_key_exists($album->getName(), $this->albumsTmp[$album->getAuteur()])) {
-                    if ($album->getPicture() && $album->getPicture() !== $this->parameters['no_cover_path']) {
+                    if ($album->getPicture() !== $this->parameters['no_cover_path']) {
                         $this->albumsTmp[$album->getAuteur()][$album->getName()]['picture'] = $album->getPicture();
                     }
                     if ($album->getYoutubeKey()) {
