@@ -51,7 +51,7 @@ class AccountController extends AbstractController
                 $this->addFlash('success', 'Profil modifié');
             }
 
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('main_home');
         }
 
         return $this->render('security/account.html.twig', [

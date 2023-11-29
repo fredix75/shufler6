@@ -21,6 +21,7 @@ export default class extends Controller {
         let query = '?artist=' + artist + '&album=' + album;
         let content = await $.ajax(url + query);
         $(content).insertAfter($(event.target).closest('.album'));
+        $('.block-content-album').toggle("slow");
     }
 
     async saveAlbum(event){

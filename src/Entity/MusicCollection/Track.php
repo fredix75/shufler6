@@ -4,6 +4,7 @@ namespace App\Entity\MusicCollection;
 
 use App\EntityListener\TrackListener;
 use App\Repository\MusicCollection\TrackRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\EntityListeners;
 
@@ -54,6 +55,9 @@ class Track
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $hash = null;
+
+    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
+    private ?bool $isCheck = false;
 
     public function getId(): ?int
     {
@@ -227,5 +231,17 @@ class Track
     {
         return hash('sha256', $this->numero.$this->titre.$this->auteur.$this->album.$this->artiste
             .$this->annee.$this->bitrate.$this->duree.$this->genre.$this->note.$this->pays);
+    }
+
+    public function getCheck(): ?bool
+    {
+        return $this->isCheck;
+    }
+
+    public function setCheck(?bool $isCheck = false): self
+    {
+        $this->isCheck = $isCheck;
+
+        return $this;
     }
 }

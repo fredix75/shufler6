@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Helper\ApiRequester;
+use App\Helper\VideoHelper;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -52,7 +53,7 @@ class ApiController extends AbstractController
             ];
 
             // Youtube
-            $response = $apiRequester->sendRequest('youtube', '/search', [
+            $response = $apiRequester->sendRequest(VideoHelper::YOUTUBE, '/search', [
                 'q'   => $search,
                 'maxResults' => 25,
             ]);
@@ -137,7 +138,7 @@ class ApiController extends AbstractController
         if ($request->get('search_api')) {
             $search = $request->get('search_api');
 
-            $response = $apiRequester->sendRequest('youtube', '/search', [
+            $response = $apiRequester->sendRequest(VideoHelper::YOUTUBE, '/search', [
                 'q'   => $search,
                 'type' => 'channel',
                 'maxResults' => 5,
@@ -174,7 +175,7 @@ class ApiController extends AbstractController
             $search = $request->get('search_api');
             $idAlbum = $request->get('id_album') ?? null;
 
-            $response = $apiRequester->sendRequest('youtube', '/search', [
+            $response = $apiRequester->sendRequest(VideoHelper::YOUTUBE, '/search', [
                 'q'   => $search,
                 'type' => 'playlist',
                 'maxResults' => 5,
@@ -249,7 +250,7 @@ class ApiController extends AbstractController
     {
         if ($request->isXmlHttpRequest()) {
             $channelId = $request->get('id');
-            $response = $apiRequester->sendRequest('youtube', '/playlists', [
+            $response = $apiRequester->sendRequest(VideoHelper::YOUTUBE, '/playlists', [
                 'channelId'   => $channelId,
                 'part' => 'snippet, contentDetails',
                 'maxResults' => 75,

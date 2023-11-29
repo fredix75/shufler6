@@ -323,7 +323,7 @@ class MusicCollectionController extends AbstractController
     public function getLink(Track $track, TrackRepository $trackRepository, Request $request, ApiRequester $apiRequester): Response
     {
         $search = $request->get('auteur') . ' ' . $request->get('titre');
-        $response = $apiRequester->sendRequest('youtube', '/search', [
+        $response = $apiRequester->sendRequest(VideoHelper::YOUTUBE, '/search', [
             'q' => $search,
         ]);
 

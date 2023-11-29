@@ -7,6 +7,7 @@ use App\Entity\MusicCollection\Artist;
 use App\Entity\MusicCollection\Track;
 use App\Helper\ApiRequester;
 use App\Helper\CsvConverter;
+use App\Helper\VideoHelper;
 use App\Repository\MusicCollection\AlbumRepository;
 use App\Repository\MusicCollection\ArtistRepository;
 use App\Repository\MusicCollection\TrackRepository;
@@ -176,7 +177,7 @@ class ImportTracksCommand extends Command
             if (!$track->getYoutubeKey() && !$trackExists && !$forbiddenRequest) {
                 try {
                     $search = $row[0] . ' ' . $row[2];
-                    $response = $this->apiRequester->sendRequest('youtube','/search', [
+                    $response = $this->apiRequester->sendRequest(VideoHelper::YOUTUBE,'/search', [
                         'q' => $search,
                     ]);
 
@@ -352,7 +353,7 @@ class ImportTracksCommand extends Command
 
                     if (!$forbiddenRequest && empty($features['youtubeKey'])) {
                         try {
-                            $response = $this->apiRequester->sendRequest('youtube','/search', [
+                            $response = $this->apiRequester->sendRequest(VideoHelper::YOUTUBE,'/search', [
                                 'q'         => $search,
                                 'type'      => 'playlist',
                             ]);

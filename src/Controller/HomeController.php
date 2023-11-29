@@ -3,14 +3,17 @@
 namespace App\Controller;
 
 use App\Repository\FluxRepository;
+use App\Repository\MusicCollection\TrackRepository;
 use App\Repository\VideoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[Route('/', name: 'main')]
 class HomeController extends AbstractController
 {
-    #[Route('/', name: 'home')]
+    #[Route('', name: '_home')]
     public function home(VideoRepository $videoRepository, FluxRepository $fluxRepository): Response
     {
         $videos = $videoRepository->getRandomVideos();
@@ -46,6 +49,35 @@ class HomeController extends AbstractController
             'anims' => $anims,
             'musics' => $musics,
             'stranges' => $stranges
+        ]);
+    }
+
+    #[Route('/search/{page}', name: '_search', requirements: ['id' => '\d+'])]
+    public function search(Request $request, VideoRepository $videoRepository, TrackRepository $trackRepository, int $page = 1): Response
+    {
+        $search = $request->get('search_field');
+
+        $videos = $search ? $videoRepository->searchVideos($search, $page, $this->getParameter('shufler_video')['max_list']) : [];
+        $videosCount = count($videos);
+        $pagination = [
+            'search_field' => $search,
+            'page' => $page,
+            'route' => 'main_search',
+            'pages_count' => ceil($videosCount / $this->getParameter('shufler_video')['max_list']),
+            'route_params' => [
+                'search_field' => $search
+            ]
+        ];
+
+        $tracks = $trackRepository->getTracks(['search' => $search]);
+
+        return $this->render('main/search.html.twig', [
+            'search' => $search,
+            'pagination' => $pagination,
+            'videos_count' => $videosCount,
+            'videos' => $videos,
+            'tracks' => $tracks,
+            'track_columns' => $this->getParameter('music_collection')['track_fields'],
         ]);
     }
 }

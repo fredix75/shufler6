@@ -9,6 +9,6 @@ class RedirectController extends AbstractController
 {
     public function redirectToLocale(): Response
     {
-        return $this->redirectToRoute('home');
+        return $this->redirectToRoute('main_home');
     }
 }

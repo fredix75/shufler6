@@ -1,0 +1,41 @@
+{%  extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} :: Dead Videos{% endblock %}
+
+{% block body %}
+    <h1><i class="bi bi-bandaid"></i>&nbsp;Dead Videos</h1>
+    <section data-controller="video" style="background-color:black; padding: 10px;">
+        <table id="videos" class="table table-dark">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>titre</th>
+                    <th>auteur</th>
+                    <th>lien</th>
+                    <th>priorite</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for video in videos %}
+                <tr>
+                    <td>{{ video.id }}</td>
+                    <td>{{ video.titre }}</td>
+                    <td>{{ video.auteur }}</td>
+                    <td>
+                        <a class="video-link" href="{{ video.lien|popUp }}" aria-label="Launch video {{ video.titre }}">
+                            {{ video.lien }}
+                        </a>
+                    </td>
+                    <td>{{ video.priorite }}</td>
+                    <td>
+                        <a href="{{ path('video_edit', {'id' : video.id }) }}" target="_blank">
+                            Editer
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock %}

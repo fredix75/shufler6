@@ -58,35 +58,6 @@ class VideoController extends AbstractController
         ]);
     }
 
-    #[Route('/search/{page}', name: '_search', requirements: ['id' => '\d+'])]
-    public function search(Request $request, VideoRepository $videoRepository, TrackRepository $trackRepository, int $page = 1): Response
-    {
-        $search = $request->get('search_field');
-
-        $videos = $search ? $videoRepository->searchVideos($search, $page, $this->getParameter('shufler_video')['max_list']) : [];
-        $videosCount = count($videos);
-        $pagination = [
-            'search_field' => $search,
-            'page' => $page,
-            'route' => 'video_search',
-            'pages_count' => ceil($videosCount / $this->getParameter('shufler_video')['max_list']),
-            'route_params' => [
-                'search_field' => $search
-            ]
-        ];
-
-        $tracks = $trackRepository->getTracks(['search' => $search]);
-
-        return $this->render('video/list.html.twig', [
-            'search' => $search,
-            'pagination' => $pagination,
-            'videos_count' => $videosCount,
-            'videos' => $videos,
-            'tracks' => $tracks,
-            'track_columns' => $this->getParameter('music_collection')['track_fields'],
-        ]);
-    }
-
     #[Route('/couch/{categorie}/{genre}/{periode}', name: '_couch', requirements: ['categorie' => '\d+', 'genre' => '\d+|-\d+'])]
     public function couch(
         Request $request,
@@ -200,7 +171,7 @@ class VideoController extends AbstractController
     {
         $result = [];
         if ('youtube' === $plateforme) {
-            $response = $apiRequester->sendRequest('youtube','/videos', [
+            $response = $apiRequester->sendRequest(VideoHelper::YOUTUBE,'/videos', [
                 'id'   => $videoKey,
                 'part' => 'snippet'
             ]);
@@ -211,7 +182,7 @@ class VideoController extends AbstractController
                 return new Response('No data', Response::HTTP_NOT_FOUND);
             }
 
-            $response = $apiRequester->sendRequest('vimeo', sprintf('/video/%s.json', $videoKey));
+            $response = $apiRequester->sendRequest(VideoHelper::VIMEO, sprintf('/video/%s.json', $videoKey));
 
             $result = json_decode($response->getContent(), true)[0] ?? null;
         }
@@ -275,7 +246,7 @@ class VideoController extends AbstractController
             'route_params' => $request->attributes->get('_route_params'),
         ];
 
-        return $this->render('video/list.html.twig', [
+        return $this->render('video/trash.html.twig', [
             'videos' => $videos,
             'trash'  => true,
             'pagination' => $pagination,

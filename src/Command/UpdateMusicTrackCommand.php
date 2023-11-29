@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Helper\VideoHelper;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -17,7 +18,7 @@ use Twig\Error\SyntaxError;
 
 #[AsCommand(
     name: 'shufler:update-music-track',
-    description: 'Add a short description for your command',
+    description: 'Search key for tracks',
 )]
 class UpdateMusicTrackCommand extends ImportTracksCommand
 {
@@ -36,8 +37,8 @@ class UpdateMusicTrackCommand extends ImportTracksCommand
             ->createQueryBuilder('t')
             ->orderBy('t.titre', 'ASC')
             ->addOrderBy('t.auteur', 'ASC')
-            ->addOrderBy('t.numero', 'ASC')
             ->addOrderBy('t.album', 'ASC')
+            ->addOrderBy('t.numero', 'ASC')
             ->andWhere("t.youtubeKey IS NULL")
             ->setMaxResults(200)
             ->getQuery()->getResult();
@@ -46,7 +47,7 @@ class UpdateMusicTrackCommand extends ImportTracksCommand
         foreach ($tracks as $track) {
             try {
                 $search = $track->getAuteur() . ' ' . $track->getTitre();
-                $response = $this->apiRequester->sendRequest('youtube','/search', [
+                $response = $this->apiRequester->sendRequest(VideoHelper::YOUTUBE,'/search', [
                     'q' => $search,
                 ]);
 

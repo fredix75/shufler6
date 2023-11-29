@@ -149,7 +149,7 @@ class FluxController extends AbstractController
     {
         if (!$flux && '0' !== $request->get('id')) {
             $this->addFlash('danger', 'No Way !!');
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('main_home');
         }
         $flux = $flux ?? new Flux();
 

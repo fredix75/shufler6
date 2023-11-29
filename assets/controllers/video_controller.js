@@ -1,6 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 import $ from 'jquery';
 import 'magnific-popup';
+import DataTable from "datatables.net";
 
 export default class extends Controller {
     connect() {
@@ -44,6 +45,14 @@ export default class extends Controller {
                     }
                 }
             }
+        });
+
+        new DataTable('#videos', {
+            responsive: {
+                details: true
+            },
+            lengthMenu: [[100, 250, 500, 1000], [100, 250, 500, 1000]],
+            order: [[1, 'asc'], [2, 'asc']]
         });
     }
 

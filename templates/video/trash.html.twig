@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} :: Trash{% endblock %}
+
+{% block body %}
+    <section class="col col-sm-12 col-md-12 medias-bande" data-controller="video">
+        <div class="col col-12 col-sm-6 col-md-6 col-lg-3 media-select" style="">
+            <h1>Trash <i class="bi bi-trash-fill"></i></h1>
+        </div>
+        {% for video in videos %}
+            <div class="col col-12 col-sm-6 col-md-6 col-lg-3 media-vignette">
+                <div class="media topcol embed-responsive-16by9" style="margin-bottom:30px;">
+                    {% include("video/part/_videoFrame.html.twig") %}
+                </div>
+            </div>
+        {% endfor %}
+    </section>
+    {% include "part/_pagination.html.twig" %}
+{% endblock %}

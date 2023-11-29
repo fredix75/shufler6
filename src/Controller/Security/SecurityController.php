@@ -14,7 +14,7 @@ class SecurityController extends AbstractController
     public function index(AuthenticationUtils $authenticationUtils, Request $request): Response
     {
         if (!empty($this->getUser())) {
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('main_home');
         }
 
         $error = $authenticationUtils->getLastAuthenticationError();

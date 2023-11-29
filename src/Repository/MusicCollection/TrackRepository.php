@@ -205,6 +205,15 @@ class TrackRepository extends ServiceEntityRepository
         return $stmt->executeQuery()->fetchAllAssociative();
     }
 
+    /**
+     * @throws Exception
+     */
+    function resetChecks() {
+        $conn = $this->getEntityManager()->getConnection();
+        $rawSQL = 'UPDATE track set is_check = FALSE WHERE TRUE';
+        $conn->executeQuery($rawSQL);
+    }
+
     function searchAjax(string $search): array
     {
         $auteurs = $this->createQueryBuilder('t')

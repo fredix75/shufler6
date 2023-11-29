@@ -25,7 +25,7 @@ class ChannelFluxController extends AbstractController
     {
         if (!$channelFlux && '0' !== $request->get('id')) {
             $this->addFlash('danger', 'No Way !!');
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('main_home');
         }
 
         $channelFlux = $channelFlux ?? new ChannelFlux();
@@ -72,7 +72,7 @@ class ChannelFluxController extends AbstractController
         }
         $channelFluxRepository->remove($channelFlux, true);
         $this->addFlash('success', 'Channel bien supprimée');
-        return $this->redirectToRoute('home');
+        return $this->redirectToRoute('main_home');
     }
 
     #[Route('/delete_logo/{id}', name: '_delete_logo', requirements: ['id' => '\d+'])]
