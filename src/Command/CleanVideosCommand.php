@@ -4,6 +4,7 @@ namespace App\Command;
 
 use App\Helper\ApiRequester;
 use App\Helper\VideoHelper;
+use App\Repository\MusicCollection\AlbumRepository;
 use App\Repository\MusicCollection\TrackRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Exception\ORMException;
@@ -27,9 +28,13 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 class CleanVideosCommand extends Command
 {
 
-    public function __construct(private TrackRepository $trackRepository, private EntityManagerInterface $entityManager, private ApiRequester $apiRequester, string $name = null)
-    {
-
+    public function __construct(
+        private readonly TrackRepository        $trackRepository,
+        private readonly AlbumRepository        $albumRepository,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly ApiRequester           $apiRequester,
+        string                                  $name = null
+    ) {
         parent::__construct($name);
     }
 
@@ -44,6 +49,7 @@ class CleanVideosCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+/**
         $io->writeln('<comment>Step 1. Loading Tracks</comment>');
 
         $tracks = $this->trackRepository->createQueryBuilder('t')
@@ -52,6 +58,7 @@ class CleanVideosCommand extends Command
             ->addOrderBy('t.numero', 'ASC')
             ->addOrderBy('t.album', 'ASC')
             ->andWhere("t.youtubeKey IS NOT NULL")
+            ->andWhere("t.youtubeKey != 'nope'")
             ->andWhere("t.isCheck = FALSE")
             ->getQuery()->getResult();
 
@@ -70,10 +77,6 @@ class CleanVideosCommand extends Command
 
         $i = $n = 0;
         foreach ($tracks as $track) {
-            if (empty($track->getYoutubeKey())) {
-                continue;
-            }
-
             $response = $this->apiRequester->sendRequest(VideoHelper::YOUTUBE, '/videos', [
                 'part' => 'id',
                 'id' => $track->getYoutubeKey(),
@@ -86,28 +89,66 @@ class CleanVideosCommand extends Command
             $response = json_decode($response->getContent(), true);
             if (empty($response['items'])) {
                 $track->setYoutubeKey(null);
-                dump('removed,');
                 $n++;
             } else {
                 $track->setCheck(true);
-                dump('checked');
             }
 
             $this->entityManager->persist($track);
             $i++;
-            if ($i%50 === 0) {
-                $progress->advance(50);
+            if ($i%20 === 0) {
+                $progress->advance(20);
                 $this->entityManager->flush();
-            }
-
-            if ($i>20) {
-                break;
             }
         }
 
         $this->entityManager->flush();
         $progress->finish();
         $io->success(sprintf('Operation finished. %d Tracks checked. %d Tracks removed.', $i, $n));
+
+**/
+        $io->writeln('<comment>Step 3. Checking Playlists</comment>');
+
+        $albums = $this->albumRepository->createQueryBuilder('a')
+            ->orderBy('a.name', 'ASC')
+            ->addOrderBy('a.auteur', 'ASC')
+            ->andWhere("a.youtubeKey IS NOT NULL")
+            ->getQuery()->getResult();
+
+        $size = count($albums);
+
+        $progress = new ProgressBar($output, $size);
+        $progress->start();
+
+        $i = $n = 0;
+        foreach ($albums as $album) {
+            $response = $this->apiRequester->sendRequest(VideoHelper::YOUTUBE, '/playlists', [
+                'part' => 'id',
+                'id' => $album->getYoutubeKey(),
+            ]);
+
+            if ($response->getStatusCode() === Response::HTTP_FORBIDDEN) {
+                break;
+            }
+
+            $response = json_decode($response->getContent(), true);
+            if (empty($response['items'])) {
+                $album->setYoutubeKey(null);
+                $this->entityManager->persist($album);
+                $n++;
+            }
+
+            $i++;
+
+            if ($n%20 === 0) {
+                $progress->advance(20);
+                $this->entityManager->flush();
+            }
+        }
+
+        $this->entityManager->flush();
+        $progress->finish();
+        $io->success(sprintf('Operation finished. %d Albums checked. %d Albums removed.', $i, $n));
 
         return Command::SUCCESS;
     }

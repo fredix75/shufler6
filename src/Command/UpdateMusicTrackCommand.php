@@ -53,7 +53,13 @@ class UpdateMusicTrackCommand extends ImportTracksCommand
 
                 if ($response->getStatusCode() === Response::HTTP_OK) {
                     $resultYouTube = json_decode($response->getContent(), true)['items'] ?? [];
-                    $track->setYoutubeKey($resultYouTube[0]['id']['videoId'] ?? 'nope');
+                    if (!empty($resultYouTube[0]['id']['videoId'])) {
+                        $track->setYoutubeKey($resultYouTube[0]['id']['videoId']);
+                        $track->setCheck(true);
+                    } else {
+                        $track->setYoutubeKey('nope');
+                    }
+
                     $i++;
                 } elseif ($response->getStatusCode() === Response::HTTP_NOT_FOUND) {
                     $track->setYoutubeKey('nope');
@@ -72,7 +78,7 @@ class UpdateMusicTrackCommand extends ImportTracksCommand
 
         $this->entityManager->flush();
 
-        $html = $this->twig->render('other/updateTracks.html.twig', [
+        $html = $this->twig->render('api/updateTracks.html.twig', [
             'message' => $message,
             'nb' => $i
         ]);

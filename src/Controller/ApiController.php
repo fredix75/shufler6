@@ -272,6 +272,7 @@ class ApiController extends AbstractController
      * @throws \Exception
      */
     #[Route('/launch', name: '_launch')]
+    #[IsGranted('ROLE_ADMIN')]
     public function launchCommand(KernelInterface $kernel): Response
     {
         $application = new Application($kernel);
