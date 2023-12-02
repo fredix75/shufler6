@@ -362,9 +362,20 @@ class ImportTracksCommand extends Command
                                 'q'         => $search,
                                 'type'      => 'playlist',
                             ]);
-                            $response = json_decode($response->getContent(), true);
-                            $album->setYoutubeKey($response['items'][0]['id']['playlistId']);
 
+                            if ($response->getStatusCode() === Response::HTTP_OK) {
+                                $resultYouTube = json_decode($response->getContent(), true)['items'] ?? [];
+                                if (!empty($resultYouTube[0]['id']['playlistId'])) {
+                                    $album->setYoutubeKey($resultYouTube[0]['id']['playlistId']);
+                                } else {
+                                    $album->setYoutubeKey('nope');
+                                }
+                            } elseif ($response->getStatusCode() === Response::HTTP_NOT_FOUND) {
+                                $album->setYoutubeKey('nope');
+                            } else {
+                                $forbiddenRequest = true;
+                                $output->writeln(sprintf('Requête inaccessible pour %s %s', $album->getAuteur(), $album->getName()));
+                            }
                         } catch (\Exception $e) {
                             $forbiddenRequest = true;
                             $output->writeln($e->getMessage());
