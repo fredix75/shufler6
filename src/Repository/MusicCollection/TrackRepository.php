@@ -175,12 +175,13 @@ class TrackRepository extends ServiceEntityRepository
         $params[':sort'] = $sort;
         $params[':dir'] = $dir;
         $conn = $this->getEntityManager()->getConnection();
-        $rawSQL = 'SELECT album, artiste, json_arrayagg(annee) as annees, json_arrayagg(genre) as genres FROM track';
+        $rawSQL = 'SELECT t.album, t.artiste, a.youtube_key as youtubeKey, json_arrayagg(t.annee) as annees, json_arrayagg(t.genre) as genres FROM track t';
+        $rawSQL .= ' JOIN album a on a.auteur=t.artiste and a.name=t.album';
         if (!empty($data['query'])) {
             $rawSQL .= ' WHERE artiste like "%'.$data['query'].'%" OR album like "%'.$data['query'].'%"';
             $params[':query'] = '%'.$data['query'].'%';
         }
-        $rawSQL .= " GROUP BY album, artiste ORDER BY $sort $dir";
+        $rawSQL .= " GROUP BY album, artiste, a.youtube_key ORDER BY $sort $dir";
 
         // TODO Gérer les params à bind (j s p pqoi ca marche pas)
 
@@ -198,6 +199,7 @@ class TrackRepository extends ServiceEntityRepository
         }
 
         $stmt = $conn->prepare($rawSQL);
+
         foreach($params as $param => $value) {
             //$stmt->bindValue($param, $value, ParameterType::STRING);
         }
@@ -272,6 +274,15 @@ class TrackRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('t')->select('distinct t.genre')
             ->orderBy('t.genre')
             ->getQuery()->getResult();
+    }
+
+    public function getTracksByCountry(): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $rawSql = "SELECT count(*), pays FROM track GROUP BY pays ORDER BY pays";
+        $stmt = $conn->prepare($rawSql);
+
+        return $stmt->executeQuery()->fetchAllAssociative();
     }
 
 //    /**

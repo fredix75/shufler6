@@ -85,6 +85,7 @@ parameters:
             - bitrate
             - note
         album_fields:
+            - youtubeKey
             - album
             - artiste
             - annee

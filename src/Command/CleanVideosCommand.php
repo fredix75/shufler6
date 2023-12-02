@@ -49,7 +49,7 @@ class CleanVideosCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-/**
+
         $io->writeln('<comment>Step 1. Loading Tracks</comment>');
 
         $tracks = $this->trackRepository->createQueryBuilder('t')
@@ -106,7 +106,7 @@ class CleanVideosCommand extends Command
         $progress->finish();
         $io->success(sprintf('Operation finished. %d Tracks checked. %d Tracks removed.', $i, $n));
 
-**/
+
         $io->writeln('<comment>Step 3. Checking Playlists</comment>');
 
         $albums = $this->albumRepository->createQueryBuilder('a')
@@ -133,6 +133,7 @@ class CleanVideosCommand extends Command
 
             $response = json_decode($response->getContent(), true);
             if (empty($response['items'])) {
+                $io->writeln($album->getYoutubeKey());
                 $album->setYoutubeKey(null);
                 $this->entityManager->persist($album);
                 $n++;

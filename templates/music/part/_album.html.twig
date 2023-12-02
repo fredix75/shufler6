@@ -6,7 +6,7 @@
     by <span class="music-auteur">{{ album.auteur }}</span> ({{ album.annee }})
     <span class="badge bg-primary">{{ album.genre }}</span>
 </p>
-<div>
+<div data-controller="album">
     {% if album.youtubeKey is not empty %}
         <a class="playlist-link icon-youtube" href="{{ album.youtubeKey|youtubeChannelLink }}" data-id="{{ album.youtubeKey }}" data-action="music#popupPlaylist">
             <i class="bi bi-youtube"></i>
@@ -14,6 +14,20 @@
     {% endif %}
     <a class="btn btn-primary" href="{{ path('music_couch', {'auteur' : album.auteur, 'album': album.name }) }}" style="margin-top: -10px;">
         <i class="bi bi-youtube"></i> Enchainer les titres
+    </a>
+    &nbsp;
+    <div class="btn-group" role="group">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="margin-top: -20px;">
+            <i class="bi bi-binoculars-fill"></i> Search
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{{ path('api_playlist', {'id_album': album.id, search_api: (album.auteur|lower != 'divers' ? album.auteur : '') ~ ' ' ~ album.name }) }}">Playlist</a></li>
+            <li><a class="dropdown-item" href="{{ path('api_album_picture', {'id_album': album.id, 'search_api': album.name }) }}">Cover</a></li>
+        </ul>
+    </div>
+    &nbsp;
+    <a class="btn btn-secondary edit-album" href="#" data-id="{{ album.id }}" data-action="album#openEditModal"  style="margin-top: -20px;" title="album edit">
+        <i class="bi bi-pencil-square"></i>
     </a>
 </div>
 <table class="table table-dark">

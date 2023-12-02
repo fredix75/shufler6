@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Helper\ApiRequester;
 use App\Helper\VideoHelper;
+use App\Repository\MusicCollection\TrackRepository;
 use App\Repository\VideoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,5 +43,15 @@ class AdminController extends AbstractController
         return $this->render('admin/dead_videos.html.twig', [
             'videos' => $deadVideos,
         ]);
+    }
+
+    #[Route('/stats', name: '_stats')]
+    public function statistiques(TrackRepository $trackRepository): Response
+    {
+        $stats = $trackRepository->getTracksByCountry();
+
+        dd($stats);
+
+        return $this->render('admin/statistiques.html.twig');
     }
 }

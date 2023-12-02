@@ -99,6 +99,7 @@ class MusicCollectionController extends AbstractController
                     sort($annees);
                     $genres = array_unique(json_decode($album['genres'], true));
                     $output['data'][] = [
+                        'youtubeKey' => '<a class="playlist-link '.($album['youtubeKey'] ? 'icon-youtube' : 'no-link').'" href="'.VideoHelper::YOUTUBE_WATCH.$album['youtubeKey'].'" data-id="'.$album['youtubeKey'].'" data-action="music#popupPlaylist" title="video Playlist">'.($album['youtubeKey'] ? '<i class="bi bi-youtube"></i>' : '').'</a>',
                         'album' => '<a href="#" data-action="music#openModal" data-artist="' . $album['artiste']. '" data-album="' . $album['album'] . '" onclick="return false;"><i class="bi bi-filter-circle-fill"></i></a> ' . $album['album'],
                         'annee' => implode(', ', $annees),
                         'artiste' => strtoupper($album['artiste']) !== 'DIVERS' ? '<a href="#" data-action="music#openModal" data-artist="' . $album['artiste'] . '" onclick="return false;"><i class="bi bi-eye-fill"></i></a> ' . $album['artiste'] : $album['artiste'],
