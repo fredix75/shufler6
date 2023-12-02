@@ -11,8 +11,6 @@ import './styles/app.scss';
 // start the Stimulus application
 import './bootstrap';
 
-import $ from 'jquery';
-
 import 'tom-select'
 import TomSelect from "tom-select"
 document.querySelectorAll('.select2').forEach((el)=>{

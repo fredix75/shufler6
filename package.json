@@ -22,8 +22,8 @@
         "build": "encore production --progress"
     },
     "volta": {
-        "node": "19.7.0",
-        "yarn": "1.22.19"
+        "node": "21.3.0",
+        "yarn": "1.22.21"
     },
     "dependencies": {
         "@popperjs/core": "^2.11.6",
