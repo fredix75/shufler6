@@ -7,7 +7,7 @@
         </h2>
         <div id="collapse-{{ id }}-{{index}}" class="accordion-collapse collapse" data-bs-parent="#{{ id }}">
             <div class="accordion-body accordion">
-                <a href="{{ value.link }}" class="btn btn-info" target="_blank">Lire l'article</a>
+                <a href="{{ value.link }}" class="btn btn-info" target="_blank" rel="noopener noreferrer">Lire l'article</a>
                 {% if value.description is defined %}
                     <p>{{ value.description|raw }}</p>
                 {% endif %}
