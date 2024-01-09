@@ -46,7 +46,7 @@ class ShuflerRuntime implements RuntimeExtensionInterface
      */
     public function convertFrameFilter(string $lien, string $name): string
     {
-        $frame_prefix = '<img class="embed-responsive-item" alt="'.$name.'" title="'.$name.'" src="';
+        $frame_prefix = '<img loading="lazy" class="embed-responsive-item" alt="'.$name.'" title="'.$name.'" src="';
         $width = '100%';
         $frame = $frame_prefix . $this->videoParameters['no_signal'] . '" width=' . $width . ' />';
 

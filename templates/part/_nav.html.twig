@@ -97,7 +97,7 @@
             {% endif %}
             <form class="d-flex" role="form" action="{{ url('main_search') }}">
                 <div data-controller="autocomplete" data-autocomplete-url-value="/fr/video/autocomplete" role="combobox" style="flex-direction: column;">
-                    <input class="form-control me-2" type="search" id="search_field" name="search_field" data-autocomplete-target="input" placeholder="Y'en a ou pas?">
+                    <input class="form-control me-2" type="search" id="search_field" name="search_field" data-autocomplete-target="input" placeholder="Y'en a ou pas?" autofocus>
                     <input type="hidden" name="video_id" data-autocomplete-target="hidden"/>
                     <ul class="list-group" data-autocomplete-target="results" style="position:absolute;"></ul>
                 </div>&nbsp;&nbsp;
