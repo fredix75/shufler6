@@ -23,10 +23,14 @@ class FluxController extends AbstractController
     public function podcasts(FluxRepository $fluxRepository, Request $request, ParameterBagInterface $parameterBag):Response
     {
         if ($request->get('resource')) {
-            $resources = scandir($parameterBag->get('uploads') . $parameterBag->get('resources')['downloads']);
-            $resources = array_filter($resources, function($item) {
-                return !is_dir($item);
-            });
+            $resources = [];
+            $dir = $parameterBag->get('uploads') . $parameterBag->get('resources')['downloads'];
+            if (is_dir($dir)) {
+                $resources = scandir($dir);
+                $resources = array_filter($resources, function($item) {
+                    return !is_dir($item);
+                });
+            }
 
             return $this->render('flux/podcasts_resources.html.twig', [
                 'resources' => $resources,

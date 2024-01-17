@@ -22,7 +22,7 @@ class FluxMood
     #[ORM\JoinColumn(nullable: false)]
     private ?FluxType $type = null;
 
-    #[ORM\OneToMany(mappedBy: 'moods', targetEntity: Flux::class)]
+    #[ORM\OneToMany(mappedBy: 'mood', targetEntity: Flux::class)]
     private Collection $flux;
 
     public function __construct()
