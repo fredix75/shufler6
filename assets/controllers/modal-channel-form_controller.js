@@ -8,7 +8,7 @@ export default class extends Controller {
     connect() {
         let select = document.getElementById('flux_form_channel');
         let control = select.tomselect;
-        control.addOption({value : 'new', text: 'Add new Channel'});
+        control.addOption({value : 0, text: 'Add new Channel'});
     }
 
     async submitForm() {
@@ -34,11 +34,13 @@ export default class extends Controller {
     }
 
     async openModal(event) {
-        if ($(event.target).val() === 'new' || $(event.target).closest('a').data('channel')) {
+        if ($(event.target).val() === '0' || $(event.target).closest('a').data('channel')) {
             let id = $(event.target).closest('a').data('channel') ?? 0;
             const modal = new Modal('#formModal', {keyboard: false});
             modal.show();
             $(document).find('.modal-body').html(await $.ajax('/fr/channel/edit/' + id));
+        } else {
+            $('#btn-edit-channel').data('channel', $(event.target).val());
         }
         event.preventDefault()
     }
