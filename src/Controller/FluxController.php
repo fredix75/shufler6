@@ -48,18 +48,17 @@ class FluxController extends AbstractController
     #[Route('/news/{category}', name: '_news', requirements: ['category' => '\d+'], defaults: ['category' => 0])]
     public function news(FluxRepository $fluxRepository, FluxMoodRepository $fluxMoodRepository, int $category): Response
     {
-        $defaultCategory = $category;
         $mood = $fluxMoodRepository->findOneBy(['name' => 'info', 'type' => 1]);
-        if ($mood) {
-            $defaultCategory = $mood->getId();
+        if ($mood && !$category) {
+            $category = $mood->getId();
         }
 
-        $news = $fluxRepository->getNews($category != 0 ? $category : $defaultCategory);
+        $news = $fluxRepository->getNews($category);
 
         return $this->render('/flux/news.html.twig', [
             'news' => $news,
             'categories' => $fluxMoodRepository->findBy(['type' => 1]),
-            'default_categorie' => $defaultCategory
+            'categorie' => $category
         ]);
     }
 
