@@ -71,13 +71,13 @@ class VideoController extends AbstractController
         Request         $request,
         VideoRepository $videoRepository,
         VideoHelper     $videoHelper,
-        int             $categorie,
-        int             $genre,
+        ?int             $categorie,
+        ?int             $genre,
         string          $periode
     ): Response
     {
-        $categorie = $request->query->get('categorie') ?? $categorie;
-        $genre = $request->query->get('genre') ?? $genre;
+        $categorie = (int)$request->query->get('categorie') ?? $categorie;
+        $genre = (int)$request->query->get('genre') ?? $genre;
         $periode = $request->query->get('periode') ?? $periode;
         $search = $request->query->get('search') ?? null;
 
