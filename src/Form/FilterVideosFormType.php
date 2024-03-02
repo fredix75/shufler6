@@ -67,6 +67,11 @@ class FilterVideosFormType extends AbstractType
             ]);
     }
 
+    public function getBlockPrefix(): string
+    {
+        return '';
+    }
+
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
