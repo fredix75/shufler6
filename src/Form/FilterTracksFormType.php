@@ -10,9 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Util\StringUtil;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Regex;
 
 class FilterTracksFormType extends AbstractType
 {
@@ -127,7 +125,7 @@ class FilterTracksFormType extends AbstractType
 
     private function getNotes(): array
     {
-        for($i=5; $i>0; $i--){
+        for($i = 5; $i > 0; $i--){
             $notes[$i] = $i;
         }
         return $notes;

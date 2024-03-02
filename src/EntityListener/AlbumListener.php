@@ -3,7 +3,6 @@
 namespace App\EntityListener;
 
 use App\Entity\MusicCollection\Album;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class AlbumListener
 {

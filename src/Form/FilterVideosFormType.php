@@ -73,9 +73,4 @@ class FilterVideosFormType extends AbstractType
             'csrf_protection' => false,
         ]);
     }
-
-    public function getBlockPrefix(): string
-    {
-        return '';
-    }
 }
