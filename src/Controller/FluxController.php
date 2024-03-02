@@ -45,8 +45,8 @@ class FluxController extends AbstractController
         ]);
     }
 
-    #[Route('/news/{category}', name: '_news', requirements: ['category' => '\d+'])]
-    public function news(FluxRepository $fluxRepository, FluxMoodRepository $fluxMoodRepository, int $category = null): Response
+    #[Route('/news/{category}', name: '_news', requirements: ['category' => '\d+'], defaults: ['category' => 0])]
+    public function news(FluxRepository $fluxRepository, FluxMoodRepository $fluxMoodRepository, int $category): Response
     {
         $defaultCategory = $category;
         $mood = $fluxMoodRepository->findOneBy(['name' => 'info', 'type' => 1]);
@@ -54,7 +54,7 @@ class FluxController extends AbstractController
             $defaultCategory = $mood->getId();
         }
 
-        $news = $fluxRepository->getNews($category ?? $defaultCategory);
+        $news = $fluxRepository->getNews($category != 0 ? $category : $defaultCategory);
 
         return $this->render('/flux/news.html.twig', [
             'news' => $news,
@@ -88,7 +88,7 @@ class FluxController extends AbstractController
 
     #[Route('/radios', name: '_radios')]
     #[IsGranted('ROLE_ADMIN')]
-    public function radios(FluxRepository $fluxRepository, FluxMoodRepository $fluxMoodRepository): Response
+    public function radios(FluxRepository $fluxRepository): Response
     {
         $radios = $fluxRepository->getRadios();
 
@@ -141,20 +141,16 @@ class FluxController extends AbstractController
         return new Response("Method not allowed", 405);
     }
 
-    #[Route('/edit/{id}', name: '_edit', requirements: ['id' => '\d+'])]
+    #[Route('/edit/{id}', name: '_edit', requirements: ['id' => '\d+'], defaults: ['id' => 0])]
     #[IsGranted('FLUX_EDIT', "flux", "No pasaran")]
     public function edit(
         Request $request,
         FluxRepository $fluxRepository,
         FluxMoodRepository $fluxMoodRepository,
         FluxTypeRepository $fluxTypeRepository,
-        Flux $flux = null
+        ?Flux $flux
     ): Response
     {
-        if (!$flux && '0' !== $request->get('id')) {
-            $this->addFlash('danger', 'No Way !!');
-            return $this->redirectToRoute('main_home');
-        }
         $flux = $flux ?? new Flux();
 
         if ($request->get('channelkey')) {

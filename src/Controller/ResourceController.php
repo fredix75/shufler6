@@ -30,10 +30,11 @@ class ResourceController extends AbstractController
     }
 
     #[Route('/delete', name: '_delete')]
-    public function deleteResources(Request $request, FileHelper $fileHelper): JsonResponse {
+    public function deleteResources(Request $request, FileHelper $fileHelper): JsonResponse
+    {
         $file = $request->get('file');
         $directory = $this->getParameter('resources')['downloads'];
-        $fileHelper->deleteFile($directory.'/'.$file);
+        $fileHelper->deleteFile($directory . '/' . $file);
         return new JsonResponse('ok', 204);
     }
 }

@@ -29,7 +29,7 @@ class MusicCollectionController extends AbstractController
         ParameterBagInterface $parameters,
         TrackRepository $trackRepository,
         ShuflerRuntime $shuflerRuntime,
-        string $mode = 'tracks'
+        string $mode
     ): Response
     {
         $columnsToDisplay = $parameters->get('music_collection')['track_fields'];
@@ -281,7 +281,7 @@ class MusicCollectionController extends AbstractController
     }
 
     #[Route('/albums/{page}', name: '_albums', requirements: ['page' => '\d+'], defaults: ['page' => 1])]
-    public function getAlbums(Request $request, AlbumRepository $albumRepository, int $page = 1): Response
+    public function getAlbums(Request $request, AlbumRepository $albumRepository, int $page): Response
     {
         $params = [
             'auteur'        => $request->get('auteur') ?? null,

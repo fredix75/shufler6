@@ -54,7 +54,7 @@ class ApiController extends AbstractController
 
             // Youtube
             $response = $apiRequester->sendRequest(VideoHelper::YOUTUBE, '/search', [
-                'q'   => $search,
+                'q' => $search,
                 'maxResults' => 25,
             ]);
 
@@ -85,7 +85,7 @@ class ApiController extends AbstractController
                 $resultat['vimeo']['items'][] = [
                     'link' => $item['pictures']['sizes'][1]['link'],
                     'name' => $item['name'],
-                    'url'  => $item['link'],
+                    'url' => $item['link'],
                     'author' => $item['user']['name'],
                     'date' => date("d-m-Y", strtotime($item['created_time'])),
                 ];
@@ -139,7 +139,7 @@ class ApiController extends AbstractController
             $search = $request->get('search_api');
 
             $response = $apiRequester->sendRequest(VideoHelper::YOUTUBE, '/search', [
-                'q'   => $search,
+                'q' => $search,
                 'type' => 'channel',
                 'maxResults' => 5,
             ]);
@@ -176,7 +176,7 @@ class ApiController extends AbstractController
             $idAlbum = $request->get('id_album') ?? null;
 
             $response = $apiRequester->sendRequest(VideoHelper::YOUTUBE, '/search', [
-                'q'   => $search,
+                'q' => $search,
                 'type' => 'playlist',
                 'maxResults' => 5,
             ]);
@@ -212,7 +212,7 @@ class ApiController extends AbstractController
             $idAlbum = $request->get('id_album') ?? null;
 
             $response = $apiRequester->sendRequest('last_fm', '', [
-                'album'   => $album,
+                'album' => $album,
                 'method' => 'album.search',
             ]);
 
@@ -251,7 +251,7 @@ class ApiController extends AbstractController
         if ($request->isXmlHttpRequest()) {
             $channelId = $request->get('id');
             $response = $apiRequester->sendRequest(VideoHelper::YOUTUBE, '/playlists', [
-                'channelId'   => $channelId,
+                'channelId' => $channelId,
                 'part' => 'snippet, contentDetails',
                 'maxResults' => 75,
             ]);
@@ -265,7 +265,6 @@ class ApiController extends AbstractController
 
         return new Response("Method not allowed", 405);
     }
-
 
 
     /**

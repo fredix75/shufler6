@@ -35,6 +35,7 @@ export default class extends Controller {
             let control = select.tomselect;
             if (this.idValue === '0') {
                 control.addOption({ value: result.id, text: result.name });
+                control.setValue(result.id);
             } else {
                 control.updateOption(result.id, { value: result.id, text: result.name });
             }

@@ -15,19 +15,14 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/channel', name: 'channel')]
 class ChannelFluxController extends AbstractController
 {
-    #[Route('/edit/{id}', name: '_edit', requirements: ['id' => '\d+'])]
+    #[Route('/edit/{id}', name: '_edit', requirements: ['id' => '\d+'], defaults: ['id' => 0])]
     #[IsGranted('ROLE_AUTEUR')]
     public function channelEdit(
-        Request $request,
+        Request               $request,
         ChannelFluxRepository $channelFluxRepository,
-        ChannelFlux $channelFlux = null
+        ?ChannelFlux          $channelFlux
     ): Response
     {
-        if (!$channelFlux && '0' !== $request->get('id')) {
-            $this->addFlash('danger', 'No Way !!');
-            return $this->redirectToRoute('main_home');
-        }
-
         $channelFlux = $channelFlux ?? new ChannelFlux();
         $form = $this->createForm(ChannelFluxFormType::class, $channelFlux, [
             'action' => $this->generateUrl(
@@ -44,7 +39,6 @@ class ChannelFluxController extends AbstractController
                 $channelFlux->setImage('new file');
             }
             $channelFluxRepository->save($channelFlux, true);
-            $this->addFlash('success', 'Channel enregistré');
 
             return new Response(json_encode([
                 'id' => $channelFlux->getId(),
@@ -52,6 +46,7 @@ class ChannelFluxController extends AbstractController
                 'image' => $channelFlux->getImage(),
             ]), Response::HTTP_OK);
         }
+
         return $this->render('channel_flux/edit.html.twig', [
             'form' => $form,
             'channelflux' => $channelFlux
@@ -62,8 +57,8 @@ class ChannelFluxController extends AbstractController
     #[IsGranted('ROLE_AUTEUR')]
     public function channelDelete(
         ChannelFluxRepository $channelFluxRepository,
-        FluxRepository $fluxRepository,
-        ChannelFlux $channelFlux
+        FluxRepository        $fluxRepository,
+        ChannelFlux           $channelFlux
     ): Response
     {
         foreach ($channelFlux->getFlux() as $flux) {
@@ -79,7 +74,7 @@ class ChannelFluxController extends AbstractController
     #[IsGranted('ROLE_AUTEUR')]
     public function channelDeleteLogo(
         ChannelFluxRepository $channelFluxRepository,
-        ChannelFlux $channelFlux
+        ChannelFlux           $channelFlux
     ): Response
     {
         $channelFlux->setImage(null);

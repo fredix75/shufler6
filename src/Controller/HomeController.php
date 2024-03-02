@@ -34,7 +34,7 @@ class HomeController extends AbstractController
             } else {
                 continue;
             }
-            $i ++;
+            $i++;
 
             if ($i >= ($videoParameters['index_max_anim'] + $videoParameters['index_max_music'] + $videoParameters['index_max_autre'])) {
                 break;

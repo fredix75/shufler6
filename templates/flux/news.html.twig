@@ -6,9 +6,10 @@
     <h1><i class="bi bi-newspaper"></i> Quoi de neuf dans le monde ?</h1>
     <div class="submenu">
         <ul class="nav nav-pills justify-content-center">
+            {% set category_from_request = app.request.get('category') != 0 ? app.request.get('category') : default_categorie %}
             {% for category in categories %}
                 <li class="nav-item">
-                    <a href="{{ path('flux_news', {'category' : category.id }) }}" class="nav-link{% if app.request.get('category') == category.id %} active {% elseif app.request.get('category') is null and default_categorie == category.id %} active {% endif %}">{{ category.name|capitalize }}</a>
+                    <a href="{{ path('flux_news', {'category' : category.id }) }}" class="nav-link{% if category_from_request == category.id %} active {% endif %}">{{ category.name|capitalize }}</a>
                 </li>
             {% endfor %}
         </ul>

@@ -29,7 +29,7 @@ class AdminController extends AbstractController
             $key = $videoHelper->getIdentifer($video->getLien(), VideoHelper::YOUTUBE);
             $response = $apiRequester->sendRequest(VideoHelper::YOUTUBE, '/videos', [
                 'part' => 'id',
-                'id' => $key,1
+                'id' => $key, 1
             ]);
 
             if ($response->getStatusCode() === Response::HTTP_OK) {

@@ -23,14 +23,18 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[IsGranted("ROLE_USER")]
 class VideoController extends AbstractController
 {
-    #[Route('/list/{categorie}/{genre}/{periode}/{page}', name: '_list', requirements: ['categorie' => '\d+', 'genre' => '\d+|-\d+', 'page' => '\d+'])]
+    #[Route('/list/{categorie}/{genre}/{periode}/{page}',
+        name: '_list',
+        requirements: ['categorie' => '\d+', 'genre' => '\d+|-\d+', 'page' => '\d+'],
+        defaults: ['categorie' => 0, 'genre' => 0, 'periode' => '0', 'page' => 1]
+    )]
     public function list(
-        Request $request,
+        Request         $request,
         VideoRepository $videoRepository,
-        int $categorie = 0,
-        int $genre = 0,
-        string $periode = '0',
-        int $page = 1
+        int             $categorie,
+        int             $genre,
+        string          $periode,
+        int             $page
     ): Response
     {
         $videoParameters = $this->getParameter('shufler_video');
@@ -58,14 +62,18 @@ class VideoController extends AbstractController
         ]);
     }
 
-    #[Route('/couch/{categorie}/{genre}/{periode}', name: '_couch', requirements: ['categorie' => '\d+', 'genre' => '\d+|-\d+'])]
+    #[Route('/couch/{categorie}/{genre}/{periode}',
+        name: '_couch',
+        requirements: ['categorie' => '\d+', 'genre' => '\d+|-\d+'],
+        defaults: ['categorie' => 0, 'genre' => 0, 'periode' => '0']
+    )]
     public function couch(
-        Request $request,
+        Request         $request,
         VideoRepository $videoRepository,
-        VideoHelper $videoHelper,
-        int $categorie = 0,
-        int $genre = 0,
-        string $periode = '0'
+        VideoHelper     $videoHelper,
+        int             $categorie,
+        int             $genre,
+        string          $periode
     ): Response
     {
         $categorie = $request->query->get('categorie') ?? $categorie;
@@ -100,19 +108,14 @@ class VideoController extends AbstractController
         ]);
     }
 
-    #[Route('/edit/{id}', name: '_edit', requirements: ['id' => '\d+'])]
+    #[Route('/edit/{id}', name: '_edit', requirements: ['id' => '\d+'], defaults: ['id' => 0])]
     #[isGranted('VIDEO_EDIT', "video", 'No pasaran')]
     public function edit(
-        Request $request,
+        Request         $request,
         VideoRepository $videoRepository,
-        Video $video = null
+        ?Video          $video
     ): Response
     {
-        if (0 != $request->get('id') && !$video) {
-            $this->addFlash('danger', 'No Way !!');
-            return $this->redirectToRoute('video_list');
-        }
-
         $video = $video ?? new Video();
 
         if ($request->get('videokey')) {
@@ -132,9 +135,9 @@ class VideoController extends AbstractController
         }
 
         return $this->render('video/edit.html.twig', [
-            'form'   => $form,
-            'video'  => $video,
-            'periods'=> $this->getParameter('shufler_video')['periods'],
+            'form' => $form,
+            'video' => $video,
+            'periods' => $this->getParameter('shufler_video')['periods'],
         ]);
     }
 
@@ -165,20 +168,20 @@ class VideoController extends AbstractController
     #[Route('/getVideoInfos/{plateforme}/{videoKey}', name: '_getVideoInfos')]
     public function getVideoInfos(
         ApiRequester $apiRequester,
-        string $plateforme,
-        string $videoKey
+        string       $plateforme,
+        string       $videoKey
     ): Response
     {
         $result = [];
         if ('youtube' === $plateforme) {
-            $response = $apiRequester->sendRequest(VideoHelper::YOUTUBE,'/videos', [
-                'id'   => $videoKey,
+            $response = $apiRequester->sendRequest(VideoHelper::YOUTUBE, '/videos', [
+                'id' => $videoKey,
                 'part' => 'snippet'
             ]);
 
             $result = json_decode($response->getContent(), true)['items'][0]['snippet'] ?? null;
         } elseif ('vimeo' === $plateforme) {
-            if (!@file_get_contents($this->getParameter('vimeo_api_url').'/video/'.$videoKey.'.json')) {
+            if (!@file_get_contents($this->getParameter('vimeo_api_url') . '/video/' . $videoKey . '.json')) {
                 return new Response('No data', Response::HTTP_NOT_FOUND);
             }
 
@@ -188,7 +191,7 @@ class VideoController extends AbstractController
         }
 
         if (!empty($response) && Response::HTTP_OK === $response->getStatusCode()) {
-            Return new Response(json_encode($result));
+            return new Response(json_encode($result));
         }
 
         return new Response('No data', Response::HTTP_NOT_FOUND);
@@ -230,12 +233,12 @@ class VideoController extends AbstractController
         return new Response('error', Response::HTTP_PAYMENT_REQUIRED);
     }
 
-    #[Route('/trash/{page}', name: '_trash', requirements: ['page' => '\d+'])]
+    #[Route('/trash/{page}', name: '_trash', requirements: ['page' => '\d+'], defaults: ['page' => 1])]
     #[IsGranted('VIDEO_VIEW')]
     public function trash(
-        Request $request,
+        Request         $request,
         VideoRepository $videoRepository,
-        int $page = 1
+        int             $page
     ): Response
     {
         $videos = $videoRepository->getPaginatedTrash($page, $this->getParameter('shufler_video')['max_list']);
@@ -248,7 +251,7 @@ class VideoController extends AbstractController
 
         return $this->render('video/trash.html.twig', [
             'videos' => $videos,
-            'trash'  => true,
+            'trash' => true,
             'pagination' => $pagination,
         ]);
     }
