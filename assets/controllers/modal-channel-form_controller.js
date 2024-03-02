@@ -4,6 +4,10 @@ import $ from 'jquery';
 
 export default class extends Controller {
 
+    static values = {
+        id: String,
+    };
+
     connect() {
         let select = document.getElementById('flux_form_channel');
         let control = select.tomselect;
@@ -29,7 +33,12 @@ export default class extends Controller {
             const result = await response.json();
             const select = document.getElementById('flux_form_channel');
             let control = select.tomselect;
-            control.addOption({ value: result.id, text: result.name });
+            if (this.idValue === '0') {
+                control.addOption({ value: result.id, text: result.name });
+            } else {
+                control.updateOption(result.id, { value: result.id, text: result.name });
+            }
+
             let modal = document.querySelector('#formModal');
             Modal.getInstance(modal).hide();
         } catch (error) {
@@ -40,10 +49,10 @@ export default class extends Controller {
 
     async openModal(event) {
         if ($(event.target).val() === '0' || $(event.target).closest('a').data('channel')) {
-            let id = $(event.target).closest('a').data('channel') ?? 0;
+            this.idValue = $(event.target).closest('a').data('channel') ?? 0;
             const modal = new Modal('#formModal', {keyboard: false});
             modal.show();
-            $(document).find('.modal-body').html(await $.ajax('/fr/channel/edit/' + id));
+            $(document).find('.modal-body').html(await $.ajax('/fr/channel/edit/' + this.idValue));
             event.stopPropagation();
         } else {
             $('#btn-edit-channel').data('channel', $(event.target).val());
