@@ -39,7 +39,7 @@ class ChannelFlux implements UploadInterface
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateInsert = null;
 
-    #[ORM\OneToMany(mappedBy: 'channel', targetEntity: Flux::class)]
+    #[ORM\OneToMany(targetEntity: Flux::class, mappedBy: 'channel')]
     private Collection $flux;
 
     public function getId(): ?int
@@ -84,17 +84,11 @@ class ChannelFlux implements UploadInterface
         return $this;
     }
 
-    /**
-     * @return UploadedFile|null
-     */
     public function getFile(): ?UploadedFile
     {
         return $this->file;
     }
 
-    /**
-     * @param UploadedFile|null $file
-     */
     public function setFile(?UploadedFile $file): self
     {
         $this->file = $file;

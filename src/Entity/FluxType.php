@@ -18,10 +18,10 @@ class FluxType
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\OneToMany(mappedBy: 'type', targetEntity: FluxMood::class, orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: FluxMood::class, mappedBy: 'type', orphanRemoval: true)]
     private Collection $fluxMoods;
 
-    #[ORM\OneToMany(mappedBy: 'type', targetEntity: Flux::class)]
+    #[ORM\OneToMany(targetEntity: Flux::class, mappedBy: 'type')]
     private Collection $flux;
 
     public function __construct()
@@ -77,9 +77,6 @@ class FluxType
         return $this;
     }
 
-    /**
-     * @return Collection<int, Flux>
-     */
     public function getFlux(): Collection
     {
         return $this->flux;
