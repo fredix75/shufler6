@@ -15,9 +15,9 @@
     <div class="well" data-controller="modal-channel-form">
         <div class="row justify-content-md-center txt-center">
             <div class="col-12 col-lg-6" {{ stimulus_controller('flux-edit', {
-                'news': news,
-                'radios': radios,
-                'liens': liens
+                news: news,
+                radios: radios,
+                liens: liens
             }) }}>
                 {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
                 {{ form_errors(form) }}

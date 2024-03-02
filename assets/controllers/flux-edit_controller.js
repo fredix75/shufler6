@@ -4,9 +4,9 @@ import $ from 'jquery';
 export default class extends Controller {
 
     static values = {
-        'news': Object,
-        'radios': Object,
-        'liens': Object,
+        news: Object,
+        radios: Object,
+        liens: Object,
     };
 
     connect() {
