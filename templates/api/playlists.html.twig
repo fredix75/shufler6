@@ -7,30 +7,33 @@
     <div class="row">
         <form name="form_search" action="{{ path('api_playlist') }}" method="POST" class="row justify-content-center">
             <div class="col col-10 col-sm-10 col-lg-6">
-                <input type="search" id="search_api" name="search_api" value="{{ search|trim }}" class="input-sm form-control big-input" placeholder="playlists on youtube" />
+                <input type="search" id="search_api" name="search_api" value="{{ search|trim }}"
+                       class="input-sm form-control big-input" placeholder="playlists on youtube"/>
                 {% if idAlbum != 0 %}
                     <input type="hidden" name="id_album" value="{{ idAlbum }}"/>
                 {% endif %}
             </div>
             <div class="col col-2 col-sm-2 col-lg-2">
-                <button type="submit" id="enter_search" class="btn btn-primary btn-sm" style="height:50px;width:50px;"><i class="bi bi-binoculars"></i></button>
+                <button type="submit" id="enter_search" class="btn btn-primary btn-sm" style="height:50px;width:50px;">
+                    <i class="bi bi-binoculars"></i></button>
             </div>
         </form>
     </div>
     <br/>
     {% if idAlbum != 0 %}
         <form name="form_album_edit" action="{{ path('music_album_edit', {'id' : idAlbum }) }}" method="POST">
-            <input type="hidden" name="albumkey" />
+            <input type="hidden" name="albumkey"/>
         </form>
     {% endif %}
     <div class="row justify-content-center txt-center" data-controller="video">
         {% for key, result in resultats %}
-            <section class="channel vignette-item row g-0 d-flex position-relative col col-12 col-md-6 col-lg-4" style="padding:5px;">
+            <section class="channel vignette-item row g-0 d-flex position-relative col col-12 col-md-6 col-lg-4"
+                     style="padding:5px;">
                 <div class="row vignette-item g-0 bg-body-secondary position-relative">
                     <div class="col-6 col-md-6 mb-md-0 p-md-4">
                         <div class="media topcol embed-responsive-16by9">
                             <a class="playlist-link" href="{{ result.url|youtubeChannelLink }}" onclick="return false;">
-                                <img src="{{ result.link }}" height=180px />
+                                <img src="{{ result.link }}" height=180px/>
                             </a>
                         </div>
                     </div>
@@ -38,7 +41,11 @@
                         <strong>{{ result.name }}</strong>';
                         {% if is_granted('ROLE_AUTEUR') %}
                             {% if idAlbum != 0 %}
-                                <div class="playlist-link" style="position:relative;"><a href="#" class="btn btn-secondary" data-action="video#editAlbum" data-url="{{ result.url }}"><i class="bi bi-arrow-left-right"></i></a></div>
+                                <div class="playlist-link" style="position:relative;"><a href="#"
+                                                                                         class="btn btn-secondary"
+                                                                                         data-action="video#editAlbum"
+                                                                                         data-url="{{ result.url }}"><i
+                                                class="bi bi-arrow-left-right"></i></a></div>
                             {% endif %}
                         {% endif %}
                         <span class="badge bg-secondary">{{ result.date }}</span>

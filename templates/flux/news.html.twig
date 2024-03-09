@@ -8,7 +8,8 @@
         <ul class="nav nav-pills justify-content-center">
             {% for category in categories %}
                 <li class="nav-item">
-                    <a href="{{ path('flux_news', {'category' : category.id }) }}" class="nav-link{% if categorie == category.id %} active {% endif %}">{{ category.name|capitalize }}</a>
+                    <a href="{{ path('flux_news', {'category' : category.id }) }}"
+                       class="nav-link{% if categorie == category.id %} active {% endif %}">{{ category.name|capitalize }}</a>
                 </li>
             {% endfor %}
         </ul>
@@ -18,23 +19,29 @@
             <section class="flux row g-0 d-flex position-relative col col-12 col-md-6 col-lg-4" style="padding:5px;">
                 <div id="flux-{{ rss.id }}" class="row news-widget bg-body-secondary">
                     <div class="col col-12 mb-md-0 p-md-4 center-block">
-                        <img src="{{ asset('/uploads/logos/' ~ rss.image) }}" alt="{{ rss.name }}" class="img-responsive center-block" style="max-height:100px; max-width:150px; margin: 0 auto;">
+                        <img src="{{ asset('/uploads/logos/' ~ rss.image) }}" alt="{{ rss.name }}"
+                             class="img-responsive center-block"
+                             style="max-height:100px; max-width:150px; margin: 0 auto;">
                     </div>
                     <div class="pod-nav row justify-content-center" style="padding:10px;">
                         <div class="col col-2 col-sm-2 col-lg-2">
-                            <a href="#" class="left btn btn-secondary disabled" data-page="0" data-action="flux#prev"><i class="bi bi-chevron-left"></i></a>
+                            <a href="#" class="left btn btn-secondary disabled" data-page="0" data-action="flux#prev"><i
+                                        class="bi bi-chevron-left"></i></a>
                         </div>
                         {% if is_granted('FLUX_EDIT', rss) %}
                             <div class="col col-auto text-center">
-                                <a href="{{ path('flux_edit', {'id': rss.id}) }}" class="btn btn-secondary"><i class="bi bi-pencil-square"></i>&nbsp;Editer</a>
+                                <a href="{{ path('flux_edit', {'id': rss.id}) }}" class="btn btn-secondary"><i
+                                            class="bi bi-pencil-square"></i>&nbsp;Editer</a>
                             </div>
                         {% endif %}
                         <div class="col col-2 col-sm-2 col-lg-2 text-end">
-                            <a href="#" class="right btn btn-secondary" data-page="2" data-action="flux#next"><i class="bi bi-chevron-right"></i></a>
+                            <a href="#" class="right btn btn-secondary" data-page="2" data-action="flux#next"><i
+                                        class="bi bi-chevron-right"></i></a>
                         </div>
                     </div>
                     <div class="col-12 p-4 ps-md-0">
-                        <div id="accordion-{{ rss.id }}" class="accordion" data-url="{{ rss.url }}" data-type="news"></div>
+                        <div id="accordion-{{ rss.id }}" class="accordion" data-url="{{ rss.url }}"
+                             data-type="news"></div>
                     </div>
                 </div>
             </section>

@@ -5,7 +5,7 @@
 {% block title %}{{ parent() }} :: Flux Edit {% endblock %}
 
 {% block body %}
-    {% if flux.id is defined and flux.id !=0  %}
+    {% if flux.id is defined and flux.id !=0 %}
         <h1 class="minor"><i class="bi bi-pencil"></i>&nbsp;Editer le Flux {{ flux.id }}</h1>
         <span class="badge bg-secondary" style="float:right;">{{ flux.dateInsert|date("d/m/Y H:i:s") }}</span><br/>
     {% else %}
@@ -24,17 +24,19 @@
                 {{ form_widget(form) }}
                 <div class="row justify-content-center">
                     <div class="col-3">
-                        <button type="submit" class="btn btn-primary" style="width: 100%;"><i class="bi bi-check-circle-fill"></i> OK</button>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;"><i
+                                    class="bi bi-check-circle-fill"></i> OK
+                        </button>
                     </div>
-                    {% if flux.id is defined and flux.id != 0 and is_granted("FLUX_DELETE", flux)  %}
-                    <div class="col-3">
-                        <a class="btn btn-danger"
-                           href="{{ path('flux_delete', {'id': flux.id}) }}"
-                           onclick="return confirm('global.confirmation');"
-                        >
-                            <i class="bi bi-trash-fill"></i>&nbsp;Delete
-                        </a>
-                    </div>
+                    {% if flux.id is defined and flux.id != 0 and is_granted("FLUX_DELETE", flux) %}
+                        <div class="col-3">
+                            <a class="btn btn-danger"
+                               href="{{ path('flux_delete', {'id': flux.id}) }}"
+                               onclick="return confirm('global.confirmation');"
+                            >
+                                <i class="bi bi-trash-fill"></i>&nbsp;Delete
+                            </a>
+                        </div>
                     {% endif %}
                 </div>
                 {{ form_end(form) }}
@@ -42,27 +44,28 @@
                 {% if flux.id is defined %}
                     {% if flux.image is not null %}
                         {% if 'http' in flux.image %}
-                            <img src="{{ asset(flux.image) }}" width="200px" />
+                            <img src="{{ asset(flux.image) }}" width="200px"/>
                         {% else %}
-                            <img src="{{ asset('uploads/logos/' ~ flux.image) }}" width="200px" />
+                            <img src="{{ asset('uploads/logos/' ~ flux.image) }}" width="200px"/>
                             <a href="{{ path('flux_delete_logo',{'id': flux.id}) }}"
                                type="button"
                                class="btn btn-danger"
-                               onclick="return confirm('{{ 'Are You sure ?'|trans}}');"
+                               onclick="return confirm('{{ 'Are You sure ?'|trans }}');"
                                title="Delete this Logo"
                             >
                                 <i class="bi bi-trash-fill"></i>
                             </a>
-                        {%  endif %}
+                        {% endif %}
                     {% endif %}
                     {% if flux.channel.id is defined and flux.channel.image is not null %}
                         {% if 'http' in flux.image %}
-                            <img src="{{ asset(flux.channel.image) }}" width="200px" />
+                            <img src="{{ asset(flux.channel.image) }}" width="200px"/>
                         {% else %}
-                            <img class="channel-image" src="{{ asset('uploads/logos/' ~ flux.channel.image) }}" width="200px" />
-                        {%  endif %}
+                            <img class="channel-image" src="{{ asset('uploads/logos/' ~ flux.channel.image) }}"
+                                 width="200px"/>
+                        {% endif %}
                     {% endif %}
-                    {%  if flux.channel.id is defined %}
+                    {% if flux.channel.id is defined %}
                         <a href="#"
                            id="btn-edit-channel"
                            type="button"

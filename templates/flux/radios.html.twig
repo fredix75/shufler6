@@ -8,11 +8,13 @@
         <div class="list-group">
             {% for radio in radios %}
                 <div class="list-group-item">
-                    <a href="{{ radio.url }}" class="btn btn-secondary" data-action="flux#launch" data-type="radio"><i class="bi bi-play-circle"></i></a>
+                    <a href="{{ radio.url }}" class="btn btn-secondary" data-action="flux#launch" data-type="radio"><i
+                                class="bi bi-play-circle"></i></a>
                     <span class="badge bg-secondary">{{ radio.mood.name ?? '' }}</span>
-                    {{ radio.name}}
+                    {{ radio.name }}
                     {% if is_granted('FLUX_EDIT', radio) %}
-                        <a href="{{ path('flux_edit',{'id': radio.id}) }}" style="position:absolute;right:50px;"><span class="bi bi-pencil"></span></a>
+                        <a href="{{ path('flux_edit',{'id': radio.id}) }}" style="position:absolute;right:50px;"><span
+                                    class="bi bi-pencil"></span></a>
                     {% endif %}
                 </div>
             {% endfor %}

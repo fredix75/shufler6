@@ -26,30 +26,31 @@
                     </div>
                 </div>
                 {% if video.id is defined and video.id != 0 %}
-                <div class="row justify-content-end" style="margin-top:20px;">
-                    <div class="col-4 col-md-3">
-                        <a class="btn btn-secondary" href="{{ path('api_video', {'search_api': video.auteur ~ ' ' ~ video.titre, 'id_video': video.id }) }}">
-                            <i class="bi bi-arrow-left-right"></i>&nbsp;Exchange on Api
-                        </a>
-                    </div>
-                    <div class="col-4 col-md-3">
-                        <a class="btn btn-secondary" href="{{ path('video_view', {'id':video.id}) }}">
-                            <i class="bi bi-eye-fill"></i>&nbsp;View
-                        </a>
-                    </div>
-
-                    {% if is_granted('VIDEO_EDIT') %}&nbsp
+                    <div class="row justify-content-end" style="margin-top:20px;">
                         <div class="col-4 col-md-3">
-                            <a class="btn btn-danger" href="{{ path('video_delete', {'id':video.id}) }}"
-                                onclick="return confirm('{% trans %}global.confirmation{% endtrans %}');"><i
-                                    class="bi bi-trash-fill"></i>&nbsp;Delete
+                            <a class="btn btn-secondary"
+                               href="{{ path('api_video', {'search_api': video.auteur ~ ' ' ~ video.titre, 'id_video': video.id }) }}">
+                                <i class="bi bi-arrow-left-right"></i>&nbsp;Exchange on Api
                             </a>
                         </div>
-                    {% endif %}
-                </div>
-                    {% endif %}
-                    {{ form_end(form) }}
-                </div>
+                        <div class="col-4 col-md-3">
+                            <a class="btn btn-secondary" href="{{ path('video_view', {'id':video.id}) }}">
+                                <i class="bi bi-eye-fill"></i>&nbsp;View
+                            </a>
+                        </div>
+
+                        {% if is_granted('VIDEO_EDIT') %}&nbsp
+                            <div class="col-4 col-md-3">
+                                <a class="btn btn-danger" href="{{ path('video_delete', {'id':video.id}) }}"
+                                   onclick="return confirm('{% trans %}global.confirmation{% endtrans %}');"><i
+                                            class="bi bi-trash-fill"></i>&nbsp;Delete
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                {{ form_end(form) }}
             </div>
+        </div>
     </div>
 {% endblock %}

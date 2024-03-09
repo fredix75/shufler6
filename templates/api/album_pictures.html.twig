@@ -5,32 +5,36 @@
 {% block body %}
     <h1 class="minor"><i class="bi bi-youtube"></i> Album Pictures Search</h1>
     <div class="row">
-        <form name="form_search" action="{{ path('api_album_picture') }}" method="POST" class="row justify-content-center">
+        <form name="form_search" action="{{ path('api_album_picture') }}" method="POST"
+              class="row justify-content-center">
             <div class="col col-10 col-sm-10 col-lg-6">
-                <input type="search" id="search_api" name="search_api" value="{{ search|trim }}" class="input-sm form-control big-input" placeholder="pictures on lastFM" />
+                <input type="search" id="search_api" name="search_api" value="{{ search|trim }}"
+                       class="input-sm form-control big-input" placeholder="pictures on lastFM"/>
                 {% if idAlbum != 0 %}
                     <input type="hidden" name="id_album" value="{{ idAlbum }}"/>
                 {% endif %}
             </div>
             <div class="col col-2 col-sm-2 col-lg-2">
-                <button type="submit" id="enter_search" class="btn btn-primary btn-sm" style="height:50px;width:50px;"><i class="bi bi-binoculars"></i></button>
+                <button type="submit" id="enter_search" class="btn btn-primary btn-sm" style="height:50px;width:50px;">
+                    <i class="bi bi-binoculars"></i></button>
             </div>
         </form>
     </div>
     <br/>
     {% if idAlbum != 0 %}
         <form name="form_album_edit" action="{{ path('music_album_edit', {'id' : idAlbum }) }}" method="POST">
-            <input type="hidden" name="albumpicture" />
+            <input type="hidden" name="albumpicture"/>
         </form>
     {% endif %}
     <div class="row justify-content-center txt-center" data-controller="album">
         {% for key, result in resultats %}
-            <section class="channel vignette-item row g-0 d-flex position-relative col col-12 col-md-6 col-lg-6" style="padding:5px;">
+            <section class="channel vignette-item row g-0 d-flex position-relative col col-12 col-md-6 col-lg-6"
+                     style="padding:5px;">
                 <div class="row vignette-item g-0 bg-body-secondary position-relative">
                     <div class="col-12 col-lg-6 mb-md-0 p-md-4">
                         <div class="playlist-link" style="position:relative;">
                             <a href="{{ result.url }}" target="_blank" rel="noopener noreferrer">
-                                <img src="{{ result.link }}" height=300px />
+                                <img src="{{ result.link }}" height=300px/>
                             </a>
                         </div>
                     </div>
@@ -39,7 +43,8 @@
                         <strong>{{ result.name }}</strong>
                         {% if is_granted('ROLE_AUTEUR') %}
                             {% if idAlbum != 0 %}
-                                <br/><a href="#" class="btn btn-secondary" data-action="album#editPicture" data-url="{{ result.link }}"><i class="bi bi-arrow-left-right"></i></a>
+                                <br/><a href="#" class="btn btn-secondary" data-action="album#editPicture"
+                                        data-url="{{ result.link }}"><i class="bi bi-arrow-left-right"></i></a>
                             {% endif %}
                         {% endif %}
                     </div>

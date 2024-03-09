@@ -7,43 +7,52 @@
     <div class="row">
         <form name="form_search" action="{{ path('api_channel') }}" method="POST" class="row justify-content-center">
             <div class="col col-10 col-sm-10 col-lg-6">
-                <input type="search" id="search_api" name="search_api" value="{{ search|trim }}" class="input-sm form-control big-input" placeholder="channels on youtube" />
+                <input type="search" id="search_api" name="search_api" value="{{ search|trim }}"
+                       class="input-sm form-control big-input" placeholder="channels on youtube"/>
             </div>
             <div class="col col-2 col-sm-2 col-lg-2">
-                <button type="submit" id="enter_search" class="btn btn-primary btn-sm" style="height:50px;width:50px;"><i class="bi bi-binoculars"></i></button>
+                <button type="submit" id="enter_search" class="btn btn-primary btn-sm" style="height:50px;width:50px;">
+                    <i class="bi bi-binoculars"></i></button>
             </div>
         </form>
     </div>
     <br/>
     <form name="form_video_edit" action="{{ path('flux_edit', {'id' : 0}) }}" method="POST">
-        <input type="hidden" name="channelkey" />
-        <input type="hidden" name="channelpicture" />
+        <input type="hidden" name="channelkey"/>
+        <input type="hidden" name="channelpicture"/>
     </form>
     <div class="row justify-content-center txt-center" data-controller="other-channel">
         {% for result in resultats %}
-            <section class="channel vignette-item row g-0 d-flex position-relative col col-12 col-md-6 col-lg-4" style="padding:5px;">
+            <section class="channel vignette-item row g-0 d-flex position-relative col col-12 col-md-6 col-lg-4"
+                     style="padding:5px;">
                 <div id="channel-{{ result.channelId }}" class="row bg-body-secondary">
                     <div class="channel-picture col col-12 mb-md-0 p-md-4 center-block">
-                        <a href="https://www.youtube.com/channel/{{ result.channelId }}" target="_blank" rel="noopener noreferrer">
-                            <img src="{{ result.link }}" alt="{{ result.name }}" class="img-responsive center-block" style="max-height:100px; max-width:150px; margin: 0 auto;">
+                        <a href="https://www.youtube.com/channel/{{ result.channelId }}" target="_blank"
+                           rel="noopener noreferrer">
+                            <img src="{{ result.link }}" alt="{{ result.name }}" class="img-responsive center-block"
+                                 style="max-height:100px; max-width:150px; margin: 0 auto;">
                             {{ result.name }}
                         </a>
                     </div>
                     <div class="pod-nav row justify-content-center" style="padding:10px;">
                         <div class="col col-2 col-sm-2 col-lg-2">
-                            <a href="#" class="left btn btn-secondary disabled" data-page="0" data-action="other-channel#prev"><i class="bi bi-chevron-left"></i></a>
+                            <a href="#" class="left btn btn-secondary disabled" data-page="0"
+                               data-action="other-channel#prev"><i class="bi bi-chevron-left"></i></a>
                         </div>
                         {% if is_granted('ROLE_ADMIN') %}
                             <div class="col col-auto text-center">
-                                <a href="#" class="btn btn-secondary"><i class="bi bi-save-fill"></i>&nbsp;Enregistrer</a>
+                                <a href="#" class="btn btn-secondary"><i
+                                            class="bi bi-save-fill"></i>&nbsp;Enregistrer</a>
                             </div>
                         {% endif %}
                         <div class="col col-2 col-sm-2 col-lg-2 text-end">
-                            <a href="#" class="right btn btn-secondary" data-page="2" data-action="other-channel#next"><i class="bi bi-chevron-right"></i></a>
+                            <a href="#" class="right btn btn-secondary" data-page="2"
+                               data-action="other-channel#next"><i class="bi bi-chevron-right"></i></a>
                         </div>
                     </div>
                     <div class="col-12 p-4 ps-md-0" data-controller="video">
-                        <div id="accordion-{{ result.channelId }}" class="accordion" data-channel="{{ result.channelId }}"></div>
+                        <div id="accordion-{{ result.channelId }}" class="accordion"
+                             data-channel="{{ result.channelId }}"></div>
                     </div>
                 </div>
             </section>

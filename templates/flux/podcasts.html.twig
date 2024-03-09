@@ -7,10 +7,12 @@
     <div class="submenu">
         <ul class="nav nav-pills justify-content-center">
             <li class="nav-item">
-                <a href="{{ path('flux_podcasts') }}" class="nav-link{% if app.request.get('resource') is null %} active {% endif %}">All Podcasts</a>
+                <a href="{{ path('flux_podcasts') }}"
+                   class="nav-link{% if app.request.get('resource') is null %} active {% endif %}">All Podcasts</a>
             </li>
             <li class="nav-item">
-                <a href="{{ path('flux_podcasts', {'resource': true}) }}" class="nav-link{% if app.request.get('resource') is not null %} active {% endif %}">Resources</a>
+                <a href="{{ path('flux_podcasts', {'resource': true}) }}"
+                   class="nav-link{% if app.request.get('resource') is not null %} active {% endif %}">Resources</a>
             </li>
         </ul>
     </div><br/><br/>
