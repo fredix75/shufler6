@@ -40,6 +40,10 @@ export default class extends Controller {
                 control.updateOption(result.id, { value: result.id, text: result.name });
             }
 
+            document.querySelectorAll('.channel-image').forEach((item) => {
+                item.src = '/uploads/logos/' + result.image + '?new=' + Math.random().toString(36);
+            });
+
             let modal = document.querySelector('#formModal');
             Modal.getInstance(modal).hide();
         } catch (error) {

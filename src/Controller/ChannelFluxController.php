@@ -56,6 +56,7 @@ class ChannelFluxController extends AbstractController
     #[Route('/delete/{id}', name: '_delete', requirements: ['id' => '\d+'])]
     #[IsGranted('ROLE_AUTEUR')]
     public function channelDelete(
+        Request $request,
         ChannelFluxRepository $channelFluxRepository,
         FluxRepository        $fluxRepository,
         ChannelFlux           $channelFlux
@@ -67,12 +68,13 @@ class ChannelFluxController extends AbstractController
         }
         $channelFluxRepository->remove($channelFlux, true);
         $this->addFlash('success', 'Channel bien supprimée');
-        return $this->redirectToRoute('main_home');
+        return $this->redirect($request->headers->get('referer'));
     }
 
     #[Route('/delete_logo/{id}', name: '_delete_logo', requirements: ['id' => '\d+'])]
     #[IsGranted('ROLE_AUTEUR')]
     public function channelDeleteLogo(
+        Request $request,
         ChannelFluxRepository $channelFluxRepository,
         ChannelFlux           $channelFlux
     ): Response
@@ -80,7 +82,7 @@ class ChannelFluxController extends AbstractController
         $channelFlux->setImage(null);
         $channelFluxRepository->save($channelFlux, true);
         $this->addFlash('success', 'Logo supprimé');
-//@todo faire en ajax
-        return $this->redirectToRoute('channel_edit', ['id' => $channelFlux->getId()]);
+
+        return $this->redirect($request->headers->get('referer'));
     }
 }

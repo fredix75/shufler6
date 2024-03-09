@@ -18,7 +18,7 @@
         {% if 'http' in channelflux.image %}
             <img src="{{ asset(channelflux.image) }}" width="200px" />
         {% else %}
-            <img src="{{ asset('uploads/logos/' ~ channelflux.image) }}" width="200px" />
+            <img class="channel-image" src="{{ asset('uploads/logos/' ~ channelflux.image) }}" width="200px" />
             <a href="{{ path('channel_delete_logo',{'id': channelflux.id}) }}"
                type="button"
                class="btn btn-danger"

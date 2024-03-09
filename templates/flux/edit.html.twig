@@ -59,7 +59,7 @@
                         {% if 'http' in flux.image %}
                             <img src="{{ asset(flux.channel.image) }}" width="200px" />
                         {% else %}
-                            <img src="{{ asset('uploads/logos/' ~ flux.channel.image) }}" width="200px" />
+                            <img class="channel-image" src="{{ asset('uploads/logos/' ~ flux.channel.image) }}" width="200px" />
                         {%  endif %}
                     {% endif %}
                     {%  if flux.channel.id is defined %}
