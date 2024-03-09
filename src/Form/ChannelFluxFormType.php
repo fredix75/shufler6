@@ -22,7 +22,6 @@ class ChannelFluxFormType extends AbstractType
                     'class' => 'input-group mb-3'
                 ]
             ])
-            ->add('image', HiddenType::class)
             ->add('file', FileType::class, [
                 'label' => 'Image',
                 'required' => false,

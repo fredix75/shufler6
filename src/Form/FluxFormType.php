@@ -74,7 +74,6 @@ class FluxFormType extends AbstractType
                     'class' => 'input-group mb-3'
                 ]
             ])
-            ->add('image', HiddenType::class)
             ->add('mood',EntityType::class, [
                 'class' => FluxMood::class,
                 'placeholder' => 'Choose a Category',
