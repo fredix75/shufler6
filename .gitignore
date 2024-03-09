@@ -14,11 +14,6 @@
 .phpunit.result.cache
 ###< phpunit/phpunit ###
 
-###> symfony/phpunit-bridge ###
-.phpunit.result.cache
-/phpunit.xml
-###< symfony/phpunit-bridge ###
-
 ###> symfony/webpack-encore-bundle ###
 /node_modules/
 /public/build/
@@ -32,6 +27,21 @@ yarn-error.log
 .buildpath
 .project
 .settings/
+
 ###> lexik/jwt-authentication-bundle ###
 /config/jwt/*.pem
 ###< lexik/jwt-authentication-bundle ###
+
+###> server ###
+.bash_history
+.composer/
+.gnupg/
+.npm/
+.nvm/
+.profile
+.subversion/
+.volta/
+.yarn/
+composer.phar
+logs/
+###< server ###
