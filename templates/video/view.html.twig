@@ -20,7 +20,7 @@
                     <div class="col-md-12"><span class="top-annee">{{ video.annee|yearDisplay }}</span></div>
                 </div>
                 {% for mood in video.moods %}
-                    <span class="badge">{{ mood.name }}</span>
+                    <span class="badge bg-secondary">{{ mood.name }}</span>
                 {% endfor %}
             </div>
             <div class="media">
@@ -28,7 +28,7 @@
             </div>
             <br/>
             <div class="well">
-                <span class="badge" style="float:right;">{{ video.dateInsert|date("d/m/Y H:i:s") }}</span><br/>
+                <span class="badge bg-dark" style="float:right;">{{ video.dateInsert|date("d/m/Y H:i:s") }}</span><br/>
                 {% if is_granted('VIDEO_EDIT') %}
                     <a class="btn btn-secondary" href="{{ path('video_edit', {'id':video.id}) }}"><span
                                 class="glyphicon glyphicon-edit"></span>&nbsp;Edit the reference</a>
