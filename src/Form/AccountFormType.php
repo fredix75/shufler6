@@ -13,11 +13,7 @@ class AccountFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email', TextType::class, [
-                'row_attr' => [
-                    'class' => 'input-group mb-3',
-                ]
-            ])
+            ->add('email', TextType::class)
             ->add('password', ChangePasswordFormType::class, [
                 'label' => false,
                 'data' => null,

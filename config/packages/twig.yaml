@@ -1,7 +1,6 @@
 twig:
     file_name_pattern: '*.twig'
-    form_themes: ['bootstrap_5_layout.html.twig']
-
+    form_themes: ['form/shufler_form_theme_layout.html.twig']
 when@test:
     twig:
         strict_variables: true

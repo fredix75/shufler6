@@ -17,9 +17,6 @@ class ChannelFluxFormType extends AbstractType
         $builder
             ->add('name', TextType::class, [
                 'required' => true,
-                'row_attr' => [
-                    'class' => 'input-group mb-3'
-                ]
             ])
             ->add('file', FileType::class, [
                 'label' => 'Image',
@@ -35,9 +32,7 @@ class ChannelFluxFormType extends AbstractType
                         'mimeTypesMessage' => "Le format du fichier n'est pas OK",
                     ])
                 ],
-                'row_attr' => [
-                    'class' => 'input-group mb-3'
-                ]
+                'help' => 'Formats: .jpeg, .jpg or .png. Max: 1Mo',
             ])
         ;
     }

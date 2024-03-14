@@ -28,18 +28,11 @@ class FluxFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name', TextType::class, [
-                'row_attr' => [
-                    'class' => 'input-group mb-3'
-                ]
-            ])
+            ->add('name', TextType::class)
             ->add('url', UrlType::class, [
                 'attr' => [
              //       'data-action' => 'change->flux-edit#getImageYoutubePlaylist'
                 ],
-                'row_attr' => [
-                    'class' => 'input-group mb-3'
-                ]
             ])
             ->add('type', EntityType::class, [
                 'class' => FluxType::class,
@@ -49,9 +42,6 @@ class FluxFormType extends AbstractType
                     'data-action' => 'change->flux-edit#typeChange',
                     'class' => 'select2',
                 ],
-                'row_attr' => [
-                    'class' => 'input-group mb-3'
-                ]
             ])
             ->add('file', FileType::class, [
                 'label' => 'Image',
@@ -69,8 +59,8 @@ class FluxFormType extends AbstractType
                 ],
                 'row_attr' => [
                     'id' => 'file',
-                    'class' => 'input-group mb-3'
-                ]
+                ],
+                'help' => 'Formats: .jpeg, .jpg or .png. Max: 1Mo',
             ])
             ->add('mood',EntityType::class, [
                 'class' => FluxMood::class,
@@ -82,7 +72,6 @@ class FluxFormType extends AbstractType
                 ],
                 'row_attr' => [
                     'id' => 'mood',
-                    'class' => 'input-group mb-3'
                 ]
             ])
             ->add('channel', EntityType::class, [
@@ -99,7 +88,6 @@ class FluxFormType extends AbstractType
                 ],
                 'row_attr' => [
                     'id' => 'channel',
-                    'class' => 'input-group mb-3'
                 ]
             ])
         ;

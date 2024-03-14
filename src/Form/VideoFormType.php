@@ -27,36 +27,18 @@ class VideoFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('titre', TextType::class, [
-                'row_attr' => [
-                    'class' => 'input-group mb-3'
-                ]
-            ])
-            ->add('auteur', TextType::class, [
-                'row_attr' => [
-                    'class' => 'input-group mb-3'
-                ],
-            ])
+            ->add('titre', TextType::class)
+            ->add('auteur', TextType::class)
             ->add('lien', UrlType::class, [
-                'row_attr' => [
-                    'class' => 'input-group mb-3'
-                ],
                 'attr' => [
                     'data-action' => 'video-edit#completeInfos'
                 ]
             ])
             ->add('chapo', TextareaType::class, [
                 'required' => false,
-                'row_attr' => [
-                    'class' => 'input-group mb-3'
-                ]
             ])
             ->add('texte', TextareaType::class, [
                 'required' => false,
-                'row_attr' => [
-                    'class' => 'input-group mb-3'
-
-                ]
             ])
             ->add('annee', IntegerType::class, [
                 'required' => false,
@@ -64,9 +46,6 @@ class VideoFormType extends AbstractType
                     'min' => 1900,
                     'max' => (new \DateTime())->format('Y'),
                     'notInRangeMessage' => 'L\'année semble incorrecte']),
-                'row_attr' => [
-                    'class' => 'input-group mb-3'
-                ],
                 'attr' => [
                     'data-action' => 'video-edit#selectPeriod'
                 ]
@@ -81,9 +60,6 @@ class VideoFormType extends AbstractType
                 'attr' => [
                     'class' => 'select2'
                 ],
-                'row_attr' => [
-                    'class' => 'input-group mb-3'
-                ]
             ])
             ->add('categorie', ChoiceType::class, [
                 'required' => true,
@@ -93,9 +69,6 @@ class VideoFormType extends AbstractType
                     'class' => 'select2',
                     'data-action' => 'change->video-edit#categorieChange'
                 ],
-                'row_attr' => [
-                    'class' => 'input-group mb-3'
-                ]
             ])
             ->add('genre', ChoiceType::class, [
                 'required' => false,
@@ -106,7 +79,6 @@ class VideoFormType extends AbstractType
                 ],
                 'row_attr' => [
                     'id' => 'genre',
-                    'class' => 'input-group mb-3'
                 ],
             ])
             ->add('moods', EntityType::Class, [
@@ -117,9 +89,6 @@ class VideoFormType extends AbstractType
                 'attr' => [
                     'class' => 'select2'
                 ],
-                'row_attr' => [
-                    'class' => 'input-group mb-3'
-                ]
             ])
             ->add('priorite', ChoiceType::class, [
                 'required' => true,
@@ -130,14 +99,11 @@ class VideoFormType extends AbstractType
                 'attr' => [
                     'class' => 'select2'
                 ],
-                'row_attr' => [
-                    'class' => 'input-group mb-3'
-                ]
             ])
             ->add('published', CheckboxType::class, [
                 'required' => false,
                 'row_attr' => [
-                    'class' => 'form-check form-switch input-group mb-3'
+                    'class' => 'form-check form-switch'
                 ]
             ])
         ;

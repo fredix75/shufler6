@@ -21,9 +21,6 @@ class ChangePasswordFormType extends AbstractType
                     'attr' => [
                         'autocomplete' => 'new-password',
                     ],
-                    'row_attr' => [
-                        'class' => 'input-group mb-3'
-                    ]
                 ],
                 'first_options' => [
                     'constraints' => [

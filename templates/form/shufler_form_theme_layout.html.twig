@@ -1,2 +1,22 @@
 {% use 'bootstrap_5_layout.html.twig' %}
 
+{%- block form_label -%}
+    {%- set row_attr =  {
+        'class': 'input-group mb-3'
+    } -%}
+    {{ parent() }}
+{%- endblock -%}
+
+{%- block form_row -%}
+    {%- set row_attr =  {
+        'class': 'input-group mb-3'
+    }|merge(row_attr|default({})) -%}
+    {{ parent() }}
+{%- endblock -%}
+
+{%- block form_help -%}
+    {%- set row_attr =  {
+        'class': 'input-group mb-3',
+    } -%}
+    {{ parent() }}
+{%- endblock -%}
