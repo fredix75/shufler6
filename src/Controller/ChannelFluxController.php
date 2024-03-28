@@ -53,7 +53,7 @@ class ChannelFluxController extends AbstractController
         ]);
     }
 
-    #[Route('/delete/{id}', name: '_delete', requirements: ['id' => '\d+'])]
+    #[Route('/delete/{id}', name: '_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     #[IsGranted('ROLE_AUTEUR')]
     public function channelDelete(
         Request $request,
@@ -62,12 +62,14 @@ class ChannelFluxController extends AbstractController
         ChannelFlux           $channelFlux
     ): Response
     {
-        foreach ($channelFlux->getFlux() as $flux) {
-            $flux->setChannel(null);
-            $fluxRepository->save($flux, true);
+        if ($this->isCsrfTokenValid('channel_delete'.$channelFlux->getId(), $request->get('_token'))) {
+            foreach ($channelFlux->getFlux() as $flux) {
+                $flux->setChannel(null);
+                $fluxRepository->save($flux, true);
+            }
+            $channelFluxRepository->remove($channelFlux, true);
+            $this->addFlash('success', 'Channel bien supprimée');
         }
-        $channelFluxRepository->remove($channelFlux, true);
-        $this->addFlash('success', 'Channel bien supprimée');
         return $this->redirect($request->headers->get('referer'));
     }
 

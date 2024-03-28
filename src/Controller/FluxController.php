@@ -204,16 +204,19 @@ class FluxController extends AbstractController
         ]);
     }
 
-    #[Route('/delete/{id}', name: '_delete', requirements: ['id' => '\d+'])]
+    #[Route('/delete/{id}', name: '_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     #[IsGranted('FLUX_DELETE', "flux", "No pasaran")]
     public function delete(
+        Request $request,
         FluxRepository $fluxRepository,
         Flux $flux
     ): Response
     {
-        $type = $flux->getType()->getName();
-        $fluxRepository->remove($flux, true);
-        $this->addFlash('success', 'Flux bien supprimé');
+        if ($this->isCsrfTokenValid('flux_delete'.$flux->getId(), $request->get('_token'))) {
+            $type = $flux->getType()->getName();
+            $fluxRepository->remove($flux, true);
+            $this->addFlash('success', 'Flux bien supprimé');
+        }
         $routeToRedirect = $this->getRouteToRedirect($type);
 
         return $this->redirectToRoute($routeToRedirect);

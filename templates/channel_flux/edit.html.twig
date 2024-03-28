@@ -7,12 +7,10 @@
     <i class="bi bi-save-fill"></i>&nbsp;Save
 </button>&nbsp;
 {% if channelflux.id is not null %}
-    <a class="btn btn-danger"
-       href="{{ path('channel_delete', {'id': channelflux.id}) }}"
-       onclick="return confirm('global.confirmation');"
-    >
-        <i class="bi bi-trash-fill"></i>&nbsp;Delete
-    </a>
+    <form action="{{ path('channel_delete', {'id' : channelflux.id}) }}" method="POST" onclick="return confirm('global.confirmation');">
+        <input type="hidden" name="_token" value="{{ csrf_token('channel_delete' ~ channelflux.id) }}">
+        <button class="btn btn-danger" type="submit"><i class="bi bi-trash-fill"></i>&nbsp;Virer</button>
+    </form>
     <br/><br/>
     {%  if channelflux.image is not null %}
         {% if 'http' in channelflux.image %}

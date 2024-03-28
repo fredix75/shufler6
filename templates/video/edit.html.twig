@@ -39,10 +39,10 @@
 
                         {% if is_granted('VIDEO_EDIT') %}&nbsp
                             <div class="col-4 col-md-3">
-                                <a class="btn btn-danger" href="{{ path('video_delete', {'id':video.id}) }}"
-                                   onclick="return confirm('{% trans %}global.confirmation{% endtrans %}');"><i
-                                            class="bi bi-trash-fill"></i>&nbsp;Delete
-                                </a>
+                                <form action="{{ path('video_delete', {'id' : video.id}) }}" method="POST" onclick="return confirm('{{ 'Are You sure ?'|trans }}');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('video_delete' ~ video.id) }}">
+                                    <button class="btn btn-danger" type="submit"><i class="bi bi-trash-fill"></i>&nbsp;Virer</button>
+                                </form>
                             </div>
                         {% endif %}
                     </div>
