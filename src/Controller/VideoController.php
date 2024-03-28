@@ -149,13 +149,14 @@ class VideoController extends AbstractController
         ]);
     }
 
-    #[Route('/delete/{id}', name: '_delete', requirements: ['id' => '\d+'])]
+    #[Route('/delete/{id}', name: '_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     #[IsGranted('VIDEO_DELETE', "video", "No pasaran")]
-    public function delete(VideoRepository $videoRepository, Video $video): Response
+    public function delete(Request $request, VideoRepository $videoRepository, Video $video): Response
     {
-        $videoRepository->remove($video, true);
-        $this->addFlash('success', 'Vidéo supprimée');
-
+        if ($this->isCsrfTokenValid('video_delete'.$video->getId(), $request->get('_token'))) {
+            $videoRepository->remove($video, true);
+            $this->addFlash('success', 'Vidéo supprimée');
+        }
         return $this->redirectToRoute('video_list');
     }
 

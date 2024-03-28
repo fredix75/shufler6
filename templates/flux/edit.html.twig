@@ -28,12 +28,10 @@
                     </div>
                     {% if flux.id is defined and flux.id != 0 and is_granted("FLUX_DELETE", flux) %}
                         <div class="col-3">
-                            <a class="btn btn-danger"
-                               href="{{ path('flux_delete', {'id': flux.id}) }}"
-                               onclick="return confirm('global.confirmation');"
-                            >
-                                <i class="bi bi-trash-fill"></i>&nbsp;Delete
-                            </a>
+                            <form action="{{ path('flux_delete', {'id' : flux.id}) }}" method="POST" onclick="return confirm('global.confirmation');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('flux_delete' ~ flux.id) }}">
+                                <button class="btn btn-danger" type="submit"><i class="bi bi-trash-fill"></i>&nbsp;Virer</button>
+                            </form>
                         </div>
                     {% endif %}
                 </div>

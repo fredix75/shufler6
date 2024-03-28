@@ -43,8 +43,10 @@
                     {% endif %}
                 {% endif %} &nbsp;
                 {% if is_granted('VIDEO_DELETE') %}
-                    <a class="btn btn-danger" href="{{ path('video_delete', {'id':video.id}) }}"
-                       onclick="return confirm('{{ 'Are You sure ?'|trans }}');"><i class="bi bi-trash"></i>&nbsp;Virer</a>
+                    <form action="{{ path('video_delete', {'id' : video.id}) }}" method="POST" onclick="return confirm('{{ 'Are You sure ?'|trans }}');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('video_delete' ~ video.id) }}">
+                        <button class="btn btn-danger" type="submit"><i class="bi bi-trash"></i>&nbsp;Virer</button>
+                    </form>
                 {% endif %}
             </div>
         </section>
