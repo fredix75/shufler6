@@ -7,12 +7,8 @@
     <i class="bi bi-save-fill"></i>&nbsp;Save
 </button>&nbsp;
 {% if channelflux.id is not null %}
-    <form action="{{ path('channel_delete', {'id' : channelflux.id}) }}" method="POST" onclick="return confirm('global.confirmation');">
-        <input type="hidden" name="_token" value="{{ csrf_token('channel_delete' ~ channelflux.id) }}">
-        <button class="btn btn-danger" type="submit"><i class="bi bi-trash-fill"></i>&nbsp;Virer</button>
-    </form>
-    <br/><br/>
-    {%  if channelflux.image is not null %}
+    <br/>
+    {% if channelflux.image is not null %}
         {% if 'http' in channelflux.image %}
             <img src="{{ asset(channelflux.image) }}" width="200px" />
         {% else %}
@@ -29,3 +25,10 @@
     {% endif %}
 {% endif %}
 {{ form_end(form) }}
+<br>
+{% if channelflux.id is not null %}
+    <form action="{{ path('channel_delete', {'id' : channelflux.id}) }}" method="POST" onclick="return confirm('global.confirmation');">
+        <input type="hidden" name="_token" value="{{ csrf_token('channel_delete' ~ channelflux.id) }}">
+        <button class="btn btn-danger" type="submit"><i class="bi bi-trash-fill"></i>&nbsp;Virer</button>
+    </form>
+{% endif %}

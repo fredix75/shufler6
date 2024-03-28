@@ -23,6 +23,7 @@
                         </button>
                     </div>
                 </div>
+                {{ form_end(form) }}
                 {% if video.id is defined and video.id != 0 %}
                     <div class="row justify-content-end" style="margin-top:20px;">
                         <div class="col-4 col-md-3">
@@ -37,7 +38,7 @@
                             </a>
                         </div>
 
-                        {% if is_granted('VIDEO_EDIT') %}&nbsp
+                        {% if is_granted('VIDEO_DELETE') %}&nbsp
                             <div class="col-4 col-md-3">
                                 <form action="{{ path('video_delete', {'id' : video.id}) }}" method="POST" onclick="return confirm('{{ 'Are You sure ?'|trans }}');">
                                     <input type="hidden" name="_token" value="{{ csrf_token('video_delete' ~ video.id) }}">
@@ -47,7 +48,6 @@
                         {% endif %}
                     </div>
                 {% endif %}
-                {{ form_end(form) }}
             </div>
         </div>
     </div>

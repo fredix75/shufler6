@@ -29,6 +29,12 @@
             <br/>
             <div class="well">
                 <span class="badge bg-dark" style="float:right;">{{ video.dateInsert|date("d/m/Y H:i:s") }}</span><br/>
+                {% if is_granted('VIDEO_DELETE') %}
+                    <form action="{{ path('video_delete', {'id' : video.id}) }}" method="POST" onclick="return confirm('{{ 'Are You sure ?'|trans }}');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('video_delete' ~ video.id) }}">
+                        <button class="btn btn-danger" type="submit"><i class="bi bi-trash"></i>&nbsp;Virer</button>
+                    </form>
+                {% endif %}
                 {% if is_granted('VIDEO_EDIT') %}
                     <a class="btn btn-secondary" href="{{ path('video_edit', {'id':video.id}) }}"><span
                                 class="glyphicon glyphicon-edit"></span>&nbsp;Edit the reference</a>
@@ -42,12 +48,6 @@
                                     class="glyphicon glyphicon-ok-sign"></span>&nbsp;Publier</a>
                     {% endif %}
                 {% endif %} &nbsp;
-                {% if is_granted('VIDEO_DELETE') %}
-                    <form action="{{ path('video_delete', {'id' : video.id}) }}" method="POST" onclick="return confirm('{{ 'Are You sure ?'|trans }}');">
-                        <input type="hidden" name="_token" value="{{ csrf_token('video_delete' ~ video.id) }}">
-                        <button class="btn btn-danger" type="submit"><i class="bi bi-trash"></i>&nbsp;Virer</button>
-                    </form>
-                {% endif %}
             </div>
         </section>
     </div>

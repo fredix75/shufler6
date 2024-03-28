@@ -20,23 +20,22 @@
                 {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
                 {{ form_errors(form) }}
                 {{ form_widget(form) }}
-                <div class="row justify-content-center">
                     <div class="col-3">
                         <button type="submit" class="btn btn-primary" style="width: 100%;"><i
                                     class="bi bi-check-circle-fill"></i> OK
                         </button>
                     </div>
-                    {% if flux.id is defined and flux.id != 0 and is_granted("FLUX_DELETE", flux) %}
-                        <div class="col-3">
-                            <form action="{{ path('flux_delete', {'id' : flux.id}) }}" method="POST" onclick="return confirm('global.confirmation');">
-                                <input type="hidden" name="_token" value="{{ csrf_token('flux_delete' ~ flux.id) }}">
-                                <button class="btn btn-danger" type="submit"><i class="bi bi-trash-fill"></i>&nbsp;Virer</button>
-                            </form>
-                        </div>
-                    {% endif %}
-                </div>
                 {{ form_end(form) }}
-                <br/>
+                <br>
+                {% if flux.id is defined and flux.id != 0 and is_granted("FLUX_DELETE", flux) %}
+                    <div class="col-3">
+                        <form action="{{ path('flux_delete', {'id' : flux.id}) }}" method="POST" onclick="return confirm('global.confirmation');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('flux_delete' ~ flux.id) }}">
+                            <button class="btn btn-danger" type="submit"><i class="bi bi-trash-fill"></i>&nbsp;Virer</button>
+                        </form>
+                    </div>
+                {% endif %}
+                <br>
                 {% if flux.id is defined %}
                     {% if flux.image is not null %}
                         {% if 'http' in flux.image %}
