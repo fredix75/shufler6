@@ -16,7 +16,7 @@
             <a href="{{ path('channel_delete_logo',{'id': channelflux.id}) }}"
                type="button"
                class="btn btn-danger"
-               onclick="return confirm('{{ 'Are You sure ?'|trans}}');"
+               onclick="return confirm('{{ 'global.confirmation'|trans}}');"
                title="Delete this Logo"
             >
                 <i class="bi bi-trash-fill"></i>
@@ -27,7 +27,7 @@
 {{ form_end(form) }}
 <br>
 {% if channelflux.id is not null %}
-    <form action="{{ path('channel_delete', {'id' : channelflux.id}) }}" method="POST" onclick="return confirm('global.confirmation');">
+    <form action="{{ path('channel_delete', {'id' : channelflux.id}) }}" method="POST" onclick="return confirm('{{ 'global.confirmation'|trans}}');">
         <input type="hidden" name="_token" value="{{ csrf_token('channel_delete' ~ channelflux.id) }}">
         <button class="btn btn-danger" type="submit"><i class="bi bi-trash-fill"></i>&nbsp;Virer</button>
     </form>
