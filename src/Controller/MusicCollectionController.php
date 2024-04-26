@@ -11,7 +11,6 @@ use App\Helper\VideoHelper;
 use App\Repository\MusicCollection\ArtistRepository;
 use App\Twig\Runtime\ShuflerRuntime;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\MusicCollection\AlbumRepository;
@@ -262,12 +261,21 @@ class MusicCollectionController extends AbstractController
         }
         $musicParameters = $this->getParameter('music_collection');
         $videoParameters = $this->getParameter('shufler_video');
-        $playlist = [$videoParameters['intro_couch']];
+        $trackIntro = new Track();
+        $trackIntro
+            ->setTitre('Intro')
+            ->setAuteur('')
+            ->setAlbum('')
+            ->setAnnee(0)
+            ->setYoutubeKey($videoParameters['intro_couch']);
+        $playlist = [$trackIntro->getYoutubeKey()];
+        $list = [$trackIntro];
 
         $i = 0;
         foreach($tracks as $track) {
             if (!\in_array($track->getYoutubeKey(), $playlist) && $track->getYoutubeKey() !== 'nope') {
                 $playlist[] = $track->getYoutubeKey();
+                $list[] = $track;
                 $i++;
             }
             if ($i >= $musicParameters['max_random']) {
@@ -276,6 +284,7 @@ class MusicCollectionController extends AbstractController
         }
 
         return $this->render('video/couch.html.twig', [
+            'list' => $list,
             'videos' => $playlist ?? [],
             'form_track' => $form,
         ]);
@@ -339,17 +348,5 @@ class MusicCollectionController extends AbstractController
         }
 
         return new Response(json_encode(['fail : ' . $response->getStatusCode()]), $response->getStatusCode());
-    }
-
-    #[Route('/track/byKey/{key}', name:'_track_by_key')]
-    public function getTrack(string $key, TrackRepository $trackRepository): JsonResponse
-    {
-        $track = $trackRepository->findOneBy(['youtubeKey' => $key]);
-
-        return $this->json($this->render(
-            'music/part/_track.html.twig', [
-                'track' => $track,
-            ])
-        );
     }
 }

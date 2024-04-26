@@ -8,7 +8,26 @@
 	}) }}>
 		<div class="col-12 col-lg-6" style="height:500px">
 			<div id="player"></div>
-			<div id="title"></div>
+			<div id="title">
+				<table class="table table-dark">
+					<tbody>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						{% for track in list %}
+							<tr id="{{ track.youtubeKey }}" style="display:none;">
+								<td>{{ track.titre }}</td>
+								<td>{{ track.auteur }}</td>
+								<td>{{ track.album }}</td>
+								<td>{{ track.annee }}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 	{% if form_track is defined %}
