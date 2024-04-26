@@ -1,4 +1,4 @@
-import { Controller } from '@hotwired/stimulus';
+import {Controller} from '@hotwired/stimulus';
 import $ from 'jquery';
 /**
  * @typedef options
@@ -32,6 +32,7 @@ export default class extends Controller {
     static values = {
         videos: Array
     };
+
     connect() {
         let player;
 
@@ -49,7 +50,23 @@ export default class extends Controller {
         });
 
         player.on('stateChange', e => {
-            $('#title').html(e.target.videoTitle);
+            let key = e.target.getVideoData().video_id;
+
+            if (key) {
+                let url = '/fr/music/track/byKey/';
+                $.ajax({
+                    'url': url + key,
+                    'dataType': 'json'
+                }).done(function(result) {
+                    if (result) {
+                        console.log(result.content);
+                        $('#title').html(result.content);
+                    }
+                });
+                //$('#title').html($.ajax(url + query));
+//                console.log(response.content);
+//                $('#title').html(response.titre);
+            }
         });
 
         if ($('[name="categorie"]').length > 0) {
@@ -57,7 +74,7 @@ export default class extends Controller {
                 $('#genre').hide();
             }
 
-            $(document).on('change', '#categorie', function() {
+            $(document).on('change', '#categorie', function () {
                 if ('2' !== $('[name="categorie"]').val()) {
                     $('[name="genre"]').val(null);
                     $('#genre').fadeOut('slow');

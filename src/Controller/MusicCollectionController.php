@@ -11,6 +11,7 @@ use App\Helper\VideoHelper;
 use App\Repository\MusicCollection\ArtistRepository;
 use App\Twig\Runtime\ShuflerRuntime;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\MusicCollection\AlbumRepository;
@@ -338,5 +339,17 @@ class MusicCollectionController extends AbstractController
         }
 
         return new Response(json_encode(['fail : ' . $response->getStatusCode()]), $response->getStatusCode());
+    }
+
+    #[Route('/track/byKey/{key}', name:'_track_by_key')]
+    public function getTrack(string $key, TrackRepository $trackRepository): JsonResponse
+    {
+        $track = $trackRepository->findOneBy(['youtubeKey' => $key]);
+
+        return $this->json($this->render(
+            'music/part/_track.html.twig', [
+                'track' => $track,
+            ])
+        );
     }
 }
