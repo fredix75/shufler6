@@ -113,7 +113,7 @@ class VideoController extends AbstractController
             if (!\in_array($videoHelper->getIdentifer($video['lien'], 'youtube'), $playlist)) {
                 $video['youtubeKey'] = $videoHelper->getIdentifer($video['lien'], 'youtube');
                 $list[] = $video;
-                $playlist[] = $videoHelper->getIdentifer($video['lien'], 'youtube');
+                $playlist[] = $video['youtubeKey'];
                 $i++;
             }
             if ($i >= $videoParameters['max_list_couch']) {
