@@ -91,7 +91,8 @@ class TrackRepository extends ServiceEntityRepository
             $p[':search'] = '%'.$params['search'].'%';
         }
 
-        $rawSQL = $sql . 'ORDER BY 1' . $orderBy;
+        $rawSQL = $sql;
+        $rawSQL .= $orderBy ? 'ORDER BY true ' . $orderBy : '';
 
         $conn = $this->getEntityManager()->getConnection();
         $stmt = $conn->prepare($rawSQL);
