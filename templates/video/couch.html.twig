@@ -9,18 +9,14 @@
 		<div class="col-12 col-lg-6" style="height:500px">
 			<div id="player"></div>
 			<div id="title">
-				<table class="table table-dark">
-					<tbody>
-						{% for track in list %}
-							<tr id="{{ track.youtubeKey }}" style="display:none;">
-								<td style="width: 200px"><img src="{{ track.picture|default('') }}" width="100%" loading="lazy"></td>
-								<td style="text-align:left"><span style="font-size: 1.5em">{{ track.auteur }} - {{ track.titre }}</span>
-									<br>{{ track.album|default('') }} ({{ track.annee }})
-								</td>
-							</tr>
-						{% endfor %}
-					</tbody>
-				</table>
+				{% for track in list %}
+					<div id="{{ track.youtubeKey }}" class="row" style="display:none;background-color: #1b1b1b;margin:0;">
+						<div class="col-6 col-md-3 col-xl-3" style="padding:0"><img src="{{ track.picture|default('') }}" width="100%" loading="lazy"></div>
+						<div class="col-6 col-md-9 col-xl-9"><span style="font-size: 1.5em">{{ track.auteur }} - {{ track.titre }}</span>
+							<br>{{ track.album|default('') }} ({{ track.annee }})
+						</div>
+					</div>
+				{% endfor %}
 			</div>
 		</div>
 	</div>

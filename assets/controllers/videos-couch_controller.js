@@ -53,8 +53,8 @@ export default class extends Controller {
             if (e.data === 1) {
                 let key = e.target.getVideoData().video_id;
                 if (key) {
-                    $('#title table')
-                        .find('#' + key).css('display', 'table-row')
+                    $('#title')
+                        .find('#' + key).css('display', 'flex')
                         .siblings().css('display', 'none');
                 }
             }

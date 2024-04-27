@@ -264,7 +264,7 @@ class MusicCollectionController extends AbstractController
         $musicParameters = $this->getParameter('music_collection');
         $videoParameters = $this->getParameter('shufler_video');
         $trackIntro = [
-            'titre' => 'Intro',
+            'titre' => ' * * * * * L O A D I N G * * * * * ',
             'auteur' => '',
             'album' => '',
             'annee' => null,
