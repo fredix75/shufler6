@@ -12,8 +12,10 @@
 				{% for track in list %}
 					<div id="{{ track.youtubeKey }}" class="row" style="display:none;background-color: #1b1b1b;margin:0;">
 						<div class="col-6 col-md-3 col-xl-3" style="padding:0"><img src="{{ track.picture|default('') }}" width="100%" loading="lazy"></div>
-						<div class="col-6 col-md-9 col-xl-9"><span style="font-size: 1.5em">{{ track.auteur }} - {{ track.titre }}</span>
-							<br>{{ track.album|default('') }} ({{ track.annee }})
+						<div class="col-6 col-md-9 col-xl-9">
+							<span style="font-size: 1.5em; color: orange;">{{ track.auteur }}</span><br>
+							<span style="font-size: 1.2em">{{ track.titre }}</span><br>
+							{{ track.album|default('') }} ({{ track.annee }})
 						</div>
 					</div>
 				{% endfor %}
