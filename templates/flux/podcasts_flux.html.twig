@@ -8,7 +8,7 @@
                      data-title="{{ podcast.name }}">
                     <div class="flux-header col col-12 mb-md-0 p-md-4 center-block">
                         {% if podcast.channel is defined and podcast.channel.image is defined %}
-                    <img src="{{ asset('uploads/logos/' ~ podcast.channel.image) }}" height=30px/>&nbsp;
+                    <img src="{{ asset('uploads/logos/' ~ podcast.channel.image) }}" height="30px" loading="lazy">&nbsp;
                         {% endif %}&nbsp;
                         {{ podcast.name }}
                     </div>

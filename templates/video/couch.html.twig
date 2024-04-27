@@ -13,7 +13,7 @@
 					<tbody>
 						{% for track in list %}
 							<tr id="{{ track.youtubeKey }}" style="display:none;">
-								<td style="width: 200px"><img src="{{ track.picture|default('') }}" width="100%"></td>
+								<td style="width: 200px"><img src="{{ track.picture|default('') }}" width="100%" loading="lazy"></td>
 								<td style="text-align:left"><span style="font-size: 1.5em">{{ track.auteur }} - {{ track.titre }}</span>
 									<br>{{ track.album|default('') }} ({{ track.annee }})
 								</td>

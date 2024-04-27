@@ -29,7 +29,7 @@
     {% if wiki is defined and idVideo is not null %}
         {% for image in wiki %}
             <img src="{% if image.image is defined %}{{ image.image }}{% endif %}"
-                 title="{% if image.title is defined %}{{ image.title }}{% endif %}"/>
+                 title="{% if image.title is defined %}{{ image.title }}{% endif %}" loading="lazy">
         {% endfor %}
     {% endif %}
     {% if idTrack is defined %}
