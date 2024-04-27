@@ -43,32 +43,32 @@ class TrackRepository extends ServiceEntityRepository
 
     public function getTracks(array $params = []): array
     {
-        $q = $this->createQueryBuilder('t');
+        $sql= "SELECT t.*, t.youtube_key as youtubeKey, a.picture FROM track t LEFT JOIN album a ON a.name = t.album AND a.auteur = t.artiste WHERE 1 ";
+        $orderBy = "";
+        $p = [];
 
         if (!empty($params['hasYoutubeKey'])) {
-            $q->andwhere("t.youtubeKey <> '' ");
+            $sql .= "AND t.youtube_key <> '' ";
         }
 
         if (!empty($params['auteur'])) {
-            $orModule = $q->expr()
-                ->orx()
-                ->add($q->expr()
-                    ->like('t.auteur', ':auteur'))
-                ->add($q->expr()
-                    ->like('t.artiste', ':auteur'));
-            $q->andWhere($orModule)->setParameter(':auteur', '%'.$params['auteur'].'%');
+            $sql .= "AND t.auteur LIKE :auteur OR t.artiste LIKE :auteur ";
+            $p[':auteur'] = '%'.$params['auteur'].'%';
         }
         if (!empty($params['album'])) {
-            $q->andWhere($q->expr()->like('t.album', ':album'))->setParameter(':album', '%'.$params['album'].'%');
-            $q->orderBy('t.numero', 'ASC');
+            $sql .= "AND t.album LIKE :album ";
+            $p[':album'] = '%'.$params['album'].'%';
+            $orderBy .= ", t.numero ASC ";
         } else {
-            $q->orderBy('t.titre', 'ASC');
+            $orderBy .= ", t.titre ASC ";
         }
         if (!empty($params['genre'])) {
-            $q->andWhere('t.genre = :genre')->setParameter(':genre', $params['genre']);
+            $sql .= "AND t.genre = :genre ";
+            $p[':genre'] = $params['genre'];
         }
         if (!empty($params['note'])) {
-            $q->andWhere('t.note >= :note')->setParameter(':note', $params['note']);
+            $sql .= "AND t.note >=:note ";
+            $p[':note'] = $params['note'];
         }
         if (!empty($params['annee'])) {
             $annee = $params['annee'];
@@ -76,31 +76,27 @@ class TrackRepository extends ServiceEntityRepository
                 $annee1 = (explode('-', $annee)[0] && is_numeric(explode('-', $annee)[0])) ? explode('-', $annee)[0] : 1;
                 $annee2 = (explode('-', $annee)[1] && is_numeric(explode('-', $annee)[1])) ? explode('-', $annee)[1] : date('Y');
                 if ($annee1 && $annee2) {
-                    $q->andWhere('t.annee >= :annee1')->setParameter(':annee1', $annee1);
-                    $q->andWhere('t.annee <= :annee2')->setParameter(':annee2', $annee2);
+                    $sql .= "AND t.annee >= :annee1 AND t.annee <= :annee2 ";
+                    $p[':annee1'] = $annee1;
+                    $p[':annee2'] = $annee2;
                 }
             } elseif (is_numeric($annee)) {
-                $q->andWhere('t.annee = :annee')->setParameter('annee', $annee);
+                $sql .= "AND t.annee = :annee ";
+                $p[':annee'] = $params['annee'];
             }
         }
 
         if (!empty($params['search'])) {
-            $orModule = $q->expr()
-                ->orx()
-                ->add($q->expr()
-                    ->like('t.auteur', ':search'))
-                ->add($q->expr()
-                    ->like('t.titre', ':search'))
-                ->add($q->expr()
-                    ->like('t.album', ':search'))
-                ->add($q->expr()
-                    ->like('t.artiste', ':search'));
-
-            $q->andWhere($orModule)
-                ->setParameter(':search', '%' . $params['search'] . '%');
+            $sql .= "AND (t.auteur LIKE :search OR t.titre LIKE :search OR t.album LIKE :search OR t.artiste LIKE :search) ";
+            $p[':search'] = '%'.$params['search'].'%';
         }
 
-        return $q->getQuery()->getResult();
+        $rawSQL = $sql . 'ORDER BY 1' . $orderBy;
+
+        $conn = $this->getEntityManager()->getConnection();
+        $stmt = $conn->prepare($rawSQL);
+
+        return $stmt->executeQuery($p)->fetchAllAssociative();
     }
 
     public function getTracksByAlbum(string $artiste, string $album): array

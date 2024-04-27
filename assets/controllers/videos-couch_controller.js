@@ -52,25 +52,10 @@ export default class extends Controller {
         player.on('stateChange', e => {
             if (e.data === 1) {
                 let key = e.target.getVideoData().video_id;
-/**
                 if (key) {
-                    let url = '/fr/music/track/byKey/';
-                    $.ajax({
-                        'url': url + key,
-                        'dataType': 'json'
-                    }).done(function (result) {
-                        if (result) {
-                            console.log(result.content);
-                            $('#title').html(result.content);
-                        }
-                    });
-                    //$('#title').html($.ajax(url + query));
-//                console.log(response.content);
-//                $('#title').html(response.titre);
-                }
- */
-                if (key) {
-                    $('#title table').find('#' + key).css('display', 'table-row').siblings().css('display', 'none');
+                    $('#title table')
+                        .find('#' + key).css('display', 'table-row')
+                        .siblings().css('display', 'none');
                 }
             }
         });

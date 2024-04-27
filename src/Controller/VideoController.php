@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
@@ -23,6 +24,10 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[IsGranted("ROLE_USER")]
 class VideoController extends AbstractController
 {
+    public function __construct(private readonly SerializerInterface $serializer)
+    {
+    }
+
     #[Route('/list/{categorie}/{genre}/{periode}/{page}',
         name: '_list',
         requirements: ['categorie' => '\d+', 'genre' => '\d+|-\d+', 'page' => '\d+'],
@@ -90,11 +95,25 @@ class VideoController extends AbstractController
 
         $videos = $videoRepository->getRandomVideos($search, $categorie, $genre, $periode, 'youtube');
         $videoParameters = $this->getParameter('shufler_video');
-        $playlist = [$videoParameters['intro_couch']];
+
+        $trackIntro = [
+            'titre' => 'Intro',
+            'auteur' => '',
+            'annee' => null,
+            'youtubeKey' => $videoParameters['intro_couch']
+        ];
+
+        $list = [$trackIntro];
+        $playlist = [$trackIntro['youtubeKey']];
+
         $i = 0;
         foreach ($videos as $video) {
-            if (!\in_array($videoHelper->getIdentifer($video->getLien(), 'youtube'), $playlist)) {
-                $playlist[] = $videoHelper->getIdentifer($video->getLien(), 'youtube');
+            $video = $this->serializer->normalize($video);
+
+            if (!\in_array($videoHelper->getIdentifer($video['lien'], 'youtube'), $playlist)) {
+                $video['youtubeKey'] = $videoHelper->getIdentifer($video['lien'], 'youtube');
+                $list[] = $video;
+                $playlist[] = $videoHelper->getIdentifer($video['lien'], 'youtube');
                 $i++;
             }
             if ($i >= $videoParameters['max_list_couch']) {
@@ -103,6 +122,7 @@ class VideoController extends AbstractController
         }
 
         return $this->render('video/couch.html.twig', [
+            'list' => $list,
             'videos' => $playlist,
             'form_video' => $form,
         ]);

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller;
 
 use App\Entity\MusicCollection\Album;
@@ -25,11 +26,11 @@ class MusicCollectionController extends AbstractController
 {
     #[Route('/all/{mode}', name: '_all', requirements: ['mode' => 'tracks|albums'], defaults: ['mode' => 'tracks'])]
     public function getAll(
-        Request $request,
+        Request               $request,
         ParameterBagInterface $parameters,
-        TrackRepository $trackRepository,
-        ShuflerRuntime $shuflerRuntime,
-        string $mode
+        TrackRepository       $trackRepository,
+        ShuflerRuntime        $shuflerRuntime,
+        string                $mode
     ): Response
     {
         $columnsToDisplay = $parameters->get('music_collection')['track_fields'];
@@ -68,11 +69,11 @@ class MusicCollectionController extends AbstractController
                     $output['data'][] = [
                         'youtubeKey' => $this->renderView('music/part/_youtube_link.html.twig', [
                             'track' => $track,
-                            'youtube_key' => VideoHelper::YOUTUBE_WATCH.$track->getYoutubeKey(),
+                            'youtube_key' => VideoHelper::YOUTUBE_WATCH . $track->getYoutubeKey(),
                         ]),
                         'id' => $track->getId(),
                         'auteur' => strtoupper($track->getAuteur()) !== 'DIVERS' ? '<a href="#" data-action="music#openModal" data-artist="' . $track->getAuteur() . '" onclick="return false;"><i class="bi bi-eye-fill"></i></a> ' . $track->getAuteur() : $track->getAuteur(),
-                        'titre' => '<a href="#" data-id='.$track->getId().' class="edit-tracks" data-action="music#openEditModal" onclick="return false;"><i class="bi bi-pencil-square"></i></a> ' . $track->getTitre(),
+                        'titre' => '<a href="#" data-id=' . $track->getId() . ' class="edit-tracks" data-action="music#openEditModal" onclick="return false;"><i class="bi bi-pencil-square"></i></a> ' . $track->getTitre(),
                         'numero' => $track->getNumero(),
                         'album' => '<a href="#" data-action="music#openModal" data-artist="' . $track->getArtiste() . '" data-album="' . $track->getAlbum() . '" onclick="return false;"><i class="bi bi-filter-circle-fill"></i></a> ' . $track->getAlbum(),
                         'annee' => $track->getAnnee(),
@@ -99,8 +100,8 @@ class MusicCollectionController extends AbstractController
                     sort($annees);
                     $genres = array_unique(json_decode($album['genres'], true));
                     $output['data'][] = [
-                        'youtubeKey' => '<a class="playlist-link '.($album['youtubeKey'] ? 'icon-youtube' : 'no-link').'" href="'.VideoHelper::YOUTUBE_WATCH.$album['youtubeKey'].'" data-id="'.$album['youtubeKey'].'" data-action="music#popupPlaylist" title="video Playlist">'.($album['youtubeKey'] ? '<i class="bi bi-youtube"></i>' : '').'</a>',
-                        'album' => '<a href="#" data-action="music#openModal" data-artist="' . $album['artiste']. '" data-album="' . $album['album'] . '" onclick="return false;"><i class="bi bi-filter-circle-fill"></i></a> ' . $album['album'],
+                        'youtubeKey' => '<a class="playlist-link ' . ($album['youtubeKey'] ? 'icon-youtube' : 'no-link') . '" href="' . VideoHelper::YOUTUBE_WATCH . $album['youtubeKey'] . '" data-id="' . $album['youtubeKey'] . '" data-action="music#popupPlaylist" title="video Playlist">' . ($album['youtubeKey'] ? '<i class="bi bi-youtube"></i>' : '') . '</a>',
+                        'album' => '<a href="#" data-action="music#openModal" data-artist="' . $album['artiste'] . '" data-album="' . $album['album'] . '" onclick="return false;"><i class="bi bi-filter-circle-fill"></i></a> ' . $album['album'],
                         'annee' => implode(', ', $annees),
                         'artiste' => strtoupper($album['artiste']) !== 'DIVERS' ? '<a href="#" data-action="music#openModal" data-artist="' . $album['artiste'] . '" onclick="return false;"><i class="bi bi-eye-fill"></i></a> ' . $album['artiste'] : $album['artiste'],
                         'genre' => implode(', ', $genres),
@@ -114,13 +115,13 @@ class MusicCollectionController extends AbstractController
         }
 
         return $this->render('music/music.html.twig', [
-            'path_url' => $this->generateUrl('music_all', ['mode'=> $mode]),
+            'path_url' => $this->generateUrl('music_all', ['mode' => $mode]),
             'page_length' => $parameters->get('music_collection')['music_all_nb_b_page'],
             'columns_db' => $columnsToDisplay,
         ]);
     }
 
-    #[Route('/artist', name:'_artist')]
+    #[Route('/artist', name: '_artist')]
     public function getArtist(Request $request, ArtistRepository $artistRepository): Response
     {
         $artist = $request->get('artist');
@@ -138,7 +139,7 @@ class MusicCollectionController extends AbstractController
         $albumName = $request->get('album');
         $isModal = $request->get('modal') ?? false;
         $tracks = $trackRepository->getTracksByAlbum($artist, $albumName);
-        $album = $albumRepository->findOneBy(['auteur'=>$artist, 'name' => $albumName]);
+        $album = $albumRepository->findOneBy(['auteur' => $artist, 'name' => $albumName]);
         if (empty($album)) {
             $album['auteur'] = $artist;
             $album['name'] = $albumName;
@@ -240,15 +241,15 @@ class MusicCollectionController extends AbstractController
         ]);
     }
 
-    #[Route('/couch', name:'_couch')]
+    #[Route('/couch', name: '_couch')]
     public function couch(Request $request, TrackRepository $trackRepository): Response
     {
         $params = [
-            'auteur'        => $request->get('auteur') ?? null,
-            'album'         => $request->get('album') ?? null,
-            'genre'         => $request->get('genre') ?? null,
-            'annee'         => $request->get('annee') ?? null,
-            'search'        => $request->get('search') ?? null,
+            'auteur' => $request->get('auteur') ?? null,
+            'album' => $request->get('album') ?? null,
+            'genre' => $request->get('genre') ?? null,
+            'annee' => $request->get('annee') ?? null,
+            'search' => $request->get('search') ?? null,
             'hasYoutubeKey' => true,
         ];
 
@@ -256,25 +257,27 @@ class MusicCollectionController extends AbstractController
 
         $params['note'] = $request->get('note') ?? null;
         $tracks = $trackRepository->getTracks($params);
+
         if (empty($params['album'])) {
             shuffle($tracks);
         }
         $musicParameters = $this->getParameter('music_collection');
         $videoParameters = $this->getParameter('shufler_video');
-        $trackIntro = new Track();
-        $trackIntro
-            ->setTitre('Intro')
-            ->setAuteur('')
-            ->setAlbum('')
-            ->setAnnee(0)
-            ->setYoutubeKey($videoParameters['intro_couch']);
-        $playlist = [$trackIntro->getYoutubeKey()];
+        $trackIntro = [
+            'titre' => 'Intro',
+            'auteur' => '',
+            'album' => '',
+            'annee' => null,
+            'youtubeKey' => $videoParameters['intro_couch']
+        ];
+
+        $playlist = [$trackIntro['youtubeKey']];
         $list = [$trackIntro];
 
         $i = 0;
-        foreach($tracks as $track) {
-            if (!\in_array($track->getYoutubeKey(), $playlist) && $track->getYoutubeKey() !== 'nope') {
-                $playlist[] = $track->getYoutubeKey();
+        foreach ($tracks as $track) {
+            if (!\in_array($track['youtubeKey'], $playlist) && $track['youtubeKey'] !== 'nope') {
+                $playlist[] = $track['youtubeKey'];
                 $list[] = $track;
                 $i++;
             }
@@ -294,12 +297,12 @@ class MusicCollectionController extends AbstractController
     public function getAlbums(Request $request, AlbumRepository $albumRepository, int $page): Response
     {
         $params = [
-            'auteur'        => $request->get('auteur') ?? null,
-            'album'         => $request->get('album') ?? null,
-            'genre'         => $request->get('genre') ?? null,
-            'annee'         => $request->get('annee') ?? null,
-            'search'        => $request->get('search') ?? null,
-            'random'        => $request->get('random') === '1',
+            'auteur' => $request->get('auteur') ?? null,
+            'album' => $request->get('album') ?? null,
+            'genre' => $request->get('genre') ?? null,
+            'annee' => $request->get('annee') ?? null,
+            'search' => $request->get('search') ?? null,
+            'random' => $request->get('random') === '1',
         ];
 
         $form = $this->createForm(FilterTracksFormType::class, $params, ['mode' => 'album']);
@@ -330,7 +333,7 @@ class MusicCollectionController extends AbstractController
         ]);
     }
 
-    #[Route('/link/{id}', name:'_link')]
+    #[Route('/link/{id}', name: '_link')]
     public function getLink(Track $track, TrackRepository $trackRepository, Request $request, ApiRequester $apiRequester): Response
     {
         $search = $request->get('auteur') . ' ' . $request->get('titre');
