@@ -268,7 +268,7 @@ class MusicCollectionController extends AbstractController
             'auteur' => '',
             'album' => '',
             'annee' => null,
-            'youtubeKey' => $videoParameters['intro_couch']
+            'youtubeKey' => $videoParameters['intro_couch'],
         ];
 
         $playlist = [$trackIntro['youtubeKey']];

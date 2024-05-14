@@ -97,7 +97,7 @@ class VideoController extends AbstractController
         $videoParameters = $this->getParameter('shufler_video');
 
         $trackIntro = [
-            'titre' => 'Intro',
+            'titre' => ' * * * * * L O A D I N G * * * * * ',
             'auteur' => '',
             'annee' => null,
             'youtubeKey' => $videoParameters['intro_couch']

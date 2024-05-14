@@ -15,7 +15,8 @@
 						<div class="col-6 col-md-9 col-xl-9">
 							<span style="font-size: 1.5em; color: orange;">{{ track.auteur }}</span><br>
 							<span style="font-size: 1.2em">{{ track.titre }}</span><br>
-							{{ track.album|default('') }} ({{ track.annee }})
+							{% if track.note is defined and track.note != 0 %}<span>{{ displayStars(track.note|default(0), false) }}</span><br>{% endif %}
+							{{ track.album|default('') }} {% if track.annee is not empty %}({{ track.annee }}){% endif %}
 						</div>
 					</div>
 				{% endfor %}
