@@ -2,9 +2,7 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
 use App\Repository\MoodRepository;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -22,9 +20,6 @@ class Mood
     #[Groups(["video:list"])]
     private ?string $name = null;
 
-    #[ORM\ManyToMany(targetEntity: Video::class, mappedBy: "moods")]
-    private Collection $videos;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -40,10 +35,5 @@ class Mood
         $this->name = $name;
 
         return $this;
-    }
-
-    public function getVideos(): Collection
-    {
-        return $this->videos;
     }
 }
