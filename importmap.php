@@ -32,9 +32,6 @@ return [
         'version' => '5.3.3',
         'type' => 'css',
     ],
-    'sass' => [
-        'version' => '1.77.4',
-    ],
     'immutable' => [
         'version' => '4.3.6',
     ],
