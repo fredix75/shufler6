@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
+import { Modal } from "bootstrap";
 import $ from 'jquery';
-import {Modal} from "bootstrap";
 
 export default class extends Controller {
     static values = {

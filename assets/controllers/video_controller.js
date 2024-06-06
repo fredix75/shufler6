@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
-import $ from 'jquery';
 import 'magnific-popup';
 import DataTable from "datatables.net";
+import $ from 'jquery';
 
 export default class extends Controller {
     connect() {

@@ -8,13 +8,12 @@
         <meta name = "viewport" content = "width=device-width, initial-scale=1">
         <meta name = "robots" content = "index, follow">
         <title>{% block title %}Shufler{% endblock %}</title>
-        <link rel="icon" type="image/png" href="{{ asset('build/images/fav.png') }}" />
+        <link rel="icon" type="image/png" href="{{ asset('images/fav.png') }}" />
         {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
         {% endblock %}
 
         {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
     <body>
@@ -39,7 +38,7 @@
         </div>
         <footer>
             <p style="position: absolute;z-index: 3"><br/>&nbsp;&nbsp;&nbsp;<i class="bi bi-wrench-adjustable"></i>&nbsp;Shufler © {{ 'now'|date('Y') }} - fred@shufler.fr<br/>&nbsp;&nbsp;&nbsp;<cite>"Life is just a joke...</cite></p>
-            <img src="{{ asset('build/images/vague.gif') }}" width="100%" height="100%" />
+            <img src="{{ asset('images/vague.gif') }}" width="100%" height="100%" />
         </footer>
     </body>
 </html>

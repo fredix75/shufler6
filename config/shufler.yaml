@@ -8,7 +8,7 @@ parameters:
         index_max_autre: 3
         api_max_list: 25
         intro_couch: '67lnjV6SrFw'
-        no_signal: '/build/images/no_signal.png'
+        no_signal: 'images/no_signal.png'
 
         categories:
             1: Anim
@@ -66,7 +66,7 @@ parameters:
         last_fm_key: '%env(LAST_FM_KEY)%'
         last_fm_secret: '%env(LAST_FM_SECRET)%'
         last_fm_api_url: 'https://ws.audioscrobbler.com/2.0'
-        no_cover_path: '/build/images/no_cover.jpeg'
+        no_cover_path: '/images/no_cover.jpeg'
         music_all_nb_b_page: 250
         max_nb_albums: 60
         max_nb_artists: 500

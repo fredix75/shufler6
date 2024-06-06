@@ -55,7 +55,7 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/api/auth, roles: PUBLIC_ACCESS }
-        - { path: ^/build/images, roles: ROLE_ADMIN }
+        - { path: ^images, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
 
 when@test:

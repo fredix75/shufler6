@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
-import $ from "jquery";
-import {Modal} from "bootstrap";
+import { Modal } from "bootstrap";
+import $ from 'jquery';
 
 /*
 * The following line makes this controller "lazy": it won't be downloaded until needed
