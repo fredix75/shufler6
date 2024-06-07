@@ -54,7 +54,8 @@ export default class extends Controller {
                     $('a#album-youtube-' + result.id).remove();
                 }
             }
-            $('#formModal').modal('hide');
+            let modal = document.querySelector('#formModal');
+            Modal.getInstance(modal).hide();
         });
     }
 

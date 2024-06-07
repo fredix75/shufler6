@@ -59,7 +59,8 @@ export default class extends Controller {
                 }
             }
         });
-        $('#formModal').modal('hide');
+        let modal = document.querySelector('#formModal');
+        Modal.getInstance(modal).hide();
     }
 
     popupPlaylist(event) {
@@ -76,7 +77,8 @@ export default class extends Controller {
                 }
             }
         });
-        $('#formModal').modal('hide');
+        let modal = document.querySelector('#formModal');
+        Modal.getInstance(modal).hide();
     }
 
     async saveTrack(event){
@@ -104,7 +106,8 @@ export default class extends Controller {
             if (element.children('i').length === 0) {
                 element.html('<i class="bi bi-youtube"></i>');
             }
-            $('#formModal').modal('hide');
+            let modal = document.querySelector('#formModal');
+            Modal.getInstance(modal).hide();
         });
     }
 
