@@ -3,13 +3,14 @@
 namespace App\EntityListener;
 
 use App\Entity\MusicCollection\Album;
+use Symfony\Component\AssetMapper\AssetMapperInterface;
 
 class AlbumListener
 {
     private string $noCoverPath;
-    public function __construct(array $parameters)
+    public function __construct(array $parameters, AssetMapperInterface $assetMapper)
     {
-        $this->noCoverPath = $parameters['no_cover_path'];
+        $this->noCoverPath = $assetMapper->getPublicPath($parameters['no_cover_path']);
     }
 
     public function postLoad(Album $album): void

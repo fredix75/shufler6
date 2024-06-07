@@ -3,6 +3,7 @@
 namespace App\Twig\Runtime;
 
 use App\Helper\VideoHelper;
+use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Twig\Extension\RuntimeExtensionInterface;
 
@@ -10,7 +11,11 @@ class ShuflerRuntime implements RuntimeExtensionInterface
 {
     private array $videoParameters;
 
-    public function __construct(ParameterBagInterface $parameterBag, private readonly VideoHelper $videoHelper)
+    public function __construct(
+        ParameterBagInterface $parameterBag,
+        private readonly VideoHelper $videoHelper,
+        private readonly AssetMapperInterface $assetMapper
+    )
     {
         $this->videoParameters = $parameterBag->get('shufler_video');
     }
@@ -48,7 +53,7 @@ class ShuflerRuntime implements RuntimeExtensionInterface
     {
         $frame_prefix = '<img loading="lazy" class="embed-responsive-item" alt="'.$name.'" title="'.$name.'" src="';
         $width = '100%';
-        $frame = $frame_prefix . $this->videoParameters['no_signal'] . '" width=' . $width . ' />';
+        $frame = $frame_prefix . $this->assetMapper->getPublicPath($this->videoParameters['no_signal']) . '" width=' . $width . ' />';
 
         $platform = $this->videoHelper->getPlatform($lien);
         $vid = $this->videoHelper->getIdentifer($lien, $platform);

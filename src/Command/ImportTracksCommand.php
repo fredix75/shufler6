@@ -12,6 +12,7 @@ use App\Repository\MusicCollection\AlbumRepository;
 use App\Repository\MusicCollection\ArtistRepository;
 use App\Repository\MusicCollection\TrackRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -53,6 +54,7 @@ class ImportTracksCommand extends Command
         private readonly AlbumRepository $albumRepository,
         private readonly SerializerInterface $serializer,
         protected readonly Environment $twig,
+        protected readonly AssetMapperInterface $assetMapper,
         ParameterBagInterface $parameterBag,
         string $name = null
     ) {
@@ -328,12 +330,12 @@ class ImportTracksCommand extends Command
 
         foreach($this->albums as $key => $album) {
             if (\array_key_exists($album->getAuteur(), $this->albumsTmp)) {
-                if (\array_key_exists($album->getName(), $this->albumsTmp[$album->getAuteur()]) && $album->getYoutubeKey() && $album->getPicture() !== $this->parameters['no_cover_path']) {
+                if (\array_key_exists($album->getName(), $this->albumsTmp[$album->getAuteur()]) && $album->getYoutubeKey() && $album->getPicture() !== $this->assetMapper->getPublicPath($this->parameters['no_cover_path'])) {
                     unset($this->albumsTmp[$album->getAuteur()][$album->getName()]);
                     unset($album);
                     unset($this->albums[$key]);
                 } elseif(\array_key_exists($album->getName(), $this->albumsTmp[$album->getAuteur()])) {
-                    if ($album->getPicture() !== $this->parameters['no_cover_path']) {
+                    if ($album->getPicture() !== $this->assetMapper->getPublicPath($this->parameters['no_cover_path'])) {
                         $this->albumsTmp[$album->getAuteur()][$album->getName()]['picture'] = $album->getPicture();
                     }
                     if ($album->getYoutubeKey()) {
