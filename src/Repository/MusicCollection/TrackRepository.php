@@ -52,7 +52,7 @@ class TrackRepository extends ServiceEntityRepository
         }
 
         if (!empty($params['auteur'])) {
-            $sql .= "AND t.auteur LIKE :auteur OR t.artiste LIKE :auteur ";
+            $sql .= "AND (t.auteur LIKE :auteur OR t.artiste LIKE :auteur) ";
             $p[':auteur'] = '%'.$params['auteur'].'%';
         }
         if (!empty($params['album'])) {
