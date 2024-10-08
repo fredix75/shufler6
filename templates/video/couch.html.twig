@@ -11,10 +11,16 @@
 			<div id="title">
 				{% for track in list %}
 					<div id="{{ track.youtubeKey }}" class="row" style="display:none;background-color: #1b1b1b;margin:0;">
-						<div class="col-6 col-md-3 col-xl-3" style="padding:0"><img src="{{ track.picture|default('') }}" width="100%" loading="lazy"></div>
-						<div class="col-6 col-md-9 col-xl-9">
-							<span style="font-size: 1.5em; color: orange;">{{ track.auteur }}</span><br>
-							<span style="font-size: 1.2em">{{ track.titre }}</span><br>
+						<div class="col-6 col-md-3 col-xl-3" style="padding:0">
+							<img src="{{ track.picture|default('') }}" width="100%" loading="lazy">
+						</div>
+						<div class="col-6 col-md-9 col-xl-9" style="position:relative;">
+							<span style="font-size: 1.5em; color: orange;">{{ track.auteur }}</span>
+							{% if form_track is defined and track.genre is defined %}
+								<span class="badge text-bg-warning" style="position:absolute;right:10px;">{{ track.genre }}</span>
+							{% endif %}
+							<span style="font-size: 1.2em">{{ track.titre }}</span>
+							<br>
 							{% if track.note is defined and track.note != 0 %}<span>{{ displayStars(track.note|default(0), false) }}</span><br>{% endif %}
 							{{ track.album|default('') }} {% if track.annee is not empty %}({{ track.annee }}){% endif %}
 						</div>

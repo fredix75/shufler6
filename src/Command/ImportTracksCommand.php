@@ -229,7 +229,7 @@ class ImportTracksCommand extends Command
 
             if ($n === $this->parameters['batch_size']) {
                 $progress->advance($n);
-                $n=0;
+                $n = 0;
             }
         }
 
@@ -296,7 +296,7 @@ class ImportTracksCommand extends Command
                 $progress->advance($this->parameters['batch_size']);
             }
 
-            $i ++;
+            $i++;
         }
 
         $this->entityManager->flush();
