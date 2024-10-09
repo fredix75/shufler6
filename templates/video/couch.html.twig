@@ -19,6 +19,15 @@
 							{% if form_track is defined and track.genre is defined %}
 								<span class="badge text-bg-warning" style="position:absolute;right:10px;">{{ track.genre }}</span>
 							{% endif %}
+							{% if form_video is defined %}
+								<span class="badge text-bg-warning" style="position:absolute;right:10px;">
+									{% if track.genre is defined and track.genre != -1  %}
+										{{ track.genre|genreDisplay }}
+									{% elseif track.categorie is defined %}
+										{{ track.categorie|categorieDisplay }}
+									{% endif %}
+								</span>
+							{% endif %}
 							<br><span style="font-size: 1.2em">{{ track.titre }}</span>
 							<br>
 							{% if track.note is defined and track.note != 0 %}

@@ -11,8 +11,9 @@
                 <div class="topcom media-body">
                     <div class="col col-10 col-sm-10 col-md-10">
                         {% if is_granted('ROLE_AUTEUR') %}
-                            <div class="link_edit"><a href="{{ path('video_edit', {'id':video.id}) }}"
-                                                      aria-label="Edit video"><i class="bi bi-pencil-square"></i></a>
+                            <div class="link_edit">
+                                <a href="{{ path('video_edit', {'id':video.id}) }}"
+                                   aria-label="Edit video"><i class="bi bi-pencil-square"></i></a>
                             </div>
                         {% endif %}
                         <h2 class="media-heading">{{ video.titre }}</h2>
@@ -33,10 +34,10 @@
                     <a class="btn btn-dark" href="{{ path('main_home') }}" role="button" aria-label="Reload"
                        style="background-color:black"><i class="bi bi-dice-3-fill"></i>&nbsp;{{ 'New Selection'|trans }}
                         <i class="bi bi-dice-6-fill"></i></a>&nbsp;&nbsp;
-                    {% if not app.user %}<a id="register_second" class="btn btn-dark" role="button"
-                                            aria-label="Create an account" data-toggle="modal" data-target="#userModal"
-                                            href="{{ path('account') }}" style="background-color:black" ><span
-                            class="glyphicon glyphicon-flag"></span>&nbsp;{{ 'Create an account'|trans }}</a>{% endif %}
+                    {% if not app.user %}
+                        <a id="register_second" class="btn btn-dark" role="button" aria-label="Create an account" data-toggle="modal" data-target="#userModal" href="{{ path('account') }}" style="background-color:black" >
+                        <span class="glyphicon glyphicon-flag"></span>&nbsp;{{ 'Create an account'|trans }}</a>
+                    {% endif %}
                 </div>
                 <br/><br/>
             </div>
