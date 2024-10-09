@@ -19,9 +19,11 @@
 							{% if form_track is defined and track.genre is defined %}
 								<span class="badge text-bg-warning" style="position:absolute;right:10px;">{{ track.genre }}</span>
 							{% endif %}
-							<span style="font-size: 1.2em">{{ track.titre }}</span>
+							<br><span style="font-size: 1.2em">{{ track.titre }}</span>
 							<br>
-							{% if track.note is defined and track.note != 0 %}<span>{{ displayStars(track.note|default(0), false) }}</span><br>{% endif %}
+							{% if track.note is defined and track.note != 0 %}
+								<span>{{ displayStars(track.note|default(0), false) }}</span><br>
+							{% endif %}
 							{{ track.album|default('') }} {% if track.annee is not empty %}({{ track.annee }}){% endif %}
 						</div>
 					</div>
