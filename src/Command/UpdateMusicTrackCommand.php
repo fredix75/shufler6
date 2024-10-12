@@ -43,7 +43,6 @@ class UpdateMusicTrackCommand extends ImportTracksCommand
             ->setMaxResults(200)
             ->getQuery()->getResult();
 
-
         $i = 0;
         foreach ($tracks as $track) {
             try {
