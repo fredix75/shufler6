@@ -3,14 +3,19 @@
 namespace App\EntityListener;
 
 use App\Entity\MusicCollection\Album;
+use App\Helper\VideoHelper;
 use Symfony\Component\AssetMapper\AssetMapperInterface;
 
 class AlbumListener
 {
     private string $noCoverPath;
-    public function __construct(array $parameters, AssetMapperInterface $assetMapper)
+
+    private VideoHelper $videoHelper;
+
+    public function __construct(array $parameters, AssetMapperInterface $assetMapper, VideoHelper $videoHelper)
     {
         $this->noCoverPath = $assetMapper->getPublicPath($parameters['no_cover_path']);
+        $this->videoHelper = $videoHelper;
     }
 
     public function postLoad(Album $album): void
@@ -27,5 +32,10 @@ class AlbumListener
             $album->setPicture('');
         }
 
+        $key = $album->getYoutubeKey();
+        if ($key && ($platform = $this->videoHelper->getPlatform($key)) === VideoHelper::YOUTUBE) {
+            $key = $this->videoHelper->getIdentifer($key, $platform);
+        }
+        $album->setYoutubeKey($key);
     }
 }

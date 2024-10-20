@@ -270,15 +270,39 @@ class ApiController extends AbstractController
     /**
      * @throws \Exception
      */
-    #[Route('/launch', name: '_launch')]
+    #[Route('/update-track-launch', name: '_update_track_launch')]
     #[IsGranted('ROLE_ADMIN')]
-    public function launchCommand(KernelInterface $kernel): Response
+    public function launchUpdateTrackCommand(KernelInterface $kernel): Response
     {
         $application = new Application($kernel);
         $application->setAutoExit(false);
 
         $input = new ArrayInput([
             'command' => 'shufler:update-music-track',
+        ]);
+
+        // You can use NullOutput() if you don't need the output
+        $output = new BufferedOutput();
+        $application->run($input, $output);
+
+        // return the output, don't use if you used NullOutput()
+        $content = $output->fetch();
+
+        return new Response($content);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    #[Route('/update-album-launch', name: '_update_album_launch')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function launchUpdateAlbumCommand(KernelInterface $kernel): Response
+    {
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput([
+            'command' => 'shufler:update-music-album',
         ]);
 
         // You can use NullOutput() if you don't need the output

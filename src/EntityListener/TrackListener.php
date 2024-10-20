@@ -7,12 +7,7 @@ use App\Helper\VideoHelper;
 
 class TrackListener
 {
-
-    private VideoHelper $videoHelper;
-
-    public function __construct(VideoHelper $videoHelper) {
-        $this->videoHelper = $videoHelper;
-    }
+    public function __construct(private readonly VideoHelper $videoHelper) {}
 
     public function prePersist(Track $track): void
     {

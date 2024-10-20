@@ -172,13 +172,13 @@ class TrackRepository extends ServiceEntityRepository
         $params[':sort'] = $sort;
         $params[':dir'] = $dir;
         $conn = $this->getEntityManager()->getConnection();
-        $rawSQL = 'SELECT t.album, t.artiste, a.youtube_key as youtubeKey, json_arrayagg(t.annee) as annees, json_arrayagg(t.genre) as genres FROM track t';
+        $rawSQL = 'SELECT a.id as id, t.album, t.artiste, a.youtube_key as youtubeKey, json_arrayagg(t.annee) as annees, json_arrayagg(t.genre) as genres FROM track t';
         $rawSQL .= ' JOIN album a on a.auteur=t.artiste and a.name=t.album';
         if (!empty($data['query'])) {
             $rawSQL .= ' WHERE artiste like "%'.$data['query'].'%" OR album like "%'.$data['query'].'%"';
             $params[':query'] = '%'.$data['query'].'%';
         }
-        $rawSQL .= " GROUP BY album, artiste, a.youtube_key ORDER BY $sort $dir";
+        $rawSQL .= " GROUP BY id, album, artiste, a.youtube_key ORDER BY $sort $dir";
 
         // TODO Gérer les params à bind (j s p pqoi ca marche pas)
 

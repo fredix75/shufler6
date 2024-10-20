@@ -100,7 +100,10 @@ class MusicCollectionController extends AbstractController
                     sort($annees);
                     $genres = array_unique(json_decode($album['genres'], true));
                     $output['data'][] = [
-                        'youtubeKey' => '<a class="playlist-link ' . ($album['youtubeKey'] ? 'icon-youtube' : 'no-link') . '" href="' . VideoHelper::YOUTUBE_WATCH . $album['youtubeKey'] . '" data-id="' . $album['youtubeKey'] . '" data-action="music#popupPlaylist" title="video Playlist">' . ($album['youtubeKey'] ? '<i class="bi bi-youtube"></i>' : '') . '</a>',
+                        'youtubeKey' => $this->renderView('music/part/_youtube_pl_link.html.twig', [
+                            'album' => $album,
+                            'youtube_key' => VideoHelper::YOUTUBE_WATCH . $album['youtubeKey'],
+                        ]),
                         'album' => '<a href="#" data-action="music#openModal" data-artist="' . $album['artiste'] . '" data-album="' . $album['album'] . '" onclick="return false;"><i class="bi bi-filter-circle-fill"></i></a> ' . $album['album'],
                         'annee' => implode(', ', $annees),
                         'artiste' => strtoupper($album['artiste']) !== 'DIVERS' ? '<a href="#" data-action="music#openModal" data-artist="' . $album['artiste'] . '" onclick="return false;"><i class="bi bi-eye-fill"></i></a> ' . $album['artiste'] : $album['artiste'],
@@ -348,6 +351,35 @@ class MusicCollectionController extends AbstractController
             $trackRepository->save($track, true);
 
             return new Response(json_encode(['youtube_key' => $track->getYoutubeKey()]), Response::HTTP_OK);
+        }
+
+        return new Response(json_encode(['fail : ' . $response->getStatusCode()]), $response->getStatusCode());
+    }
+
+    #[Route('/playlist-link/{id}', name: '_playlist_link')]
+    public function getPlaylistLink(Album $album, AlbumRepository $albumRepository, Request $request, ApiRequester $apiRequester): Response
+    {
+        if (strtolower($request->get('name')) === 'divers') {
+            $album->setYoutubeKey('nope');
+            $albumRepository->save($album, true);
+
+            return new Response(json_encode(['youtube_key' => 'nope']), Response::HTTP_OK);
+        }
+
+        $search = (strtolower($request->get('auteur')) !== 'divers' ? $request->get('auteur') . ' ' : '') . $request->get('name');
+
+        $response = $apiRequester->sendRequest(VideoHelper::YOUTUBE, '/search', [
+            'q' => $search,
+            'type' => 'playlist'
+        ]);
+
+        if ($response->getStatusCode() === Response::HTTP_OK) {
+            $resultYouTube = json_decode($response->getContent(), true)['items'] ?? [];
+
+            $album->setYoutubeKey($resultYouTube[0]['id']['playlistId'] ?? '');
+            $albumRepository->save($album, true);
+
+            return new Response(json_encode(['youtube_key' => $album->getYoutubeKey()]), Response::HTTP_OK);
         }
 
         return new Response(json_encode(['fail : ' . $response->getStatusCode()]), $response->getStatusCode());

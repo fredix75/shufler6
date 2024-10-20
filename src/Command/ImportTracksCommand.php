@@ -47,16 +47,16 @@ class ImportTracksCommand extends Command
 
     public function __construct(
         protected readonly EntityManagerInterface $entityManager,
-        private readonly CsvConverter $converter,
-        protected readonly ApiRequester $apiRequester,
-        protected readonly TrackRepository $trackRepository,
-        private readonly ArtistRepository $artistRepository,
-        private readonly AlbumRepository $albumRepository,
-        private readonly SerializerInterface $serializer,
-        protected readonly Environment $twig,
-        protected readonly AssetMapperInterface $assetMapper,
-        ParameterBagInterface $parameterBag,
-        string $name = null
+        private readonly CsvConverter             $converter,
+        protected readonly ApiRequester           $apiRequester,
+        protected readonly TrackRepository        $trackRepository,
+        private readonly ArtistRepository         $artistRepository,
+        protected readonly AlbumRepository        $albumRepository,
+        private readonly SerializerInterface      $serializer,
+        protected readonly Environment            $twig,
+        protected readonly AssetMapperInterface   $assetMapper,
+        ParameterBagInterface                     $parameterBag,
+        string                                    $name = null
     ) {
         $this->parameters = $parameterBag->get('music_collection');
         parent::__construct($name);

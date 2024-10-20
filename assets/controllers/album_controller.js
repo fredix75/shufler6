@@ -41,14 +41,18 @@ export default class extends Controller {
             let picture = $('.album-picture-' + result.id);
             picture.attr('src', result.picture);
             if (result.youtube_key != null) {
-                if ($('a#album-youtube-' + result.id).length > 0) {
-                    $('a#album-youtube-' + result.id).attr('href', 'https://www.youtube.com/watch?v=' + result.youtube_key);
-                } else {
-                    let btn = '<a id="album-youtube-' + result.id +'" class="playlist-link icon-youtube" href="https://www.youtube.com/watch?v=' + result.youtube_key + '" data-id="' + result.youtube_key + '" data-action="music#popupPlaylist" title="video Playlist">\n' +
-                        '<i class="bi bi-youtube"></i>\n' +
-                        '</a>';
-                    $('#album-btn').prepend(btn);
+                let element = $('a#album-youtube-' + result.id);
+                element.attr('href', 'https://www.youtube.com/watch?v=' + result.youtube_key);
+                if (element.hasClass('no-link')) {
+                    element.removeClass('no-link');
                 }
+                if (!element.hasClass('video-link icon-youtube')) {
+                    element.addClass('video-link icon-youtube');
+                }
+                if (element.children('i').length === 0) {
+                    element.html('<i class="bi bi-youtube"></i>');
+                }
+                element.data('action', 'music#popupPlaylist');
             } else {
                 if ($('a#album-youtube-' + result.id).length > 0) {
                     $('a#album-youtube-' + result.id).remove();
@@ -63,7 +67,9 @@ export default class extends Controller {
         event.preventDefault();
         if ($(event.target).closest('a').data('id')) {
             let id = $(event.target).closest('a').data('id');
-            const modal = new Modal('#formModal', {keyboard: false});
+            let modal = document.querySelector('#formModal');
+            Modal.getInstance(modal).hide();
+            modal = new Modal('#formModal', {keyboard: false});
             modal.show();
             $(document).find('.modal-body').html(await $.ajax('/fr/music/album/edit/' + id));
         }

@@ -134,6 +134,36 @@ export default class extends Controller {
         });
     }
 
+    async getPlaylistLink(event) {
+        let id = $(event.target).closest('a').data('id');
+        let auteur = $(event.target).closest('a').data('auteur');
+        let album = $(event.target).closest('a').data('album');
+
+        await $.ajax({
+            url: '/fr/music/playlist-link/' + id,
+            method: 'POST',
+            data:  {auteur: auteur, name: album},
+            processData: true,
+            dataType	: 'json', // what type of data do we expect back from the server
+            error       : function(data) {
+                console.log(data.responseText);
+            },
+            success     : function(data, textStatus, xhr) {
+                if (xhr.status === 200) {
+                    if (data.youtube_key !== 'nope') {
+                        $(event.target).closest('a').attr('href', 'https://www.youtube.com/watch?v=' + data.youtube_key);
+                        $(event.target).closest('a').removeClass('no-link');
+                        $(event.target).closest('a').addClass('playlist-link icon-youtube');
+                    } else {
+                        $(event.target).closest('a').html('');
+                    }
+
+                }
+            }
+        });
+        event.preventDefault();
+    }
+
     async openModal(event) {
         let query = '?';
         let url = '/fr/music/tracks_album';

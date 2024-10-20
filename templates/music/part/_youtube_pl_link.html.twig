@@ -1,0 +1,10 @@
+<a id="album-youtube-{{ album.id }}"
+   href="{{ youtube_key }}"
+   class="{{ album.youtubeKey is not null ? 'playlist-link icon-youtube' : 'no-link' }}"
+   data-id="{{ album.id }}"
+   data-auteur="{{ album.artiste }}" data-album="{{ album.album }}"
+   {{ album.youtubeKey is not null ? 'data-action="music#popupPlaylist"' : 'data-action="music#getPlaylistLink"' }}
+   title="video Playlist"
+   onclick="return false;">
+    {{ album.youtubeKey != 'nope' ? '<i class="bi bi-youtube"></i>' : '' }}
+</a>

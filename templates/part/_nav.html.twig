@@ -11,7 +11,8 @@
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-label="Admin"><i class="bi bi-gear"></i> Admin</a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{{ path('admin_dead_videos') }}" aria-label="Dead Videos"><i class="bi bi-bandaid"></i> Dead Links</a></li>
-                            <li><a class="dropdown-item" href="{{ path('api_launch') }}"><i class="bi bi-gift"></i> Update Tracks</a></li>
+                            <li><a class="dropdown-item" href="{{ path('api_update_track_launch') }}"><i class="bi bi-gift"></i> Update Tracks</a></li>
+                            <li><a class="dropdown-item" href="{{ path('api_update_album_launch') }}"><i class="bi bi-gift"></i> Update Albums</a></li>
                         </ul>
                     </li>
                 {% endif %}
