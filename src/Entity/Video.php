@@ -11,6 +11,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Controller\Api\RandomVideoController;
 use App\Controller\Api\VideoController;
 use App\EntityListener\VideoListener;
 use App\Repository\VideoRepository;
@@ -36,6 +37,12 @@ use Symfony\Component\Validator\Constraints as Assert;
             schemes: ['https'],
             controller: VideoController::class,
             paginationItemsPerPage: 3,
+            normalizationContext: ['groups' => 'video:list']
+        ),
+        new GetCollection(
+            uriTemplate: '/random',
+            schemes: ['https'],
+            controller: RandomVideoController::class,
             normalizationContext: ['groups' => 'video:list']
         ),
         new Get(
