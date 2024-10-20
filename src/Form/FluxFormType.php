@@ -20,16 +20,13 @@ use Symfony\Component\Validator\Constraints\File;
 
 class FluxFormType extends AbstractType
 {
-    public function __construct(
-        private readonly FluxTypeRepository $fluxTypeRepository,
-        private readonly FluxMoodRepository $fluxMoodRepository
-    ) {}
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('name', TextType::class)
             ->add('url', UrlType::class, [
+                'default_protocol' => 'https',
                 'attr' => [
              //       'data-action' => 'change->flux-edit#getImageYoutubePlaylist'
                 ],

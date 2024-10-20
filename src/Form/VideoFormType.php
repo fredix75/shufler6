@@ -30,6 +30,7 @@ class VideoFormType extends AbstractType
             ->add('titre', TextType::class)
             ->add('auteur', TextType::class)
             ->add('lien', UrlType::class, [
+                'default_protocol' => 'https',
                 'attr' => [
                     'data-action' => 'video-edit#completeInfos'
                 ]

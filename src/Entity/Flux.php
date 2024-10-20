@@ -26,7 +26,7 @@ class Flux implements UploadInterface
 
     #[ORM\Column(length: 255, unique: true)]
     #[Assert\NotBlank]
-    #[Assert\Url]
+    #[Assert\Url(requireTld: true)]
     private ?string $url = null;
 
     #[ORM\Column(length: 255, nullable: true)]
