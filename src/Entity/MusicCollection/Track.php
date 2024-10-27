@@ -27,7 +27,6 @@ class Track extends Piece
     private ?string $hash = null;
 
     public function setId(int $id): static
-
     {
         $this->id = $id;
 
@@ -40,7 +39,6 @@ class Track extends Piece
     }
 
     public function setNumero(?int $numero): static
-
     {
         $this->numero = $numero;
 
@@ -53,7 +51,6 @@ class Track extends Piece
     }
 
     public function setDuree(?string $duree): static
-
     {
         $this->duree = $duree;
 
@@ -66,7 +63,6 @@ class Track extends Piece
     }
 
     public function setBitrate(?string $bitrate): static
-
     {
         $this->bitrate = $bitrate;
 
@@ -79,7 +75,6 @@ class Track extends Piece
     }
 
     public function setNote(?float $note): static
-
     {
         $this->note = $note;
 
@@ -92,7 +87,6 @@ class Track extends Piece
     }
 
     public function setHash(?string $hash): static
-
     {
         $this->hash = $hash;
 
