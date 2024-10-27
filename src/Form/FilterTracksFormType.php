@@ -2,8 +2,10 @@
 
 namespace App\Form;
 
-use App\Repository\MusicCollection\TrackRepository;
+use App\Form\ChoiceLoader\PieceGenresLoader;
+use App\Repository\MusicCollection\PieceRepository;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -14,7 +16,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class FilterTracksFormType extends AbstractType
 {
-    public function __construct(private readonly TrackRepository $trackRepository){}
+    public function __construct(private readonly PieceGenresLoader $genresLoader)
+    {
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -63,7 +68,7 @@ class FilterTracksFormType extends AbstractType
                 'label' => false,
                 'placeholder' => 'Choisissez un genre',
                 'required' => false,
-                'choices' => $this->getGenres(),
+                'choice_loader' => $this->genresLoader,
                 'row_attr' => [
                     'class' => 'col-6 col-md-4 col-lg-2'
                 ],
@@ -74,7 +79,12 @@ class FilterTracksFormType extends AbstractType
                     'label' => false,
                     'placeholder' => 'Rating',
                     'required' => false,
-                    'choices' => $this->getNotes(),
+                    'choice_loader' => new CallbackChoiceLoader(static function (): array {
+                        for($i = 5; $i > 0; $i--){
+                            $notes[$i] = $i;
+                        }
+                        return $notes;
+                    }),
                     'row_attr' => [
                         'class' => 'col-6 col-md-4 col-lg-1'
                     ],
@@ -110,24 +120,5 @@ class FilterTracksFormType extends AbstractType
     public function getBlockPrefix(): string
     {
         return '';
-    }
-
-    private function getGenres(): array
-    {
-        $genres = $this->trackRepository->getGenres();
-
-        $genres = array_map(function($item) {
-            return $item['genre'];
-        }, $genres);
-
-        return array_combine($genres, $genres);
-    }
-
-    private function getNotes(): array
-    {
-        for($i = 5; $i > 0; $i--){
-            $notes[$i] = $i;
-        }
-        return $notes;
     }
 }

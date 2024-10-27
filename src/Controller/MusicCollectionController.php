@@ -3,14 +3,18 @@
 namespace App\Controller;
 
 use App\Entity\MusicCollection\Album;
+use App\Entity\MusicCollection\CloudTrack;
 use App\Entity\MusicCollection\Track;
 use App\Form\AlbumFormType;
+use App\Form\CloudTrackFormType;
 use App\Form\FilterTracksFormType;
 use App\Form\TrackFormType;
 use App\Helper\ApiRequester;
 use App\Helper\VideoHelper;
 use App\Repository\MusicCollection\ArtistRepository;
+use App\Repository\MusicCollection\PieceRepository;
 use App\Twig\Runtime\ShuflerRuntime;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -164,6 +168,39 @@ class MusicCollectionController extends AbstractController
         ]);
     }
 
+    #[Route('/cloudtrack/edit/{id}', name: '_cloudtrack_edit', requirements: ['id' => '\d+'], defaults: ['id' => 0])]
+    public function editCloudTrack(CloudTrack $cloudTrack = null, Request $request, EntityManagerInterface $em): Response
+    {
+        $cloudTrack = $cloudTrack ?? new CloudTrack();
+
+        if ($request->get('trackkey')) {
+            $cloudTrack->setYoutubeKey($request->get('trackkey'));
+            $em->persist($cloudTrack);
+            $em->flush();
+
+            return $this->redirectToRoute('music_all', ['mode' => 'tracks']);
+        }
+
+        $form = $this->createForm(CloudTrackFormType::class, $cloudTrack);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $youtubeKey = $form->get('youtubeKey')->getData();
+            $cloudTrack->setYoutubeKey($youtubeKey);
+            $em->persist($cloudTrack);
+            $em->flush();
+
+            $this->addFlash('success', 'Un morceau a été sauvegardé');
+
+            return $this->redirectToRoute('main_home');
+        }
+
+        return $this->render('music/cloud-track_edit.html.twig', [
+            'form' => $form,
+            'cloudTrack' => $cloudTrack,
+        ]);
+    }
+
     #[Route('/track/edit/{id}', name: '_track_edit', requirements: ['id' => '\d+'])]
     public function editTrack(Track $track, Request $request, TrackRepository $trackRepository): Response
     {
@@ -245,7 +282,7 @@ class MusicCollectionController extends AbstractController
     }
 
     #[Route('/couch', name: '_couch')]
-    public function couch(Request $request, TrackRepository $trackRepository): Response
+    public function couch(Request $request, PieceRepository $pieceRepository): Response
     {
         $params = [
             'auteur' => $request->get('auteur') ?? null,
@@ -259,10 +296,10 @@ class MusicCollectionController extends AbstractController
         $form = $this->createForm(FilterTracksFormType::class, $params);
 
         $params['note'] = $request->get('note') ?? null;
-        $tracks = $trackRepository->getTracks($params);
+        $pieces = $pieceRepository->getPieces($params);
 
         if (empty($params['album'])) {
-            shuffle($tracks);
+            shuffle($pieces);
         }
         $musicParameters = $this->getParameter('music_collection');
         $videoParameters = $this->getParameter('shufler_video');
@@ -278,10 +315,10 @@ class MusicCollectionController extends AbstractController
         $list = [$trackIntro];
 
         $i = 0;
-        foreach ($tracks as $track) {
-            if (!\in_array($track['youtubeKey'], $playlist) && $track['youtubeKey'] !== 'nope') {
-                $playlist[] = $track['youtubeKey'];
-                $list[] = $track;
+        foreach ($pieces as $piece) {
+            if (!\in_array($piece['youtubeKey'], $playlist) && $piece['youtubeKey'] !== 'nope') {
+                $playlist[] = $piece['youtubeKey'];
+                $list[] = $piece;
                 $i++;
             }
             if ($i >= $musicParameters['max_random']) {
@@ -291,7 +328,7 @@ class MusicCollectionController extends AbstractController
 
         return $this->render('video/couch.html.twig', [
             'list' => $list,
-            'videos' => $playlist ?? [],
+            'videos' => $playlist,
             'form_track' => $form,
         ]);
     }

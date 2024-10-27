@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\FluxRepository;
+use App\Repository\MusicCollection\PieceRepository;
 use App\Repository\MusicCollection\TrackRepository;
 use App\Repository\VideoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -53,7 +54,7 @@ class HomeController extends AbstractController
     }
 
     #[Route('/search/{page}', name: '_search', requirements: ['id' => '\d+'])]
-    public function search(Request $request, VideoRepository $videoRepository, TrackRepository $trackRepository, int $page = 1): Response
+    public function search(Request $request, VideoRepository $videoRepository, PieceRepository $pieceRepository, int $page = 1): Response
     {
         $search = $request->get('search_field');
 
@@ -69,7 +70,7 @@ class HomeController extends AbstractController
             ]
         ];
 
-        $tracks = $trackRepository->getTracks(['search' => $search]);
+        $tracks = $pieceRepository->getPieces(['search' => $search]);
 
         return $this->render('main/search.html.twig', [
             'search' => $search,

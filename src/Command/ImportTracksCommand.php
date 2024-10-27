@@ -427,7 +427,7 @@ class ImportTracksCommand extends Command
                 try {
                     $this->entityManager->flush();
                 } catch (\Exception $e) {
-                    dump($e->getMessage());
+                    $output->writeln($e->getMessage());
                     $this->entityManager->rollback();
                 }
 
@@ -436,7 +436,7 @@ class ImportTracksCommand extends Command
         try {
             $this->entityManager->flush();
         } catch (\Exception $e) {
-            dump($e->getMessage());
+            $output->writeln($e->getMessage());
             $this->entityManager->rollback();
         }
         $this->entityManager->clear();

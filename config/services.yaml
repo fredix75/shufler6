@@ -39,6 +39,13 @@ services:
             - { name: 'doctrine.event_listener', event: 'preUpdate' }
             - { name: 'doctrine.event_listener', event: 'preRemove' }
 
+    App\EntityListener\PieceListener:
+        arguments:
+            $videoHelper: '@App\Helper\VideoHelper'
+        tags:
+            - { name: 'doctrine.orm.entity_listener', event: 'prePersist' }
+            - { name: 'doctrine.orm.entity_listener', event: 'preUpdate' }
+
     App\EntityListener\TrackListener:
         arguments:
             $videoHelper: '@App\Helper\VideoHelper'

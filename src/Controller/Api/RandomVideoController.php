@@ -13,7 +13,8 @@ class RandomVideoController extends AbstractController
     {
         $categorie = $request->get('categorie');
 
-        return array_slice($videoRepository->getRandomVideos(null, $categorie),0,12);
+        //return array_slice($videoRepository->getRandomVideos(null, $categorie),0,12);
+        return [$videoRepository->find(41)];
     }
 
 }

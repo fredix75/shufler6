@@ -41,65 +41,6 @@ class TrackRepository extends ServiceEntityRepository
         }
     }
 
-    public function getTracks(array $params = []): array
-    {
-        $sql= "SELECT t.*, t.youtube_key as youtubeKey, a.picture FROM track t LEFT JOIN album a ON a.name = t.album AND a.auteur = t.artiste WHERE 1 ";
-        $orderBy = "";
-        $p = [];
-
-        if (!empty($params['hasYoutubeKey'])) {
-            $sql .= "AND t.youtube_key <> '' ";
-        }
-
-        if (!empty($params['auteur'])) {
-            $sql .= "AND (t.auteur LIKE :auteur OR t.artiste LIKE :auteur) ";
-            $p[':auteur'] = '%'.$params['auteur'].'%';
-        }
-        if (!empty($params['album'])) {
-            $sql .= "AND t.album LIKE :album ";
-            $p[':album'] = '%'.$params['album'].'%';
-            $orderBy .= ", t.numero ASC ";
-        } else {
-            $orderBy .= ", t.titre ASC ";
-        }
-        if (!empty($params['genre'])) {
-            $sql .= "AND t.genre = :genre ";
-            $p[':genre'] = $params['genre'];
-        }
-        if (!empty($params['note'])) {
-            $sql .= "AND t.note >=:note ";
-            $p[':note'] = $params['note'];
-        }
-        if (!empty($params['annee'])) {
-            $annee = $params['annee'];
-            if (substr_count($annee, '-')) {
-                $annee1 = (explode('-', $annee)[0] && is_numeric(explode('-', $annee)[0])) ? explode('-', $annee)[0] : 1;
-                $annee2 = (explode('-', $annee)[1] && is_numeric(explode('-', $annee)[1])) ? explode('-', $annee)[1] : date('Y');
-                if ($annee1 && $annee2) {
-                    $sql .= "AND t.annee >= :annee1 AND t.annee <= :annee2 ";
-                    $p[':annee1'] = $annee1;
-                    $p[':annee2'] = $annee2;
-                }
-            } elseif (is_numeric($annee)) {
-                $sql .= "AND t.annee = :annee ";
-                $p[':annee'] = $params['annee'];
-            }
-        }
-
-        if (!empty($params['search'])) {
-            $sql .= "AND (t.auteur LIKE :search OR t.titre LIKE :search OR t.album LIKE :search OR t.artiste LIKE :search) ";
-            $p[':search'] = '%'.$params['search'].'%';
-        }
-
-        $rawSQL = $sql;
-        $rawSQL .= $orderBy ? 'ORDER BY true ' . $orderBy : '';
-
-        $conn = $this->getEntityManager()->getConnection();
-        $stmt = $conn->prepare($rawSQL);
-
-        return $stmt->executeQuery($p)->fetchAllAssociative();
-    }
-
     public function getTracksByAlbum(string $artiste, string $album): array
     {
         return $this->createQueryBuilder('t')
@@ -172,10 +113,10 @@ class TrackRepository extends ServiceEntityRepository
         $params[':sort'] = $sort;
         $params[':dir'] = $dir;
         $conn = $this->getEntityManager()->getConnection();
-        $rawSQL = 'SELECT a.id as id, t.album, t.artiste, a.youtube_key as youtubeKey, json_arrayagg(t.annee) as annees, json_arrayagg(t.genre) as genres FROM track t';
-        $rawSQL .= ' JOIN album a on a.auteur=t.artiste and a.name=t.album';
+        $rawSQL = 'SELECT a.id as id, t.album, t.artiste, a.youtube_key as youtubeKey, json_arrayagg(t.annee) as annees, json_arrayagg(t.genre) as genres FROM piece t';
+        $rawSQL .= ' JOIN album a on a.auteur=t.artiste and a.name=t.album WHERE t.data_type = 1';
         if (!empty($data['query'])) {
-            $rawSQL .= ' WHERE artiste like "%'.$data['query'].'%" OR album like "%'.$data['query'].'%"';
+            $rawSQL .= ' AND (artiste like "%'.$data['query'].'%" OR album like "%'.$data['query'].'%")';
             $params[':query'] = '%'.$data['query'].'%';
         }
         $rawSQL .= " GROUP BY id, album, artiste, a.youtube_key ORDER BY $sort $dir";
@@ -209,10 +150,11 @@ class TrackRepository extends ServiceEntityRepository
      */
     function resetChecks() {
         $conn = $this->getEntityManager()->getConnection();
-        $rawSQL = 'UPDATE track set is_check = FALSE WHERE TRUE';
+        $rawSQL = 'UPDATE piece set is_check = FALSE WHERE data_type = 1';
         $conn->executeQuery($rawSQL);
     }
 
+    //TODO A modifier pour élargir la recherche
     function searchAjax(string $search): array
     {
         $auteurs = $this->createQueryBuilder('t')
@@ -266,17 +208,11 @@ class TrackRepository extends ServiceEntityRepository
         return $suggestions;
     }
 
-    public function getGenres(): array
-    {
-        return $this->createQueryBuilder('t')->select('distinct t.genre')
-            ->orderBy('t.genre')
-            ->getQuery()->getResult();
-    }
-
+    //TODO A modifier pour élargir ??
     public function getTracksByCountry(): array
     {
         $conn = $this->getEntityManager()->getConnection();
-        $rawSql = "SELECT count(*), pays FROM track GROUP BY pays ORDER BY pays";
+        $rawSql = "SELECT count(*), pays FROM piece GROUP BY pays ORDER BY pays";
         $stmt = $conn->prepare($rawSql);
 
         return $stmt->executeQuery()->fetchAllAssociative();
