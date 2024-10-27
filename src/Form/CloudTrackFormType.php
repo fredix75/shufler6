@@ -26,6 +26,7 @@ class CloudTrackFormType extends AbstractType
         $builder
             ->add('youtubeKey', UrlType::class, [
                 'label' => 'Youtube Link',
+                'default_protocol' => 'https',
             ])
             ->add('auteur', TextType::class, [
                 'required' => false,
