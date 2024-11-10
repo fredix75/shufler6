@@ -3,7 +3,6 @@
 namespace App\Form;
 
 use App\Form\ChoiceLoader\PieceGenresLoader;
-use App\Repository\MusicCollection\PieceRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -29,18 +28,12 @@ class FilterTracksFormType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Search',
                 ],
-                'row_attr' => [
-                    'class' => 'col-6 col-md-4 col-lg-2'
-                ],
             ])
             ->add('auteur', TextType::class, [
                 'label' => false,
                 'required' => false,
                 'attr' => [
                     'placeholder' => 'Auteur',
-                ],
-                'row_attr' => [
-                    'class' => 'col-6 col-md-4 col-lg-2'
                 ],
             ])
             ->add('album', TextType::class, [
@@ -49,28 +42,23 @@ class FilterTracksFormType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Album',
                 ],
-                'row_attr' => [
-                    'class' => 'col-6 col-md-4 col-lg-2'
-                ],
             ])
             ->add('annee', TextType::class, [
                 'label' => false,
                 'required' => false,
-                'row_attr' => [
-                    'class' => 'col-6 col-md-4 col-lg-2',
-                ],
                 'attr' => [
                     'pattern' => '\d{4}(-\d{4})?',
                     'placeholder' => 'Ex: 1968 ou 1914-1918',
                 ],
             ])
-            ->add('genre', ChoiceType::class, [
+            ->add('genres', ChoiceType::class, [
                 'label' => false,
                 'placeholder' => 'Choisissez un genre',
                 'required' => false,
                 'choice_loader' => $this->genresLoader,
-                'row_attr' => [
-                    'class' => 'col-6 col-md-4 col-lg-2'
+                'multiple' => true,
+                'attr'  => [
+                    'class' => 'select2',
                 ],
             ]);
 
@@ -85,26 +73,17 @@ class FilterTracksFormType extends AbstractType
                         }
                         return $notes;
                     }),
-                    'row_attr' => [
-                        'class' => 'col-6 col-md-4 col-lg-1'
-                    ],
                 ]);
             } else {
                 $builder->add('page', HiddenType::class, [
                         'data' => 0,
                 ])->add('random', CheckboxType::class, [
                         'required' => false,
-                        'row_attr' => [
-                            'class' => 'form-check form-switch col-6 col-md-2 col-lg-1'
-                        ]
                     ]);
             }
 
             $builder->add('submit', SubmitType::class, [
                 'label' => 'OK',
-                'row_attr' => [
-                    'class' => 'col-3 col-md-2 col-lg-1'
-                ],
             ])
         ;
     }

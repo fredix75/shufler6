@@ -11,6 +11,7 @@ use App\Form\FilterTracksFormType;
 use App\Form\TrackFormType;
 use App\Helper\ApiRequester;
 use App\Helper\VideoHelper;
+use App\Repository\FilterPieceRepository;
 use App\Repository\MusicCollection\ArtistRepository;
 use App\Repository\MusicCollection\PieceRepository;
 use App\Twig\Runtime\ShuflerRuntime;
@@ -281,13 +282,26 @@ class MusicCollectionController extends AbstractController
         ]);
     }
 
+    #[Route('/filter-couch', name: '_filter_couch')]
+    public function filterCouch(FilterPieceRepository $filterPieceRepository): Response {
+
+        $form = $this->createForm(FilterTracksFormType::class);
+
+        $filterlistes = $filterPieceRepository->findBy([], ['name' => 'ASC']);
+
+        return $this->render('music/filter_couch.html.twig', [
+            'form' => $form,
+            'filter_listes' => $filterlistes,
+        ]);
+    }
+
     #[Route('/couch', name: '_couch')]
     public function couch(Request $request, PieceRepository $pieceRepository): Response
     {
         $params = [
             'auteur' => $request->get('auteur') ?? null,
             'album' => $request->get('album') ?? null,
-            'genre' => $request->get('genre') ?? null,
+            'genres' => $request->get('genres') ?? null,
             'annee' => $request->get('annee') ?? null,
             'search' => $request->get('search') ?? null,
             'hasYoutubeKey' => true,

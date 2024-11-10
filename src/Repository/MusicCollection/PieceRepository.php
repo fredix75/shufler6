@@ -24,23 +24,24 @@ class PieceRepository extends ServiceEntityRepository
         }
 
         if (!empty($params['auteur'])) {
-            $sql .= "AND (t.auteur LIKE :auteur OR t.artiste LIKE :auteur) ";
-            $p[':auteur'] = '%'.$params['auteur'].'%';
+            $sql .= "AND (t.auteur LIKE ? OR t.artiste LIKE ?) ";
+            $p[] = '%'.$params['auteur'].'%';
+            $p[] = '%'.$params['auteur'].'%';
         }
         if (!empty($params['album'])) {
-            $sql .= "AND t.album LIKE :album ";
-            $p[':album'] = '%'.$params['album'].'%';
+            $sql .= "AND t.album LIKE ? ";
+            $p[] = '%'.$params['album'].'%';
             $orderBy .= ", t.numero ASC ";
         } else {
             $orderBy .= ", t.titre ASC ";
         }
-        if (!empty($params['genre'])) {
-            $sql .= "AND t.genre = :genre ";
-            $p[':genre'] = $params['genre'];
+        if (!empty($params['genres'])) {
+            $sql .= "AND t.genre IN (" . str_repeat('?,', count($params['genres']) - 1) . "?) ";
+            $p = array_merge($p, $params['genres']);
         }
         if (!empty($params['note'])) {
-            $sql .= "AND t.extra_note >=:note ";
-            $p[':note'] = $params['note'];
+            $sql .= "AND t.extra_note >= ? ";
+            $p[] = $params['note'];
         }
         if (!empty($params['annee'])) {
             $annee = $params['annee'];
@@ -48,24 +49,26 @@ class PieceRepository extends ServiceEntityRepository
                 $annee1 = (explode('-', $annee)[0] && is_numeric(explode('-', $annee)[0])) ? explode('-', $annee)[0] : 1;
                 $annee2 = (explode('-', $annee)[1] && is_numeric(explode('-', $annee)[1])) ? explode('-', $annee)[1] : date('Y');
                 if ($annee1 && $annee2) {
-                    $sql .= "AND t.annee >= :annee1 AND t.annee <= :annee2 ";
-                    $p[':annee1'] = $annee1;
-                    $p[':annee2'] = $annee2;
+                    $sql .= "AND t.annee >= ? AND t.annee <= ? ";
+                    $p[] = $annee1;
+                    $p[] = $annee2;
                 }
             } elseif (is_numeric($annee)) {
-                $sql .= "AND t.annee = :annee ";
-                $p[':annee'] = $params['annee'];
+                $sql .= "AND t.annee = ? ";
+                $p[] = $params['annee'];
             }
         }
 
         if (!empty($params['search'])) {
-            $sql .= "AND (t.auteur LIKE :search OR t.titre LIKE :search OR t.album LIKE :search OR t.artiste LIKE :search) ";
-            $p[':search'] = '%'.$params['search'].'%';
+            $sql .= "AND (t.auteur LIKE ? OR t.titre LIKE ? OR t.album LIKE ? OR t.artiste LIKE ?) ";
+            $p[] = '%'.$params['search'].'%';
+            $p[] = '%'.$params['search'].'%';
+            $p[] = '%'.$params['search'].'%';
+            $p[] = '%'.$params['search'].'%';
         }
 
         $rawSQL = $sql;
         $rawSQL .= $orderBy ? 'ORDER BY true ' . $orderBy : '';
-
         $conn = $this->getEntityManager()->getConnection();
         $stmt = $conn->prepare($rawSQL);
 

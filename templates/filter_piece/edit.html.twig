@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} :: Filter Edit {% endblock %}
+
+{% block body %}
+    {% if filter_piece.id is defined and filter_piece.id !=0 %}
+        <h1 class="minor"><i class="bi bi-pencil"></i>s&nbsp;Editer la Liste</h1>
+    {% else %}
+        <h1 class="minor"><i class="bi bi-plus-circle"></i>&nbsp;Ajouter une Liste</h1>
+    {% endif %}
+
+    <div class="well" data-controller="modal-channel-form">
+        <div class="row justify-content-md-center txt-center">
+            <div class="col-12 col-lg-6">
+                {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+                {{ form_errors(form) }}
+                {{ form_widget(form) }}
+                <div class="col-3">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;"><i
+                                class="bi bi-check-circle-fill"></i> OK
+                    </button>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

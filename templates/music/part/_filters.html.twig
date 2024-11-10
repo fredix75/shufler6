@@ -3,18 +3,34 @@
 {% block slider_content %}
     {{ form_start(form_track, {'method' : 'GET'}) }}
     <div class="row justify-content-center filter-form">
-        {{ form_row(form_track.genre) }}
-        {{ form_row(form_track.search) }}
-        {{ form_row(form_track.auteur) }}
-        {{ form_row(form_track.album) }}
-        {{ form_row(form_track.annee) }}
+        <div class="col-6 col-md-4 col-lg-2">
+            {{ form_row(form_track.genres) }}
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            {{ form_row(form_track.search) }}
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            {{ form_row(form_track.auteur) }}
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            {{ form_row(form_track.album) }}
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            {{ form_row(form_track.annee) }}
+        </div>
         {% if form_track.note is defined %}
-            {{ form_row(form_track.note) }}
+            <div class="col-6 col-md-4 col-lg-1">
+                {{ form_row(form_track.note) }}
+            </div>
         {% endif %}
         {% if form_track.random is defined %}
-            {{ form_row(form_track.random) }}
+            <div class="form-check form-switch col-6 col-md-2 col-lg-1">
+                {{ form_row(form_track.random) }}
+            </div>
         {% endif %}
-        {{ form_row(form_track.submit) }}
+        <div class="col-3 col-md-2 col-lg-1">
+            {{ form_row(form_track.submit) }}
+        </div>
     </div>
     {{ form_end(form_track) }}
 {% endblock %}
