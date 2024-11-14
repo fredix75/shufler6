@@ -41,6 +41,8 @@
                     <div class="col-12 col-lg-6 p-4 ps-md-0">
                         <strong>{{ result.artist }}</strong><br/>
                         <strong>{{ result.name }}</strong>
+                        <br><br>
+                        <a href="{{ path('api_playlist', {'search_api' : result.artist ~ ' ' ~ result.name}) }}" class="icon-youtube"><i class="bi bi-youtube"></i></a>
                         {% if is_granted('ROLE_AUTEUR') %}
                             {% if idAlbum != 0 %}
                                 <br/><a href="#" class="btn btn-secondary" data-action="album#editPicture"

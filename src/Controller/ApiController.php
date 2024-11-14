@@ -33,13 +33,14 @@ class ApiController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function searchVideo(Request $request, ApiRequester $apiRequester): Response
     {
-        $search = $idVideo = $idTrack = $wiki = null;
+        $search = $idVideo = $idTrack = $idCloudtrack = $wiki = null;
         $resultat = [];
 
         if ($request->get('search_api')) {
             $search = $request->get('search_api');
-            $idVideo = $request->get('id_video') ?? $idVideo;
-            $idTrack = $request->get('id_track') ?? $idTrack;
+            $idVideo = $request->get('id_video');
+            $idTrack = $request->get('id_track');
+            $idCloudtrack = $request->get('id_cloudtrack');
 
             $resultat = [
                 'youtube' => [
@@ -81,14 +82,16 @@ class ApiController extends AbstractController
                 'page' => 1
             ]);
 
-            foreach ($content['body']['data'] as $item) {
-                $resultat['vimeo']['items'][] = [
-                    'link' => $item['pictures']['sizes'][1]['link'],
-                    'name' => $item['name'],
-                    'url' => $item['link'],
-                    'author' => $item['user']['name'],
-                    'date' => date("d-m-Y", strtotime($item['created_time'])),
-                ];
+            if (!empty($content['body']['data'])) {
+                foreach ($content['body']['data'] as $item) {
+                    $resultat['vimeo']['items'][] = [
+                        'link' => $item['pictures']['sizes'][1]['link'],
+                        'name' => $item['name'],
+                        'url' => $item['link'],
+                        'author' => $item['user']['name'],
+                        'date' => date("d-m-Y", strtotime($item['created_time'])),
+                    ];
+                }
             }
 
             // Wikipedia
@@ -119,6 +122,9 @@ class ApiController extends AbstractController
         ];
         if ($idTrack) {
             $params['idTrack'] = $idTrack;
+        }
+        if ($idCloudtrack) {
+            $params['idCloudtrack'] = $idCloudtrack;
         }
         return $this->render('api/videos.html.twig', $params);
     }

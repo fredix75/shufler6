@@ -11,6 +11,8 @@
                        class="input-sm form-control big-input" placeholder="videos on youtube"/>
                 {% if idTrack is defined %}
                     <input type="hidden" name="id_track" value="{{ idTrack }}"/>
+                {% elseif idCloudtrack is defined %}
+                    <input type="hidden" name="id_cloud_track" value="{{ idCloudtrack }}"/>
                 {% else %}
                     <input type="hidden" name="id_video" value="{{ idVideo ?? 0 }}"/>
                 {% endif %}
@@ -18,9 +20,9 @@
             <div class="col col-2 col-sm-2 col-lg-2">
                 <button type="submit" id="enter_search" class="btn btn-primary btn-sm" style="height:50px;width:50px;">
                     <i class="bi bi-binoculars"></i></button>
-                {% if idTrack is not defined and idVideo != 0 %}
+                {% if idTrack is not defined and (idVideo != 0 or idCloudtrack is defined) %}
                     <a href="#" data-action="video#deleteKey"><span class="badge bg-warning"><i
-                                    class="bi bi-pin-angle-fill"></i>&nbsp;{{ idVideo }}</span></a>
+                                    class="bi bi-pin-angle-fill"></i>&nbsp;{{ idCloudtrack ?? idVideo }}</span></a>
                 {% endif %}
             </div>
         </form>
@@ -35,6 +37,10 @@
     {% if idTrack is defined %}
         <form name="form_track_edit" action="{{ path('music_track_edit',{'id': idTrack }) }}" method="POST">
             <input type="hidden" name="trackkey"/>
+        </form>
+    {% elseif idCloudtrack is defined %}
+        <form name="form_cloudtrack_edit" action="{{ path('music_cloudtrack_edit',{'id': idCloudtrack }) }}" method="POST">
+            <input type="hidden" name="cloudtrackkey"/>
         </form>
     {% else %}
         <form name="form_video_edit" action="{{ path('video_edit',{'id': idVideo ?? 0 }) }}" method="POST">
@@ -66,6 +72,12 @@
                                         <div class="link_edit" style="position:relative;"><a href="#"
                                                                                              class="btn btn-secondary"
                                                                                              data-action="video#editTrack"
+                                                                                             data-url="{{ vignette.url }}"><i
+                                                        class="bi bi-arrow-left-right"></i></a></div>
+                                    {% elseif idCloudtrack is defined %}
+                                        <div class="link_edit" style="position:relative;"><a href="#"
+                                                                                             class="btn btn-secondary"
+                                                                                             data-action="video#editCloudtrack"
                                                                                              data-url="{{ vignette.url }}"><i
                                                         class="bi bi-arrow-left-right"></i></a></div>
                                     {% else %}

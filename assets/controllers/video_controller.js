@@ -70,6 +70,12 @@ export default class extends Controller {
         $('form[name="form_track_edit"]').submit();
     }
 
+    editCloudtrack(event) {
+        let url = $(event.target).closest('a').data('url');
+        $('input[name="cloudtrackkey"]').val(url);
+        $('form[name="form_cloudtrack_edit"]').submit();
+    }
+
     editAlbum(event) {
         let url = $(event.target).closest('a').data('url');
         $('input[name="albumkey"]').val(url);

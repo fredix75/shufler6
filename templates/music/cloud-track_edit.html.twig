@@ -10,7 +10,7 @@
                 {{ form_start(form) }}
                 {{ form_widget(form) }}
                 <a class="btn btn-secondary"
-                   href="{{ path('api_video', {'search_api': cloudTrack.auteur ~ ' ' ~ cloudTrack.titre, 'id_track': cloudTrack.id }) }}">
+                   href="{{ path('api_video', {'search_api': cloudTrack.auteur ~ ' ' ~ cloudTrack.titre, 'id_cloudtrack': cloudTrack.id }) }}">
                     <i class="bi bi-arrow-left-right"></i>&nbsp;Exchange on Api
                 </a>
                 <button class="btn btn-primary" type="submit">
