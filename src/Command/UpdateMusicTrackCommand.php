@@ -55,7 +55,7 @@ class UpdateMusicTrackCommand extends ImportTracksCommand
                     $resultYouTube = json_decode($response->getContent(), true)['items'] ?? [];
                     if (!empty($resultYouTube[0]['id']['videoId'])) {
                         $track->setYoutubeKey($resultYouTube[0]['id']['videoId']);
-                        $track->setisCheck(true);
+                        $track->setIsCheck(true);
                     } else {
                         $track->setYoutubeKey('nope');
                     }
