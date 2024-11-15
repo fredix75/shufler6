@@ -7,22 +7,20 @@ use App\Form\TipFormType;
 use App\Repository\TipRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/tip', name: 'tip')]
 #[IsGranted('ROLE_ADMIN')]
 class TipController extends AbstractController
 {
-
-    #[Route('/list', name: '_list')]
-    public function index(TipRepository $tipRepository, Request $request, EntityManagerInterface $em): Response
+    #[Route('/list/{id}', name: '_list', requirements: ['id' => '\d+'], defaults: ['id' => 0])]
+    public function index(?Tip $tip, TipRepository $tipRepository, Request $request, EntityManagerInterface $em): Response
     {
-        $tipForm = $this->createForm(TipFormType::class);
+        $tip = $tip ?? new Tip();
+        $tipForm = $this->createForm(TipFormType::class, $tip);
         $tipForm->handleRequest($request);
         if ($tipForm->isSubmitted() && $tipForm->isValid()) {
             $tip = $tipForm->getData();
@@ -37,6 +35,7 @@ class TipController extends AbstractController
         return $this->render('tip/tips.html.twig', [
             'form' => $tipForm,
             'tips' => $tips,
+            'tip'  => $tip,
         ]);
     }
 
