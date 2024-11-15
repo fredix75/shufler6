@@ -40,7 +40,7 @@ class UpdateMusicTrackCommand extends ImportTracksCommand
             ->addOrderBy('t.album', 'ASC')
             ->addOrderBy('t.numero', 'ASC')
             ->andWhere("t.youtubeKey IS NULL")
-            ->setMaxResults(200)
+            ->setMaxResults(1)
             ->getQuery()->getResult();
 
         $i = 0;
@@ -55,7 +55,7 @@ class UpdateMusicTrackCommand extends ImportTracksCommand
                     $resultYouTube = json_decode($response->getContent(), true)['items'] ?? [];
                     if (!empty($resultYouTube[0]['id']['videoId'])) {
                         $track->setYoutubeKey($resultYouTube[0]['id']['videoId']);
-                        $track->setCheck(true);
+                        $track->setisCheck(true);
                     } else {
                         $track->setYoutubeKey('nope');
                     }

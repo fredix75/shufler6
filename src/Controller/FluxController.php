@@ -10,9 +10,11 @@ use App\Repository\FluxTypeRepository;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/flux', name: 'flux')]
@@ -20,14 +22,14 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class FluxController extends AbstractController
 {
     #[Route('/podcasts', name: '_podcasts')]
-    public function podcasts(FluxRepository $fluxRepository, Request $request, ParameterBagInterface $parameterBag):Response
+    public function podcasts(FluxRepository $fluxRepository, Request $request, ParameterBagInterface $parameterBag): Response
     {
         if ($request->get('resource')) {
             $resources = [];
             $dir = $parameterBag->get('uploads') . $parameterBag->get('resources')['downloads'];
             if (is_dir($dir)) {
                 $resources = scandir($dir);
-                $resources = array_filter($resources, function($item) {
+                $resources = array_filter($resources, function ($item) {
                     return !is_dir($item);
                 });
             }
@@ -117,7 +119,7 @@ class FluxController extends AbstractController
             $namespaces = $contenu ? $contenu->getNamespaces(true) : [];
             $infos = [];
 
-            for ($i = $debut; $i < $debut + 6; $i ++) {
+            for ($i = $debut; $i < $debut + 6; $i++) {
                 if (empty($contenu[$i])) {
                     break;
                 }
@@ -143,11 +145,11 @@ class FluxController extends AbstractController
     #[Route('/edit/{id}', name: '_edit', requirements: ['id' => '\d+'], defaults: ['id' => 0])]
     #[IsGranted('FLUX_EDIT', "flux", "No pasaran")]
     public function edit(
-        Request $request,
-        FluxRepository $fluxRepository,
+        Request            $request,
+        FluxRepository     $fluxRepository,
         FluxMoodRepository $fluxMoodRepository,
         FluxTypeRepository $fluxTypeRepository,
-        ?Flux $flux
+        ?Flux              $flux
     ): Response
     {
         $flux = $flux ?? new Flux();
@@ -176,47 +178,45 @@ class FluxController extends AbstractController
         }
 
         $fluxMoods = $fluxMoodRepository->findAll();
-        $news = array_filter($fluxMoods, function($item) {
+        $news = array_filter($fluxMoods, function ($item) {
             return $item->getType()->getId() === 1;
         });
-        array_walk_recursive($news, function($a) use (&$tabNews) {
+        array_walk_recursive($news, function ($a) use (&$tabNews) {
             $tabNews[$a->getId()] = $a->getName();
         });
-        $radios = array_filter($fluxMoods, function($item) {
+        $radios = array_filter($fluxMoods, function ($item) {
             return $item->getType()->getId() === 3;
         });
-        array_walk_recursive($radios, function($a) use (&$tabRadios) {
+        array_walk_recursive($radios, function ($a) use (&$tabRadios) {
             $tabRadios[$a->getId()] = $a->getName();
         });
-        $liens = array_filter($fluxMoods, function($item) {
+        $liens = array_filter($fluxMoods, function ($item) {
             return $item->getType()->getId() === 4;
         });
-        array_walk_recursive($liens, function($a) use (&$tabLiens) {
+        array_walk_recursive($liens, function ($a) use (&$tabLiens) {
             $tabLiens[$a->getId()] = $a->getName();
         });
 
         return $this->render('flux/edit.html.twig', [
-            'form'      => $form,
-            'flux'      => $flux,
-            'news'      => $tabNews,
-            'radios'    => $tabRadios,
-            'liens'     => $tabLiens,
+            'form' => $form,
+            'flux' => $flux,
+            'news' => $tabNews,
+            'radios' => $tabRadios,
+            'liens' => $tabLiens,
         ]);
     }
 
-    #[Route('/delete/{id}', name: '_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
+    #[Route('/delete/{id}', name: '_delete', requirements: ['id' => '\d+'])]
     #[IsGranted('FLUX_DELETE', "flux", "No pasaran")]
+    #[IsCsrfTokenValid(new Expression('"flux_delete" ~ args["flux"].getId()'), tokenKey: '_token')]
     public function delete(
-        Request $request,
         FluxRepository $fluxRepository,
-        Flux $flux
+        Flux           $flux
     ): Response
     {
-        if ($this->isCsrfTokenValid('flux_delete'.$flux->getId(), $request->get('_token'))) {
-            $type = $flux->getType()->getName();
-            $fluxRepository->remove($flux, true);
-            $this->addFlash('success', 'Flux bien supprimé');
-        }
+        $type = $flux->getType()->getName();
+        $fluxRepository->remove($flux, true);
+        $this->addFlash('success', 'Flux bien supprimé');
         $routeToRedirect = $this->getRouteToRedirect($type);
 
         return $this->redirectToRoute($routeToRedirect);
@@ -226,7 +226,7 @@ class FluxController extends AbstractController
     #[IsGranted('ROLE_AUTEUR')]
     public function deleteLogo(
         FluxRepository $fluxRepository,
-        Flux $flux
+        Flux           $flux
     ): Response
     {
         $flux->setImage(null);
@@ -239,6 +239,6 @@ class FluxController extends AbstractController
     private function getRouteToRedirect(string $type): string
     {
         $routeToRedirect = sprintf('flux_%s', $type);
-        return $routeToRedirect !== 'flux_news' ? $routeToRedirect.'s' : $routeToRedirect;
+        return $routeToRedirect !== 'flux_news' ? $routeToRedirect . 's' : $routeToRedirect;
     }
 }
