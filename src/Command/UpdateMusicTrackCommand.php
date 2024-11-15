@@ -40,7 +40,7 @@ class UpdateMusicTrackCommand extends ImportTracksCommand
             ->addOrderBy('t.album', 'ASC')
             ->addOrderBy('t.numero', 'ASC')
             ->andWhere("t.youtubeKey IS NULL")
-            ->setMaxResults(1)
+            ->setMaxResults(200)
             ->getQuery()->getResult();
 
         $i = 0;
