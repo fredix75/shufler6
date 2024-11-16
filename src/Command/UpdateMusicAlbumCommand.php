@@ -50,6 +50,7 @@ class UpdateMusicAlbumCommand extends ImportTracksCommand
                 continue;
             }
 
+            // Youtube Links
             try {
                 $search = (strtolower($album->getAuteur()) === 'divers' ? '' : $album->getAuteur().' ') . $album->getName();
                 $response = $this->apiRequester->sendRequest(VideoHelper::YOUTUBE,'/search', [
@@ -72,19 +73,35 @@ class UpdateMusicAlbumCommand extends ImportTracksCommand
                     $message = sprintf('No more request : %s %s', $album->getAuteur(), $album->getName());
                     break;
                 }
-
-                $this->entityManager->persist($album);
-
             } catch (\Exception $e) {
                 $message = $e->getMessage();
                 break;
+            }
+
+            // Pictures
+            if (str_contains($album->getPicture(), 'no_cover') && strtolower($album->getName()) !== 'divers') {
+                try {
+                    $response = $this->apiRequester->sendRequest('last_fm', '', [
+                        'artist'   => strtolower($album->getAuteur()) === 'divers' ? 'Various Artists' : $album->getAuteur() ,
+                        'album'   => $album->getName(),
+                        'method' => 'album.getInfo',
+                    ]);
+                    if ($response->getStatusCode() === Response::HTTP_OK) {
+                        $response = json_decode($response->getContent(), true) ?? [];
+                        if (!empty($response['album'])) {
+                            $album->setPicture($response['album']['image'][4]['#text'] ?? '');
+                        }
+                    }
+                } catch(\Exception $e) {
+                    // pas grave : dans ce cas, on continue sans problème
+                }
             }
         }
 
         $this->entityManager->flush();
 
         $html = $this->twig->render('api/updateAlbums.html.twig', [
-            'message' => $message,
+            'message' => $message ?? '',
             'nb' => $i
         ]);
 

@@ -67,9 +67,6 @@ class UpdateMusicTrackCommand extends ImportTracksCommand
                     $message = sprintf('No more request : %s %s', $track->getAuteur(), $track->getTitre());
                     break;
                 }
-
-                $this->entityManager->persist($track);
-
             } catch (\Exception $e) {
                 $message = $e->getMessage();
                 break;
