@@ -211,16 +211,39 @@ class ApiController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function searchPicture(Request $request, ApiRequester $apiRequester): Response
     {
-        $album = $idAlbum = null;
+        $album = $idAlbum = $artist = null;
         $resultat = [];
-        if ($request->get('search_api')) {
+        if ($request->get('search_api') || $request->get('artist')) {
             $album = $request->get('search_api');
+            $artist = $request->get('artist');
             $idAlbum = $request->get('id_album') ?? null;
 
-            $response = $apiRequester->sendRequest('last_fm', '', [
-                'album' => $album,
+            $params = [
+                'album' => $album != "" ? $album : $artist,
                 'method' => 'album.search',
-            ]);
+            ];
+
+            if ($artist && $artist !== $params['album']) {
+                $t['artist'] = strtolower($artist) === 'divers' ? 'Various Artists' : $artist;
+                $t['method'] = 'album.getInfo';
+
+                $response = $apiRequester->sendRequest('last_fm', '', array_merge($params, $t));
+
+                if ($response->getStatusCode() === Response::HTTP_OK) {
+                    $response = json_decode($response->getContent(), true) ?? [];
+                    if (!empty($response['album'])) {
+                        $resultat[] = [
+                            'link' => $response['album']['image'][4]['#text'] ?? null,
+                            'artist' => $response['album']['artist'] ?? null,
+                            'name' => $response['album']['name'] ?? null,
+                            'url' => $response['album']['url'] ?? '',
+                            'txt' => $response['album']['wiki']['summary'] ?? '',
+                        ];
+                    }
+                }
+            }
+
+            $response = $apiRequester->sendRequest('last_fm', '', $params);
 
             if ($response->getStatusCode() === Response::HTTP_OK) {
                 $results = json_decode($response->getContent(), true)['results']['albummatches']['album'] ?? [];
@@ -241,6 +264,7 @@ class ApiController extends AbstractController
         return $this->render('api/album_pictures.html.twig', [
             'resultats' => $resultat,
             'search' => $album,
+            'artist' => $artist,
             'idAlbum' => $idAlbum ?? 0,
         ]);
     }

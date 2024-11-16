@@ -31,7 +31,7 @@
                            href="{{ path('api_playlist', {'id_album': album.id, search_api: (album.auteur|lower != 'divers' ? album.auteur : '') ~ ' ' ~ album.name }) }}">Playlist</a>
                     </li>
                     <li><a class="dropdown-item"
-                           href="{{ path('api_album_picture', {'id_album': album.id, 'search_api': album.name }) }}">Cover</a>
+                           href="{{ path('api_album_picture', {'id_album': album.id, 'search_api': album.name, 'artist' : album.auteur }) }}">Cover</a>
                     </li>
                 </ul>
             </div>
