@@ -1,8 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello TipController!{% endblock %}
+{% block title %}{{ parent() }} :: Notes {% endblock %}
 
 {% block body %}
+    <style>
+        .card-body {
+            font-family: "Courier New", serif;
+        }
+    </style>
+
     <h1><i class="bi bi-chat-right-text"></i> Notes</h1>
     <div class="well">
         <div class="row justify-content-md-center txt-center">
@@ -25,17 +31,15 @@
                     <div class="card mb-3">
                         <div class="card-header">
                             <div class="d-flex justify-content-between">
-                                <small class="badge bg-primary">{{ tip.dateInsert|date('d/m/Y H:i') }}</small>
+                                <small class="badge bg-secondary">{{ tip.dateInsert|date('d/m/Y H:i') }}</small>
                                 <a href="{{ path('tip_delete', {'id' : tip.id, '_token' : csrf_token('delete' ~ tip.id) }) }}" class="btn btn-close" onclick="return confirm('Etes-vous sûr ?')"></a>
                             </div>
                         </div>
                         <div class="card-body">
-                            <blockquote class="blockquote mb-0">
-                                <p>{{ tip.content|nl2br }}</p>
-                                <div class="d-flex justify-content-end">
-                                    <a href="{{ path('tip_list',{'id': tip.id}) }}"><i class="bi bi-pencil"></i></a>
-                                </div>
-                            </blockquote>
+                            <p>{{ tip.content|nl2br }}</p>
+                            <div class="d-flex justify-content-end">
+                                <a href="{{ path('tip_list',{'id': tip.id}) }}"><i class="bi bi-pencil"></i></a>
+                            </div>
                         </div>
                     </div>
                 {% endfor %}

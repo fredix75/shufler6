@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Contract\UploadInterface;
+use App\EntityListener\FluxListener;
 use App\Repository\FluxRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,6 +14,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 #[ORM\Entity(repositoryClass: FluxRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[UniqueEntity('url', message: "flux.validation.is_uniq")]
+#[ORM\EntityListeners([FluxListener::class])]
 class Flux implements UploadInterface
 {
     #[ORM\Id]
