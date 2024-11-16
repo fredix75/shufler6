@@ -40,6 +40,8 @@
                     {% if flux.image is not null %}
                         {% if 'http' in flux.image %}
                             <img src="{{ asset(flux.image) }}" width="200px"/>
+                        {% elseif no_cover_picture in flux.image %}
+
                         {% else %}
                             <img src="{{ asset('uploads/logos/' ~ flux.image) }}" width="200px"/>
                             <a href="{{ path('flux_delete_logo',{'id': flux.id}) }}"
