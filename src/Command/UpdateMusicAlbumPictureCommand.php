@@ -40,6 +40,7 @@ class UpdateMusicAlbumPictureCommand extends ImportTracksCommand
             ->addOrderBy('a.auteur', 'ASC')
             ->andWhere("a.picture = ''")
             ->setMaxResults(100)
+            ->setFirstResult(100)
             ->getQuery()->getResult();
 $message = count($albums) . ' albums & ';
         $i = 0;
