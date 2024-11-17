@@ -70,8 +70,8 @@ class UpdateMusicAlbumPictureCommand extends ImportTracksCommand
                     ]);
                     if ($response->getStatusCode() === Response::HTTP_OK) {
                         $response = json_decode($response->getContent(), true) ?? [];
-                        if (!empty($response['album'])) {
-                            $album->setPicture($response['album']['image'][4]['#text'] ?? '');
+                        if (!empty($response['album']) && !empty($response['album']['image'][4]['#text'])) {
+                            $album->setPicture($response['album']['image'][4]['#text']);
                             $i++;
                         }
                     }
