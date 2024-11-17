@@ -14,7 +14,7 @@
                             <li><a class="dropdown-item" href="{{ path('admin_dead_videos') }}" aria-label="Dead Videos"><i class="bi bi-bandaid"></i> Dead Links</a></li>
                             <li><a class="dropdown-item" href="{{ path('api_update_track_launch') }}"><i class="bi bi-gift"></i> Update Tracks</a></li>
                             <li><a class="dropdown-item" href="{{ path('api_update_album_launch') }}"><i class="bi bi-gift"></i> Update Albums</a></li>
-                            <li><a class="dropdown-item" href="{{ path('api_update_album_picture_launch') }}"><i class="bi bi-gift"></i> Update Albums Picture</a></li>
+                            <li><a class="dropdown-item" href="{{ path('api_update_album_picture_launch', {'nb' : 0}) }}"><i class="bi bi-gift"></i> Update Albums Picture</a></li>
                         </ul>
                     </li>
                 {% endif %}
