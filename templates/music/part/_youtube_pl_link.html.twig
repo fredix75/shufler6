@@ -2,7 +2,7 @@
    href="{{ youtube_key }}"
    class="{{ album.youtubeKey is not null ? 'playlist-link icon-youtube' : 'no-link' }}"
    data-id="{{ album.id }}"
-   data-auteur="{{ album.artiste }}" data-album="{{ album.album }}"
+   data-auteur="{{ album.artiste ?? album.auteur }}" data-album="{{ album.album ?? album.name }}"
    {{ album.youtubeKey is not null ? 'data-action="music#popupPlaylist"' : 'data-action="music#getPlaylistLink"' }}
    title="video Playlist"
    onclick="return false;">

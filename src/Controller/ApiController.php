@@ -179,7 +179,8 @@ class ApiController extends AbstractController
         $resultat = [];
         if ($request->get('search_api')) {
             $search = $request->get('search_api');
-            $idAlbum = $request->get('id_album') ?? null;
+            $idAlbum = $request->get('id_album');
+            $idCloudalbum = $request->get('id_cloudalbum');
 
             $response = $apiRequester->sendRequest(VideoHelper::YOUTUBE, '/search', [
                 'q' => $search,
@@ -204,6 +205,7 @@ class ApiController extends AbstractController
             'resultats' => $resultat,
             'search' => $search,
             'idAlbum' => $idAlbum ?? 0,
+            'idCloudalbum' => $idCloudalbum ?? 0,
         ]);
     }
 

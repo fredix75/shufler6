@@ -169,7 +169,6 @@ abstract class Piece
 
     public function getExtraNote(): ?float
     {
-
         return $this->extraNote;
     }
 

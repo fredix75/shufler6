@@ -90,7 +90,20 @@ parameters:
             - artiste
             - annee
             - genre
-
+        cloud-track_fields:
+            - youtubeKey
+            - auteur
+            - titre
+            - annee
+            - genre
+            - pays
+            - note
+        cloud-album_fields:
+            - youtubeKey
+            - name
+            - auteur
+            - annee
+            - genre
     sniffer:
         upload_directory: 'sniffer'
 

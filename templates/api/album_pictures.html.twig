@@ -48,9 +48,10 @@
                         <br><br>
                         <p>{{ result.txt|default('')|raw }}</p>
                         <br>
-                        <a href="{{ path('api_playlist', {'search_api' : result.artist ~ ' ' ~ result.name}) }}" class="icon-youtube"><i class="bi bi-youtube"></i></a>
                         {% if is_granted('ROLE_AUTEUR') %}
-                            {% if idAlbum != 0 %}
+                            {% if idAlbum == 0 %}
+                                <a href="{{ path('api_playlist', {'search_api' : result.artist ~ ' ' ~ result.name}) }}" class="icon-youtube"><i class="bi bi-youtube"></i></a>
+                            {% else %}
                                 <br/><a href="#" class="btn btn-secondary" data-action="album#editPicture"
                                         data-url="{{ result.link }}"><i class="bi bi-arrow-left-right"></i></a>
                             {% endif %}

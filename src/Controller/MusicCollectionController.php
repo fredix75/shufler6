@@ -13,6 +13,8 @@ use App\Helper\ApiRequester;
 use App\Helper\VideoHelper;
 use App\Repository\FilterPieceRepository;
 use App\Repository\MusicCollection\ArtistRepository;
+use App\Repository\MusicCollection\CloudAlbumRepository;
+use App\Repository\MusicCollection\CloudTrackRepository;
 use App\Repository\MusicCollection\PieceRepository;
 use App\Twig\Runtime\ShuflerRuntime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -129,6 +131,99 @@ class MusicCollectionController extends AbstractController
         ]);
     }
 
+    #[Route('/cloud-all/{mode}', name: '_cloud-all', requirements: ['mode' => 'tracks|albums'], defaults: ['mode' => 'tracks'])]
+    public function getCloudAll(
+        Request               $request,
+        ParameterBagInterface $parameters,
+        CloudTrackRepository  $cloudTrackRepository,
+        CloudAlbumRepository  $cloudAlbumRepository,
+        ShuflerRuntime        $shuflerRuntime,
+        string                $mode
+    ): Response
+    {
+        $columnsToDisplay = $parameters->get('music_collection')['cloud-track_fields'];
+        if ($mode === 'albums') {
+            $columnsToDisplay = $parameters->get('music_collection')['cloud-album_fields'];
+        }
+
+        if ($request->isXmlHttpRequest()) {
+
+            $length = $request->get('length');
+            $length = $length && ($length > 0) ? $length : 0;
+
+            $start = $request->get('start');
+            $start = $length ? ($start && $start > 0 ? $start : 0) / $length : 0;
+
+            $search = $request->get('search');
+            $filters = [
+                'query' => @$search['value']
+            ];
+
+            $sort = $request->get('order')[0]['column'];
+            $sort = $columnsToDisplay[$sort];
+
+            $dir = @$request->get('order')[0]['dir'];
+
+            if ($mode === 'tracks') {
+                $tracks = $cloudTrackRepository->getTracksAjax($filters, $start, $length, $sort, $dir);
+
+                $output = [
+                    'data' => [],
+                    'recordsFiltered' => count($cloudTrackRepository->getTracksAjax($filters, 0, false)),
+                    'recordsTotal' => $cloudTrackRepository->count([]),
+                ];
+
+                foreach ($tracks as $track) {
+                    $output['data'][] = [
+                        'youtubeKey' => $this->renderView('music/part/_youtube_link.html.twig', [
+                            'track' => $track,
+                            'youtube_key' => VideoHelper::YOUTUBE_WATCH . $track->getYoutubeKey(),
+                        ]),
+                        'id' => $track->getId(),
+                        'auteur' => strtoupper($track->getAuteur()) !== 'DIVERS' ? '<a href="#" data-action="music#openModal" data-artist="' . $track->getAuteur() . '" onclick="return false;"><i class="bi bi-eye-fill"></i></a> ' . $track->getAuteur() : $track->getAuteur(),
+                        'titre' => '<a href="'.$this->generateUrl('music_cloudtrack_edit',  ['id' => $track->getId()]).'"><i class="bi bi-pencil-square"></i></a> ' . $track->getTitre(),
+                        'annee' => $track->getAnnee(),
+                        'genre' => '<span class="badge bg-dark">' . $track->getGenre() . '</span>',
+                        'pays'  => $track->getPays(),
+                        'note' => $track->getNote() ? $shuflerRuntime->displayStarsFunction($track->getNote()) : '',
+                    ];
+                }
+            } elseif ($mode === 'albums') {
+
+                $albums = $cloudAlbumRepository->getAlbumsAjax($filters, $start, $length, $sort, $dir);
+
+                $output = [
+                    'data' => [],
+                    'recordsFiltered' => count($cloudAlbumRepository->getAlbumsAjax($filters, 0, false)),
+                    'recordsTotal' => count($cloudAlbumRepository->getAlbumsAjax([], 0, false)),
+                ];
+
+                foreach ($albums as $album) {
+                    $output['data'][] = [
+                        'youtubeKey' => $this->renderView('music/part/_youtube_pl_link.html.twig', [
+                            'album' => $album,
+                            'youtube_key' => VideoHelper::YOUTUBE_WATCH . $album->getYoutubekey(),
+                        ]),
+                        'name' => '<a href="'.$this->generateUrl('music_album_cloud_edit', ['id' => $album->getId()]).'"><i class="bi bi-pencil-square"></i></a> ' . $album->getName(),
+                        'auteur' => $album->getAuteur(),
+                        'annee' => $album->getAnnee(),
+                        'genre' => $album->getGenre(),
+                    ];
+                }
+            }
+
+            return new Response($this->json($output)->getContent(), Response::HTTP_OK, [
+                'Content-Type' => 'application/json'
+            ]);
+        }
+
+        return $this->render('music/music.html.twig', [
+            'path_url' => $this->generateUrl('music_cloud-all', ['mode' => $mode]),
+            'page_length' => $parameters->get('music_collection')['music_all_nb_b_page'],
+            'columns_db' => $columnsToDisplay,
+        ]);
+    }
+
     #[Route('/artist', name: '_artist')]
     public function getArtist(Request $request, ArtistRepository $artistRepository): Response
     {
@@ -171,39 +266,6 @@ class MusicCollectionController extends AbstractController
         ]);
     }
 
-    #[Route('/cloudtrack/edit/{id}', name: '_cloudtrack_edit', requirements: ['id' => '\d+'], defaults: ['id' => 0])]
-    public function editCloudTrack(CloudTrack $cloudTrack = null, Request $request, EntityManagerInterface $em): Response
-    {
-        $cloudTrack = $cloudTrack ?? new CloudTrack();
-
-        if ($request->get('trackkey')) {
-            $cloudTrack->setYoutubeKey($request->get('trackkey'));
-            $em->persist($cloudTrack);
-            $em->flush();
-
-            return $this->redirectToRoute('music_all', ['mode' => 'tracks']);
-        }
-
-        $form = $this->createForm(CloudTrackFormType::class, $cloudTrack);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $youtubeKey = $form->get('youtubeKey')->getData();
-            $cloudTrack->setYoutubeKey($youtubeKey);
-            $em->persist($cloudTrack);
-            $em->flush();
-
-            $this->addFlash('success', 'Un morceau a été sauvegardé');
-
-            return $this->redirectToRoute('main_home');
-        }
-
-        return $this->render('music/cloud-track_edit.html.twig', [
-            'form' => $form,
-            'cloudTrack' => $cloudTrack,
-        ]);
-    }
-
     #[Route('/track/edit/{id}', name: '_track_edit', requirements: ['id' => '\d+'])]
     public function editTrack(Track $track, Request $request, TrackRepository $trackRepository): Response
     {
@@ -240,49 +302,7 @@ class MusicCollectionController extends AbstractController
         ]);
     }
 
-    #[Route('/album/edit/{id}', name: '_album_edit', requirements: ['id' => '\d+'])]
-    public function editAlbum(Album $album, Request $request, AlbumRepository $albumRepository): Response
-    {
-        if ($request->get('albumkey')) {
-            $album->setYoutubeKey($request->get('albumkey'));
-            $albumRepository->save($album, true);
 
-            return $this->redirectToRoute('music_albums');
-        }
-
-        if ($request->get('albumpicture')) {
-            $album->setPicture($request->get('albumpicture'));
-            $albumRepository->save($album, true);
-
-            return $this->redirectToRoute('music_albums');
-        }
-
-        $form = $this->createForm(AlbumFormType::class, $album, [
-            'action' => $this->generateUrl(
-                $request->attributes->get('_route'),
-                $request->attributes->get('_route_params')
-            ),
-        ]);
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted()) {
-            $album->setYoutubeKey($form->get('youtubeKey')->getData());
-            $album->setPicture($form->get('picture')->getData());
-            $albumRepository->save($album, true);
-
-            return new Response(json_encode([
-                'youtube_key' => $album->getYoutubeKey(),
-                'picture' => $album->getPicture(),
-                'id' => $album->getId(),
-            ]), 200);
-        }
-
-        return $this->render('music/album_edit.html.twig', [
-            'album' => $album,
-            'form' => $form
-        ]);
-    }
 
     #[Route('/filter-couch', name: '_filter_couch')]
     public function filterCouch(FilterPieceRepository $filterPieceRepository): Response {
@@ -345,46 +365,6 @@ class MusicCollectionController extends AbstractController
         return $this->render('video/couch.html.twig', [
             'list' => $list,
             'videos' => $playlist,
-            'form_track' => $form,
-        ]);
-    }
-
-    #[Route('/albums/{page}', name: '_albums', requirements: ['page' => '\d+'], defaults: ['page' => 1])]
-    public function getAlbums(Request $request, AlbumRepository $albumRepository, int $page): Response
-    {
-        $params = [
-            'auteur' => $request->get('auteur') ?? null,
-            'album' => $request->get('album') ?? null,
-            'genre' => $request->get('genre') ?? null,
-            'annee' => $request->get('annee') ?? null,
-            'search' => $request->get('search') ?? null,
-            'random' => $request->get('random') === '1',
-        ];
-
-        $form = $this->createForm(FilterTracksFormType::class, $params, ['mode' => 'album']);
-        $form->handleRequest($request);
-
-        $max = $this->getParameter('music_collection')['max_nb_albums'];
-        $routeParams = $request->attributes->get('_route_params');
-        if (isset($request->query->all()['page'])) {
-            $page = 1;
-            $routeParams['page'] = 1;
-        }
-
-        $albums = $albumRepository->getAlbums($params, $page, $max);
-
-        if (false === $params['random']) {
-            $pagination = [
-                'page' => $page,
-                'route' => 'music_albums',
-                'pages_count' => (int)ceil(count($albums) / $max),
-                'route_params' => array_merge($routeParams, $params)
-            ];
-        }
-
-        return $this->render('music/albums.html.twig', [
-            'albums' => $albums,
-            'pagination' => $pagination ?? [],
             'form_track' => $form,
         ]);
     }

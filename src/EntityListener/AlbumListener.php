@@ -26,6 +26,19 @@ class AlbumListener
 
     }
 
+    public function prePersist(Album $album): void
+    {
+        if ($album->getPicture() === $this->noCoverPath) {
+            $album->setPicture('');
+        }
+
+        $key = $album->getYoutubeKey();
+        if ($key && ($platform = $this->videoHelper->getPlatform($key)) === VideoHelper::YOUTUBE) {
+            $key = $this->videoHelper->getIdentifer($key, $platform);
+        }
+        $album->setYoutubeKey($key);
+    }
+
     public function preUpdate(Album $album): void
     {
         if ($album->getPicture() === $this->noCoverPath) {

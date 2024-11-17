@@ -5,10 +5,16 @@ namespace App\Entity\MusicCollection;
 use App\EntityListener\AlbumListener;
 use App\Repository\MusicCollection\AlbumRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\DiscriminatorColumn;
+use Doctrine\ORM\Mapping\DiscriminatorMap;
 use Doctrine\ORM\Mapping\EntityListeners;
+use Doctrine\ORM\Mapping\InheritanceType;
 
-#[EntityListeners([AlbumListener::class])]
 #[ORM\Entity(repositoryClass: AlbumRepository::class)]
+#[InheritanceType('SINGLE_TABLE')]
+#[DiscriminatorColumn(name: 'is_cloud', type: 'integer')]
+#[DiscriminatorMap([0 => Album::class, 1 => CloudAlbum::class])]
+#[EntityListeners([AlbumListener::class])]
 class Album
 {
     #[ORM\Id]
