@@ -41,7 +41,7 @@ class UpdateMusicAlbumPictureCommand extends ImportTracksCommand
             ->andWhere("a.picture IS NULL")
             ->setMaxResults(100)
             ->getQuery()->getResult();
-
+$message = count($albums) . ' albums & ';
         $i = 0;
         foreach ($albums as $album) {
 
