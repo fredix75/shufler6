@@ -5,6 +5,7 @@ namespace App\Command;
 use App\Helper\VideoHelper;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,6 +24,13 @@ use Twig\Error\SyntaxError;
 class UpdateMusicAlbumPictureCommand extends ImportTracksCommand
 {
 
+    protected function configure(): void
+    {
+        $this
+            ->addArgument('offset', InputArgument::REQUIRED, 'Offset')
+        ;
+    }
+
     /**
      * @throws RedirectionExceptionInterface
      * @throws RuntimeError
@@ -40,9 +48,10 @@ class UpdateMusicAlbumPictureCommand extends ImportTracksCommand
             ->addOrderBy('a.auteur', 'ASC')
             ->andWhere("a.picture = ''")
             ->setMaxResults(100)
-            ->setFirstResult(100)
+            ->setFirstResult($input->getArgument('offset'))
             ->getQuery()->getResult();
-$message = count($albums) . ' albums & ';
+
+        $message = count($albums) . ' albums & ';
         $i = 0;
         foreach ($albums as $album) {
 
