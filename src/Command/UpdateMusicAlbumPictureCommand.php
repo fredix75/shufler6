@@ -72,6 +72,7 @@ class UpdateMusicAlbumPictureCommand extends ImportTracksCommand
                         $response = json_decode($response->getContent(), true) ?? [];
                         if (!empty($response['album'])) {
                             $album->setPicture($response['album']['image'][4]['#text'] ?? '');
+                            $i++;
                         }
                     }
                 } catch(\Exception $e) {
