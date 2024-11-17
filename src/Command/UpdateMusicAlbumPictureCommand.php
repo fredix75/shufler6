@@ -38,7 +38,7 @@ class UpdateMusicAlbumPictureCommand extends ImportTracksCommand
             ->createQueryBuilder('a')
             ->orderBy('a.name', 'ASC')
             ->addOrderBy('a.auteur', 'ASC')
-            ->andWhere("a.picture IS NULL")
+            ->andWhere("a.picture = ''")
             ->setMaxResults(100)
             ->getQuery()->getResult();
 $message = count($albums) . ' albums & ';
