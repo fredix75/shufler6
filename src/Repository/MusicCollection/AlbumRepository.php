@@ -88,7 +88,7 @@ class AlbumRepository extends ServiceEntityRepository
         if ($params['random']) {
             $result = $query->getQuery()->getResult();
             shuffle($result);
-            return $result;
+            return array_slice($result, 0, 50);
         } else {
             $query->orderBy('a.name', 'ASC')
                 ->setMaxResults($max)->setFirstResult(($page-1)*$max);

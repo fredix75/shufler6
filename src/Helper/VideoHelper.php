@@ -5,6 +5,7 @@ namespace App\Helper;
 class VideoHelper
 {
     const YOUTUBE = 'youtube';
+    const YOUTUBE_ALT = 'youtu.be';
     const YOUTUBE_API = 'https://img.youtube.com/vi/';
     const YOUTUBE_WATCH = 'https://www.youtube.com/watch?v=';
 
@@ -23,7 +24,7 @@ class VideoHelper
 
     public function getPlatform(string $lien): string
     {
-        if (strripos($lien,self::YOUTUBE)) {
+        if (strripos($lien,self::YOUTUBE) || strripos($lien,self::YOUTUBE_ALT)) {
             return self::YOUTUBE;
         } elseif (strripos($lien,self::VIMEO)) {
             return self::VIMEO;
