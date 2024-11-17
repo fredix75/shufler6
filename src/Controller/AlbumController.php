@@ -28,7 +28,7 @@ class AlbumController extends AbstractController
             $album->setYoutubeKey($request->get('albumkey'));
             $albumRepository->save($album, true);
 
-            return $this->redirectToRoute('smusic_albums');
+            return $this->redirectToRoute('music_albums');
         }
 
         if ($request->get('albumpicture')) {
