@@ -26,7 +26,7 @@ class TestController extends AbstractController
             $output = $process->getOutput();
         } else {
             // Si une erreur se produit, affichez l'erreur
-            echo 'Erreur : ' . $process->getErrorOutput();
+            $output = 'Erreur : ' . $process->getErrorOutput();
         }
         return new Response($output);
 
