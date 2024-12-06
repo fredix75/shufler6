@@ -40,3 +40,7 @@ logs/
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+
+/bin/bin/
+/bin/include/
+/bin/lib/
