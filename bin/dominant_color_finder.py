@@ -10,7 +10,7 @@ import scipy.cluster
 import sklearn.cluster
 import numpy
 from PIL import Image
-
+import binascii
 
 image_path = sys.argv[1]
 response = requests.get(image_path)
@@ -35,4 +35,5 @@ colors = []
 for index in numpy.argsort(counts)[::-1]:
     colors.append(tuple([int(code) for code in codes[index]]))
 
-print(colors)
+colour = binascii.hexlify(bytearray(int(c) for c in colors)).decode('ascii')
+print('#%s' % colour))
