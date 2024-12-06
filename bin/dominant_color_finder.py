@@ -3,6 +3,9 @@ import requests
 import binascii
 import struct
 from PIL import Image
+import os
+os.environ['OPENBLAS_NUM_THREADS'] = '1'
+
 import numpy as np
 import scipy
 import scipy.misc
