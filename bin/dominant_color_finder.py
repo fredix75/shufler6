@@ -24,7 +24,7 @@ ar = ar.reshape(np.prod(shape[:2]), shape[2]).astype(float)
 codes, dist = scipy.cluster.vq.kmeans(ar, NUM_CLUSTERS)
 vecs, dist = scipy.cluster.vq.vq(ar, codes)         # assign codes
 counts, bins = np.histogram(vecs, len(codes))    # count occurrences
-index_max = scipy.argmax(counts)                    # find most frequent
+index_max = np.argmax(counts)                    # find most frequent
 peak = codes[index_max]
 colour = binascii.hexlify(bytearray(int(c) for c in peak)).decode('ascii')
 print('#%s' % colour)
