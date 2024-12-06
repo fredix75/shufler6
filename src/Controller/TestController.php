@@ -10,13 +10,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class TestController extends AbstractController
 {
 
-    #[Route('/test', name: 'test')]
-    public function test(): Response
+    #[Route('/test/{link}', name: 'test')]
+    public function test(string $link): Response
     {
 
         $process = new Process(['python3',
             '../bin/dominant_color_finder.py',
-           'https://img.youtube.com/vi/VQh8oh0rj3s/0.jpg',
+           $link,
             // 'https://www.thoughtco.com/thmb/OVVzRivlUr6QFRi9fVabr0blZ-k=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/chimpanzee---pan-troglodytes-troglodytes--831042278-5a5e4c81b39d03003785777f.jpg'
         ]);
         $process->run();
