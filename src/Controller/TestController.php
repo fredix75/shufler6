@@ -10,10 +10,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class TestController extends AbstractController
 {
 
-    #[Route('/test/{link}', name: 'test')]
-    public function test(string $link): Response
+    #[Route('/test', name: 'test')]
+    public function test(Request $request): Response
     {
-
+dd($request->get('link'));
+$link = $request->get('link');
         $process = new Process(['python3',
             '../bin/dominant_color_finder.py',
            $link,
