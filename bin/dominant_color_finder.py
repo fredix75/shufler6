@@ -18,7 +18,7 @@ image = Image.open(BytesIO(response.content))
 image = image.resize((150, 150))      # optional, to reduce time
 ar = numpy.asarray(image)
 shape = ar.shape
-ar = ar.reshape(numpy.product(shape[:2]), shape[2]).astype(float)
+ar = ar.reshape(numpy.prod(shape[:2]), shape[2]).astype(float)
 
 kmeans = sklearn.cluster.MiniBatchKMeans(
     n_clusters=10,
