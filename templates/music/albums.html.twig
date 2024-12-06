@@ -10,8 +10,9 @@
                      style="background-color: black; color:white;border:1px solid #052660;">
                     <a href="#album-{{ album.id }}" data-action="album#displayContent" data-artist="{{ album.auteur }}"
                        data-album="{{ album.name }}">
+                        {% set class-no-picture = '' %}
                         {% if no_cover_picture in album.picture %}
-                            {% set class-no-picture='no-picture' %}
+                            {% set class-no-picture = 'no-picture' %}
                         {% endif %}
                         <img class="album-picture-{{ album.id }} {{ class-no-picture|default('') }}" src="{{ album.picture }}"
                              alt="{{ album.auteur ~ ' ' ~ album.name }}" title="{{ album.name }}" width="100%"
