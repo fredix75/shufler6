@@ -3,6 +3,11 @@
 {% block title %}{{ parent() }} :: Music Albums{% endblock %}
 
 {% block body %}
+    <style>
+        img.no-picture {
+            opacity: 0.3;
+        }
+    </style>
     <div class="row justify-content-center g-2 g-lg-3" data-controller="album">
         {% for album in albums %}
             {% if album.picture is not null %}
@@ -10,11 +15,11 @@
                      style="background-color: black; color:white;border:1px solid #052660;">
                     <a href="#album-{{ album.id }}" data-action="album#displayContent" data-artist="{{ album.auteur }}"
                        data-album="{{ album.name }}">
-                        {% set class-no-picture = '' %}
+                        {% set class_no_picture = '' %}
                         {% if no_cover_picture in album.picture %}
-                            {% set class-no-picture = 'no-picture' %}
+                            {% set class_no_picture = ' no-picture' %}
                         {% endif %}
-                        <img class="album-picture-{{ album.id }} {{ class-no-picture|default('') }}" src="{{ album.picture }}"
+                        <img class="album-picture-{{ album.id }}{{ class_no_picture }}" src="{{ album.picture }}"
                              alt="{{ album.auteur ~ ' ' ~ album.name }}" title="{{ album.name }}" width="100%"
                              loading="lazy"/>
                         <strong>{{ album.auteur }}</strong><br/>
