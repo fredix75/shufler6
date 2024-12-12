@@ -15,8 +15,8 @@ class PieceRepository extends ServiceEntityRepository
 
     public function getPieces(array $params = []): array
     {
-        $sql= "SELECT t.*, t.youtube_key as youtubeKey, COALESCE(t.extra_note, t.note) as note, a.picture FROM piece t LEFT JOIN album a ON a.name = t.album AND a.auteur = t.artiste WHERE TRUE ";
-        $orderBy = "";
+        $sql= "SELECT t.*, t.youtube_key as youtubeKey, COALESCE(t.extra_note, t.note) as note, a.picture FROM piece t LEFT JOIN album a ON a.name = t.album AND a.auteur = t.artiste ";
+        $orderBy = [];
         $p = [];
 
         if (!empty($params['hasYoutubeKey'])) {
@@ -31,9 +31,9 @@ class PieceRepository extends ServiceEntityRepository
         if (!empty($params['album'])) {
             $sql .= "AND t.album LIKE ? ";
             $p[] = '%'.$params['album'].'%';
-            $orderBy .= ", t.numero ASC ";
+            $orderBy[] = "t.numero ASC ";
         } else {
-            $orderBy .= ", t.titre ASC ";
+            $orderBy[] = "t.titre ASC ";
         }
         if (!empty($params['genres'])) {
             $sql .= "AND t.genre IN (" . str_repeat('?,', count($params['genres']) - 1) . "?) ";
@@ -68,11 +68,14 @@ class PieceRepository extends ServiceEntityRepository
         }
 
         $rawSQL = $sql;
-        $rawSQL .= $orderBy ? 'ORDER BY true ' . $orderBy : '';
+        $rawSQL .= $orderBy ? 'ORDER BY ' . implode(', ', $orderBy) : '';
         $conn = $this->getEntityManager()->getConnection();
         $stmt = $conn->prepare($rawSQL);
-
-        return $stmt->executeQuery($p)->fetchAllAssociative();
+        foreach($p as $k => $v) {
+            $stmt->bindValue($k + 1, $v);
+        }
+//dd($p);
+        return $stmt->executeQuery()->fetchAllAssociative();
     }
 
     public function getGenres(): array
