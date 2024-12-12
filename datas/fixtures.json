@@ -1,0 +1,301 @@
+{
+  "flux_type": [
+    {
+      "name": "news"
+    },
+    {
+      "name": "podcast"
+    },
+    {
+      "name": "radio"
+    },
+    {
+      "name": "lien"
+    },
+    {
+      "name": "playlist"
+    }
+  ],
+  "flux_mood": [
+    {
+      "type_id": 3,
+      "name": "generaliste"
+    },
+    {
+      "type_id": 3,
+      "name": "rock"
+    },
+    {
+      "type_id": 3,
+      "name": "jazz"
+    },
+    {
+      "type_id": 3,
+      "name": "groove"
+    },
+    {
+      "type_id": 3,
+      "name": "reggae"
+    },
+    {
+      "type_id": 3,
+      "name": "disco"
+    },
+    {
+      "type_id": 3,
+      "name": "funk"
+    },
+    {
+      "type_id": 3,
+      "name": "classique"
+    },
+    {
+      "type_id": 3,
+      "name": "electro"
+    },
+    {
+      "type_id": 3,
+      "name": "bossa-nova"
+    },
+    {
+      "type_id": 3,
+      "name": "infos"
+    },
+    {
+      "type_id": 3,
+      "name": "autres"
+    },
+    {
+      "type_id": 4,
+      "name": "artistes"
+    },
+    {
+      "type_id": 4,
+      "name": "bd"
+    },
+    {
+      "type_id": 4,
+      "name": "blogs"
+    },
+    {
+      "type_id": 4,
+      "name": "humour"
+    },
+    {
+      "type_id": 4,
+      "name": "jeux"
+    },
+    {
+      "type_id": 4,
+      "name": "liens divers"
+    },
+    {
+      "type_id": 4,
+      "name": "outils"
+    },
+    {
+      "type_id": 4,
+      "name": "presse"
+    },
+    {
+      "type_id": 4,
+      "name": "radios"
+    },
+    {
+      "type_id": 4,
+      "name": "web dev"
+    },
+    {
+      "type_id": 1,
+      "name": "info"
+    },
+    {
+      "type_id": 1,
+      "name": "PQR"
+    },
+    {
+      "type_id": 1,
+      "name": "sciences &amp; technique"
+    },
+    {
+      "type_id": 1,
+      "name": "dev &amp; informatique"
+    },
+    {
+      "type_id": 1,
+      "name": "divertissements"
+    },
+    {
+      "type_id": 1,
+      "name": "autres"
+    }
+  ],
+  "video": [
+    {
+      "titre": "It's a man's man's world",
+      "auteur": "James Brown",
+      "lien": "https://www.youtube.com/embed/juTeHsKPWhY",
+      "annee": 1966,
+      "categorie": 2,
+      "genre": 4,
+      "priorite": 1,
+      "published": true
+    },
+    {
+      "titre": "Laisse Béton",
+      "auteur": "Renaud",
+      "lien": "https://www.youtube.com/embed/IjfO1epliFM",
+      "periode": "1971-1985",
+      "categorie": 2,
+      "genre": 6,
+      "priorite": 1,
+      "published": true
+    },
+    {
+      "titre": "Billie Jean",
+      "auteur": "Michael Jackson",
+      "lien": "https://www.youtube.com/embed/45Ph_MXIP1o",
+      "periode": "1971-1985",
+      "categorie": 2,
+      "genre": 4,
+      "priorite": 1,
+      "published": true
+    },
+    {
+      "titre": "I shot the sheriff",
+      "auteur": "Eric clapton",
+      "lien": "https://www.youtube.com/embed/APWhx97QvxE",
+      "annee": 2010,
+      "categorie": 2,
+      "genre": 4,
+      "priorite": 1,
+      "published": true
+    },
+    {
+      "titre": "Der Kommissar",
+      "auteur": "Falco",
+      "lien": "https://www.youtube.com/embed/8-bgiiTxhzM",
+      "annee": 1982,
+      "categorie": 2,
+      "genre": 14,
+      "priorite": 1,
+      "published": true
+    },
+    {
+      "titre": "Le pudding à l'arsenic",
+      "auteur": "Uderzo / Goscinny",
+      "lien": "https://www.youtube.com/embed/qOTQ9NJXAvE",
+      "annee": 1968,
+      "categorie": 1,
+      "priorite": 1,
+      "published": true
+    },
+    {
+      "titre": "La Sonnamabula",
+      "auteur": "Gianluigi Toccafondo",
+      "lien": "https://www.youtube.com/embed/0NRUJbXBbq0",
+      "annee": 2018,
+      "categorie": 1,
+      "priorite": 1,
+      "published": true
+    },
+    {
+      "titre": "Love & Theft",
+      "auteur": "Filmbilder",
+      "lien": "https://www.youtube.com/embed/rEUxlwb2uFI",
+      "periode": "2001-2015",
+      "categorie": 1,
+      "priorite": 1,
+      "published": true
+    }
+  ],
+  "channel_flux": [
+    {
+      "id": 1,
+      "name": "France Inter"
+    }
+  ],
+  "flux": [
+    {
+      "name": "Le Monde",
+      "type_id": 1,
+      "mood_id": 23,
+      "url": "https://www.lemonde.fr/rss/une.xml"
+    },
+    {
+      "name": "Libération",
+      "type_id": 1,
+      "mood_id": 23,
+      "url": "https://rss.liberation.fr/rss/latest/"
+    },
+    {
+      "name": "Affaires sensibles",
+      "type_id": 2,
+      "channel_id": 1,
+      "url": "http://radiofrance-podcast.net/podcast09/rss_13940.xml"
+    },
+    {
+      "name": "The useless Web",
+      "type_id": 4,
+      "mood_id": 16,
+      "url": "https://theuselessweb.com/"
+    },
+    {
+      "name": "Jeux géographiques",
+      "type_id": 4,
+      "mood_id": 17,
+      "url": "https://www.jeux-geographiques.com/"
+    },
+    {
+      "name": "PRUN",
+      "type_id": 3,
+      "mood_id": 3,
+      "url": "https://tunein.com/embed/player/s24724/"
+    }
+  ],
+  "album": [
+    {
+      "name": "Burn",
+      "auteur": "Deep Purple",
+      "annee": 1974,
+      "genre": "Rock",
+      "picture": "https://lastfm.freetls.fastly.net/i/u/300x300/94ed6d1c617b46efa80661d5ae9c1e52.png",
+      "youtube_key": "PL3hju7cJi6zKcX9O4s7dcpghuhnJ_zhMh"
+    }
+  ],
+  "track": [
+    {
+      "titre": "Burn",
+      "auteur": "Deep Purple",
+      "album": "Burn",
+      "numero": 1,
+      "annee": "1974",
+      "artiste": "Deep Purple",
+      "youtube_key": "LCnebZnysmI",
+      "genre": "Rock",
+      "pays": "UK"
+    },
+    {
+      "titre": "Might Just Take Your Life",
+      "auteur": "Deep Purple",
+      "album": "Burn",
+      "numero": 2,
+      "annee": "1974",
+      "artiste": "Deep Purple",
+      "youtube_key": "a58295TocB8",
+      "genre": "Rock",
+      "pays": "UK"
+    },
+    {
+      "titre": " Lay Down, Stay Down",
+      "auteur": "Deep Purple",
+      "album": "Burn",
+      "numero": 3,
+      "annee": "1974",
+      "artiste": "Deep Purple",
+      "youtube_key": "D0sBfM_zLjI",
+      "genre": "Rock",
+      "pays": "UK"
+    }
+  ]
+}

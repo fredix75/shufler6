@@ -3,9 +3,13 @@
 namespace App\EntityListener;
 
 use App\Entity\Video;
+use App\Helper\VideoHelper;
 
 class VideoListener
 {
+    public function __construct(private readonly VideoHelper $videoHelper){
+    }
+
     public function postLoad(Video $video): void
     {
         $link = $video->getLien();
@@ -18,11 +22,19 @@ class VideoListener
     public function prePersist(Video $video): void
     {
         $this->sanitizeLink($video);
+        if ($video->getAnnee()) {
+            $periode = $this->videoHelper->selectPeriod($video->getAnnee());
+            $video->setPeriode($periode);
+        }
     }
 
     public function preUpdate(Video $video): void
     {
         $this->sanitizeLink($video);
+        if ($video->getAnnee()) {
+            $periode = $this->videoHelper->selectPeriod($video->getAnnee());
+            $video->setPeriode($periode);
+        }
     }
 
     private function sanitizeLink(Video $video): void

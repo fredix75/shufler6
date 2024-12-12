@@ -65,3 +65,11 @@ services:
         tags:
             - { name: 'doctrine.orm.entity_listener', event: 'prePersist' }
             - { name: 'doctrine.orm.entity_listener', event: 'postLoad' }
+
+    App\EntityListener\VideoListener:
+        arguments:
+            $videoHelper: '@App\Helper\VideoHelper'
+        tags:
+            - { name: 'doctrine.orm.entity_listener', event: 'prePersist' }
+            - { name: 'doctrine.orm.entity_listener', event: 'preUpdate' }
+            - { name: 'doctrine.orm.entity_listener', event: 'postLoad' }

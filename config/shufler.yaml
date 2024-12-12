@@ -109,3 +109,4 @@ parameters:
 
     resources:
         downloads: 'resources'
+        fixtures_filepath: 'datas/fixtures.json'

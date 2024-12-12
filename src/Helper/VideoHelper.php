@@ -2,6 +2,8 @@
 
 namespace App\Helper;
 
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+
 class VideoHelper
 {
     const YOUTUBE = 'youtube';
@@ -21,6 +23,8 @@ class VideoHelper
      */
     const VIMEO = 'vimeo';
     const VIMEO_API = 'https://vimeo.com/api/v2/video/';
+
+    public function __construct(private readonly ParameterBagInterface $parameterBag) {}
 
     public function getPlatform(string $lien): string
     {
@@ -52,5 +56,21 @@ class VideoHelper
 
         return $vid;
     }
+
+    public function selectPeriod(int $annee): string
+    {
+        $periodes = $this->parameterBag->get('shufler_video')['periods'];
+        $periode = $periodes[count($periodes)-1];
+        if ($annee >= 1939) {
+            array_map(function($value) use ($annee, &$periode) {
+                if ($annee >= explode('-', $value)[0] && $annee <= explode('-', $value)[1]) {
+                    $periode = $value;
+                }
+            }, $periodes);
+        }
+
+        return $periode;
+    }
+
 
 }
