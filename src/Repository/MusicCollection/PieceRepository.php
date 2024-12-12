@@ -15,7 +15,7 @@ class PieceRepository extends ServiceEntityRepository
 
     public function getPieces(array $params = []): array
     {
-        $sql= "SELECT t.*, t.youtube_key as youtubeKey, COALESCE(t.extra_note, t.note) as note, a.picture FROM piece t LEFT JOIN album a ON a.name = t.album AND a.auteur = t.artiste ";
+        $sql= "SELECT t.*, t.youtube_key as youtubeKey, COALESCE(t.extra_note, t.note) as note, a.picture FROM piece t LEFT JOIN album a ON a.name = t.album AND a.auteur = t.artiste WHERE TRUE ";
         $orderBy = [];
         $p = [];
 
