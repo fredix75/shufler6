@@ -74,7 +74,7 @@ class PieceRepository extends ServiceEntityRepository
         foreach($p as $k => $v) {
             $stmt->bindValue($k + 1, $v);
         }
-//dd($p);
+
         return $stmt->executeQuery()->fetchAllAssociative();
     }
 
