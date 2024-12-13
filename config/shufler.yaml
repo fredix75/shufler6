@@ -3,9 +3,9 @@ parameters:
     shufler_video:
         max_list: 11
         max_list_couch: 99
-        index_max_anim: 4
-        index_max_music: 15
-        index_max_autre: 3
+        index_max_anim: 5
+        index_max_music: 12
+        index_max_autre: 4
         api_max_list: 25
         intro_couch: '67lnjV6SrFw'
         no_signal: '/images/no_signal.png'

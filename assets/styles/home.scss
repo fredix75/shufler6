@@ -5,6 +5,7 @@
   position: relative;
   padding: 10px;
   text-shadow: 1px 1px 2px rgba(36, 36, 36, 1);
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
 }
 
 .top-auteur {
@@ -50,10 +51,6 @@
 }
 
 #vu-widget {
-  display:flex;
-  flex-wrap: wrap;
   background-color:black;
-  height:auto;
-  margin:10px;
   background-image: url('../images/tv_old.png');
 }

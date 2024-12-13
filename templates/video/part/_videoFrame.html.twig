@@ -1,14 +1,14 @@
 <a class="video-link" href="{{ video.lien|popUp }}" aria-label="Launch video {{ video.titre }}">
 	{{ convertFrame(video.lien, video.auteur ~ '-' ~ video.titre)}}
-	<div class="media-body">
+	<div class="media-body d-flex align-items-center justify-content-between p-1">
+		<div>
+			<h3 class="media-heading">{{  video.titre }}</h3>
+			{{  video.auteur }} <span class="annee_small">{{  video.annee|yearDisplay }}</span>
+		</div>
 		{% if is_granted('VIDEO_EDIT', video) %}
-			<div class="link_edit">
-				<a href="{{ path('video_edit',{'id':video.id}) }}" role="button" aria-label="Edit video {{ video.titre }}">
-					<i class="bi bi-pencil-square"></i>
-				</a>
-			</div>
+			<a href="{{ path('video_edit',{'id':video.id}) }}" class="link-edit" role="button" aria-label="Edit video {{ video.titre }}">
+				<i class="bi bi-pencil-square"></i>
+			</a>
 		{% endif %}
-		<h3 class="media-heading">{{  video.titre }}</h3>
-		{{  video.auteur }} <span class="annee_small">{{  video.annee|yearDisplay }}</span>
 	</div>
 </a>

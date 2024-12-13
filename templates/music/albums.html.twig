@@ -3,11 +3,6 @@
 {% block title %}{{ parent() }} :: Music Albums{% endblock %}
 
 {% block body %}
-    <style>
-        img.no-picture {
-            opacity: 0.3;
-        }
-    </style>
     <div class="row justify-content-center g-2 g-lg-3" data-controller="album">
         {% for album in albums %}
             {% if album.picture is not null %}

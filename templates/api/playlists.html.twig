@@ -49,17 +49,17 @@
                                 {% set class = "bi bi-arrow-left-right" %}
                             {% endif %}
                             {% if idAlbum != 0 %}
-                                <div class="playlist-link" style="position:relative;"><a href="#"
-                                                                                         class="btn btn-secondary"
-                                                                                         data-action="video#editAlbum"
-                                                                                         data-url="{{ result.url }}"><i
-                                                class="bi bi-arrow-left-right"></i></a></div>
+                                <div class="playlist-link" style="position:relative;">
+                                    <a href="#" class="btn btn-secondary" data-action="video#editAlbum" data-url="{{ result.url }}">
+                                        <i class="bi bi-arrow-left-right"></i>
+                                    </a>
+                                </div>
                             {% else %}
-                                <div style="position:relative;"><a href="#"
-                                                                   class="btn btn-secondary"
-                                                                   data-action="video#editAlbum"
-                                                                   data-url="{{ result.url }}"><i
-                                                class="{{ class }}"></i></a></div>
+                                <div style="position:relative;">
+                                    <a href="#" class="btn btn-secondary" data-action="video#editAlbum" data-url="{{ result.url }}">
+                                        <i class="{{ class }}"></i>
+                                    </a>
+                                </div>
                             {% endif %}
                         {% endif %}
                         <span class="badge bg-secondary">{{ result.date }}</span>
