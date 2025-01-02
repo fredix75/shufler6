@@ -8,6 +8,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-libxml": "*",
+        "ext-curl": "*",
         "api-platform/core": "^3.1",
         "doctrine/dbal": "^3",
         "doctrine/doctrine-bundle": "^2.11",
