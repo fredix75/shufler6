@@ -34,40 +34,44 @@ use Symfony\Component\Validator\Constraints as Assert;
     operations: [
         new GetCollection(
             uriTemplate: '/videos',
-            schemes: ['https'],
+            schemes: ['http', 'https'],
             controller: VideoController::class,
             paginationItemsPerPage: 3,
             normalizationContext: ['groups' => 'video:list']
         ),
         new GetCollection(
             uriTemplate: '/random',
-            schemes: ['https'],
+            schemes: ['http', 'https'],
             controller: RandomVideoController::class,
             normalizationContext: ['groups' => 'video:list']
         ),
         new Get(
             uriTemplate: '/video/{id}',
             requirements: ['id' => '\d+'],
-            schemes: ['https']
+            schemes: ['http', 'https']
         ),
         new Post(
             uriTemplate: '/video',
             status: 301,
+            schemes: ['https'],
             security: "is_granted('ROLE_AUTEUR')"
         ),
         new Put(
             uriTemplate: '/video/{id}',
             requirements: ['id' => '\d+'],
+            schemes: ['https'],
             security: "is_granted('ROLE_AUTEUR')",
         ),
         new Patch(
             uriTemplate: '/video/{id}',
             requirements: ['id' => '\d+'],
+            schemes: ['https'],
             security: "is_granted('ROLE_AUTEUR')"
         ),
         new Delete(
             uriTemplate: '/video/{id}',
             requirements: ['id' => '\d+'],
+            schemes: ['https'],
             security: "is_granted('ROLE_ADMIN')"
         )
     ],
