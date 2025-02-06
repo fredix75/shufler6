@@ -36,9 +36,9 @@
                 </div>
             </div>
         </div>
-        <div class="row g-4 p-4" style="background-color: #511a00;">
+        <div class="row g-4 p-4" style="background-color: #220909;justify-content: space-around;">
             <h1>Anims</h1>
-            {% for video in anims|slice(1, 4) %}
+            {% for video in anims|slice(1, 2) %}
                 <div class="col-12 col-lg-3 media-vignette">
                     <div class="media topcol embed-responsive-16by9">
                         {% include("video/part/_videoFrame.html.twig") %}
@@ -46,11 +46,10 @@
                 </div>
             {% endfor %}
         </div>
-        <br>
-        <div class="row g-4 p-4" style="background-color: #001360;">
+        <div class="row g-4 p-4" style="background-color: #001360;justify-content: space-between;">
             <h1>Du son, des images</h1>
             <p>Une palanquée de morceaux d'anthologie, parfois méconnus, amoureusement choisis</p>
-            {% for video in musics|slice(0, 4) %}
+            {% for video in musics|slice(0, 3) %}
                 <div class="col-12 col-lg-3 media-vignette">
                     <div class="media topcol embed-responsive-16by9">
                         <div class="categorie"><a

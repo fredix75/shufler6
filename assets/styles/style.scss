@@ -47,7 +47,7 @@ h1 {
   font-family: blippok, sans-serif;
   font-size: 3.6em;
   text-shadow: 1px 1px 3px black;
-  border-bottom: 1px dotted $orange-red;
+  border-bottom: 2px dashed white;
 
   &.minor {
     font-size: 2.5em;
@@ -84,6 +84,10 @@ a {
 a:hover, a:active {
   text-decoration: none;
   color: #B27300;
+}
+
+a.video-link {
+  color: white;
 }
 
 a.video-link img, a.playlist-link img{
