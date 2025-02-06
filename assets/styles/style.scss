@@ -46,7 +46,7 @@ h1 {
   color: $orange-simple;
   font-family: blippok, sans-serif;
   font-size: 3.6em;
-  text-shadow: 1px 1px 3px black;
+  text-shadow: 1px 1px 3px red;
   border-bottom: 2px dashed white;
 
   &.minor {
@@ -72,7 +72,7 @@ h1 .bi {
 }
 
 h3 {
-  font-size: 1.3em;
+  font-size: 1.2em;
   color: $white-broken;
 }
 
