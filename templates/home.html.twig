@@ -39,7 +39,7 @@
         <div class="row g-4 p-4" style="background-color: #220909;justify-content: space-around;">
             <h1>Anims</h1>
             {% for video in anims|slice(1, 2) %}
-                <div class="col-12 col-lg-3 media-vignette">
+                <div class="col-12 col-md-6 col-lg-3 media-vignette">
                     <div class="media topcol embed-responsive-16by9">
                         {% include("video/part/_videoFrame.html.twig") %}
                     </div>
@@ -50,7 +50,7 @@
             <h1>Du son, des images</h1>
             <p>Une palanquée de morceaux d'anthologie, parfois méconnus, amoureusement choisis</p>
             {% for video in musics|slice(0, 3) %}
-                <div class="col-12 col-lg-3 media-vignette">
+                <div class="col-12 col-md-6 col-lg-3 media-vignette">
                     <div class="media topcol embed-responsive-16by9">
                         <div class="categorie"><a
                                     href="{{ path('video_list', {'categorie' : video.categorie, 'genre' : video.genre}) }}"
@@ -62,7 +62,7 @@
             {% endfor %}
         </div>
         <div class="row g-4">
-            <div class="col-12 col-lg-6 p-4">
+            <div class="col-12 col-md-12 col-lg-6 p-4">
                 <h1>Vu</h1>
                 {% if playlist is not empty %}
                     <div id="vu-widget" class="col-12">
@@ -81,12 +81,12 @@
                     </div>
                 {% endif %}
             </div>
-            <div class="col-12 col-lg-6 p-4" style="background-color: black;">
+            <div class="col-12 col-md-12 col-lg-6 p-4" style="background-color: black;">
                 <h1>OMG, WTF ??</h1>
                 <p>Du bizarre, du cheulou comme disent les jeunes.. On y trouve aussi du mdr, voire du ptdr</p>
                 <div class="row g-4 p-4 row-cols-1 row-cols-lg-2">
                     {% for video in stranges|slice(0, 2) %}
-                        <div class="col-12 col-lg-6 media-vignette">
+                        <div class="col-12 col-md-6 col-lg-6 media-vignette">
                             <div class="media topcol embed-responsive-16by9">
                                 {% include("video/part/_videoFrame.html.twig") %}
                             </div>
@@ -99,7 +99,7 @@
         <div class="row g-4 p-4" style="background-color:#4a008f;">
             <h1>En v'la encore</h1>
             {% for video in musics|slice(4,8) %}
-                <div class="col-6 col-lg-3 media-vignette">
+                <div class="col-12 col-md-6 col-lg-3 media-vignette">
                     <div class="media topcol embed-responsive-16by9">
                         <div class="categorie"><a
                                     href="{{ path('video_list', {'categorie' : video.categorie, 'genre' : video.genre}) }}"
