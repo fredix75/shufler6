@@ -3,18 +3,10 @@
 {% block body %}
     <div class="container" data-controller="video">
         <div class="row g-4">
-            <div class="col-lg-6 col-12">
+            <div class="col-lg-6 col-12" style="padding:0;margin-top:10px;box-shadow: 8px 8px 24px black;">
                 <div class="ratio ratio-16x9">
                     <iframe class="media embed-responsive-item" src="{{ anims[0].lien }}" allowfullscreen
                             title="{{ anims[0].auteur ~ '-' ~ anims[0].titre }}" style="width:100%"></iframe>
-                </div>
-                <div class="topcom media-body d-flex align-items-center justify-content-between">
-                    <div>
-                        <h2 class="media-heading">{{ anims[0].titre }}</h2>
-                        <span class="top-auteur">{{ anims[0].auteur }}</span>
-                        <p class="topchapo">{{ anims[0].chapo }}</p>
-                        <span class="top-annee">{{ anims[0].annee|yearDisplay }}</span>
-                    </div>
                     {% if is_granted('ROLE_AUTEUR') %}
                         <a href="{{ path('video_edit', {'id':anims[0].id}) }}"
                            class="link-edit"
@@ -46,7 +38,7 @@
                 </div>
             {% endfor %}
         </div>
-        <div class="row g-4 p-4" style="background-color: #001360;justify-content: space-between;">
+        <div class="row g-4 p-4" style="background-color: #001360;justify-content: space-between;border-top:15px dashed #220909;">
             <h1>Du son, des images</h1>
             <p>Une palanquée de morceaux d'anthologie, parfois méconnus, amoureusement choisis</p>
             {% for video in musics|slice(0, 3) %}

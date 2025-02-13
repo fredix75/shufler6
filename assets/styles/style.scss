@@ -13,9 +13,13 @@ body {
   font-family: "futuran", sans-serif;
 }
 
+.container {
+  max-width: 100%;
+}
+
 .content {
   margin-top: 60px;
-  padding: 20px;
+  padding: 20px 0;
   min-height: 1200px;
   color: white;
 }
