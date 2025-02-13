@@ -7,11 +7,6 @@
                 <div class="ratio ratio-16x9">
                     <iframe class="media embed-responsive-item" src="{{ anims[0].lien }}" allowfullscreen
                             title="{{ anims[0].auteur ~ '-' ~ anims[0].titre }}" style="width:100%"></iframe>
-                    {% if is_granted('ROLE_AUTEUR') %}
-                        <a href="{{ path('video_edit', {'id':anims[0].id}) }}"
-                           class="link-edit"
-                           aria-label="Edit video"><i class="bi bi-pencil-square"></i></a>
-                    {% endif %}
                 </div>
             </div>
             <div class="col-lg-6 col-12 texte my-auto p-5">
@@ -24,6 +19,11 @@
                     {% if not app.user %}
                         <a id="register_second" class="btn btn-dark" role="button" aria-label="Create an account" data-toggle="modal" data-target="#userModal" href="{{ path('account') }}" style="background-color:black" >
                             <span class="glyphicon glyphicon-flag"></span>&nbsp;{{ 'Create an account'|trans }}</a>
+                    {% endif %}
+                    {% if is_granted('ROLE_AUTEUR') %}
+                        <a href="{{ path('video_edit', {'id':anims[0].id}) }}" role="button" aria-label="Edit the video"
+                           class="link-edit btn btn-dark"
+                           aria-label="Edit video"><i class="bi bi-pencil-square"></i></a>
                     {% endif %}
                 </div>
             </div>

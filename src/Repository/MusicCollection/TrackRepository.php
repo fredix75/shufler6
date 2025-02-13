@@ -56,7 +56,7 @@ class TrackRepository extends ServiceEntityRepository
     public function getTracksAjax(
         array $data,
         int $page = 0,
-        int $max = null,
+        ?int $max = null,
         string $sort = 'titre',
         string $dir = 'ASC'
     ): array
@@ -105,7 +105,7 @@ class TrackRepository extends ServiceEntityRepository
     public function getTracksByAlbumsAjax(
         array $data,
         int $page = 0,
-        int $max = null,
+        ?int $max = null,
         string $sort = 'album',
         string $dir = 'ASC',
     ): array

@@ -9,7 +9,13 @@
 }
 
 body {
-  background: linear-gradient($background-color, #00050d);
+  background: url('../images/sky.jpg');
+  background-color: $background-color;
+  background-blend-mode: darken;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   font-family: "futuran", sans-serif;
 }
 
