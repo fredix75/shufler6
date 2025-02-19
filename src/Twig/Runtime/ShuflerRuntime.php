@@ -33,7 +33,7 @@ class ShuflerRuntime implements RuntimeExtensionInterface
     /**
      * Display genre
      */
-    public function genreFilter(int $genre = null): string
+    public function genreFilter(?int $genre = null): string
     {
         return $this->videoParameters['genres'][$genre] ?? 'Inconnu';
     }
@@ -41,7 +41,7 @@ class ShuflerRuntime implements RuntimeExtensionInterface
     /**
      * Display Year
      */
-    public function yearFilter(int $year = null): ?int
+    public function yearFilter(?int $year = null): ?int
     {
         return ($year > 0) ? $year : null;
     }

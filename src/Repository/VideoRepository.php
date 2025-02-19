@@ -57,11 +57,11 @@ class VideoRepository extends ServiceEntityRepository
     }
 
     public function getRandomVideos(
-        string $search = null,
-        int $categorie = null,
-        int $genre = null,
+        ?string $search = null,
+        ?int $categorie = null,
+        ?int $genre = null,
         string $periode = '0',
-        string $plateforme = null
+        ?string $plateforme = null
     ): array
     {
         $q = $this->getVideosQuery($categorie, $genre, $periode, $search, $plateforme);
@@ -74,8 +74,8 @@ class VideoRepository extends ServiceEntityRepository
     }
 
     public function getPaginatedVideos(
-        int $categorie = null,
-        int $genre = null,
+        ?int $categorie = null,
+        ?int $genre = null,
         string $periode = '0',
         int $page = 1,
         int $maxperpage = 10
@@ -93,11 +93,11 @@ class VideoRepository extends ServiceEntityRepository
     }
 
     private function getVideosQuery(
-        int $categorie = null,
-        int $genre = null,
+        ?int $categorie = null,
+        ?int $genre = null,
         string $periode = '0',
-        string $search = null,
-        string $plateforme = null
+        ?string $search = null,
+        ?string $plateforme = null
     ): QueryBuilder
     {
         $q = $this->createQueryBuilder('a')

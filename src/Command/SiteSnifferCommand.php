@@ -25,7 +25,7 @@ class SiteSnifferCommand extends Command
     public function __construct(
         FileHelper $fileHelper,
         ParameterBagInterface $parameterBag,
-        string $name = null
+        ?string $name = null
     )
     {
         $this->fileHelper = $fileHelper;

@@ -25,7 +25,7 @@ class BDSniffCommand extends Command
 
     private string $directory;
 
-    public function __construct(Filesystem $filesystem, ParameterBagInterface $parameterBag, string $name = null) {
+    public function __construct(Filesystem $filesystem, ParameterBagInterface $parameterBag, ?string $name = null) {
         $this->filesystem = $filesystem;
         $this->directory = $parameterBag->get('uploads').'sniffer/Revues/';
         parent::__construct($name);
