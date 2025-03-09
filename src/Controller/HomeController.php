@@ -4,12 +4,11 @@ namespace App\Controller;
 
 use App\Repository\FluxRepository;
 use App\Repository\MusicCollection\PieceRepository;
-use App\Repository\MusicCollection\TrackRepository;
 use App\Repository\VideoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/', name: 'main')]
 class HomeController extends AbstractController

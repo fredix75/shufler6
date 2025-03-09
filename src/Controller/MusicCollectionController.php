@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Repository\MusicCollection\AlbumRepository;
 use App\Repository\MusicCollection\TrackRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/music', name: 'music')]
