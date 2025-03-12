@@ -90,4 +90,7 @@ return [
         'version' => '2.0.8',
         'type' => 'css',
     ],
+    'chartjs' => [
+        'version' => '0.3.24',
+    ],
 ];

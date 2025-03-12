@@ -3,79 +3,83 @@
 {% block title %}{{ parent() }} :: Flux Edit {% endblock %}
 
 {% block body %}
-    {% if flux.id is defined and flux.id !=0 %}
-        <h1 class="minor"><i class="bi bi-pencil"></i>&nbsp;Editer le Flux {{ flux.id }}</h1>
-        <span class="badge bg-secondary" style="float:right;">{{ flux.dateInsert|date("d/m/Y H:i:s") }}</span><br/>
-    {% else %}
-        <h1 class="minor"><i class="bi bi-plus-circle"></i>&nbsp;Ajouter un Flux</h1>
-    {% endif %}
+    <div class="p-4">
+        {% if flux.id is defined and flux.id !=0 %}
+            <h1 class="minor"><i class="bi bi-pencil"></i>&nbsp;Editer le Flux {{ flux.id }}</h1>
+            <span class="badge bg-secondary" style="float:right;">{{ flux.dateInsert|date("d/m/Y H:i:s") }}</span><br/>
+        {% else %}
+            <h1 class="minor"><i class="bi bi-plus-circle"></i>&nbsp;Ajouter un Flux</h1>
+        {% endif %}
 
-    <div class="well" data-controller="modal-channel-form">
-        <div class="row justify-content-md-center txt-center">
-            <div class="col-12 col-lg-6" {{ stimulus_controller('flux-edit', {
-                news: news,
-                radios: radios,
-                liens: liens
-            }) }}>
-                {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
-                {{ form_errors(form) }}
-                {{ form_widget(form) }}
+        <div class="well" data-controller="modal-channel-form">
+            <div class="row justify-content-md-center txt-center">
+                <div class="col-12 col-lg-6" {{ stimulus_controller('flux-edit', {
+                    news: news,
+                    radios: radios,
+                    liens: liens
+                }) }}>
+                    {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+                    {{ form_errors(form) }}
+                    {{ form_widget(form) }}
                     <div class="col-3">
                         <button type="submit" class="btn btn-primary" style="width: 100%;"><i
                                     class="bi bi-check-circle-fill"></i> OK
                         </button>
                     </div>
-                {{ form_end(form) }}
-                <br>
-                {% if flux.id is defined and flux.id != 0 and is_granted("FLUX_DELETE", flux) %}
-                    <div class="col-3">
-                        <form action="{{ path('flux_delete', {'id' : flux.id}) }}" method="POST" onclick="return confirm('global.confirmation');">
-                            <input type="hidden" name="_token" value="{{ csrf_token('flux_delete' ~ flux.id) }}">
-                            <button class="btn btn-danger" type="submit"><i class="bi bi-trash-fill"></i>&nbsp;Virer</button>
-                        </form>
-                    </div>
-                {% endif %}
-                <br>
-                {% if flux.id is defined %}
-                    {% if flux.image is not null %}
-                        {% if 'http' in flux.image %}
-                            <img src="{{ asset(flux.image) }}" width="200px"/>
-                        {% elseif no_cover_picture in flux.image %}
+                    {{ form_end(form) }}
+                    <br>
+                    {% if flux.id is defined and flux.id != 0 and is_granted("FLUX_DELETE", flux) %}
+                        <div class="col-3">
+                            <form action="{{ path('flux_delete', {'id' : flux.id}) }}" method="POST"
+                                  onclick="return confirm('global.confirmation');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('flux_delete' ~ flux.id) }}">
+                                <button class="btn btn-danger" type="submit"><i class="bi bi-trash-fill"></i>&nbsp;Virer
+                                </button>
+                            </form>
+                        </div>
+                    {% endif %}
+                    <br>
+                    {% if flux.id is defined %}
+                        {% if flux.image is not null %}
+                            {% if 'http' in flux.image %}
+                                <img src="{{ asset(flux.image) }}" width="200px"/>
+                            {% elseif no_cover_picture in flux.image %}
 
-                        {% else %}
-                            <img src="{{ asset('uploads/logos/' ~ flux.image) }}" width="200px"/>
-                            <a href="{{ path('flux_delete_logo',{'id': flux.id}) }}"
+                            {% else %}
+                                <img src="{{ asset('uploads/logos/' ~ flux.image) }}" width="200px"/>
+                                <a href="{{ path('flux_delete_logo',{'id': flux.id}) }}"
+                                   type="button"
+                                   class="btn btn-danger"
+                                   onclick="return confirm('{{ 'Are You sure ?'|trans }}');"
+                                   title="Delete this Logo"
+                                >
+                                    <i class="bi bi-trash-fill"></i>
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                        {% if flux.channel.id is defined and flux.channel.image is not null %}
+                            {% if 'http' in flux.image %}
+                                <img src="{{ asset(flux.channel.image) }}" width="200px"/>
+                            {% else %}
+                                <img class="channel-image" src="{{ asset('uploads/logos/' ~ flux.channel.image) }}"
+                                     width="200px"/>
+                            {% endif %}
+                        {% endif %}
+                        {% if flux.channel.id is defined %}
+                            <a href="#"
+                               id="btn-edit-channel"
                                type="button"
-                               class="btn btn-danger"
-                               onclick="return confirm('{{ 'Are You sure ?'|trans }}');"
-                               title="Delete this Logo"
+                               class="btn btn-secondary"
+                               title="Edit this Channel"
+                               data-action="modal-channel-form#openModal"
+                               data-channel="{{ flux.channel.id }}"
                             >
-                                <i class="bi bi-trash-fill"></i>
+                                <i class="bi bi-pencil-square"></i> Edit this channel
                             </a>
                         {% endif %}
                     {% endif %}
-                    {% if flux.channel.id is defined and flux.channel.image is not null %}
-                        {% if 'http' in flux.image %}
-                            <img src="{{ asset(flux.channel.image) }}" width="200px"/>
-                        {% else %}
-                            <img class="channel-image" src="{{ asset('uploads/logos/' ~ flux.channel.image) }}"
-                                 width="200px"/>
-                        {% endif %}
-                    {% endif %}
-                    {% if flux.channel.id is defined %}
-                        <a href="#"
-                           id="btn-edit-channel"
-                           type="button"
-                           class="btn btn-secondary"
-                           title="Edit this Channel"
-                           data-action="modal-channel-form#openModal"
-                           data-channel="{{ flux.channel.id }}"
-                        >
-                            <i class="bi bi-pencil-square"></i> Edit this channel
-                        </a>
-                    {% endif %}
-                {% endif %}
-                {% include 'part/_modal.html.twig' with { modalTitle: 'Edit Channel' } %}
+                    {% include 'part/_modal.html.twig' with { modalTitle: 'Edit Channel' } %}
+                </div>
             </div>
         </div>
     </div>

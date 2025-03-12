@@ -3,71 +3,74 @@
 {% block title %}Shufler :: Search{% endblock %}
 
 {% block body %}
-    <section class="col col-sm-12 col-md-12 medias-bande" data-controller="video">
-        <div class="col col-12 col-sm-6 col-md-6 col-lg-3 media-select" style="">
-            <h1>{% if videos_count > 0 or tracks is not empty %}
-                    Trouvé&nbsp;<i class="bi bi-binoculars"></i>&nbsp;
-                {% else %}
-                    Désolé&nbsp;<i class="bi bi-emoji-frown"></i>&nbsp;
-                {% endif %}
-            </h1>
-            <div class="page_videos_sous_titre">
-                "{{ search }}"<br/>
-                <span class="badge bg-secondary">{{ 'video.videos_number'|trans({count: videos_count}) }}</span>
-                <span class="badge bg-secondary">{{ 'track.tracks_number'|trans({count: tracks|length}) }}</span>
-            </div>
-        </div>
-        {% for video in videos %}
-            <div class="col col-12 col-sm-6 col-md-6 col-lg-3 media-vignette">
-                <div class="media topcol embed-responsive-16by9" style="margin-bottom:30px;">
-                    {% include("video/part/_videoFrame.html.twig") %}
+    <div class="p-4">
+        <section class="col col-sm-12 col-md-12 medias-bande" data-controller="video">
+            <div class="col col-12 col-sm-6 col-md-6 col-lg-3 media-select" style="">
+                <h1>{% if videos_count > 0 or tracks is not empty %}
+                        Trouvé&nbsp;<i class="bi bi-binoculars"></i>&nbsp;
+                    {% else %}
+                        Désolé&nbsp;<i class="bi bi-emoji-frown"></i>&nbsp;
+                    {% endif %}
+                </h1>
+                <div class="page_videos_sous_titre">
+                    "{{ search }}"<br/>
+                    <span class="badge bg-secondary">{{ 'video.videos_number'|trans({count: videos_count}) }}</span>
+                    <span class="badge bg-secondary">{{ 'track.tracks_number'|trans({count: tracks|length}) }}</span>
                 </div>
             </div>
-        {% endfor %}
-        {% if 0 == videos_count %}
-            <div class="col col-12 col-sm-6 col-md-6 col-lg-3 media-vignette">
-                <div class="media topcol embed-responsive-16by9" style="margin-bottom:30px;">
-                    <img src="{{ asset('images/tv_brouillage.gif') }}" height="250px"/>
+            {% for video in videos %}
+                <div class="col col-12 col-sm-6 col-md-6 col-lg-3 media-vignette">
+                    <div class="media topcol embed-responsive-16by9" style="margin-bottom:30px;">
+                        {% include("video/part/_videoFrame.html.twig") %}
+                    </div>
                 </div>
-            </div>
-        {% endif %}
-    </section>
+            {% endfor %}
+            {% if 0 == videos_count %}
+                <div class="col col-12 col-sm-6 col-md-6 col-lg-3 media-vignette">
+                    <div class="media topcol embed-responsive-16by9" style="margin-bottom:30px;">
+                        <img src="{{ asset('images/tv_brouillage.gif') }}" height="250px"/>
+                    </div>
+                </div>
+            {% endif %}
+        </section>
 
-    {% include "part/_pagination.html.twig" %}
+        {% include "part/_pagination.html.twig" %}
 
-    {% if tracks is not empty %}
-        <br/><br/><br/><br/>
-        <a type="button" class="btn btn-primary" href="{{ path('music_couch', {'search' : search }) }}" role="button"
-           aria-label="Enchainer la liste"><i class="bi bi-youtube icon-youtube"></i> Enchaîner la liste</a>
-        <br/><br/>
-        <section data-controller="track" style="background-color:black; padding: 10px;">
-            <table id="tracks" class="table table-dark">
-                <thead>
-                <tr>
-                    {% for column in track_columns %}
-                        <th>{{ column|capitalize }}</th>
-                    {% endfor %}
-                </tr>
-                </thead>
-                <tbody>
-                {% for track in tracks %}
+        {% if tracks is not empty %}
+            <br/><br/><br/><br/>
+            <a type="button" class="btn btn-primary" href="{{ path('music_couch', {'search' : search }) }}"
+               role="button"
+               aria-label="Enchainer la liste"><i class="bi bi-youtube icon-youtube"></i> Enchaîner la liste</a>
+            <br/><br/>
+            <section data-controller="track" style="background-color:black; padding: 10px;">
+                <table id="tracks" class="table table-dark">
+                    <thead>
                     <tr>
                         {% for column in track_columns %}
-                            {% if column == 'youtubeKey' and attribute(track, column) is not empty %}
-                                {% set youtube_key = 'https://www.youtube.com/watch?v=' ~ track.youtubeKey %}
-                                <td>{% include 'music/part/_youtube_link.html.twig' %}</td>
-                            {% elseif column in ["album", "auteur", "artiste"] %}
-                                <td>
-                                    <a href="{{ path('main_search', {'search_field' : attribute(track, column)}) }}">{{ attribute(track, column) }}</a>
-                                </td>
-                            {% else %}
-                                <td>{{ attribute(track, column) }}</td>
-                            {% endif %}
+                            <th>{{ column|capitalize }}</th>
                         {% endfor %}
                     </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </section>
-    {% endif %}
+                    </thead>
+                    <tbody>
+                    {% for track in tracks %}
+                        <tr>
+                            {% for column in track_columns %}
+                                {% if column == 'youtubeKey' and attribute(track, column) is not empty %}
+                                    {% set youtube_key = 'https://www.youtube.com/watch?v=' ~ track.youtubeKey %}
+                                    <td>{% include 'music/part/_youtube_link.html.twig' %}</td>
+                                {% elseif column in ["album", "auteur", "artiste"] %}
+                                    <td>
+                                        <a href="{{ path('main_search', {'search_field' : attribute(track, column)}) }}">{{ attribute(track, column) }}</a>
+                                    </td>
+                                {% else %}
+                                    <td>{{ attribute(track, column) }}</td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+        {% endif %}
+    </div>
 {% endblock %}

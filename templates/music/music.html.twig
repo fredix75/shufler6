@@ -1,32 +1,42 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}
-    {% if 'cloud' in app.request.get('_route') %}
-       {% set cloud = '(cloud)' %}
-    {% endif %}
+{% block title %}{{ parent() }} ::
     {% if app.current_route_parameters['mode'] == 'albums' %}
-        <h1><i class="bi bi-disc-fill"></i> Albums {{ cloud|default('') }}</h1>
+        Albums
     {% else %}
-        <h1><i class="bi bi-music-note-list"></i> Tracks {{ cloud|default('') }}</h1>
+        Tracks
     {% endif %}
-    <div {{ stimulus_controller('music', {
-        columns: columns_db,
-        pathUrl: path_url,
-        pageLength: page_length
-    }) }}>
-        <div class="row">
-            <div class="datas-white" style="color:black;">
-                <table id="container-datas" class="table display table-dark">
-                    <thead>
-                    <tr>
-                        {% for column in columns_db %}
-                            <th>{{ column|capitalize }}</th>
-                        {% endfor %}
-                    </tr>
-                    </thead>
-                </table>
+{% endblock %}
+
+{% block body %}
+    <div class="p-4">
+        {% if 'cloud' in app.request.get('_route') %}
+            {% set cloud = '(cloud)' %}
+        {% endif %}
+        {% if app.current_route_parameters['mode'] == 'albums' %}
+            <h1><i class="bi bi-disc-fill"></i> Albums {{ cloud|default('') }}</h1>
+        {% else %}
+            <h1><i class="bi bi-music-note-list"></i> Tracks {{ cloud|default('') }}</h1>
+        {% endif %}
+        <div {{ stimulus_controller('music', {
+            columns: columns_db,
+            pathUrl: path_url,
+            pageLength: page_length
+        }) }}>
+            <div class="row">
+                <div class="datas-white" style="color:black;">
+                    <table id="container-datas" class="table display table-dark">
+                        <thead>
+                        <tr>
+                            {% for column in columns_db %}
+                                <th>{{ column|capitalize }}</th>
+                            {% endfor %}
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
             </div>
+            {% include 'part/_modal.html.twig' with { modalTitle: 'Music', class: 'music-modal' } %}
         </div>
-        {% include 'part/_modal.html.twig' with { modalTitle: 'Music', class: 'music-modal' } %}
     </div>
 {% endblock %}

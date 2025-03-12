@@ -3,30 +3,36 @@
 {% block title %}{{ parent() }} :: Couch Filters{% endblock %}
 
 {% block body %}
-    <h1 class="minor"><i class="bi bi-filter-circle"></i>&nbsp;Filtres</h1>
-    <div class="well">
-        <div class="row justify-content-center txt-center">
-            <div class="row col-12 col-lg-6">
-                <div class="list-group row g-0 d-flex position-relative col-12" style="padding:0 0 15px 0;">
-                    <a href="{{ path('music_filter_piece_edit') }}" type="button" class="btn btn-secondary">Créer une liste</a>
-                    <h2>Listes</h2>
-                    {% for filter_list in filter_listes %}
-                        <div class="list-group-item">
-                            <a href="{{ path('music_filter_piece_edit',{'id': filter_list.id}) }}" class="btn btn-transparent">
-                                <span class="bi bi-pencil"></span>
-                            </a>
-                            <a href="{{ path('music_couch', {'genres' : filter_list.simpleGenres}) }}" class="list-group-item-action" title="{{ filter_list.simpleGenres|join(', ') }}">
-                                <strong style="font-size: 130%">{{ filter_list.name|title }}</strong> <small>{{ filter_list.simpleGenres|join(', ') }}</small>
-                            </a>
-                        </div>
-                    {% endfor %}
+    <div class="p-4">
+        <h1 class="minor"><i class="bi bi-filter-circle"></i>&nbsp;Filtres</h1>
+        <div class="well">
+            <div class="row justify-content-center txt-center">
+                <div class="row col-12 col-lg-6">
+                    <div class="list-group row g-0 d-flex position-relative col-12" style="padding:0 0 15px 0;">
+                        <a href="{{ path('music_filter_piece_edit') }}" type="button" class="btn btn-secondary">Créer
+                            une liste</a>
+                        <h2>Listes</h2>
+                        {% for filter_list in filter_listes %}
+                            <div class="list-group-item">
+                                <a href="{{ path('music_filter_piece_edit',{'id': filter_list.id}) }}"
+                                   class="btn btn-transparent">
+                                    <span class="bi bi-pencil"></span>
+                                </a>
+                                <a href="{{ path('music_couch', {'genres' : filter_list.simpleGenres}) }}"
+                                   class="list-group-item-action" title="{{ filter_list.simpleGenres|join(', ') }}">
+                                    <strong style="font-size: 130%">{{ filter_list.name|title }}</strong>
+                                    <small>{{ filter_list.simpleGenres|join(', ') }}</small>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
-            </div>
-            <div class="col-12 col-lg-6">
-                <h2>Filtres custom</h2>
-                {{ form_start(form, {'action': path('music_couch'), 'method': 'GET'}) }}
-                {{ form_widget(form) }}
-                {{ form_end(form) }}
+                <div class="col-12 col-lg-6">
+                    <h2>Filtres custom</h2>
+                    {{ form_start(form, {'action': path('music_couch'), 'method': 'GET'}) }}
+                    {{ form_widget(form) }}
+                    {{ form_end(form) }}
+                </div>
             </div>
         </div>
     </div>

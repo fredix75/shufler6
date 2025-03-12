@@ -3,26 +3,30 @@
 {% block title %}{{ parent() }} :: Edit Cloud Album{% endblock %}
 
 {% block body %}
-    <h1 class="minor"><i class="bi bi-pencil"></i>&nbsp;Editer l'album {{ cloudAlbum.id }}</h1>
-    <div class="well">
-        <div class="row justify-content-md-center txt-center">
-            <div class="col-12 col-lg-6">
-                {{ form_start(form) }}
-                {{ form_widget(form) }}
-                {% if cloudAlbum.id is not null %}
-                    <a class="btn btn-secondary"
-                       href="{{ path('api_playlist', {'search_api': cloudAlbum.auteur ~ ' ' ~ cloudAlbum.name, 'id_cloudalbum': cloudAlbum.id }) }}">
-                        <i class="bi bi-arrow-left-right"></i>&nbsp;Exchange on Api
-                    </a>
-                {% endif %}
-                <button class="btn btn-primary" type="submit">
-                    <i class="bi bi-save-fill"></i>&nbsp;Save
-                </button>
-                {% if cloudAlbum.id is not null %}
-                    &nbsp;
-                    <a href="{{ path('music_album_cloud_delete', {'id' : cloudAlbum.id, '_token' : csrf_token('delete'~cloudAlbum.id)}) }}" type="button" class="btn btn-danger" onclick="return confirm('Etes--vous sûr ?')">Supprimer</a> &nbsp;
-                {% endif %}
-                {{ form_end(form) }}
+    <div class="p-4">
+        <h1 class="minor"><i class="bi bi-pencil"></i>&nbsp;Editer l'album {{ cloudAlbum.id }}</h1>
+        <div class="well">
+            <div class="row justify-content-md-center txt-center">
+                <div class="col-12 col-lg-6">
+                    {{ form_start(form) }}
+                    {{ form_widget(form) }}
+                    {% if cloudAlbum.id is not null %}
+                        <a class="btn btn-secondary"
+                           href="{{ path('api_playlist', {'search_api': cloudAlbum.auteur ~ ' ' ~ cloudAlbum.name, 'id_cloudalbum': cloudAlbum.id }) }}">
+                            <i class="bi bi-arrow-left-right"></i>&nbsp;Exchange on Api
+                        </a>
+                    {% endif %}
+                    <button class="btn btn-primary" type="submit">
+                        <i class="bi bi-save-fill"></i>&nbsp;Save
+                    </button>
+                    {% if cloudAlbum.id is not null %}
+                        &nbsp;
+                        <a href="{{ path('music_album_cloud_delete', {'id' : cloudAlbum.id, '_token' : csrf_token('delete'~cloudAlbum.id)}) }}"
+                           type="button" class="btn btn-danger"
+                           onclick="return confirm('Etes--vous sûr ?')">Supprimer</a> &nbsp;
+                    {% endif %}
+                    {{ form_end(form) }}
+                </div>
             </div>
         </div>
     </div>

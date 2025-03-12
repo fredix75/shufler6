@@ -19,7 +19,7 @@ class CloudAlbumRepository extends ServiceEntityRepository
     public function getAlbumsAjax(
         array $data,
         int $page = 0,
-        int $max = null,
+        ?int $max = null,
         string $sort = 'name',
         string $dir = 'ASC'
     ): array

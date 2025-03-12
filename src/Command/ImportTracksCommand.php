@@ -56,7 +56,7 @@ class ImportTracksCommand extends Command
         protected readonly Environment            $twig,
         protected readonly AssetMapperInterface   $assetMapper,
         ParameterBagInterface                     $parameterBag,
-        string                                    $name = null
+        ?string                                    $name = null
     ) {
         $this->parameters = $parameterBag->get('music_collection');
         parent::__construct($name);

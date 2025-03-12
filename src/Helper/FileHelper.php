@@ -56,9 +56,9 @@ class FileHelper
 
     public function uploadFile(
         UploadedFile $file,
-        string $fileName = null,
-        string $subPath = null,
-        string $imageToDelete = null
+        ?string $fileName = null,
+        ?string $subPath = null,
+        ?string $imageToDelete = null
     ): string
     {
         $safeFilename = $fileName ? strtolower($this->slugger->slug($fileName)) : md5(uniqid());

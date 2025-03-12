@@ -3,19 +3,22 @@
 {% block title %}{{ parent() }} :: Podcasts{% endblock %}
 
 {% block body %}
-    <h1><i class="bi bi-broadcast-pin"></i> Podcasts</h1>
-    <div class="submenu">
-        <ul class="nav nav-pills justify-content-center">
-            <li class="nav-item">
-                <a href="{{ path('flux_podcasts') }}"
-                   class="nav-link{% if app.request.get('resource') is null %} active {% endif %}">All Podcasts</a>
-            </li>
-            <li class="nav-item">
-                <a href="{{ path('flux_podcasts', {'resource': true}) }}"
-                   class="nav-link{% if app.request.get('resource') is not null %} active {% endif %}">Resources</a>
-            </li>
-        </ul>
-    </div><br/><br/>
-    {% block podcasts %}{% endblock %}
+    <div class="p-4">
+        <h1><i class="bi bi-broadcast-pin"></i> Podcasts</h1>
+        <div class="submenu">
+            <ul class="nav nav-pills justify-content-center">
+                <li class="nav-item">
+                    <a href="{{ path('flux_podcasts') }}"
+                       class="nav-link{% if app.request.get('resource') is null %} active {% endif %}">All Podcasts</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ path('flux_podcasts', {'resource': true}) }}"
+                       class="nav-link{% if app.request.get('resource') is not null %} active {% endif %}">Resources</a>
+                </li>
+            </ul>
+        </div>
+        <br/><br/>
+        {% block podcasts %}{% endblock %}
+    </div>
     {% include 'flux/part/_audio_stick.html.twig' %}
 {% endblock %}

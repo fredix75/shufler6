@@ -33,7 +33,7 @@ class CleanVideosCommand extends Command
         private readonly AlbumRepository        $albumRepository,
         private readonly EntityManagerInterface $entityManager,
         private readonly ApiRequester           $apiRequester,
-        string                                  $name = null
+        ?string                                  $name = null
     ) {
         parent::__construct($name);
     }
