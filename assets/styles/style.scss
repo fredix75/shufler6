@@ -9,9 +9,7 @@
 }
 
 body {
-  background: url('../images/sky.jpg');
-  background-color: $background-color;
-  background-blend-mode: darken;
+  background-image: linear-gradient(rgba(10, 0, 100, 0.5), rgba(0, 0, 0, 0.9)), url('../images/sky.jpg');
   background-attachment: fixed;
   background-position: center;
   font-family: "futuran", sans-serif;
