@@ -3,7 +3,6 @@
 {% block title %}{{ parent() }} :: Edit Cloud track{% endblock %}
 
 {% block body %}
-    <div class="p-4">
     <h1 class="minor"><i class="bi bi-pencil"></i>&nbsp;Editer la Track {{ cloudTrack.id }}</h1>
     <div class="well">
         <div class="row justify-content-md-center txt-center">
@@ -21,7 +20,9 @@
                 </button>
                 {% if cloudTrack.id is not null %}
                     &nbsp;
-                    <a href="{{ path('music_cloudtrack_delete', {'id' : cloudTrack.id, '_token' : csrf_token('delete'~cloudTrack.id)}) }}" type="button" class="btn btn-danger" onclick="return confirm('Etes--vous sûr ?')">Supprimer</a> &nbsp;
+                    <a href="{{ path('music_cloudtrack_delete', {'id' : cloudTrack.id, '_token' : csrf_token('delete'~cloudTrack.id)}) }}"
+                       type="button" class="btn btn-danger"
+                       onclick="return confirm('Etes--vous sûr ?')">Supprimer</a> &nbsp;
                 {% endif %}
                 {{ form_end(form) }}
             </div>
