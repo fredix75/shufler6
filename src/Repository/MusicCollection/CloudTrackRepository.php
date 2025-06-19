@@ -19,7 +19,7 @@ class CloudTrackRepository extends ServiceEntityRepository
     public function getTracksAjax(
         array $data,
         int $page = 0,
-        int $max = null,
+        ?int $max = null,
         string $sort = 'titre',
         string $dir = 'ASC'
     ): array
