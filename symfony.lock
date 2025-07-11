@@ -306,12 +306,12 @@
         ]
     },
     "symfony/stimulus-bundle": {
-        "version": "2.22",
+        "version": "2.27",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
             "version": "2.20",
-            "ref": "3acc494b566816514a6873a89023a35440b6386d"
+            "ref": "e058471c5502e549c1404ebdd510099107bb5549"
         },
         "files": [
             "assets/bootstrap.js",
