@@ -171,6 +171,7 @@ class ImportTracksCommand extends Command
                         $serializedTrack = $this->serializer->serialize($track, 'json');
                         $track = $this->serializer->deserialize($serializedTrack, Track::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $trackInBase]);
                         unset($this->tracks[$key]);
+                        $output->writeln(sprintf('Track reconnue: %s - %s', $track->getAuteur(), $track->getTitre()));
                         break;
                     }
                 }
@@ -197,7 +198,7 @@ class ImportTracksCommand extends Command
                         $forbiddenRequest = true;
                         $output->writeln(sprintf('Requête inaccessible pour %s %s', $track->getAuteur(), $track->getTitre()));
                     }
-                    
+
                 } catch (\Exception $e) {
                     $forbiddenRequest = true;
                     $output->writeln($e->getMessage());
@@ -208,6 +209,7 @@ class ImportTracksCommand extends Command
                 $i++;
                 $n++;
                 $this->entityManager->persist($track);
+                $output->writeln(sprintf('Nouvelle Track: %s - %s', $track->getAuteur(), $track->getTitre()));
             }
 
             if (empty($this->artistsTmp[$track->getAuteur()])) {
@@ -240,6 +242,7 @@ class ImportTracksCommand extends Command
 		foreach($this->tracks as $trackInBase) {
             $i++;
 			$this->entityManager->remove($trackInBase);
+            $output->writeln(sprintf('Track supprimée: %s - %s', $trackInBase->getAuteur(), $trackInBase->getTitre()));
             if (($i%$this->parameters['batch_size']) === 0) {
                 $this->entityManager->flush();
             }
@@ -306,6 +309,7 @@ class ImportTracksCommand extends Command
         foreach($this->artists as $artist) {
             $i++;
             $this->entityManager->remove($artist);
+            $output->writeln(sprintf('Artiste supprimé: %s', $artist->getName()));
             if (($i%$this->parameters['batch_size']) === 0) {
                 $this->entityManager->flush();
             }
@@ -322,8 +326,7 @@ class ImportTracksCommand extends Command
     {
         $i = 1;
         $forbiddenRequest = false;
-        $this->albums  = $this->albumRepository->findAll();
-
+        $this->albums  = $this->albumRepository->createQueryBuilder('a')->where('a not instance of App\Entity\MusicCollection\CloudAlbum')->getQuery()->getResult();
         // Starting progress
         $progress = new ProgressBar($output, $this->albumsCount);
         $progress->start();
@@ -423,6 +426,7 @@ class ImportTracksCommand extends Command
         foreach($this->albums as $album) {
             $i++;
             $this->entityManager->remove($album);
+            $output->writeln(sprintf('Album supprimé: %s - %s', $album->getAuteur(), $album->getName()));
             if (($i%$this->parameters['batch_size']) === 0) {
                 try {
                     $this->entityManager->flush();

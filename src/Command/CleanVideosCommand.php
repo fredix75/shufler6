@@ -83,6 +83,7 @@ class CleanVideosCommand extends Command
             ]);
 
             if ($response->getStatusCode() === Response::HTTP_FORBIDDEN) {
+                $io->error('Plus de crédit');
                 break;
             }
 
@@ -91,7 +92,7 @@ class CleanVideosCommand extends Command
                 $track->setYoutubeKey(null);
                 $n++;
             } else {
-                $track->setCheck(true);
+                $track->setIsCheck(true);
             }
 
             $this->entityManager->persist($track);
@@ -113,6 +114,7 @@ class CleanVideosCommand extends Command
             ->orderBy('a.name', 'ASC')
             ->addOrderBy('a.auteur', 'ASC')
             ->andWhere("a.youtubeKey IS NOT NULL")
+            ->andWhere("a.youtubeKey != 'nope'")
             ->getQuery()->getResult();
 
         $size = count($albums);
@@ -128,6 +130,7 @@ class CleanVideosCommand extends Command
             ]);
 
             if ($response->getStatusCode() === Response::HTTP_FORBIDDEN) {
+                $io->error('Plus de crédit !');
                 break;
             }
 
