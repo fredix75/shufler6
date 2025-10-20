@@ -91,6 +91,7 @@ class CleanVideosCommand extends Command
             if (empty($response['items'])) {
                 $track->setYoutubeKey(null);
                 $n++;
+                $io->write('X');
             } else {
                 $track->setIsCheck(true);
             }
@@ -136,7 +137,7 @@ class CleanVideosCommand extends Command
 
             $response = json_decode($response->getContent(), true);
             if (empty($response['items'])) {
-                $io->writeln($album->getYoutubeKey());
+                $io->write('X');
                 $album->setYoutubeKey(null);
                 $this->entityManager->persist($album);
                 $n++;
