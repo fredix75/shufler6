@@ -43,7 +43,8 @@ class UpdateMusicTrackCommand extends ImportTracksCommand
             ->setMaxResults(200)
             ->getQuery()->getResult();
 
-        $i = 0;
+        $i = $nbNope = 0;
+        $message = '';
         foreach ($tracks as $track) {
             try {
                 $search = $track->getAuteur() . ' ' . $track->getTitre();
@@ -58,11 +59,13 @@ class UpdateMusicTrackCommand extends ImportTracksCommand
                         $track->setIsCheck(true);
                     } else {
                         $track->setYoutubeKey('nope');
+                        $nbNope++;
                     }
 
                     $i++;
                 } elseif ($response->getStatusCode() === Response::HTTP_NOT_FOUND) {
                     $track->setYoutubeKey('nope');
+                    $nbNope++;
                 } else {
                     $message = sprintf('No more request : %s %s', $track->getAuteur(), $track->getTitre());
                     break;
@@ -72,7 +75,7 @@ class UpdateMusicTrackCommand extends ImportTracksCommand
                 break;
             }
         }
-
+        $message .= sprintf(' %d nopes', $nbNope);
         $this->entityManager->flush();
 
         $html = $this->twig->render('api/updateTracks.html.twig', [
