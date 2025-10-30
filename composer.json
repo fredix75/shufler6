@@ -10,7 +10,7 @@
         "ext-libxml": "*",
         "ext-curl": "*",
         "api-platform/core": "^4.0",
-        "doctrine/dbal": "^3",
+        "doctrine/dbal": "^4",
         "doctrine/doctrine-bundle": "^2.11",
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "^3.0",
@@ -55,7 +55,7 @@
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/intl-extra": "^3.7",
         "twig/twig": "^2.12|^3.0",
-        "vimeo/vimeo-api": "^3.0"
+        "vimeo/vimeo-api": "^4.0"
     },
     "config": {
         "allow-plugins": {
