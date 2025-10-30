@@ -16,6 +16,7 @@ use Doctrine\ORM\Mapping\InheritanceType;
 #[DiscriminatorColumn(name: 'data_type', type: 'integer')]
 #[DiscriminatorMap([1 => Track::class, 2 => CloudTrack::class])]
 #[EntityListeners([PieceListener::class])]
+#[ORM\Index(columns: ['auteur', 'album'])]
 abstract class Piece
 {
     #[ORM\Id]
