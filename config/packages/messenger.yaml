@@ -1,6 +1,5 @@
 framework:
     messenger:
-        failure_transport: failed
 
         transports:
             # https://symfony.com/doc/current/messenger.html#transport-configuration
