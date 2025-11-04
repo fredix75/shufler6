@@ -112,6 +112,8 @@ class FluxRepository extends ServiceEntityRepository
     function getPlaylists(): array
     {
         return $this->createQueryBuilder('a')
+            ->leftJoin('a.type', 'type')
+            ->addSelect('type')
             ->where('a.type= :type')
             ->setParameter('type', 5)
             ->orderBy('a.name', 'ASC')

@@ -185,8 +185,6 @@ class FluxController extends AbstractController
             return $this->redirectToRoute($routeToRedirect);
         }
 
-
-
         $tabNews = array_reduce($fluxMoods, function ($carry, $m) {
             if ($m->getType()->getId() === 1) {
                 $carry[$m->getId()] = $m->getName();
