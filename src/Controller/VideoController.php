@@ -128,7 +128,7 @@ class VideoController extends AbstractController
         ]);
     }
 
-    #[Route('/edit/{id}', name: '_edit', requirements: ['id' => '\d+'], defaults: ['id' => 0])]
+    #[Route('/edit/{id}', name: '_edit', requirements: ['id' => '\d+'], defaults: ['id' => null])]
     #[isGranted('VIDEO_EDIT', "video", 'No pasaran')]
     public function edit(
         Request         $request,

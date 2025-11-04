@@ -50,16 +50,17 @@ class FluxController extends AbstractController
     #[Route('/news/{category}', name: '_news', requirements: ['category' => '\d+'], defaults: ['category' => 0])]
     public function news(FluxRepository $fluxRepository, FluxMoodRepository $fluxMoodRepository, int $category): Response
     {
-        $mood = $fluxMoodRepository->findOneBy(['name' => 'info', 'type' => 1]);
-        if ($mood && !$category) {
-            $category = $mood->getId();
+        $categories = $fluxMoodRepository->findBy(['type' => 1]);
+        if (!$category) {
+            $filter = array_filter($categories, fn($c) => $c->getName() === 'info');
+            $category = $filter[0]->getId();
         }
 
         $news = $fluxRepository->getNews($category);
 
         return $this->render('/flux/news.html.twig', [
             'news' => $news,
-            'categories' => $fluxMoodRepository->findBy(['type' => 1]),
+            'categories' => $categories,
             'categorie' => $category
         ]);
     }
@@ -80,10 +81,14 @@ class FluxController extends AbstractController
     public function links(FluxRepository $fluxRepository, FluxMoodRepository $fluxMoodRepository): Response
     {
         $liens = $fluxRepository->getLinks();
+        $categories = array_reduce($liens, function ($carry, $item) {
+            $carry[$item->getMood()->getId()] = $item->getMood();
+            return $carry;
+        });
 
         return $this->render('flux/liens.html.twig', [
             'liens' => $liens,
-            'categories' => $fluxMoodRepository->findBy(['type' => 4]),
+            'categories' => $categories,
         ]);
     }
 
@@ -142,7 +147,7 @@ class FluxController extends AbstractController
         return new Response("Method not allowed", 405);
     }
 
-    #[Route('/edit/{id}', name: '_edit', requirements: ['id' => '\d+'], defaults: ['id' => 0])]
+    #[Route('/edit/{id}', name: '_edit', requirements: ['id' => '\d+'], defaults: ['id' => null])]
     #[IsGranted('FLUX_EDIT', "flux", "No pasaran")]
     public function edit(
         Request            $request,
@@ -160,8 +165,11 @@ class FluxController extends AbstractController
             $fluxType = $fluxTypeRepository->find(5);
             $flux->setType($fluxType);
         }
+        $fluxMoods = $fluxMoodRepository->findAll();
 
-        $form = $this->createForm(FluxFormType::class, $flux);
+        $form = $this->createForm(FluxFormType::class, $flux, [
+            'moods' => $fluxMoods,
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -177,24 +185,27 @@ class FluxController extends AbstractController
             return $this->redirectToRoute($routeToRedirect);
         }
 
-        $fluxMoods = $fluxMoodRepository->findAll();
-        $news = array_filter($fluxMoods, function ($item) {
-            return $item->getType()->getId() === 1;
+
+
+        $tabNews = array_reduce($fluxMoods, function ($carry, $m) {
+            if ($m->getType()->getId() === 1) {
+                $carry[$m->getId()] = $m->getName();
+            }
+            return $carry;
         });
-        array_walk_recursive($news, function ($a) use (&$tabNews) {
-            $tabNews[$a->getId()] = $a->getName();
+
+        $tabRadios = array_reduce($fluxMoods, function ($carry, $m) {
+            if ($m->getType()->getId() === 3) {
+                $carry[$m->getId()] = $m->getName();
+            }
+            return $carry;
         });
-        $radios = array_filter($fluxMoods, function ($item) {
-            return $item->getType()->getId() === 3;
-        });
-        array_walk_recursive($radios, function ($a) use (&$tabRadios) {
-            $tabRadios[$a->getId()] = $a->getName();
-        });
-        $liens = array_filter($fluxMoods, function ($item) {
-            return $item->getType()->getId() === 4;
-        });
-        array_walk_recursive($liens, function ($a) use (&$tabLiens) {
-            $tabLiens[$a->getId()] = $a->getName();
+
+        $tabLiens = array_reduce($fluxMoods, function ($carry, $m) {
+            if ($m->getType()->getId() === 4) {
+                $carry[$m->getId()] = $m->getName();
+            }
+            return $carry;
         });
 
         return $this->render('flux/edit.html.twig', [

@@ -65,7 +65,7 @@ class AlbumController extends AbstractController
         ]);
     }
 
-    #[Route('/cloud/edit/{id}', name: '_cloud_edit',requirements: ['id' => '\d+'], defaults: ['id' => 0])]
+    #[Route('/cloud/edit/{id}', name: '_cloud_edit',requirements: ['id' => '\d+'], defaults: ['id' => null])]
     public function edit(?CloudAlbum $album, Request $request, EntityManagerInterface $em, ApiRequester $apiRequester): Response
     {
         $album = $album ?? new CloudAlbum();

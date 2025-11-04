@@ -7,8 +7,6 @@ use App\Entity\Flux;
 use App\Entity\FluxMood;
 use App\Entity\FluxType;
 use App\Repository\ChannelFluxRepository;
-use App\Repository\FluxMoodRepository;
-use App\Repository\FluxTypeRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -16,7 +14,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\File;
 
 class FluxFormType extends AbstractType
 {
@@ -43,17 +40,6 @@ class FluxFormType extends AbstractType
             ->add('file', FileType::class, [
                 'label' => 'Image',
                 'required' => false,
-                'constraints' => [
-                    new File([
-                        'maxSize' => '1024k',
-                        'mimeTypes' => [
-                            'image/jpeg',
-                            'image/jpg',
-                            'image/png',
-                        ],
-                        'mimeTypesMessage' => "Le format du fichier n'est pas OK",
-                    ])
-                ],
                 'row_attr' => [
                     'id' => 'file',
                 ],
@@ -63,6 +49,7 @@ class FluxFormType extends AbstractType
                 'class' => FluxMood::class,
                 'placeholder' => 'Choose a Category',
                 'required' => false,
+                'choices' => $options['moods'],
                 'choice_label' => 'name',
                 'attr' => [
                     'class' => 'select2',
@@ -94,6 +81,7 @@ class FluxFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Flux::class,
+            'moods' => [],
         ]);
     }
 }

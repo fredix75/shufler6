@@ -15,7 +15,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_ADMIN')]
 class CloudTrackController extends AbstractController
 {
-    #[Route('/edit/{id}', name: '_edit', requirements: ['id' => '\d+'], defaults: ['id' => 0])]
+    #[Route('/edit/{id}', name: '_edit', requirements: ['id' => '\d+'], defaults: ['id' => null])]
     public function editCloudTrack(?CloudTrack $cloudTrack, Request $request, EntityManagerInterface $em): Response
     {
         $cloudTrack = $cloudTrack ?? new CloudTrack();
