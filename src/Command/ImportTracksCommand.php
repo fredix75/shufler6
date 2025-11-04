@@ -168,6 +168,9 @@ class ImportTracksCommand extends Command
                     ) {
                         $track->setId($trackInBase->getId());
                         $track->setYoutubeKey($trackInBase->getYoutubeKey() ?? '');
+                        if ($trackInBase->getExtraNote() && $trackInBase->getExtraNote() != -1 && $track->getNote() >= $trackInBase->getExtraNote()) {
+                            $trackInBase->setExtraNote(null);
+                        }
                         $serializedTrack = $this->serializer->serialize($track, 'json');
                         $track = $this->serializer->deserialize($serializedTrack, Track::class, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $trackInBase]);
                         unset($this->tracks[$key]);
