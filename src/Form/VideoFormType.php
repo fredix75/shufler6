@@ -15,7 +15,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Range;
 
 class VideoFormType extends AbstractType
 {
@@ -43,10 +42,6 @@ class VideoFormType extends AbstractType
             ])
             ->add('annee', IntegerType::class, [
                 'required' => false,
-                'constraints'   => new Range([
-                    'min' => 1900,
-                    'max' => (new \DateTime())->format('Y'),
-                    'notInRangeMessage' => 'L\'année semble incorrecte']),
                 'attr' => [
                     'data-action' => 'video-edit#selectPeriod'
                 ]

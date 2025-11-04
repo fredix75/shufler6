@@ -21,25 +21,25 @@ class Album
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    protected ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    protected ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $auteur = null;
+    protected ?string $auteur = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $annee = null;
+    protected ?int $annee = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $genre = null;
+    protected ?string $genre = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $picture = null;
+    protected ?string $picture = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $youtubeKey = null;
+    protected ?string $youtubeKey = null;
 
     public function getId(): ?int
     {

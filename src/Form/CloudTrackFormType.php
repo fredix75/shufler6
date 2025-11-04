@@ -11,7 +11,6 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Range;
 
 class CloudTrackFormType extends AbstractType
 {
@@ -31,10 +30,6 @@ class CloudTrackFormType extends AbstractType
             ])
             ->add('annee', IntegerType::class, [
                 'required' => false,
-                'constraints'   => new Range([
-                    'min' => 1000,
-                    'max' => (new \DateTime())->format('Y'),
-                    'notInRangeMessage' => 'L\'année semble incorrecte']),
             ])
             ->add('genre', ChoiceType::class, [
                 'choice_loader' => $this->genresLoader,

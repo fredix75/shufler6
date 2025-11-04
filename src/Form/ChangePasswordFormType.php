@@ -24,15 +24,14 @@ class ChangePasswordFormType extends AbstractType
                 ],
                 'first_options' => [
                     'constraints' => [
-                        new NotBlank([
-                            'message' => 'Please enter a password',
-                        ]),
-                        new Length([
-                            'min' => 6,
-                            'minMessage' => 'validation.password.min_car',
-                            // max length allowed by Symfony for security reasons
-                            'max' => 4096,
-                        ]),
+                        new NotBlank(
+                            message: 'Please enter a password',
+                        ),
+                        new Length(
+                           min: 6,
+                            max: 4096,
+                            minMessage: 'validation.password.min_car',
+                        ),
                     ],
                     'label' => 'New password',
                 ],

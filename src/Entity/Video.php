@@ -24,6 +24,7 @@ use Doctrine\ORM\Mapping\EntityListeners;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 #[ORM\Entity(repositoryClass: VideoRepository::class)]
 #[Assert\Callback([VideoValidator::class, 'validate'])]
@@ -149,6 +150,15 @@ class Video
     public function __construct()
     {
         $this->moods = new ArrayCollection();
+    }
+
+    public static function loadValidatorMetadata(ClassMetadata $metadata): void
+    {
+        $metadata->addPropertyConstraint('annee', new Assert\Range(
+            notInRangeMessage: 'L\'année doit être comprise entre {{ min }} et {{ max }}.',
+            min: 1900,
+            max: (int)date('Y')
+        ));
     }
 
     public function getId(): ?int

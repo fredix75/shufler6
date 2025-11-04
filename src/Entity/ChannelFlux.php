@@ -26,6 +26,11 @@ class ChannelFlux implements UploadInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
+    #[Assert\File(
+        maxSize: '1024k',
+        mimeTypes: ['image/jpeg', 'image/jpg', 'image/png',],
+        mimeTypesMessage: 'Le format du fichier n\'est pas OK',
+    )]
     private ?UploadedFile $file = null;
 
     private ?string $oldImage = null;
