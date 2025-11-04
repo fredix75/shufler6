@@ -19,6 +19,7 @@ use App\Repository\MusicCollection\PieceRepository;
 use App\Twig\Runtime\ShuflerRuntime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Repository\MusicCollection\AlbumRepository;
@@ -416,5 +417,14 @@ class MusicCollectionController extends AbstractController
         }
 
         return new Response(json_encode(['fail : ' . $response->getStatusCode()]), $response->getStatusCode());
+    }
+
+    #[Route('/set-extra-note/{id}', name: '_set_extra_note')]
+    public function setExtraNote(Track $track, EntityManagerInterface $em): Response {
+        $note = ($track->getNote() > 0 || $track->getExtraNote() > 0) && $track->getExtraNote() != -1 ? -1 : 4;
+        $track->setExtraNote($note);
+        $em->flush();
+
+        return new JsonResponse(['note' => $note]);
     }
 }

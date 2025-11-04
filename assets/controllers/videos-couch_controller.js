@@ -24,8 +24,9 @@ import $ from 'jquery';
  * @returns {Object}
  */
 import YouTubePlayer from 'youtube-player';
+import PieceController from "./piece_controller.js";
 
-export default class extends Controller {
+export default class extends PieceController {
     static values = {
         videos: Array
     };

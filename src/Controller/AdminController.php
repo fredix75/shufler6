@@ -54,4 +54,17 @@ class AdminController extends AbstractController
 
         return $this->render('admin/statistiques.html.twig');
     }
+
+    #[Route('/extra-note', name: '_extra_note')]
+    public function listExtraNote(TrackRepository $trackRepository): Response
+    {
+        $tracks = $trackRepository->createQueryBuilder('t')
+            ->where('t.extraNote IS NOT NULL')
+            ->getQuery()
+            ->getResult();
+
+        return $this->render('admin/extra_notes.html.twig', [
+            'tracks' => $tracks,
+        ]);
+    }
 }

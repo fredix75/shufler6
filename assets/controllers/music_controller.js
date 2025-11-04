@@ -3,8 +3,9 @@ import 'magnific-popup';
 import DataTable from 'datatables.net';
 import {Modal} from "bootstrap";
 import $ from 'jquery';
+import PieceController from "./piece_controller.js";
 
-export default class extends Controller {
+export default class extends PieceController {
 
     static values = {
         columns: Array,

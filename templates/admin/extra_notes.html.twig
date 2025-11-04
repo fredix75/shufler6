@@ -1,0 +1,28 @@
+{%  extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} :: Extra notes{% endblock %}
+
+{% block body %}
+    <h1><i class="bi bi-star"></i> Les extra notes</h1>
+    <br><br>
+    <h2>Les 4 <i class="bi bi-heart-fill"></i></h2>
+    <table class="table">
+        {% for track in tracks|filter(track => track.extraNote == 4) %}
+        <tr>
+            <td>{{ track.auteur }}</td>
+            <td>{{ track.titre }}</td>
+            <td>{{ track.album }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <h2>Les -1 <i class="bi bi-heartbreak-fill"></i></h2>
+    <table class="table">
+        {% for track in tracks|filter(track => track.extraNote == -1 and track.note > 1) %}
+            <tr>
+                <td>{{ track.auteur }}</td>
+                <td>{{ track.titre }}</td>
+                <td>{{ track.album }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

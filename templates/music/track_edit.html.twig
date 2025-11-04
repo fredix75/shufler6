@@ -7,4 +7,5 @@
 <button class="btn btn-primary save-track" type="button" data-action="music#saveTrack">
     <i class="bi bi-save-fill"></i>&nbsp;Save
 </button>&nbsp;
+<a type="button" class="btn btn-secondary" data-action="music#setNote" data-id={{ track.id }}><i class="bi bi-heart{{ track.note != null and track.note != -1 ? '-fill' : '' }}"></i></a>&nbsp;
 {{ form_end(form) }}

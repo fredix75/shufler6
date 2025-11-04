@@ -31,9 +31,16 @@
 							<br><span style="font-size: 1.2em">{{ track.titre }}</span>
 							<br>
 							{% if track.note is defined and track.note != 0 %}
-								<span>{{ displayStars(track.note|default(0), false) }}</span><br>
+								<span class="stars-note">{{ displayStars(track.note|default(0), false) }}</span><br>
 							{% endif %}
 							{{ track.album|default('') }} {% if track.annee is not empty %}({{ track.annee }}){% endif %}
+                            {%  if is_granted('ROLE_ADMIN') and track.note is defined %}
+                            <div class="justify-content-end" style="text-align: right;font-size:200%;padding: 0 1em 1em 0">
+                                <a href="#" data-action="videos-couch#setNote" data-id={{ track.id }} >
+                                    <i class="bi bi-heart{{ track.note != null and track.note != -1 ? '-fill' : '' }}"></i>
+                                </a>
+                            </div>
+                            {% endif %}
 						</div>
 					</div>
 				{% endfor %}
