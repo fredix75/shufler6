@@ -46,3 +46,4 @@ logs/
 /bin/lib/
 /bin/lib64/
 /bin/pyvenv.cfg
+/bin/.venv
