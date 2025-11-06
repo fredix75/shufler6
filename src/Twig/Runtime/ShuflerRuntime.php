@@ -131,7 +131,7 @@ class ShuflerRuntime implements RuntimeExtensionInterface
         }
     }
 
-    public function displayStarsFunction(int $number = 0, $displayIfZero = true): string
+    public function displayStarsFunction(?int $number = null, $displayIfZero = true): string
     {
         if (!$displayIfZero && !$number) {
             return '';

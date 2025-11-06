@@ -21,7 +21,7 @@ export default class extends PieceController {
             columns.push({data : item});
         });
 
-        let table = new DataTable('#container-datas', {
+        new DataTable('#container-datas', {
             processing: true,
             serverSide: true,
             select: true,
@@ -35,6 +35,14 @@ export default class extends PieceController {
             columns: columns,
             retrieve: true,
             order: [[1, 'asc']]
+        });
+
+        new DataTable('#tracks', {
+            responsive: {
+                details: true
+            },
+            lengthMenu: [[100, 250, 500, 1000], [100, 250, 500, 1000]],
+            order: [[6, 'asc'], [1, 'asc'], [4, 'asc'], [3, 'asc']]
         });
 
         $(document).on('click', '#track-xchange', function() {

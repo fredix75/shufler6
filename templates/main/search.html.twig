@@ -27,7 +27,7 @@
             {% endfor %}
             {% if picture is not null %}
             <div class="col col-12 col-sm-6 col-md-6 col-lg-3">
-                <img src="{{ picture }}" loading="lazy">
+                <img src="{{ picture }}" class="cover-search-album" alt="Cover {{ search }}" title="Cover {{ search }}" loading="lazy">
             </div>
             {% elseif 0 == videos_count %}
                 <div class="col col-12 col-sm-6 col-md-6 col-lg-3 media-vignette">
@@ -51,7 +51,7 @@
                role="button"
                aria-label="Enchainer la liste"><i class="bi bi-youtube icon-youtube"></i> Enchaîner la liste</a>
             <br/><br/>
-            <section data-controller="track" style="background-color:black; padding: 10px;">
+            <section data-controller="music" style="background-color:black; padding: 10px;">
                 <table id="tracks" class="table table-dark">
                     <thead>
                     <tr>
@@ -64,16 +64,24 @@
                     {% for track in tracks %}
                         <tr>
                             {% for column in track_columns %}
-                                {% if column == 'youtubeKey' and attribute(track, column) is not empty %}
+                                {% if column == 'youtubeKey' %}
                                     {% set youtube_key = 'https://www.youtube.com/watch?v=' ~ track.youtubeKey %}
                                     <td>{% include 'music/part/_youtube_link.html.twig' %}</td>
                                 {% elseif column in ["auteur", "artiste"] %}
                                     <td>
-                                        <a href="{{ path('main_search', {'search_field' : attribute(track, column)}) }}">{{ attribute(track, column) }}</a>
+                                        <a href="{{ path('main_search', {'search_field' : attribute(track, column), 'type' : 'auteur' }) }}">{{ attribute(track, column) }}</a>
                                     </td>
                                 {% elseif column == "album" %}
                                     <td>
                                         <a href="{{ path('main_search', {'search_field' : attribute(track, column), 'type' : 'album', 'auteur' : attribute(track, "artiste")}) }}">{{ attribute(track, column) }}</a>
+                                    </td>
+                                {% elseif column == 'titre'%}
+                                    <td>
+                                        <a href="#" data-id="{{ track.id }}" class="edit-tracks" data-action="music#openEditModal" onclick="return false;"><i class="bi bi-pencil-square"></i></a> {{ attribute(track, column) }}
+                                    </td>
+                                {% elseif column == "note" %}
+                                    <td class="col-stars">
+                                        {{ displayStars(attribute(track, column), false) }}
                                     </td>
                                 {% else %}
                                     <td>{{ attribute(track, column) }}</td>
@@ -83,6 +91,7 @@
                     {% endfor %}
                     </tbody>
                 </table>
+                {% include 'part/_modal.html.twig' with { modalTitle: 'Music', class: 'music-modal' } %}
             </section>
         {% endif %}
     </div>
