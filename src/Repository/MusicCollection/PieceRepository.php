@@ -69,6 +69,7 @@ class PieceRepository extends ServiceEntityRepository
 
         $rawSQL = $sql;
         $rawSQL .= $orderBy ? 'ORDER BY ' . implode(', ', $orderBy) : '';
+        $rawSQL .= !empty($params['limit']) ? ' LIMIT '.$params['limit'] : '';
         $conn = $this->getEntityManager()->getConnection();
         $stmt = $conn->prepare($rawSQL);
         foreach($p as $k => $v) {

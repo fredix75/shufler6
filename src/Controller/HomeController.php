@@ -69,7 +69,7 @@ class HomeController extends AbstractController
             ]
         ];
 
-        $tracks = $pieceRepository->getPieces(['search' => $search]);
+        $tracks = $pieceRepository->getPieces(['search' => $search, 'limit' => 600]);
 
         return $this->render('main/search.html.twig', [
             'search' => $search,
