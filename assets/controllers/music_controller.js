@@ -138,6 +138,7 @@ export default class extends PieceController {
                     $(event.target).closest('a').attr('href', 'https://www.youtube.com/watch?v=' + data.youtube_key);
                     $(event.target).closest('a').removeClass('no-link');
                     $(event.target).closest('a').addClass('video-link icon-youtube');
+                    $(event.target).closest('a').attr('data-action', 'music#popup');
                 }
             }
         });
