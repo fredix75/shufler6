@@ -119,7 +119,7 @@ class AlbumController extends AbstractController
         $params = [
             'auteur' => $request->get('auteur') ?? null,
             'album' => $request->get('album') ?? null,
-            'genre' => $request->get('genre') ?? null,
+            'genres' => $request->get('genres') ?? null,
             'annee' => $request->get('annee') ?? null,
             'search' => $request->get('search') ?? null,
             'random' => $request->get('random') === '1',

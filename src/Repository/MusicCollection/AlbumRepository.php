@@ -67,8 +67,14 @@ class AlbumRepository extends ServiceEntityRepository
             ->setParameter('album', '%'.$params['album'].'%');
         }
 
-        if (!empty($params['genre'])) {
-            $query->andWhere('a.genre = :genre')->setParameter(':genre', $params['genre']);
+        if (!empty($params['genres'])) {
+            $genreModule = $query->expr()
+                ->orx();
+            foreach ($params['genres'] as $i => $g) {
+                $genreModule->add($query->expr()->eq('a.genre', ":genre$i"));
+                $query->setParameter("genre$i", $g);
+            }
+            $query->andWhere($genreModule);
         }
 
         if (!empty($params['annee'])) {
