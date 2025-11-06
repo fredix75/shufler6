@@ -76,8 +76,8 @@ class VideoController extends AbstractController
         Request         $request,
         VideoRepository $videoRepository,
         VideoHelper     $videoHelper,
-        ?int             $categorie,
-        ?int             $genre,
+        ?int            $categorie,
+        ?int            $genre,
         string          $periode
     ): Response
     {

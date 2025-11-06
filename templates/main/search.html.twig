@@ -25,7 +25,11 @@
                     </div>
                 </div>
             {% endfor %}
-            {% if 0 == videos_count %}
+            {% if picture is not null %}
+            <div class="col col-12 col-sm-6 col-md-6 col-lg-3">
+                <img src="{{ picture }}" loading="lazy">
+            </div>
+            {% elseif 0 == videos_count %}
                 <div class="col col-12 col-sm-6 col-md-6 col-lg-3 media-vignette">
                     <div class="media topcol embed-responsive-16by9" style="margin-bottom:30px;">
                         <img src="{{ asset('images/tv_brouillage.gif') }}" height="250px"/>
@@ -38,7 +42,12 @@
 
         {% if tracks is not empty %}
             <br/><br/><br/><br/>
-            <a type="button" class="btn btn-primary" href="{{ path('music_couch', {'search' : search }) }}"
+            {% if app.request.query.get('type') == 'album' %}
+                {% set path = path('music_couch', { 'album' : search, 'auteur' : app.request.query.get('auteur') }) %}
+            {% else %}
+                {% set path = path('music_couch', { 'search' : search })%}
+            {% endif %}
+            <a type="button" class="btn btn-primary" href="{{ path }}"
                role="button"
                aria-label="Enchainer la liste"><i class="bi bi-youtube icon-youtube"></i> Enchaîner la liste</a>
             <br/><br/>
@@ -58,9 +67,13 @@
                                 {% if column == 'youtubeKey' and attribute(track, column) is not empty %}
                                     {% set youtube_key = 'https://www.youtube.com/watch?v=' ~ track.youtubeKey %}
                                     <td>{% include 'music/part/_youtube_link.html.twig' %}</td>
-                                {% elseif column in ["album", "auteur", "artiste"] %}
+                                {% elseif column in ["auteur", "artiste"] %}
                                     <td>
                                         <a href="{{ path('main_search', {'search_field' : attribute(track, column)}) }}">{{ attribute(track, column) }}</a>
+                                    </td>
+                                {% elseif column == "album" %}
+                                    <td>
+                                        <a href="{{ path('main_search', {'search_field' : attribute(track, column), 'type' : 'album', 'auteur' : attribute(track, "artiste")}) }}">{{ attribute(track, column) }}</a>
                                     </td>
                                 {% else %}
                                     <td>{{ attribute(track, column) }}</td>

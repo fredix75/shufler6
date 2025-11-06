@@ -56,9 +56,19 @@ class HomeController extends AbstractController
     public function search(Request $request, VideoRepository $videoRepository, PieceRepository $pieceRepository, int $page = 1): Response
     {
         $search = $request->get('search_field');
+        $picture = null;
+        $videos = [];
+        $videosCount = 0;
 
-        $videos = $search ? $videoRepository->searchVideos($search, $page, $this->getParameter('shufler_video')['max_list']) : [];
-        $videosCount = count($videos);
+        if ($request->get('type') == 'album' && $request->get('auteur')) {
+            $tracks = $pieceRepository->getPieces(['auteur' => $request->get('auteur'), 'album' => $search]);
+            $picture = !empty($tracks) ? $tracks[0]['picture'] : null;
+        } else {
+            $videos = $search ? $videoRepository->searchVideos($search, $page, $this->getParameter('shufler_video')['max_list']) : [];
+            $videosCount = count($videos);
+            $tracks = $pieceRepository->getPieces(['search' => $search, 'limit' => 600]);
+        }
+
         $pagination = [
             'search_field' => $search,
             'page' => $page,
@@ -69,7 +79,6 @@ class HomeController extends AbstractController
             ]
         ];
 
-        $tracks = $pieceRepository->getPieces(['search' => $search, 'limit' => 600]);
 
         return $this->render('main/search.html.twig', [
             'search' => $search,
@@ -77,6 +86,7 @@ class HomeController extends AbstractController
             'videos_count' => $videosCount,
             'videos' => $videos,
             'tracks' => $tracks,
+            'picture' => $picture,
             'track_columns' => $this->getParameter('music_collection')['track_fields'],
         ]);
     }
