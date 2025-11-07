@@ -63,7 +63,7 @@ class HomeController extends AbstractController
         if ($request->get('type') == 'album' && $request->get('auteur')) {
             $tracks = $pieceRepository->getPieces(['auteur' => $request->get('auteur'), 'album' => $search]);
             $picture = !empty($tracks) ? $tracks[0]['picture'] : null;
-        } else if ($request->get('type') == 'auteur' && $request->get('auteur')) {
+        } else if ($request->get('type') == 'auteur') {
             $tracks = $pieceRepository->getPieces(['auteur' => $search]);
         } else {
             $videos = $search ? $videoRepository->searchVideos($search, $page, $this->getParameter('shufler_video')['max_list']) : [];
