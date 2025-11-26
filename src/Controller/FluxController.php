@@ -159,9 +159,9 @@ class FluxController extends AbstractController
     {
         $flux = $flux ?? new Flux();
 
-        if ($request->get('channelkey')) {
-            $flux->setUrl(sprintf('https://www.youtube.com/playlist?list=%s', $request->get('channelkey')));
-            $flux->setImage($request->get('channelpicture'));
+        if ($request->request->get('channelkey')) {
+            $flux->setUrl(sprintf('https://www.youtube.com/playlist?list=%s', $request->request->get('channelkey')));
+            $flux->setImage($request->request->get('channelpicture'));
             $fluxType = $fluxTypeRepository->find(5);
             $flux->setType($fluxType);
         }

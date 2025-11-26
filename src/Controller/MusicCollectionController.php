@@ -271,8 +271,8 @@ class MusicCollectionController extends AbstractController
     #[Route('/track/edit/{id}', name: '_track_edit', requirements: ['id' => '\d+'])]
     public function editTrack(Track $track, Request $request, TrackRepository $trackRepository): Response
     {
-        if ($request->get('trackkey')) {
-            $track->setYoutubeKey($request->get('trackkey'));
+        if ($request->request->get('trackkey')) {
+            $track->setYoutubeKey($request->request->get('trackkey'));
             $trackRepository->save($track, true);
 
             return $this->redirectToRoute('music_all', ['mode' => 'tracks']);
@@ -374,7 +374,7 @@ class MusicCollectionController extends AbstractController
     #[Route('/link/{id}', name: '_link')]
     public function getLink(Track $track, TrackRepository $trackRepository, Request $request, ApiRequester $apiRequester): Response
     {
-        $search = $request->get('auteur') . ' ' . $request->get('titre');
+        $search = $request->request->get('auteur') . ' ' . $request->request->get('titre');
         $response = $apiRequester->sendRequest(VideoHelper::YOUTUBE, '/search', [
             'q' => $search,
         ]);
@@ -394,14 +394,14 @@ class MusicCollectionController extends AbstractController
     #[Route('/playlist-link/{id}', name: '_playlist_link')]
     public function getPlaylistLink(Album $album, AlbumRepository $albumRepository, Request $request, ApiRequester $apiRequester): Response
     {
-        if (strtolower($request->get('name')) === 'divers') {
+        if (strtolower($request->request->get('name')) === 'divers') {
             $album->setYoutubeKey('nope');
             $albumRepository->save($album, true);
 
             return new Response(json_encode(['youtube_key' => 'nope']), Response::HTTP_OK);
         }
 
-        $search = (strtolower($request->get('auteur')) !== 'divers' ? $request->get('auteur') . ' ' : '') . $request->get('name');
+        $search = (strtolower($request->request->get('auteur')) !== 'divers' ? $request->request->get('auteur') . ' ' : '') . $request->request->get('name');
 
         $response = $apiRequester->sendRequest(VideoHelper::YOUTUBE, '/search', [
             'q' => $search,
