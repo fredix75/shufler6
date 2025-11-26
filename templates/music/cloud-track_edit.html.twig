@@ -12,7 +12,7 @@
                     {{ form_widget(form) }}
                     {% if cloudTrack.id is not null %}
                         <a class="btn btn-secondary"
-                           href="{{ path('api_video', {'search_api': cloudTrack.auteur ~ ' ' ~ cloudTrack.titre, 'id_cloudtrack': cloudTrack.id }) }}">
+                           href="{{ path('api_video', {'search_api': cloudTrack.auteur ~ ' ' ~ cloudTrack.titre, 'id_cloud_track': cloudTrack.id }) }}">
                             <i class="bi bi-arrow-left-right"></i>&nbsp;Exchange on Api
                         </a>
                     {% endif %}

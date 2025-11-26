@@ -82,7 +82,7 @@ export default class extends Controller {
         $('form[name="form_album_edit"]').submit();
     }
 
-    editAlbum(event) {
+    editCloudAlbum(event) {
         let url = $(event.target).closest('a').data('url');
         $('input[name="cloudalbumkey"]').val(url);
         $('form[name="form_cloudalbum_edit"]').submit();

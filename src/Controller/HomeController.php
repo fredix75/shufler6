@@ -55,15 +55,15 @@ class HomeController extends AbstractController
     #[Route('/search/{page}', name: '_search', requirements: ['id' => '\d+'])]
     public function search(Request $request, VideoRepository $videoRepository, PieceRepository $pieceRepository, int $page = 1): Response
     {
-        $search = $request->get('search_field');
+        $search = $request->query->get('search_field');
         $picture = null;
         $videos = [];
         $videosCount = 0;
 
-        if ($request->get('type') == 'album' && $request->get('auteur')) {
-            $tracks = $pieceRepository->getPieces(['auteur' => $request->get('auteur'), 'album' => $search]);
+        if ($request->query->get('type') == 'album' && $request->query->get('auteur')) {
+            $tracks = $pieceRepository->getPieces(['auteur' => $request->query->get('auteur'), 'album' => $search]);
             $picture = !empty($tracks) ? $tracks[0]['picture'] : null;
-        } else if ($request->get('type') == 'auteur') {
+        } else if ($request->query->get('type') == 'auteur') {
             $tracks = $pieceRepository->getPieces(['auteur' => $search]);
         } else {
             $videos = $search ? $videoRepository->searchVideos($search, $page, $this->getParameter('shufler_video')['max_list']) : [];

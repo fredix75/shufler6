@@ -62,7 +62,7 @@ class ChannelFluxController extends AbstractController
         ChannelFlux           $channelFlux
     ): Response
     {
-        if ($this->isCsrfTokenValid('channel_delete'.$channelFlux->getId(), $request->get('_token'))) {
+        if ($this->isCsrfTokenValid('channel_delete'.$channelFlux->getId(), $request->request->get('_token'))) {
             foreach ($channelFlux->getFlux() as $flux) {
                 $flux->setChannel(null);
                 $fluxRepository->save($flux, true);

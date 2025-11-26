@@ -27,6 +27,10 @@
             <form name="form_album_edit" action="{{ path('music_album_edit', {'id' : idAlbum }) }}" method="POST">
                 <input type="hidden" name="albumkey"/>
             </form>
+        {% elseif idCloudAlbum != 0 %}
+            <form name="form_cloudalbum_edit" action="{{ path('music_album_cloud_edit', {'id' : idCloudAlbum}) }}" method="POST">
+                <input type="hidden" name="cloudalbumkey"/>
+            </form>
         {% else %}
             <form name="form_cloudalbum_edit" action="{{ path('music_album_cloud_edit') }}" method="POST">
                 <input type="hidden" name="cloudalbumkey"/>
@@ -48,10 +52,6 @@
                         <div class="col-6 col-md-6 p-4 ps-md-0">
                             <strong>{{ result.name }}</strong>';
                             {% if is_granted('ROLE_AUTEUR') %}
-                                {% set class = "bi bi-patch-plus" %}
-                                {% if idCloudAlbum is defined and idCloudAlbum != 0 %}
-                                    {% set class = "bi bi-arrow-left-right" %}
-                                {% endif %}
                                 {% if idAlbum != 0 %}
                                     <div class="playlist-link" style="position:relative;">
                                         <a href="#" class="btn btn-secondary" data-action="video#editAlbum"
@@ -59,11 +59,18 @@
                                             <i class="bi bi-arrow-left-right"></i>
                                         </a>
                                     </div>
+                                {% elseif idCloudAlbum is defined and idCloudAlbum != 0 %}
+                                    <div class="playlist-link" style="position:relative;">
+                                        <a href="#" class="btn btn-secondary" data-action="video#editCloudAlbum"
+                                           data-url="{{ result.url }}">
+                                            <i class="bi bi-arrow-left-right"></i>
+                                        </a>
+                                    </div>
                                 {% else %}
                                     <div style="position:relative;">
-                                        <a href="#" class="btn btn-secondary" data-action="video#editAlbum"
+                                        <a href="#" class="btn btn-secondary" data-action="video#editCloudAlbum"
                                            data-url="{{ result.url }}">
-                                            <i class="{{ class }}"></i>
+                                            <i class="bi bi-patch-plus"></i>
                                         </a>
                                     </div>
                                 {% endif %}

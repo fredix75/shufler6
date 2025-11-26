@@ -36,11 +36,11 @@ class ApiController extends AbstractController
         $search = $idVideo = $idTrack = $idCloudtrack = $wiki = null;
         $resultat = [];
 
-        if ($request->get('search_api')) {
-            $search = $request->get('search_api');
-            $idVideo = $request->get('id_video');
-            $idTrack = $request->get('id_track');
-            $idCloudtrack = $request->get('id_cloudtrack');
+        if ($request->query->get('search_api') || $request->request->get('search_api')) {
+            $search = $request->request->get('search_api') ?? $request->query->get('search_api');
+            $idVideo = $request->request->get('id_video') ?? $request->query->get('id_video');
+            $idTrack = $request->request->get('id_track') ?? $request->query->get('id_track');
+            $idCloudtrack = $request->request->get('id_cloud_track') ?? $request->query->get('id_cloud_track');
 
             $resultat = [
                 'youtube' => [
@@ -76,11 +76,11 @@ class ApiController extends AbstractController
             // Vimeo
             $lib = new Vimeo($this->getParameter('vimeo_id'), $this->getParameter('vimeo_secret'), $this->getParameter('vimeo_access_token'));
 
-            $content = $lib->request('/videos', [
-                'query' => $search,
-                'per_page' => 25,
-                'page' => 1
-            ]);
+//            $content = $lib->request('/videos', [
+//                'query' => $search,
+//                'per_page' => 25,
+//                'page' => 1
+//            ]);
 
             if (!empty($content['body']['data'])) {
                 foreach ($content['body']['data'] as $item) {
@@ -141,8 +141,8 @@ class ApiController extends AbstractController
     {
         $search = $idChannel = null;
         $resultat = [];
-        if ($request->get('search_api')) {
-            $search = $request->get('search_api');
+        if ($request->request->get('search_api')) {
+            $search = $request->request->get('search_api');
 
             $response = $apiRequester->sendRequest(VideoHelper::YOUTUBE, '/search', [
                 'q' => $search,
@@ -177,10 +177,10 @@ class ApiController extends AbstractController
     {
         $search = $idAlbum = null;
         $resultat = [];
-        if ($request->get('search_api')) {
-            $search = $request->get('search_api');
-            $idAlbum = $request->get('id_album');
-            $idCloudalbum = $request->get('id_cloudalbum');
+        if ($request->request->get('search_api') || $request->query->get('search_api')) {
+            $search = $request->request->get('search_api') ?? $request->query->get('search_api');
+            $idAlbum = $request->request->get('id_album') ?? $request->query->get('id_album');
+            $idCloudalbum = $request->request->get('id_cloudalbum') ?? $request->query->get('id_cloudalbum');
 
             $response = $apiRequester->sendRequest(VideoHelper::YOUTUBE, '/search', [
                 'q' => $search,
@@ -205,7 +205,7 @@ class ApiController extends AbstractController
             'resultats' => $resultat,
             'search' => $search,
             'idAlbum' => $idAlbum ?? 0,
-            'idCloudalbum' => $idCloudalbum ?? 0,
+            'idCloudAlbum' => $idCloudalbum ?? 0,
         ]);
     }
 
@@ -215,10 +215,11 @@ class ApiController extends AbstractController
     {
         $album = $idAlbum = $artist = null;
         $resultat = [];
-        if ($request->get('search_api') || $request->get('artist')) {
-            $album = $request->get('search_api');
-            $artist = $request->get('artist');
-            $idAlbum = $request->get('id_album') ?? null;
+        if ($request->query->get('search_api') || $request->request->get('search_api')
+            || $request->query->get('artist') || $request->request->get('artist')) {
+            $album = $request->request->get('search_api') ?? $request->query->get('search_api');
+            $artist = $request->request->get('artist') ?? $request->query->get('artist');
+            $idAlbum = $request->request->get('id_album') ?? $request->query->get('id_album') ?? null;
 
             $params = [
                 'album' => $album != "" ? $album : $artist,
@@ -281,7 +282,7 @@ class ApiController extends AbstractController
     public function handleChannel(Request $request, ApiRequester $apiRequester): Response
     {
         if ($request->isXmlHttpRequest()) {
-            $channelId = $request->get('id');
+            $channelId = $request->query->get('id');
             $response = $apiRequester->sendRequest(VideoHelper::YOUTUBE, '/playlists', [
                 'channelId' => $channelId,
                 'part' => 'snippet, contentDetails',

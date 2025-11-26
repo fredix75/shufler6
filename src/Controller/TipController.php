@@ -42,7 +42,7 @@ class TipController extends AbstractController
     #[Route('/delete/{id}', name: '_delete', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function delete(Tip $tip, Request $request, EntityManagerInterface $em): Response
     {
-        if ($this->isCsrfTokenValid('delete'. $tip->getId(), $request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'. $tip->getId(), $request->query->get('_token'))) {
             $em->remove($tip);
             $em->flush();
             $this->addFlash('success', 'Une note a été supprimée');

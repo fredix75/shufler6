@@ -20,12 +20,14 @@ class CloudTrackController extends AbstractController
     {
         $cloudTrack = $cloudTrack ?? new CloudTrack();
 
-        if ($request->get('trackkey')) {
-            $cloudTrack->setYoutubeKey($request->get('trackkey'));
+        if ($request->request->get('cloudtrackkey')) {
+            $cloudTrack->setYoutubeKey($request->request->get('cloudtrackkey'));
             $em->persist($cloudTrack);
             $em->flush();
 
-            return $this->redirectToRoute('music_all', ['mode' => 'tracks']);
+            $this->addFlash('success', 'Un lien a été modifié');
+
+            return $this->redirectToRoute('music_cloud-all', ['mode' => 'tracks']);
         }
 
         $form = $this->createForm(CloudTrackFormType::class, $cloudTrack);
@@ -51,7 +53,7 @@ class CloudTrackController extends AbstractController
     #[Route('/delete/{id}', name: '_delete', requirements: ['id' => '\d+'])]
     public function deleteCloudTrack(CloudTrack $cloudTrack, Request $request, EntityManagerInterface $em): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $cloudTrack->getId(), $request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $cloudTrack->getId(), $request->query->get('_token'))) {
             $em->remove($cloudTrack);
             $em->flush();
             $this->addFlash('success', 'Une track a été supprimée');

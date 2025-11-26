@@ -138,8 +138,8 @@ class VideoController extends AbstractController
     {
         $video = $video ?? new Video();
 
-        if ($request->get('videokey')) {
-            $video->setLien($request->get('videokey'));
+        if ($request->request->get('videokey')) {
+            $video->setLien($request->request->get('videokey'));
         }
 
         $form = $this->createForm(VideoFormType::class, $video);
@@ -173,7 +173,7 @@ class VideoController extends AbstractController
     #[IsGranted('VIDEO_DELETE', "video", "No pasaran")]
     public function delete(Request $request, VideoRepository $videoRepository, Video $video): Response
     {
-        if ($this->isCsrfTokenValid('video_delete'.$video->getId(), $request->get('_token'))) {
+        if ($this->isCsrfTokenValid('video_delete'.$video->getId(), $request->query->get('_token'))) {
             $videoRepository->remove($video, true);
             $this->addFlash('success', 'Vidéo supprimée');
         }

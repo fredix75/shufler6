@@ -21,8 +21,8 @@ class ResourceController extends AbstractController
     #[Route('/download', name: '_download')]
     public function downloadResource(Request $request, FileHelper $fileHelper, SluggerInterface $slugger): JsonResponse
     {
-        $url = $request->get('url');
-        $title = strtolower($slugger->slug($request->get('title')));
+        $url = $request->query->get('url');
+        $title = strtolower($slugger->slug($request->query->get('title')));
         $directory = $this->getParameter('resources')['downloads'];
         $filePath = $fileHelper->copyFileFromUrl($url, $directory, $title);
 
@@ -32,7 +32,7 @@ class ResourceController extends AbstractController
     #[Route('/delete', name: '_delete')]
     public function deleteResources(Request $request, FileHelper $fileHelper): JsonResponse
     {
-        $file = $request->get('file');
+        $file = $request->query->get('file');
         $directory = $this->getParameter('resources')['downloads'];
         $fileHelper->deleteFile($directory . '/' . $file);
         return new JsonResponse('ok', 204);

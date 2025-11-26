@@ -24,15 +24,15 @@ class AlbumController extends AbstractController
     #[Route('/edit/{id}', name: '_edit', requirements: ['id' => '\d+'])]
     public function editAlbum(Album $album, Request $request, AlbumRepository $albumRepository): Response
     {
-        if ($request->get('albumkey')) {
-            $album->setYoutubeKey($request->get('albumkey'));
+        if ($request->request->get('albumkey')) {
+            $album->setYoutubeKey($request->request->get('albumkey'));
             $albumRepository->save($album, true);
 
             return $this->redirectToRoute('music_albums');
         }
 
-        if ($request->get('albumpicture')) {
-            $album->setPicture($request->get('albumpicture'));
+        if ($request->request->get('albumpicture')) {
+            $album->setPicture($request->request->get('albumpicture'));
             $albumRepository->save($album, true);
 
             return $this->redirectToRoute('music_albums');
@@ -69,8 +69,8 @@ class AlbumController extends AbstractController
     public function edit(?CloudAlbum $album, Request $request, EntityManagerInterface $em, ApiRequester $apiRequester): Response
     {
         $album = $album ?? new CloudAlbum();
-        if ($request->get('cloudalbumkey')) {
-            $album->setYoutubeKey($request->get('cloudalbumkey'));
+        if ($request->request->get('cloudalbumkey')) {
+            $album->setYoutubeKey($request->request->get('cloudalbumkey'));
         }
         $form = $this->createForm(CloudAlbumFormType::class, $album);
         $form->handleRequest($request);
@@ -103,7 +103,7 @@ class AlbumController extends AbstractController
     #[Route('/cloud/delete/{id}', name: '_cloud_delete', requirements: ['id' => '\d+'])]
     public function deleteCloudTrack(CloudAlbum $cloudAlbum, Request $request, EntityManagerInterface $em): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $cloudAlbum->getId(), $request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $cloudAlbum->getId(), $request->query->get('_token'))) {
             $em->remove($cloudAlbum);
             $em->flush();
             $this->addFlash('success', 'Un album a été supprimée');
@@ -117,12 +117,12 @@ class AlbumController extends AbstractController
     public function getAlbums(Request $request, AlbumRepository $albumRepository, int $page): Response
     {
         $params = [
-            'auteur' => $request->get('auteur') ?? null,
-            'album' => $request->get('album') ?? null,
-            'genres' => $request->get('genres') ?? null,
-            'annee' => $request->get('annee') ?? null,
-            'search' => $request->get('search') ?? null,
-            'random' => $request->get('random') === '1',
+            'auteur' => $request->query->get('auteur') ?? null,
+            'album' => $request->query->get('album') ?? null,
+            'genres' => $request->query->get('genres') ?? null,
+            'annee' => $request->query->get('annee') ?? null,
+            'search' => $request->query->get('search') ?? null,
+            'random' => $request->query->get('random') === '1',
         ];
 
         $form = $this->createForm(FilterTracksFormType::class, $params, ['mode' => 'album']);

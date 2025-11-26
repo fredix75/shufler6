@@ -15,7 +15,7 @@ class TestController extends AbstractController
     public function test(Request $request): Response
     {
 
-        $link = $request->get('link');
+        $link = $request->query->get('link');
         $process = new Process(['python3',
             '../bin/dominant_color_finder.py',
            $link,

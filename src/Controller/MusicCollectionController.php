@@ -47,22 +47,23 @@ class MusicCollectionController extends AbstractController
         }
 
         if ($request->isXmlHttpRequest()) {
-
-            $length = $request->get('length');
+            $parameters = $request->query->all();
+            $length = $parameters['length'];
             $length = $length && ($length > 0) ? $length : 0;
 
-            $start = $request->get('start');
+            $start = $parameters['start'];
             $start = $length ? ($start && $start > 0 ? $start : 0) / $length : 0;
 
-            $search = $request->get('search');
+            $search = $parameters['search'];
+
             $filters = [
                 'query' => @$search['value']
             ];
 
-            $sort = $request->get('order')[0]['column'];
+            $sort = $parameters['order'][0]['column'];
             $sort = $columnsToDisplay[$sort];
 
-            $dir = @$request->get('order')[0]['dir'];
+            $dir = @$parameters['order'][0]['dir'];
 
             if ($mode === 'tracks') {
                 $tracks = $trackRepository->getTracksAjax($filters, $start, $length, $sort, $dir);
@@ -149,21 +150,21 @@ class MusicCollectionController extends AbstractController
 
         if ($request->isXmlHttpRequest()) {
 
-            $length = $request->get('length');
+            $length = $request->query->get('length');
             $length = $length && ($length > 0) ? $length : 0;
 
-            $start = $request->get('start');
+            $start = $request->query->get('start');
             $start = $length ? ($start && $start > 0 ? $start : 0) / $length : 0;
 
-            $search = $request->get('search');
+            $search = $request->query->get('search');
             $filters = [
                 'query' => @$search['value']
             ];
 
-            $sort = $request->get('order')[0]['column'];
+            $sort = $request->query->get('order')[0]['column'];
             $sort = $columnsToDisplay[$sort];
 
-            $dir = @$request->get('order')[0]['dir'];
+            $dir = @$request->query->get('order')[0]['dir'];
 
             if ($mode === 'tracks') {
                 $tracks = $cloudTrackRepository->getTracksAjax($filters, $start, $length, $sort, $dir);
@@ -228,7 +229,7 @@ class MusicCollectionController extends AbstractController
     #[Route('/artist', name: '_artist')]
     public function getArtist(Request $request, ArtistRepository $artistRepository): Response
     {
-        $artist = $request->get('artist');
+        $artist = $request->query->get('artist');
         $artist = $artistRepository->findOneBy(['name' => $artist]);
 
         return $this->render('music/part/_artist.html.twig', [
@@ -239,9 +240,9 @@ class MusicCollectionController extends AbstractController
     #[Route('/tracks_album', name: '_tracks_album')]
     public function getTracksByAlbumAjax(Request $request, TrackRepository $trackRepository, AlbumRepository $albumRepository): Response
     {
-        $artist = $request->get('artist');
-        $albumName = $request->get('album');
-        $isModal = $request->get('modal') ?? false;
+        $artist = $request->query->get('artist');
+        $albumName = $request->query->get('album');
+        $isModal = $request->query->get('modal') ?? false;
         $tracks = $trackRepository->getTracksByAlbum($artist, $albumName);
         $album = $albumRepository->findOneBy(['auteur' => $artist, 'name' => $albumName]);
 
@@ -322,17 +323,17 @@ class MusicCollectionController extends AbstractController
     public function couch(Request $request, PieceRepository $pieceRepository): Response
     {
         $params = [
-            'auteur' => $request->get('auteur') ?? null,
-            'album' => $request->get('album') ?? null,
-            'genres' => $request->get('genres') ?? null,
-            'annee' => $request->get('annee') ?? null,
-            'search' => $request->get('search') ?? null,
+            'auteur' => $request->query->get('auteur') ?? null,
+            'album' => $request->query->get('album') ?? null,
+            'genres' => $request->query->get('genres') ?? null,
+            'annee' => $request->query->get('annee') ?? null,
+            'search' => $request->query->get('search') ?? null,
             'hasYoutubeKey' => true,
         ];
 
         $form = $this->createForm(FilterTracksFormType::class, $params);
 
-        $params['note'] = $request->get('note') ?? null;
+        $params['note'] = $request->query->get('note') ?? null;
         $pieces = $pieceRepository->getPieces($params);
 
         if (empty($params['album'])) {

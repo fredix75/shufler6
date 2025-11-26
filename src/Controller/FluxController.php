@@ -24,7 +24,7 @@ class FluxController extends AbstractController
     #[Route('/podcasts', name: '_podcasts')]
     public function podcasts(FluxRepository $fluxRepository, Request $request, ParameterBagInterface $parameterBag): Response
     {
-        if ($request->get('resource')) {
+        if ($request->query->get('resource')) {
             $resources = [];
             $dir = $parameterBag->get('uploads') . $parameterBag->get('resources')['downloads'];
             if (is_dir($dir)) {
@@ -107,9 +107,9 @@ class FluxController extends AbstractController
     public function handleFlux(Request $request): Response
     {
         if ($request->isXmlHttpRequest()) {
-            $id = $request->get('id');
-            $url = $request->get('url');
-            $type = $request->get('type');
+            $id = $request->query->get('id');
+            $url = $request->query->get('url');
+            $type = $request->query->get('type');
             $contenu = '';
             try {
                 if (@simplexml_load_file($url, null, LIBXML_NOCDATA)->{'channel'}->{'item'}) {
@@ -119,7 +119,7 @@ class FluxController extends AbstractController
                 return new Response('No data - ' . $e->getMessage());
             }
 
-            $page = $request->get('page');
+            $page = $request->query->get('page');
             $debut = ($page - 1) * 6;
             $namespaces = $contenu ? $contenu->getNamespaces(true) : [];
             $infos = [];
