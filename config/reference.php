@@ -1360,9 +1360,11 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *     handlers?: array<string, array{ // Default: []
  *         type: scalar|null,
  *         id?: scalar|null,
+ *         enabled?: bool, // Default: true
  *         priority?: scalar|null, // Default: 0
  *         level?: scalar|null, // Default: "DEBUG"
  *         bubble?: bool, // Default: true
+ *         interactive_only?: bool, // Default: false
  *         app_name?: scalar|null, // Default: null
  *         fill_extra_context?: bool, // Default: false
  *         include_stacktraces?: bool, // Default: false
@@ -1408,6 +1410,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *         include_extra?: scalar|null, // Default: false
  *         icon_emoji?: scalar|null, // Default: null
  *         webhook_url?: scalar|null,
+ *         exclude_fields?: list<scalar|null>,
  *         team?: scalar|null,
  *         notify?: scalar|null, // Default: false
  *         nickname?: scalar|null, // Default: "Monolog"
@@ -1440,6 +1443,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *         disable_notification?: bool|null, // Default: null
  *         split_long_messages?: bool, // Default: false
  *         delay_between_messages?: bool, // Default: false
+ *         topic?: int, // Default: null
  *         factor?: int, // Default: 1
  *         tags?: list<scalar|null>,
  *         console_formater_options?: mixed, // Deprecated: "monolog.handlers..console_formater_options.console_formater_options" is deprecated, use "monolog.handlers..console_formater_options.console_formatter_options" instead.
@@ -1451,6 +1455,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *             hostname?: scalar|null,
  *             port?: scalar|null, // Default: 12201
  *             chunk_size?: scalar|null, // Default: 1420
+ *             encoder?: "json"|"compressed_json",
  *         },
  *         mongo?: string|array{
  *             id?: scalar|null,
@@ -1461,8 +1466,17 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *             database?: scalar|null, // Default: "monolog"
  *             collection?: scalar|null, // Default: "logs"
  *         },
+ *         mongodb?: string|array{
+ *             id?: scalar|null, // ID of a MongoDB\Client service
+ *             uri?: scalar|null,
+ *             username?: scalar|null,
+ *             password?: scalar|null,
+ *             database?: scalar|null, // Default: "monolog"
+ *             collection?: scalar|null, // Default: "logs"
+ *         },
  *         elasticsearch?: string|array{
  *             id?: scalar|null,
+ *             hosts?: list<scalar|null>,
  *             host?: scalar|null,
  *             port?: scalar|null, // Default: 9200
  *             transport?: scalar|null, // Default: "Http"
