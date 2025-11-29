@@ -65,11 +65,11 @@ class ShuflerRuntime implements RuntimeExtensionInterface
         } elseif ($platform === VideoHelper::VIMEO) {
             try {
                 $data = file_get_contents(VideoHelper::VIMEO_API . $vid . '.json');
+                if ($data && $data = json_decode($data)) {
+                    $frame = $frame_prefix . $data[0]->thumbnail_medium . '" width=' . $width . ' />';
+                }
             } catch (\Exception $e) {
                 error_log($e->getMessage());
-            }
-            if ($data && $data = json_decode($data)) {
-                $frame = $frame_prefix . $data[0]->thumbnail_medium . '" width=' . $width . ' />';
             }
         } elseif (VideoHelper::DAILYMOTION === $platform) {
             try {
