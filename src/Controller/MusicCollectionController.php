@@ -149,22 +149,23 @@ class MusicCollectionController extends AbstractController
         }
 
         if ($request->isXmlHttpRequest()) {
-
-            $length = $request->query->get('length');
+            $parameters = $request->query->all();
+            $length = $parameters['length'];
             $length = $length && ($length > 0) ? $length : 0;
 
-            $start = $request->query->get('start');
+            $start = $parameters['start'];
             $start = $length ? ($start && $start > 0 ? $start : 0) / $length : 0;
 
-            $search = $request->query->get('search');
+            $search = $parameters['search'];
+
             $filters = [
                 'query' => @$search['value']
             ];
 
-            $sort = $request->query->get('order')[0]['column'];
+            $sort = $parameters['order'][0]['column'];
             $sort = $columnsToDisplay[$sort];
 
-            $dir = @$request->query->get('order')[0]['dir'];
+            $dir = @$parameters['order'][0]['dir'];
 
             if ($mode === 'tracks') {
                 $tracks = $cloudTrackRepository->getTracksAjax($filters, $start, $length, $sort, $dir);
