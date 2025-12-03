@@ -2052,7 +2052,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *             database: string,
  *             collection: string,
  *             index_name: string,
- *             vector_field?: string,
+ *             vector_field: string,
  *             bulk_write?: bool,
  *         }>,
  *         neo4j?: array<string, array{ // Default: []
@@ -2062,9 +2062,9 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *             database?: string,
  *             vector_index_name?: string,
  *             node_name?: string,
- *             vector_field?: string,
- *             dimensions?: int,
- *             distance?: string,
+ *             vector_field: string,
+ *             dimensions: int,
+ *             distance: string,
  *             quantization?: bool,
  *         }>,
  *         pinecone?: array<string, array{ // Default: []
@@ -2073,12 +2073,21 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *             filter?: list<scalar|null>,
  *             top_k?: int,
  *         }>,
+ *         postgres?: array<string, array{ // Default: []
+ *             dsn?: string,
+ *             username?: string,
+ *             password?: string,
+ *             table_name: string,
+ *             vector_field: string,
+ *             distance?: cosine|inner_product|l1|l2, // Distance metric to use for vector similarity search // Default: "l2"
+ *             dbal_connection?: string,
+ *         }>,
  *         qdrant?: array<string, array{ // Default: []
  *             endpoint?: string,
  *             api_key?: string,
  *             collection_name?: string,
- *             dimensions?: int,
- *             distance?: string,
+ *             dimensions: int,
+ *             distance: string,
  *             async?: bool,
  *         }>,
  *         redis?: array<string, array{ // Default: []
@@ -2087,18 +2096,6 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *             index_name: string,
  *             key_prefix?: string, // Default: "vector:"
  *             distance?: \Symfony\AI\Store\Bridge\Redis\Distance::Cosine|\Symfony\AI\Store\Bridge\Redis\Distance::L2|\Symfony\AI\Store\Bridge\Redis\Distance::Ip, // Distance metric to use for vector similarity search // Default: "COSINE"
- *         }>,
- *         surreal_db?: array<string, array{ // Default: []
- *             endpoint?: string,
- *             username?: string,
- *             password?: string,
- *             namespace?: string,
- *             database?: string,
- *             table?: string,
- *             vector_field?: string,
- *             strategy?: string,
- *             dimensions?: int,
- *             namespaced_user?: bool,
  *         }>,
  *         supabase?: array<string, array{ // Default: []
  *             http_client?: string, // Service ID of the HTTP client to use // Default: "http_client"
@@ -2109,26 +2106,29 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *             vector_dimension?: int,
  *             function_name?: string,
  *         }>,
+ *         surrealdb?: array<string, array{ // Default: []
+ *             endpoint?: string,
+ *             username?: string,
+ *             password?: string,
+ *             namespace?: string,
+ *             database?: string,
+ *             table: string,
+ *             vector_field: string,
+ *             strategy: string,
+ *             dimensions: int,
+ *             namespaced_user?: bool,
+ *         }>,
  *         typesense?: array<string, array{ // Default: []
  *             endpoint?: string,
  *             api_key: string,
  *             collection: string,
- *             vector_field?: string,
- *             dimensions?: int,
+ *             vector_field: string,
+ *             dimensions: int,
  *         }>,
  *         weaviate?: array<string, array{ // Default: []
  *             endpoint?: string,
  *             api_key: string,
  *             collection: string,
- *         }>,
- *         postgres?: array<string, array{ // Default: []
- *             dsn?: string,
- *             username?: string,
- *             password?: string,
- *             table_name: string,
- *             vector_field?: string,
- *             distance?: cosine|inner_product|l1|l2, // Distance metric to use for vector similarity search // Default: "l2"
- *             dbal_connection?: string,
  *         }>,
  *     },
  *     message_store?: array{
@@ -2176,7 +2176,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *         session?: array<string, array{ // Default: []
  *             identifier?: string,
  *         }>,
- *         surreal_db?: array<string, array{ // Default: []
+ *         surrealdb?: array<string, array{ // Default: []
  *             endpoint?: string,
  *             username?: string,
  *             password?: string,
