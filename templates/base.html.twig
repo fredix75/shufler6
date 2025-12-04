@@ -22,11 +22,14 @@
         </header>
 
         <div class="container-fluid content">
-            {% for label, messages in app.flashes %}
+            {% for type, messages in app.flashes %}
                 {% for message in messages %}
-                    <div class="alert alert-{{ label }}">
-                        <p><i class="{{ label|toIconAlert }}"></i> {{ message }}</p>
-                    </div>
+                    <twig:Alert :message="message" :type="type" withCloseButton />
+{#                    {{ component('Alert', {s
+                        id: 'custom-alert-id',
+                        type: type,
+                        message: message
+                    }) }}#}
                 {% endfor %}
             {% endfor %}
 
