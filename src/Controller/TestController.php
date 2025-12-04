@@ -3,10 +3,14 @@
 namespace App\Controller;
 
 use Symfony\AI\Agent\Agent;
+use Symfony\AI\Agent\AgentInterface;
+use Symfony\AI\Agent\Exception\ExceptionInterface;
 use Symfony\AI\Agent\InputProcessor\SystemPromptInputProcessor;
 use Symfony\AI\Agent\Memory\MemoryInputProcessor;
 use Symfony\AI\Agent\Memory\StaticMemoryProvider;
+use Symfony\AI\AiBundle\Exception\RuntimeException;
 use Symfony\AI\Platform\Bridge\OpenAi\PlatformFactory;
+use Symfony\AI\Platform\Exception\RateLimitExceededException;
 use Symfony\AI\Platform\Message\Message;
 use Symfony\AI\Platform\Message\MessageBag;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,7 +21,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use function PHPUnit\Framework\isInstanceOf;
+use function PHPUnit\Framework\throwException;
 
 #[Route('/test', name: 'test')]
 class TestController extends AbstractController
@@ -47,7 +56,7 @@ class TestController extends AbstractController
     }
 
     #[Route('/ai', name: '_ai')]
-    public function promptAi(Request $request, HttpClientInterface $httpClient): Response
+    public function promptAi(Request $request, AgentInterface $agent): Response
     {
         $form = $this->createFormBuilder()
             ->add('prompt', TextareaType::class)
@@ -58,29 +67,28 @@ class TestController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $prompt = $form->getData()['prompt'];
-            $platform = PlatformFactory::create($_ENV['OPENAI_API_KEY'], $httpClient);
-
-            $systemPromptProcessor = new SystemPromptInputProcessor('Tu es un mentor qui a toujours des conseils sages et avisés. Tu parles français');
-
-            $personalFacts = new StaticMemoryProvider(
-                'Je suis un amateur de musique et d\'arts visuels vintage.',
-            );
-
-            $memoryProcessor = new MemoryInputProcessor($personalFacts);
-
-            $agent = new Agent(
-                $platform,
-                'gpt-4o-mini',
-                [$systemPromptProcessor, $memoryProcessor]
-            );
 
             $messages = new MessageBag(Message::ofUser($prompt));
-            $result = $agent->call($messages);
+
+            try {
+                $result = $agent->call($messages);
+                $response = $result->getContent().\PHP_EOL;
+                //$response = 'ok';
+            } catch (\Throwable $e) {
+                $response = "Sorry : Rate Limit Exception ! {$e->getMessage()}";
+            } finally {
+                try {
+                    return new Response('ok');
+                } catch(\Throwable $e) {
+                    dd($e);
+                }
+            }
 
             return $this->render('test/ai.html.twig', [
                 'form' => $form,
-                'reponse' => $result->getContent().\PHP_EOL,
+                'reponse' => $response,
             ]);
+
         }
 
         return $this->render('test/ai.html.twig', [

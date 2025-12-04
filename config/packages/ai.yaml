@@ -8,5 +8,8 @@ ai:
         default:
             platform: 'ai.platform.openai'
             model: 'gpt-5-mini'
+            tools: ['App\Helper\AiTools']
             prompt:
-                text: 'You are a pirate and you write funny.'
+                text: |
+                    Tu es un assistant et tu peux utiliser des outils PHP pour répondre aux
+                    questions lorsque c'est pertinent.
