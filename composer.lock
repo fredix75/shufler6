@@ -393,16 +393,16 @@
         },
         {
             "name": "doctrine/dbal",
-            "version": "4.4.0",
+            "version": "4.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "e8c5163fbec0f34e357431bd1e5fc4056cdf4fdc"
+                "reference": "3d544473fb93f5c25b483ea4f4ce99f8c4d9d44c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/e8c5163fbec0f34e357431bd1e5fc4056cdf4fdc",
-                "reference": "e8c5163fbec0f34e357431bd1e5fc4056cdf4fdc",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/3d544473fb93f5c25b483ea4f4ce99f8c4d9d44c",
+                "reference": "3d544473fb93f5c25b483ea4f4ce99f8c4d9d44c",
                 "shasum": ""
             },
             "require": {
@@ -479,7 +479,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/dbal/issues",
-                "source": "https://github.com/doctrine/dbal/tree/4.4.0"
+                "source": "https://github.com/doctrine/dbal/tree/4.4.1"
             },
             "funding": [
                 {
@@ -495,7 +495,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-11-29T12:17:09+00:00"
+            "time": "2025-12-04T10:11:03+00:00"
         },
         {
             "name": "doctrine/deprecations",
@@ -9166,16 +9166,16 @@
         },
         {
             "name": "doctrine/doctrine-fixtures-bundle",
-            "version": "4.3.x-dev",
+            "version": "4.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/DoctrineFixturesBundle.git",
-                "reference": "b81f888126871d00089493cccd990df4a57ed830"
+                "reference": "9e013ed10d49bf7746b07204d336384a7d9b5a4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineFixturesBundle/zipball/b81f888126871d00089493cccd990df4a57ed830",
-                "reference": "b81f888126871d00089493cccd990df4a57ed830",
+                "url": "https://api.github.com/repos/doctrine/DoctrineFixturesBundle/zipball/9e013ed10d49bf7746b07204d336384a7d9b5a4d",
+                "reference": "9e013ed10d49bf7746b07204d336384a7d9b5a4d",
                 "shasum": ""
             },
             "require": {
@@ -9200,7 +9200,6 @@
                 "phpstan/phpstan": "2.1.11",
                 "phpunit/phpunit": "^10.5.38 || 11.4.14"
             },
-            "default-branch": true,
             "type": "symfony-bundle",
             "autoload": {
                 "psr-4": {
@@ -9233,7 +9232,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/DoctrineFixturesBundle/issues",
-                "source": "https://github.com/doctrine/DoctrineFixturesBundle/tree/4.3.x"
+                "source": "https://github.com/doctrine/DoctrineFixturesBundle/tree/4.3.1"
             },
             "funding": [
                 {
@@ -9249,7 +9248,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-11-28T15:28:55+00:00"
+            "time": "2025-12-03T16:05:42+00:00"
         },
         {
             "name": "myclabs/deep-copy",
