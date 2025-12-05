@@ -22,17 +22,7 @@
         </header>
 
         <div class="container-fluid content">
-            {% for type, messages in app.flashes %}
-                {% for message in messages %}
-                    <twig:Alert :message="message" :type="type" withCloseButton />
-{#                    {{ component('Alert', {s
-                        id: 'custom-alert-id',
-                        type: type,
-                        message: message
-                    }) }}#}
-                {% endfor %}
-            {% endfor %}
-
+            <twig:Alert :flashes="app.flashes" withCloseButton />
             {% block body %}{% endblock %}
 
             {% if not is_granted('IS_AUTHENTICATED') %}
