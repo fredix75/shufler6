@@ -1,9 +1,3 @@
-<a id="track-youtube-{{ track.id }}"
-   href="{{ youtube_key }}"
-   class="{{ track.youtubeKey is not null ? 'video-link icon-youtube' : 'no-link' }}"
-   data-id="{{ track.id }}" data-auteur="{{ track.auteur }}" data-titre="{{ track.titre }}"
-        {{ track.youtubeKey is not null ? 'data-action="music#popup"' : 'data-action="music#getLink"' }}
-   onclick="return false;"
-   title="video link">
-    {{ track.youtubeKey != 'nope' ? '<i class="bi bi-youtube"></i>' : '' }}
-</a>
+{% from 'macros/macros.html.twig' import youtube_link %}
+
+{{ youtube_link(track) }}

@@ -2,7 +2,7 @@
 
 {% block title %}Shufler :: Search{% endblock %}
 
-{% from 'macros/macros.html.twig' import video_clip %}
+{% from 'macros/macros.html.twig' import video_clip, youtube_link %}
 
 {% block body %}
     <div class="p-4">
@@ -67,8 +67,7 @@
                         <tr>
                             {% for column in track_columns %}
                                 {% if column == 'youtubeKey' %}
-                                    {% set youtube_key = 'https://www.youtube.com/watch?v=' ~ track.youtubeKey %}
-                                    <td>{% include 'music/part/_youtube_link.html.twig' %}</td>
+                                    <td>{{ youtube_link(track) }}</td>
                                 {% elseif column in ["auteur", "artiste"] %}
                                     <td>
                                         <a href="{{ path('main_search', {'search_field' : attribute(track, column), 'type' : 'auteur' }) }}">{{ attribute(track, column) }}</a>

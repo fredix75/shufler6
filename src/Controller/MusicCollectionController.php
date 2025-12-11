@@ -78,7 +78,6 @@ class MusicCollectionController extends AbstractController
                     $output['data'][] = [
                         'youtubeKey' => $this->renderView('music/part/_youtube_link.html.twig', [
                             'track' => $track,
-                            'youtube_key' => VideoHelper::YOUTUBE_WATCH . $track->getYoutubeKey(),
                         ]),
                         'id' => $track->getId(),
                         'auteur' => strtoupper($track->getAuteur()) !== 'DIVERS' ? '<a href="#" data-action="music#openModal" data-artist="' . $track->getAuteur() . '" onclick="return false;"><i class="bi bi-eye-fill"></i></a> ' . $track->getAuteur() : $track->getAuteur(),
@@ -179,8 +178,7 @@ class MusicCollectionController extends AbstractController
                 foreach ($tracks as $track) {
                     $output['data'][] = [
                         'youtubeKey' => $this->renderView('music/part/_youtube_link.html.twig', [
-                            'track' => $track,
-                            'youtube_key' => VideoHelper::YOUTUBE_WATCH . $track->getYoutubeKey(),
+                            'track' => $track
                         ]),
                         'id' => $track->getId(),
                         'auteur' => strtoupper($track->getAuteur()) !== 'DIVERS' ? '<a href="#" data-action="music#openModal" data-artist="' . $track->getAuteur() . '" onclick="return false;"><i class="bi bi-eye-fill"></i></a> ' . $track->getAuteur() : $track->getAuteur(),
