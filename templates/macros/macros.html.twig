@@ -30,7 +30,7 @@
 {% endmacro youtube_link %}
 
 {% macro pagination(pagination = null) %}
-    {% if pagination is not null and pagination.pages_count > 1 %}
+    {% if pagination.pages_count > 1 %}
         <nav aria-label="Navigation" class="navbar-dark flex-wrap justify-content-center" style="display:flex">
             <ul class="pagination">
                 {% if pagination.page > 1 %}
