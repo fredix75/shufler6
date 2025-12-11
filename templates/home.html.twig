@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% from 'macros/macros.html.twig' import video_clip %}
+
 {% block body %}
     <div class="container" data-controller="video">
         <div class="row g-4">
@@ -23,7 +25,7 @@
                     {% if is_granted('ROLE_AUTEUR') %}
                         <a href="{{ path('video_edit', {'id':anims[0].id}) }}" role="button" aria-label="Edit the video"
                            class="link-edit btn btn-dark"
-                           aria-label="Edit video"><i class="bi bi-pencil-square"></i></a>
+                        ><i class="bi bi-pencil-square"></i></a>
                     {% endif %}
                 </div>
             </div>
@@ -33,7 +35,7 @@
             {% for video in anims|slice(1, 2) %}
                 <div class="col-12 col-md-6 col-lg-3 media-vignette">
                     <div class="media topcol embed-responsive-16by9">
-                        {% include("video/part/_videoFrame.html.twig") %}
+                        {{ video_clip(video) }}
                     </div>
                 </div>
             {% endfor %}
@@ -48,7 +50,7 @@
                                     href="{{ path('video_list', {'categorie' : video.categorie, 'genre' : video.genre}) }}"
                                     aria-label="Go to category {{ video.genre|genreDisplay }}">{{ video.genre|genreDisplay }}</a>
                         </div>
-                        {% include("video/part/_videoFrame.html.twig") %}
+                        {{ video_clip(video) }}
                     </div>
                 </div>
             {% endfor %}
@@ -80,7 +82,7 @@
                     {% for video in stranges|slice(0, 2) %}
                         <div class="col-12 col-md-6 col-lg-6 media-vignette">
                             <div class="media topcol embed-responsive-16by9">
-                                {% include("video/part/_videoFrame.html.twig") %}
+                                {{ video_clip(video) }}
                             </div>
                         </div>
                     {% endfor %}
@@ -97,7 +99,7 @@
                                     href="{{ path('video_list', {'categorie' : video.categorie, 'genre' : video.genre}) }}"
                                     aria-label="Go to category {{ video.genre|genreDisplay }}">{{ video.genre|genreDisplay }}</a>
                         </div>
-                        {% include("video/part/_videoFrame.html.twig") %}
+                        {{ video_clip(video) }}
                     </div>
                 </div>
             {% endfor %}

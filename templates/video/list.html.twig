@@ -2,6 +2,8 @@
 
 {% block title %}{{ parent() }} :: Gallerie{% endblock %}
 
+{% from 'macros/macros.html.twig' import video_clip %}
+
 {% block body %}
     <div class="p-4">
         <section class="col col-sm-12 col-md-12 medias-bande" data-controller="video">
@@ -75,7 +77,7 @@
                                 <a href="{{ path('video_list', {'categorie' : pagination.route_params.categorie, 'genre' : video.genre}) }}">{{ video.genre|genreDisplay }}</a>
                             {% endif %}
                         </div>
-                        {% include("video/part/_videoFrame.html.twig") %}
+                        {{ video_clip(video) }}
                     </div>
                 </div>
             {% endfor %}
