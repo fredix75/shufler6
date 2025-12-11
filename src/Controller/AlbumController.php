@@ -116,13 +116,14 @@ class AlbumController extends AbstractController
     #[Route('s/{page}', name: 's', requirements: ['page' => '\d+'], defaults: ['page' => 1])]
     public function getAlbums(Request $request, AlbumRepository $albumRepository, int $page): Response
     {
+        $p = $request->query->all();
         $params = [
-            'auteur' => $request->query->get('auteur') ?? null,
-            'album' => $request->query->get('album') ?? null,
-            'genres' => $request->query->get('genres') ?? null,
-            'annee' => $request->query->get('annee') ?? null,
-            'search' => $request->query->get('search') ?? null,
-            'random' => $request->query->get('random') === '1',
+            'auteur' => $p['auteur'] ?? null,
+            'album' => $p['album'] ?? null,
+            'genres' => $p['genres'] ?? null,
+            'annee' => $p['annee'] ?? null,
+            'search' => $p['search'] ?? null,
+            'random' => $p['random'] === '1',
         ];
 
         $form = $this->createForm(FilterTracksFormType::class, $params, ['mode' => 'album']);
@@ -130,7 +131,7 @@ class AlbumController extends AbstractController
 
         $max = $this->getParameter('music_collection')['max_nb_albums'];
         $routeParams = $request->attributes->get('_route_params');
-        if (isset($request->query->all()['page'])) {
+        if (isset($p['page'])) {
             $page = 1;
             $routeParams['page'] = 1;
         }

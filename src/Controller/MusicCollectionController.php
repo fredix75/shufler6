@@ -323,12 +323,13 @@ class MusicCollectionController extends AbstractController
     #[Route('/couch', name: '_couch')]
     public function couch(Request $request, PieceRepository $pieceRepository): Response
     {
+        $p = $request->query->all();
         $params = [
-            'auteur' => $request->query->get('auteur') ?? null,
-            'album' => $request->query->get('album') ?? null,
-            'genres' => $request->query->get('genres') ?? null,
-            'annee' => $request->query->get('annee') ?? null,
-            'search' => $request->query->get('search') ?? null,
+            'auteur' => $p['auteur'] ?? null,
+            'album' => $p['album'] ?? null,
+            'genres' => $p['genres'] ?? null,
+            'annee' => $p['annee'] ?? null,
+            'search' => $p['search'] ?? null,
             'hasYoutubeKey' => true,
         ];
 
