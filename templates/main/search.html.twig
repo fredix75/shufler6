@@ -2,7 +2,7 @@
 
 {% block title %}Shufler :: Search{% endblock %}
 
-{% from 'macros/macros.html.twig' import video_clip, youtube_link %}
+{% from 'macros/macros.html.twig' import video_clip, youtube_link, pagination %}
 
 {% block body %}
     <div class="p-4">
@@ -40,7 +40,7 @@
             {% endif %}
         </section>
 
-        {% include "part/_pagination.html.twig" %}
+        {{ pagination(pagination) }}
 
         {% if tracks is not empty %}
             <br/><br/><br/><br/>

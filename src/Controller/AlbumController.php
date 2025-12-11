@@ -123,7 +123,7 @@ class AlbumController extends AbstractController
             'genres' => $p['genres'] ?? null,
             'annee' => $p['annee'] ?? null,
             'search' => $p['search'] ?? null,
-            'random' => $p['random'] === '1',
+            'random' => !empty($p['random']) && $p['random'] === '1',
         ];
 
         $form = $this->createForm(FilterTracksFormType::class, $params, ['mode' => 'album']);

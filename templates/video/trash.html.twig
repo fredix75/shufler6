@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% from 'macros/macros.html.twig' import video_clip, pagination %}
+
 {% block title %}{{ parent() }} :: Trash{% endblock %}
 
 {% block body %}
@@ -11,11 +13,11 @@
             {% for video in videos %}
                 <div class="col col-12 col-sm-6 col-md-6 col-lg-3 media-vignette">
                     <div class="media topcol embed-responsive-16by9" style="margin-bottom:30px;">
-                        {% include("video/part/_videoFrame.html.twig") %}
+                        {{ video_clip(video) }}
                     </div>
                 </div>
             {% endfor %}
         </section>
-        {% include "part/_pagination.html.twig" %}
+        {{ pagination(pagination|default(null)) }}
     </div>
 {% endblock %}

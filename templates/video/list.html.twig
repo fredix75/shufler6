@@ -2,7 +2,7 @@
 
 {% block title %}{{ parent() }} :: Gallerie{% endblock %}
 
-{% from 'macros/macros.html.twig' import video_clip %}
+{% from 'macros/macros.html.twig' import video_clip, pagination %}
 
 {% block body %}
     <div class="p-4">
@@ -82,6 +82,6 @@
                 </div>
             {% endfor %}
         </section>
-        {% include "part/_pagination.html.twig" %}
+        {{ pagination(pagination) }}
     </div>
 {% endblock %}
