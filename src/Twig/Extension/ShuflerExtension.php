@@ -18,7 +18,8 @@ class ShuflerExtension extends AbstractExtension
             new TwigFilter('youtubeChannelLink', [ShuflerRuntime::class, 'getYoutubeChannelLinkFilter']),
             new TwigFilter('popUp', [ShuflerRuntime::class, 'popUpFilter']),
             new TwigFilter('popUpYoutube', [ShuflerRuntime::class, 'popUpYoutubeFilter']),
-            new TwigFilter('toIconAlert', [ShuflerRuntime::class, 'toIconAlertFilter'])
+            new TwigFilter('toIconAlert', [ShuflerRuntime::class, 'toIconAlertFilter']),
+            new TwigFilter('toIconYoutube', [ShuflerRuntime::class, 'toIconYoutubeFilter'], ['is_safe' => ['html']]),
         ];
     }
 

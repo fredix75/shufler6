@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
 
-{% from 'macros/macros.html.twig' import video_clip %}
-
 {% block body %}
     <div class="container" data-controller="video">
         <div class="row g-4">
@@ -35,7 +33,7 @@
             {% for video in anims|slice(1, 2) %}
                 <div class="col-12 col-md-6 col-lg-3 media-vignette">
                     <div class="media topcol embed-responsive-16by9">
-                        {{ video_clip(video) }}
+                        <twig:VideoFrame :video="video" />
                     </div>
                 </div>
             {% endfor %}
@@ -50,7 +48,7 @@
                                     href="{{ path('video_list', {'categorie' : video.categorie, 'genre' : video.genre}) }}"
                                     aria-label="Go to category {{ video.genre|genreDisplay }}">{{ video.genre|genreDisplay }}</a>
                         </div>
-                        {{ video_clip(video) }}
+                        <twig:VideoFrame :video="video" />
                     </div>
                 </div>
             {% endfor %}
@@ -82,7 +80,7 @@
                     {% for video in stranges|slice(0, 2) %}
                         <div class="col-12 col-md-6 col-lg-6 media-vignette">
                             <div class="media topcol embed-responsive-16by9">
-                                {{ video_clip(video) }}
+                                <twig:VideoFrame :video="video" />
                             </div>
                         </div>
                     {% endfor %}
@@ -99,7 +97,7 @@
                                     href="{{ path('video_list', {'categorie' : video.categorie, 'genre' : video.genre}) }}"
                                     aria-label="Go to category {{ video.genre|genreDisplay }}">{{ video.genre|genreDisplay }}</a>
                         </div>
-                        {{ video_clip(video) }}
+                        <twig:VideoFrame :video="video" />
                     </div>
                 </div>
             {% endfor %}

@@ -28,19 +28,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+
 #[Route('/music', name: 'music')]
 #[IsGranted('ROLE_ADMIN')]
 class MusicCollectionController extends AbstractController
 {
     #[Route('/all/{mode}', name: '_all', requirements: ['mode' => 'tracks|albums'], defaults: ['mode' => 'tracks'])]
     public function getAll(
-        Request               $request,
-        ParameterBagInterface $parameters,
-        TrackRepository       $trackRepository,
-        ShuflerRuntime        $shuflerRuntime,
-        string                $mode
+        Request                     $request,
+        ParameterBagInterface       $parameters,
+        TrackRepository             $trackRepository,
+        ShuflerRuntime              $shuflerRuntime,
+        string                      $mode
     ): Response
     {
+
         $columnsToDisplay = $parameters->get('music_collection')['track_fields'];
         if ($mode === 'albums') {
             $columnsToDisplay = $parameters->get('music_collection')['album_fields'];
@@ -73,7 +75,6 @@ class MusicCollectionController extends AbstractController
                     'recordsFiltered' => count($trackRepository->getTracksAjax($filters, 0, false)),
                     'recordsTotal' => $trackRepository->count([]),
                 ];
-
                 foreach ($tracks as $track) {
                     $output['data'][] = [
                         'youtubeKey' => $this->renderView('music/part/_youtube_link.html.twig', [

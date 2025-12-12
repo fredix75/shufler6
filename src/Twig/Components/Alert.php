@@ -7,5 +7,15 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 #[AsTwigComponent]
 class Alert
 {
-    public array $flashes;
+    private array $flashes;
+
+    public function getFlashes(): array
+    {
+        return $this->flashes;
+    }
+
+    public function setFlashes(array $flashes): void
+    {
+        $this->flashes = $flashes;
+    }
 }

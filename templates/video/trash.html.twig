@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% from 'macros/macros.html.twig' import video_clip, pagination %}
+{% from 'macros/macros.html.twig' import pagination %}
 
 {% block title %}{{ parent() }} :: Trash{% endblock %}
 
@@ -13,7 +13,7 @@
             {% for video in videos %}
                 <div class="col col-12 col-sm-6 col-md-6 col-lg-3 media-vignette">
                     <div class="media topcol embed-responsive-16by9" style="margin-bottom:30px;">
-                        {{ video_clip(video) }}
+                        <twig:VideoFrame :video="video" />
                     </div>
                 </div>
             {% endfor %}

@@ -148,4 +148,13 @@ class ShuflerRuntime implements RuntimeExtensionInterface
         $stars .= '</span>';
         return $stars;
     }
+
+    public function toIconYoutubeFilter(?string $key): string
+    {
+        if ('nope' !== $key) {
+            return '<i class="bi bi-youtube"></i>';
+        }
+
+        return '';
+    }
 }
