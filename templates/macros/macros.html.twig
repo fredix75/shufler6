@@ -8,7 +8,7 @@
         {{ track.youtubeKey is not null ? 'data-action="music#popup"' : 'data-action="music#getLink"' }}
        onclick="return false;"
        title="video link">
-        {{ track.youtubeKey != 'nope' ? '<i class="bi bi-youtube"></i>' : '' }}
+        {{ track.youtubeKey|toIconYoutube }}
     </a>
 {% endmacro youtube_link %}
 
