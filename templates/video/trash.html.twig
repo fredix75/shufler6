@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
 
-{% from 'macros/macros.html.twig' import pagination %}
-
 {% block title %}{{ parent() }} :: Trash{% endblock %}
 
 {% block body %}
@@ -18,6 +16,6 @@
                 </div>
             {% endfor %}
         </section>
-        {{ pagination(pagination) }}
+        <twig:Pagination :pagination="pagination" />
     </div>
 {% endblock %}

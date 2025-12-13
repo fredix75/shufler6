@@ -2,8 +2,6 @@
 
 {% block title %}{{ parent() }} :: Gallerie{% endblock %}
 
-{% from 'macros/macros.html.twig' import pagination %}
-
 {% block body %}
     <div class="p-4">
         <section class="col col-sm-12 col-md-12 medias-bande" data-controller="video">
@@ -82,6 +80,6 @@
                 </div>
             {% endfor %}
         </section>
-        {{ pagination(pagination) }}
+        <twig:Pagination :pagination="pagination" />
     </div>
 {% endblock %}

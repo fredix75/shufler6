@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
 
-{% from 'macros/macros.html.twig' import pagination %}
-
 {% block title %}{{ parent() }} :: Music Albums{% endblock %}
 
 {% block body %}
@@ -29,7 +27,7 @@
             {% endfor %}
             {% if pagination is not empty %}
                 <section class="col-sm-12 col-md-12" style="margin-top: 20px;">
-                    {{ pagination(pagination) }}
+                    <twig:Pagination :pagination="pagination" />
                 </section>
             {% endif %}
         </div>

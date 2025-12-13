@@ -1,0 +1,29 @@
+{% if this.pagination.pages_count > 1 %}
+    <nav aria-label="Navigation" class="navbar-dark flex-wrap justify-content-center" style="display:flex">
+        <ul class="pagination">
+            {% if this.pagination.page > 1 %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ path(this.pagination.route, this.pagination.route_params|merge({'page': 1})) }}"><<</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="{{ path(this.pagination.route, this.pagination.route_params|merge({'page': this.pagination.page - 1})) }}"><</a>
+                </li>
+            {% endif %}
+            {#display p numbers only from p-4 to p+4 but don't go <1 or >pages_count#}
+            {% for p in range(max(this.pagination.page - 2, 1),
+                min(this.pagination.page + 2, this.pagination.pages_count)) %}
+                <li class="page-item {% if p == this.pagination.page %}active {% endif %}">
+                    <a class="page-link" href="{{ path(this.pagination.route, this.pagination.route_params|merge({'page': p})) }}">{{ p }}</a>
+                </li>
+            {% endfor %}
+            {% if this.pagination.page<this.pagination.pages_count %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ path(this.pagination.route, this.pagination.route_params|merge({'page': this.pagination.page + 1})) }}">></a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="{{ path(this.pagination.route, this.pagination.route_params|merge({'page': this.pagination.pages_count})) }}">>></a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endif %}
