@@ -46,6 +46,7 @@
         "symfony/string": "8.0.*",
         "symfony/translation": "8.0.*",
         "symfony/twig-bundle": "8.0.*",
+        "symfony/ux-live-component": "^2.31",
         "symfony/ux-turbo": "^2.17",
         "symfony/ux-twig-component": "^2.31",
         "symfony/validator": "8.0.*",
