@@ -78,7 +78,7 @@ class FluxController extends AbstractController
 
     #[Route('/liens', name: '_liens')]
     #[IsGranted('ROLE_ADMIN')]
-    public function links(FluxRepository $fluxRepository, FluxMoodRepository $fluxMoodRepository): Response
+    public function links(FluxRepository $fluxRepository): Response
     {
         $liens = $fluxRepository->getLinks();
         $categories = array_reduce($liens, function ($carry, $item) {
