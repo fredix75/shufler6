@@ -26,27 +26,24 @@
                              loading="lazy">
                     </div>
                     <div class="card-body">
-                        <div id="flux-{{ rss.id }}" class="row news-widget bg-body-secondary">
-                            <div class="pod-nav flex-row d-flex justify-content-around">
-                                <div>
-                                    <a href="#" class="left btn btn-secondary disabled" data-page="0"
-                                       data-action="flux#prev"><i
-                                            class="bi bi-chevron-left"></i></a>
-                                </div>
+                        <div id="flux-{{ rss.id }}" class="row news-widget">
+                            <div class="pod-nav flex-row d-flex justify-content-around mb-4">
+                                <a href="#" class="left btn btn-secondary disabled" data-page="0" data-action="flux#prev">
+                                    <i class="bi bi-chevron-left"></i>
+                                </a>
                                 {% if is_granted('FLUX_EDIT', rss) %}
-                                    <div>
-                                        <a href="{{ path('flux_edit', {'id': rss.id}) }}" class="btn btn-secondary"><i
-                                                class="bi bi-pencil-square"></i>&nbsp;Editer</a>
-                                    </div>
+                                    <a href="{{ path('flux_edit', {'id': rss.id}) }}" class="btn btn-secondary">
+                                        <i class="bi bi-pencil-square"></i>&nbsp;Editer
+                                    </a>
                                 {% endif %}
-                                <div>
-                                    <a href="#" class="right btn btn-secondary" data-page="2" data-action="flux#next"><i
-                                            class="bi bi-chevron-right"></i></a>
-                                </div>
+                                <a href="#" class="right btn btn-secondary" data-page="2" data-action="flux#next">
+                                    <i class="bi bi-chevron-right"></i>
+                                </a>
                             </div>
-                            <div class="col-12 p-4">
+                            <div class="col-12">
                                 <div id="accordion-{{ rss.id }}" class="accordion text-center" data-url="{{ rss.url }}"
-                                     data-type="news"></div>
+                                     data-type="news">
+                                </div>
                             </div>
                         </div>
                     </div>
