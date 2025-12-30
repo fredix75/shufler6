@@ -1861,6 +1861,181 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *     profiler?: bool, // Enables the profiler for Twig Component (in debug mode) // Default: "%kernel.debug%"
  *     controllers_json?: scalar|null, // Deprecated: The "twig_component.controllers_json" config option is deprecated, and will be removed in 3.0. // Default: null
  * }
+ * @psalm-type NelmioSecurityConfig = array{
+ *     signed_cookie?: array{
+ *         names?: list<scalar|null>,
+ *         secret?: scalar|null, // Default: "%kernel.secret%"
+ *         hash_algo?: scalar|null,
+ *         legacy_hash_algo?: scalar|null, // Fallback algorithm to allow for frictionless hash algorithm upgrades. Use with caution and as a temporary measure as it allows for downgrade attacks. // Default: null
+ *         separator?: scalar|null, // Default: "."
+ *     },
+ *     clickjacking?: array{
+ *         hosts?: list<scalar|null>,
+ *         paths?: array<string, array{ // Default: {"^/.*":{"header":"DENY"}}
+ *             header?: scalar|null, // Default: "DENY"
+ *         }>,
+ *         content_types?: list<scalar|null>,
+ *     },
+ *     external_redirects?: array{
+ *         abort?: bool, // Default: false
+ *         override?: scalar|null, // Default: null
+ *         forward_as?: scalar|null, // Default: null
+ *         log?: bool, // Default: false
+ *         allow_list?: list<scalar|null>,
+ *     },
+ *     flexible_ssl?: bool|array{
+ *         enabled?: bool, // Default: false
+ *         cookie_name?: scalar|null, // Default: "auth"
+ *         unsecured_logout?: bool, // Default: false
+ *     },
+ *     forced_ssl?: bool|array{
+ *         enabled?: bool, // Default: false
+ *         hsts_max_age?: scalar|null, // Default: null
+ *         hsts_subdomains?: bool, // Default: false
+ *         hsts_preload?: bool, // Default: false
+ *         allow_list?: list<scalar|null>,
+ *         hosts?: list<scalar|null>,
+ *         redirect_status_code?: scalar|null, // Default: 302
+ *     },
+ *     content_type?: array{
+ *         nosniff?: bool, // Default: false
+ *     },
+ *     xss_protection?: array{ // Deprecated: The "xss_protection" option is deprecated, use Content Security Policy without allowing "unsafe-inline" scripts instead.
+ *         enabled?: bool, // Default: false
+ *         mode_block?: bool, // Default: false
+ *         report_uri?: scalar|null, // Default: null
+ *     },
+ *     csp?: bool|array{
+ *         enabled?: bool, // Default: true
+ *         request_matcher?: scalar|null, // Default: null
+ *         hosts?: list<scalar|null>,
+ *         content_types?: list<scalar|null>,
+ *         report_endpoint?: array{
+ *             log_channel?: scalar|null, // Default: null
+ *             log_formatter?: scalar|null, // Default: "nelmio_security.csp_report.log_formatter"
+ *             log_level?: "alert"|"critical"|"debug"|"emergency"|"error"|"info"|"notice"|"warning", // Default: "notice"
+ *             filters?: array{
+ *                 domains?: bool, // Default: true
+ *                 schemes?: bool, // Default: true
+ *                 browser_bugs?: bool, // Default: true
+ *                 injected_scripts?: bool, // Default: true
+ *             },
+ *             dismiss?: list<list<"default-src"|"base-uri"|"block-all-mixed-content"|"child-src"|"connect-src"|"font-src"|"form-action"|"frame-ancestors"|"frame-src"|"img-src"|"manifest-src"|"media-src"|"object-src"|"plugin-types"|"script-src"|"style-src"|"upgrade-insecure-requests"|"report-uri"|"worker-src"|"prefetch-src"|"report-to"|"*">>,
+ *         },
+ *         compat_headers?: bool, // Default: true
+ *         report_logger_service?: scalar|null, // Default: "logger"
+ *         hash?: array{
+ *             algorithm?: "sha256"|"sha384"|"sha512", // The algorithm to use for hashes // Default: "sha256"
+ *         },
+ *         report?: array{
+ *             level1_fallback?: bool, // Provides CSP Level 1 fallback when using hash or nonce (CSP level 2) by adding 'unsafe-inline' source. See https://www.w3.org/TR/CSP2/#directive-script-src and https://www.w3.org/TR/CSP2/#directive-style-src // Default: true
+ *             browser_adaptive?: bool|array{ // Do not send directives that browser do not support
+ *                 enabled?: bool, // Default: false
+ *                 parser?: scalar|null, // Default: "nelmio_security.ua_parser.ua_php"
+ *             },
+ *             default-src?: list<scalar|null>,
+ *             base-uri?: list<scalar|null>,
+ *             block-all-mixed-content?: bool, // Default: false
+ *             child-src?: list<scalar|null>,
+ *             connect-src?: list<scalar|null>,
+ *             font-src?: list<scalar|null>,
+ *             form-action?: list<scalar|null>,
+ *             frame-ancestors?: list<scalar|null>,
+ *             frame-src?: list<scalar|null>,
+ *             img-src?: list<scalar|null>,
+ *             manifest-src?: list<scalar|null>,
+ *             media-src?: list<scalar|null>,
+ *             object-src?: list<scalar|null>,
+ *             plugin-types?: list<scalar|null>,
+ *             script-src?: list<scalar|null>,
+ *             style-src?: list<scalar|null>,
+ *             upgrade-insecure-requests?: bool, // Default: false
+ *             report-uri?: list<scalar|null>,
+ *             worker-src?: list<scalar|null>,
+ *             prefetch-src?: list<scalar|null>,
+ *             report-to?: scalar|null,
+ *         },
+ *         enforce?: array{
+ *             level1_fallback?: bool, // Provides CSP Level 1 fallback when using hash or nonce (CSP level 2) by adding 'unsafe-inline' source. See https://www.w3.org/TR/CSP2/#directive-script-src and https://www.w3.org/TR/CSP2/#directive-style-src // Default: true
+ *             browser_adaptive?: bool|array{ // Do not send directives that browser do not support
+ *                 enabled?: bool, // Default: false
+ *                 parser?: scalar|null, // Default: "nelmio_security.ua_parser.ua_php"
+ *             },
+ *             default-src?: list<scalar|null>,
+ *             base-uri?: list<scalar|null>,
+ *             block-all-mixed-content?: bool, // Default: false
+ *             child-src?: list<scalar|null>,
+ *             connect-src?: list<scalar|null>,
+ *             font-src?: list<scalar|null>,
+ *             form-action?: list<scalar|null>,
+ *             frame-ancestors?: list<scalar|null>,
+ *             frame-src?: list<scalar|null>,
+ *             img-src?: list<scalar|null>,
+ *             manifest-src?: list<scalar|null>,
+ *             media-src?: list<scalar|null>,
+ *             object-src?: list<scalar|null>,
+ *             plugin-types?: list<scalar|null>,
+ *             script-src?: list<scalar|null>,
+ *             style-src?: list<scalar|null>,
+ *             upgrade-insecure-requests?: bool, // Default: false
+ *             report-uri?: list<scalar|null>,
+ *             worker-src?: list<scalar|null>,
+ *             prefetch-src?: list<scalar|null>,
+ *             report-to?: scalar|null,
+ *         },
+ *     },
+ *     referrer_policy?: bool|array{
+ *         enabled?: bool, // Default: false
+ *         policies?: list<scalar|null>,
+ *     },
+ *     permissions_policy?: bool|array{
+ *         enabled?: bool, // Default: false
+ *         policies?: array{
+ *             accelerometer?: mixed, // Default: null
+ *             ambient_light_sensor?: mixed, // Default: null
+ *             attribution_reporting?: mixed, // Default: null
+ *             autoplay?: mixed, // Default: null
+ *             bluetooth?: mixed, // Default: null
+ *             browsing_topics?: mixed, // Default: null
+ *             camera?: mixed, // Default: null
+ *             captured_surface_control?: mixed, // Default: null
+ *             compute_pressure?: mixed, // Default: null
+ *             cross_origin_isolated?: mixed, // Default: null
+ *             deferred_fetch?: mixed, // Default: null
+ *             deferred_fetch_minimal?: mixed, // Default: null
+ *             display_capture?: mixed, // Default: null
+ *             encrypted_media?: mixed, // Default: null
+ *             fullscreen?: mixed, // Default: null
+ *             gamepad?: mixed, // Default: null
+ *             geolocation?: mixed, // Default: null
+ *             gyroscope?: mixed, // Default: null
+ *             hid?: mixed, // Default: null
+ *             identity_credentials_get?: mixed, // Default: null
+ *             idle_detection?: mixed, // Default: null
+ *             interest_cohort?: mixed, // Default: null
+ *             language_detector?: mixed, // Default: null
+ *             local_fonts?: mixed, // Default: null
+ *             magnetometer?: mixed, // Default: null
+ *             microphone?: mixed, // Default: null
+ *             midi?: mixed, // Default: null
+ *             otp_credentials?: mixed, // Default: null
+ *             payment?: mixed, // Default: null
+ *             picture_in_picture?: mixed, // Default: null
+ *             publickey_credentials_create?: mixed, // Default: null
+ *             publickey_credentials_get?: mixed, // Default: null
+ *             screen_wake_lock?: mixed, // Default: null
+ *             serial?: mixed, // Default: null
+ *             speaker_selection?: mixed, // Default: null
+ *             storage_access?: mixed, // Default: null
+ *             summarizer?: mixed, // Default: null
+ *             translator?: mixed, // Default: null
+ *             usb?: mixed, // Default: null
+ *             web_share?: mixed, // Default: null
+ *             window_management?: mixed, // Default: null
+ *             xr_spatial_tracking?: mixed, // Default: null
+ *         },
+ *     },
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
@@ -1880,6 +2055,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *     symfonycasts_sass?: SymfonycastsSassConfig,
  *     turbo?: TurboConfig,
  *     twig_component?: TwigComponentConfig,
+ *     nelmio_security?: NelmioSecurityConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -1902,6 +2078,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *         symfonycasts_sass?: SymfonycastsSassConfig,
  *         turbo?: TurboConfig,
  *         twig_component?: TwigComponentConfig,
+ *         nelmio_security?: NelmioSecurityConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -1922,6 +2099,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *         symfonycasts_sass?: SymfonycastsSassConfig,
  *         turbo?: TurboConfig,
  *         twig_component?: TwigComponentConfig,
+ *         nelmio_security?: NelmioSecurityConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
@@ -1943,6 +2121,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *         symfonycasts_sass?: SymfonycastsSassConfig,
  *         turbo?: TurboConfig,
  *         twig_component?: TwigComponentConfig,
+ *         nelmio_security?: NelmioSecurityConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,
