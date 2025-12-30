@@ -182,7 +182,7 @@ class MusicCollectionController extends AbstractController
                             'track' => $track
                         ]),
                         'id' => $track->getId(),
-                        'auteur' => strtoupper($track->getAuteur()) !== 'DIVERS' ? '<a href="#" data-action="music#openModal" data-artist="' . $track->getAuteur() . '" onclick="return false;"><i class="bi bi-eye-fill"></i></a> ' . $track->getAuteur() : $track->getAuteur(),
+                        'auteur' => $track->getAuteur(),
                         'titre' => '<a href="'.$this->generateUrl('music_cloudtrack_edit',  ['id' => $track->getId()]).'"><i class="bi bi-pencil-square"></i></a> ' . $track->getTitre(),
                         'annee' => $track->getAnnee(),
                         'genre' => '<span class="badge bg-dark">' . $track->getGenre() . '</span>',
