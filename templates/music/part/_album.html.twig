@@ -1,8 +1,8 @@
-<div class="d-flex flex-row justify-content-around mb-4">
+<div class="row justify-content-around mb-4 bg-black">
     {% if album.picture is not empty %}
-        <img src="{{ album.picture }}" loading="lazy" class="w-50">
+        <img src="{{ album.picture }}" loading="lazy" class="col-12 w-50">
     {% endif %}
-    <div class="music-title">
+    <div class="music-title col-12">
         <span class="music-album">{{ album.name }}</span><br/>
         by <span class="music-auteur">{{ album.auteur }}</span> ({{ album.annee }})
         <span class="badge bg-primary">{{ album.genre }}</span>
@@ -11,12 +11,12 @@
 <div data-controller="album">
     <div class="d-flex flex-row justify-content-around mb-4">
         {% if album.youtubeKey is not empty %}
-            <a class="playlist-link icon-youtube" href="{{ album.youtubeKey|youtubeChannelLink }}"
+            <a class="playlist-link icon-youtube p-2" href="{{ album.youtubeKey|youtubeChannelLink }}"
                data-id="{{ album.youtubeKey }}" data-action="music#popupPlaylist">
                 <i class="bi bi-youtube"></i>
             </a>&nbsp;&nbsp;
         {% endif %}
-        <a class="btn btn-primary"
+        <a class="btn btn-primary p-3"
            href="{{ path('music_couch', {'auteur' : album.auteur, 'album': album.name }) }}">
             <i class="bi bi-youtube"></i> Enchainer les titres
         </a>
@@ -34,7 +34,7 @@
                 </li>
             </ul>
         </div>
-        <a class="btn btn-secondary edit-album" href="#" data-id="{{ album.id }}" data-action="album#openEditModal"
+        <a class="btn btn-secondary edit-album p-3" href="#" data-id="{{ album.id }}" data-action="album#openEditModal"
            title="album edit">
             <i class="bi bi-pencil-square"></i>
         </a>
