@@ -72,38 +72,67 @@ parameters:
         max_nb_artists: 500
         max_random: 100
         track_fields:
-            - youtubeKey
-            - auteur
-            - titre
-            - numero
-            - album
-            - annee
-            - artiste
-            - genre
-            - duree
-            - pays
-            - bitrate
-            - note
+            - data: youtubeKey
+              orderable: false
+            - data: auteur
+              orderable: true
+            - data: titre
+              orderable: true
+            - data: numero
+              orderable: true
+            - data: album
+              orderable: true
+            - data: annee
+              orderable: true
+            - data: artiste
+              orderable: true
+            - data: genre
+              orderable: true
+            - data: duree
+              orderable: true
+            - data: pays
+              orderable: true
+            - data: bitrate
+              orderable: true
+            - data: note
+              orderable: true
         album_fields:
-            - youtubeKey
-            - album
-            - artiste
-            - annee
-            - genre
+            - data: youtubeKey
+              orderable: false
+            - data: album
+              orderable: true
+            - data: artiste
+              orderable: true
+            - data: annee
+              orderable: false
+            - data: genre
+              orderable: false
         cloud-track_fields:
-            - youtubeKey
-            - auteur
-            - titre
-            - annee
-            - genre
-            - pays
-            - note
+            - data: youtubeKey
+              orderable: false
+            - data: auteur
+              orderable: true
+            - data: titre
+              orderable: true
+            - data: annee
+              orderable: true
+            - data: genre
+              orderable: true
+            - data: pays
+              orderable: true
+            - data: note
+              orderable: true
         cloud-album_fields:
-            - youtubeKey
-            - name
-            - auteur
-            - annee
-            - genre
+            - data: youtubeKey
+              orderable: false
+            - data: name
+              orderable: true
+            - data: auteur
+              orderable: true
+            - data: annee
+              orderable: true
+            - data: genre
+              orderable: true
     sniffer:
         upload_directory: 'sniffer'
 

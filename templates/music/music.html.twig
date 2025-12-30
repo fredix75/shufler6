@@ -29,7 +29,7 @@
                         <thead>
                         <tr>
                             {% for column in columns_db %}
-                                <th>{{ column|capitalize }}</th>
+                                <th>{{ column.data|capitalize }}</th>
                             {% endfor %}
                         </tr>
                         </thead>

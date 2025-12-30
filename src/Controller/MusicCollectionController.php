@@ -63,7 +63,7 @@ class MusicCollectionController extends AbstractController
             ];
 
             $sort = $parameters['order'][0]['column'];
-            $sort = $columnsToDisplay[$sort];
+            $sort = $columnsToDisplay[$sort]['data'];
 
             $dir = @$parameters['order'][0]['dir'];
 
@@ -163,7 +163,7 @@ class MusicCollectionController extends AbstractController
             ];
 
             $sort = $parameters['order'][0]['column'];
-            $sort = $columnsToDisplay[$sort];
+            $sort = $columnsToDisplay[$sort]['data'];
 
             $dir = @$parameters['order'][0]['dir'];
 

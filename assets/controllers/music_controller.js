@@ -1,4 +1,3 @@
-import { Controller } from '@hotwired/stimulus';
 import 'magnific-popup';
 import DataTable from 'datatables.net';
 import {Modal, Offcanvas} from "bootstrap";
@@ -18,7 +17,7 @@ export default class extends PieceController {
     connect() {
         let columns = [];
         this.columnsValue.forEach(function(item){
-            columns.push({data : item});
+            columns.push(item);
         });
 
         new DataTable('#container-datas', {
