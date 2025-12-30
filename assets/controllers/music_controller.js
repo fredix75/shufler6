@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 import 'magnific-popup';
 import DataTable from 'datatables.net';
-import {Modal} from "bootstrap";
+import {Modal, Offcanvas} from "bootstrap";
 import $ from 'jquery';
 import PieceController from "./piece_controller.js";
 
@@ -192,10 +192,19 @@ export default class extends PieceController {
         } else {
             url = '/fr/music/artist';
         }
+
         query += '&modal=true';
-        const modal = new Modal('#formModal', {keyboard: false});
-        modal.show();
-        $(document).find('.modal-body').html(await $.ajax(url + query));
+
+        if ($(event.target).closest('a').data('album')) {
+            const offcanvas = new Offcanvas('#offcanvasRight');
+            $(document).find('.offcanvas-body').html(await $.ajax(url + query));
+            offcanvas.show();
+        } else {
+            const modal = new Modal('#formModal', {keyboard: false});
+            $(document).find('.modal-body').html(await $.ajax(url + query));
+            modal.show();
+        }
+
         event.preventDefault()
     }
 
