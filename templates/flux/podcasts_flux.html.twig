@@ -1,39 +1,42 @@
 {% extends 'flux/podcasts.html.twig' %}
 
 {% block podcasts %}
-    <div class="row justify-content-md-center txt-center" data-controller="flux">
+    <div class="row justify-content-center txt-center" data-controller="flux">
         {% for podcast in podcasts %}
-            <section class="flux row g-0 d-flex position-relative col col-12 col-md-6 col-lg-4" style="padding:5px;">
-                <div id="flux-{{ podcast.id }}" class="row flux-widget bg-body-secondary"
-                     data-title="{{ podcast.name }}">
-                    <div class="flux-header col col-12 mb-md-0 p-md-4 center-block">
-                        {% if podcast.channel is defined and podcast.channel.image is defined %}
-                    <img src="{{ asset('uploads/logos/' ~ podcast.channel.image) }}" height="30px" loading="lazy">&nbsp;
-                        {% endif %}&nbsp;
-                        {{ podcast.name }}
-                    </div>
-                    <div class="pod-nav row justify-content-center" style="padding:10px;">
-                        <div class="col col-2 col-sm-2 col-lg-2">
-                            <a href="#" class="left btn btn-secondary disabled" data-page="0" data-action="flux#prev"><i
-                                        class="bi bi-chevron-left"></i></a>
+            <div class="flux card col col-12 col-md-6 col-lg-4 m-1">
+                <div class="card-header d-flex flex-row justify-content-between" style="background-color: #0a53be; color:yellow;">
+                    {% if podcast.channel is defined and podcast.channel.image is defined %}
+                        <img src="{{ asset('uploads/logos/' ~ podcast.channel.image) }}" height="50px" loading="lazy">&nbsp;
+                    {% endif %}&nbsp;
+                    <h2>{{ podcast.name }}</h2>
+                </div>
+                <div class="card-body">
+                    <div id="flux-{{ podcast.id }}" class="row news-widget">
+                        <div class="pod-nav flex-row d-flex justify-content-around mb-4">
+                            <a href="#" class="left btn btn-secondary disabled" data-page="0" data-action="flux#prev">
+                                <i class="bi bi-chevron-left"></i>
+                            </a>
+                            {% if is_granted('FLUX_EDIT', podcast) %}
+                                <a href="{{ path('flux_edit', {'id': podcast.id}) }}" class="btn btn-secondary">
+                                    <i class="bi bi-pencil-square"></i>&nbsp;Editer
+                                </a>
+                            {% endif %}
+                            <a href="#" class="right btn btn-secondary" data-page="2" data-action="flux#next">
+                                <i class="bi bi-chevron-right"></i>
+                            </a>
                         </div>
-                        {% if is_granted('FLUX_EDIT', podcast) %}
-                            <div class="col col-auto text-center">
-                                <a href="{{ path('flux_edit', {'id': podcast.id}) }}" class="btn btn-secondary"><i
-                                            class="bi bi-pencil-square"></i>&nbsp;Editer</a>
+                        <div class="col-12">
+                            <div id="accordion-{{ podcast.id }}" class="accordion text-center" data-url="{{ podcast.url }}"
+                                 data-type="podcast">
                             </div>
-                        {% endif %}
-                        <div class="col col-2 col-sm-2 col-lg-2 text-end">
-                            <a href="#" class="right btn btn-secondary" data-page="2" data-action="flux#next"><i
-                                        class="bi bi-chevron-right"></i></a>
                         </div>
-                    </div>
-                    <div class="col-12 p-4 ps-md-0">
-                        <div id="accordion-{{ podcast.id }}" class="accordion" data-type="podcast"
-                             data-url="{{ podcast.url }}"></div>
                     </div>
                 </div>
-            </section>
+                <div class="card-footer flex-row d-flex justify-content-between small bg-dark-subtle text-bg-light">
+                    <div>{{ podcast.name }}</div>
+                    <div>{{ 'now'|date('d/m/Y H:i') }}</div>
+                </div>
+            </div>
         {% endfor %}
     </div>
 {% endblock %}
