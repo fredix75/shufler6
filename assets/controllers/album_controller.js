@@ -10,20 +10,20 @@ import $ from 'jquery';
 export default class extends Controller {
 
     async displayContent(event) {
-        document.querySelectorAll('.block-content-album').forEach(el => el.hidden = true)
-        let artist = event.target.closest('a')?.dataset.artist
+        document.querySelectorAll('.block-content-album').forEach(el => el.hidden = true);
+        let artist = event.target.closest('a')?.dataset.artist;
         artist = artist.toString().replaceAll('&', '%26');
         let album = event.target.closest('a')?.dataset.album;
         album = album.toString().replaceAll('&', '%26');
         album = album.toString().replaceAll('#', '%23');
         album = album.toString().replaceAll('+', '%2B');
-        let url = '/fr/music/tracks_album';
-        let query = '?artist=' + artist + '&album=' + album;
-        const response = await fetch(url + query)
-        const content = await response.text()
+        const url = '/fr/music/tracks_album';
+        const query = '?artist=' + artist + '&album=' + album;
+        const response = await fetch(url + query);
+        const content = await response.text();
         event.target
             .closest('.album')
-            ?.insertAdjacentHTML('afterend', content)
+            ?.insertAdjacentHTML('afterend', content);
         // jquery inévitable !
         $('.block-content-album').toggle("slow");
     }
