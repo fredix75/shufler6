@@ -1,0 +1,65 @@
+<div{{ attributes }}>
+    <div id="flux-{{ this.flux.id }}" class="row flux-widget" data-title="{{ this.flux.name }}">
+        <div class="pod-nav flex-row d-flex justify-content-around mb-4">
+            <a href="#" class="left btn btn-secondary {{ this.page < 2 ? "disabled" : "" }}" {{ live_action('prevPage') }}>
+                <i class="bi bi-chevron-left"></i>
+            </a>
+            {% if is_granted('FLUX_EDIT', this.flux) %}
+                <a href="{{ path('flux_edit', {'id': this.flux.id}) }}" class="btn btn-secondary">
+                    <i class="bi bi-pencil-square"></i>&nbsp;Editer
+                </a>
+            {% endif %}
+            <a href="#" class="right btn btn-secondary" {{ live_action('nextPage') }}>
+                <i class="bi bi-chevron-right"></i>
+            </a>
+        </div>
+        <div class="col-12">
+            <div class="accordion text-center">
+                {% for index, value in this.items %}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading-{{ this.flux.id }}-{{ index }}">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapse-{{ this.flux.id }}-{{ index }}" aria-expanded="true"
+                                    aria-controls="collapse-{{ this.flux.id }}-{{ index }}">
+                                <span class="badge bg-secondary text-end"
+                                      style="font-size:60%;">{{ value.pubDate|date('d/m/Y') }}</span>&nbsp;&nbsp;{{ value.title }}
+                            </button>
+                        </h2>
+                        <div id="collapse-{{ this.flux.id }}-{{ index }}" class="accordion-collapse collapse"
+                             data-bs-parent="#{{ this.flux.id }}">
+                            <div class="accordion-body accordion">
+                                {% if value.enclosure is defined and value.enclosure.attributes.url != null %}
+                                    <div class="row">
+                                        <div id="sound-{{ this.flux.id }}-{{ index }}" class="audio text-center col-8">
+                                            <a href="{{ value.enclosure.attributes.url }}" type="button"
+                                               class="btn btn-secondary"
+                                               data-type="{{ value.enclosure.attributes.type }}"
+                                               data-action="flux#launch" style="width:100%;"><i
+                                                    class="bi bi-play-circle-fill"></i></a>
+                                        </div>
+                                        {% if is_granted('FLUX_DOWNLOAD') %}
+                                            <div class="audio text-center col-4">
+                                                <a href="#" data-url="{{ value.enclosure.attributes.url }}"
+                                                   type="button" class="btn btn-secondary"
+                                                   data-type="{{ value.enclosure.attributes.type }}"
+                                                   data-action="flux#download" data-title="{{ value.title }}"
+                                                   style="width:100%;" download><i class="bi bi-download"></i></a>
+                                            </div>
+                                        {% endif %}
+                                    </div><br/>
+                                {% endif %}
+                                {% if value.description is defined %}
+                                    <p>{{ value.description|raw }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                        <div class="spinner-grow text-warning" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>

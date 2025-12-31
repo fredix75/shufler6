@@ -3,13 +3,6 @@ import $ from 'jquery';
 
 export default class extends Controller {
 
-    connect() {
-        $.each($('.accordion'), function (index, value) {
-            let id = $(value).attr('id');
-            let url = $(value).data('url');
-            getData(url, id, 1);
-        });
-    }
 
     launch(event) {
         let url = $(event.target).closest('a').attr('href');
@@ -26,38 +19,6 @@ export default class extends Controller {
             text = '<div class="pres">' + podcast + '<br />' + title.html()+ '</div>';
         }
         $('#audio-stick').html(audio).append(text);
-        event.preventDefault();
-    }
-
-    prev(event) {
-        let url = $(event.target).closest('.flux').find('.accordion').data('url');
-        let id = $(event.target).closest('.flux').find('.accordion').attr('id');
-        let page = parseInt($(event.target).closest('a.left').data('page'));
-        getData(url, id, page);
-        $(event.target).closest('.pod-nav').find('a.right').data('page', page + 1);
-        if (page > 1) {
-            $(event.target).closest('a.left').data('page', page - 1);
-        } else {
-            $(event.target).closest('a.left').addClass('disabled');
-        }
-        event.preventDefault();
-    }
-
-    next(event) {
-        let url = $(event.target).closest('.flux').find('.accordion').data('url');
-        let id = $(event.target).closest('.flux').find('.accordion').attr('id');
-        let page = parseInt($(event.target).closest('a.right').data('page'));
-        getData(url, id, page);
-        $(event.target).closest('a.right').data('page', page + 1);
-        if (page > 1) {
-            $(event.target).closest('.pod-nav').find('a.left').data('page', page - 1);
-            $(event.target).closest('.pod-nav').find('a.left').removeClass('disabled');
-        } else {
-            if (!$(event.target).closest('.pod-nav').find('a.left').hasClass('disabled')) {
-                $(event.target).closest('.pod-nav').find('a.left').data('page', page - 1);
-                $(event.target).closest('.pod-nav').find('a.left').addClass('disabled');
-            }
-        }
         event.preventDefault();
     }
 

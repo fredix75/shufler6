@@ -2036,6 +2036,9 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *         },
  *     },
  * }
+ * @psalm-type LiveComponentConfig = array{
+ *     secret?: scalar|null, // The secret used to compute fingerprints and checksums // Default: "%kernel.secret%"
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
@@ -2056,6 +2059,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *     turbo?: TurboConfig,
  *     twig_component?: TwigComponentConfig,
  *     nelmio_security?: NelmioSecurityConfig,
+ *     live_component?: LiveComponentConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -2079,6 +2083,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *         turbo?: TurboConfig,
  *         twig_component?: TwigComponentConfig,
  *         nelmio_security?: NelmioSecurityConfig,
+ *         live_component?: LiveComponentConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -2100,6 +2105,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *         turbo?: TurboConfig,
  *         twig_component?: TwigComponentConfig,
  *         nelmio_security?: NelmioSecurityConfig,
+ *         live_component?: LiveComponentConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
@@ -2122,6 +2128,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
  *         turbo?: TurboConfig,
  *         twig_component?: TwigComponentConfig,
  *         nelmio_security?: NelmioSecurityConfig,
+ *         live_component?: LiveComponentConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,
