@@ -10,17 +10,21 @@ import $ from 'jquery';
 export default class extends Controller {
 
     async displayContent(event) {
-        $('.block-content-album').remove();
-        let artist = $(event.target).closest('a').data('artist');
-        artist = artist.replaceAll('&', '%26');
-        let album = $(event.target).closest('a').data('album');
+        document.querySelectorAll('.block-content-album').forEach(el => el.hidden = true)
+        let artist = event.target.closest('a')?.dataset.artist
+        artist = artist.toString().replaceAll('&', '%26');
+        let album = event.target.closest('a')?.dataset.album;
         album = album.toString().replaceAll('&', '%26');
         album = album.toString().replaceAll('#', '%23');
         album = album.toString().replaceAll('+', '%2B');
         let url = '/fr/music/tracks_album';
         let query = '?artist=' + artist + '&album=' + album;
-        let content = await $.ajax(url + query);
-        $(content).insertAfter($(event.target).closest('.album'));
+        const response = await fetch(url + query)
+        const content = await response.text()
+        event.target
+            .closest('.album')
+            ?.insertAdjacentHTML('afterend', content)
+        // jquery inévitable !
         $('.block-content-album').toggle("slow");
     }
 
