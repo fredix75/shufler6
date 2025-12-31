@@ -68,7 +68,9 @@ export default class extends PieceController {
             }
         });
         let modal = document.querySelector('#formModal');
-        Modal.getInstance(modal).hide();
+        if (Modal.getInstance(modal) !== null) {
+            Modal.getInstance(modal).hide();
+        }
     }
 
     popupPlaylist(event) {
@@ -86,7 +88,9 @@ export default class extends PieceController {
             }
         });
         let modal = document.querySelector('#formModal');
-        Modal.getInstance(modal).hide();
+        if (Modal.getInstance(modal) !== null) {
+            Modal.getInstance(modal).hide();
+        }
     }
 
     async saveTrack(event){
@@ -115,7 +119,9 @@ export default class extends PieceController {
                 element.html('<i class="bi bi-youtube"></i>');
             }
             let modal = document.querySelector('#formModal');
-            Modal.getInstance(modal).hide();
+            if (Modal.getInstance(modal) !== null) {
+                Modal.getInstance(modal).hide();
+            }
         });
     }
 

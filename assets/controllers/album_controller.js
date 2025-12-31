@@ -63,7 +63,9 @@ export default class extends Controller {
                 }
             }
             let modal = document.querySelector('#formModal');
-            Modal.getInstance(modal).hide();
+            if (Modal.getInstance(modal) !== null) {
+                Modal.getInstance(modal).hide();
+            }
         });
     }
 
@@ -72,9 +74,8 @@ export default class extends Controller {
         if ($(event.target).closest('a').data('id')) {
             let id = $(event.target).closest('a').data('id');
             let modal = document.querySelector('#formModal');
-            let m = Modal.getInstance(modal);
-            if (m != null) {
-                m.hide();
+            if (Modal.getInstance(modal) !== null) {
+                Modal.getInstance(modal).hide();
             }
             modal = new Modal('#formModal', {keyboard: false});
             modal.show();
