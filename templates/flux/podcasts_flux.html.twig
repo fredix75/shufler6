@@ -3,7 +3,7 @@
 {% block podcasts %}
     <div class="row justify-content-center txt-center" data-controller="flux">
         {% for podcast in podcasts %}
-            <div class="flux card col col-12 col-md-6 col-lg-4 m-1">
+            <div class="flux card col col-12 col-md-6 col-lg-4 m-1 p-0">
                 <div class="card-header d-flex flex-row justify-content-between" style="background-color: #0a53be; color:yellow;">
                     {% if podcast.channel is defined and podcast.channel.image is defined %}
                         <img src="{{ asset('uploads/logos/' ~ podcast.channel.image) }}" height="50px" loading="lazy">&nbsp;
