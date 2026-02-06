@@ -5,28 +5,35 @@
 {% block body %}
     <div class="p-4">
         <h1><i class="bi bi-link"></i> Liens</h1>
-        <div class="row justify-content-center txt-center">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-2 justify-content-center txt-center">
             {% for categ in categories %}
-                <div class="link row g-0 position-relative col col-12 col-md-6 col-lg-4" style="padding: 5px;">
-                    <div class="row" style="padding: 5px;background-color: grey;">
-                        <h2 class="flux-titre">{{ categ.name }}</h2>
-                        <div class="list-group">
-                            {% for link in liens %}
-                                {% if link.mood is not null and link.mood.id == categ.id %}
-                                    <div class="list-group-item">
-                                        {% if is_granted('FLUX_EDIT', link) %}
-                                            <a href="{{ path('flux_edit',{'id': link.id}) }}"
-                                               class="btn btn-transparent">
-                                                <span class="bi bi-pencil"></span>
+                <div class="col p-2">
+                    <div class="link card bg-dark text-white">
+                        <div class="card-header text-center bg-black">
+                            <h2>{{ categ.name|capitalize }}</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="list-group">
+                                {% for link in liens %}
+                                    {% if link.mood is not null and link.mood.id == categ.id %}
+                                        <div class="d-flex list-group-item list-group-item-action list-group-item-dark justify-content-between border-1">
+                                            <a href="{{ link.url }}" class="text-black" target="_blank"
+                                               rel="noopener noreferrer">
+                                                <h3 class="text-dark fw-bold">{{ link.name }}</h3>
+                                                <p>{{ link.description }}</p>
                                             </a>
-                                        {% endif %}
-                                        <a href="{{ link.url }}" class="list-group-item-action" target="_blank"
-                                           rel="noopener noreferrer">
-                                            {{ link.name }}
-                                        </a>
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
+                                            {% if is_granted('FLUX_EDIT', link) %}
+                                                <div>
+                                                    <a href="{{ path('flux_edit',{'id': link.id}) }}"
+                                                       class="btn btn-secondary">
+                                                        <i class="bi bi-pencil"></i>
+                                                    </a>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
                 </div>

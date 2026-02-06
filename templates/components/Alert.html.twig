@@ -1,6 +1,6 @@
 {% for type, messages in this.flashes %}
     {% for message in messages %}
-        <div {{ attributes.defaults({class: 'alert alert-' ~ type}) }}>
+        <div {{ attributes.defaults({class: 'alert alert-' ~ type ~ ' mx-4 p-2'}) }}>
             <p><i class="{{ type|toIconAlert }}"></i> {{ message }}</p>
         </div>
     {% endfor %}

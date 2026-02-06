@@ -16,39 +16,44 @@
             </ul>
         </div>
         <br/><br/>
-        <div class="row justify-content-center txt-center" data-controller="flux">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-2 justify-content-center txt-center"
+             data-controller="flux">
             {% for rss in news %}
-                <div class="flux card col col-12 col-md-6 col-lg-4 m-1 p-0">
-                    <div class="card-header text-center">
-                        <img src="{{ asset('/uploads/logos/' ~ rss.image) }}" alt="{{ rss.name }}"
-                             style="max-height:100px; max-width:150px;"
-                             loading="lazy">
-                    </div>
-                    <div class="card-body">
-                        <div id="flux-{{ rss.id }}" class="row news-widget">
-                            <div class="pod-nav flex-row d-flex justify-content-around mb-4">
-                                <a href="#" class="left btn btn-secondary disabled" data-page="0" data-action="flux#prev">
-                                    <i class="bi bi-chevron-left"></i>
-                                </a>
-                                {% if is_granted('FLUX_EDIT', rss) %}
-                                    <a href="{{ path('flux_edit', {'id': rss.id}) }}" class="btn btn-secondary">
-                                        <i class="bi bi-pencil-square"></i>&nbsp;Editer
+                <div class="col p-2">
+                    <div class="flux card">
+                        <div class="card-header text-center">
+                            <img src="{{ asset('/uploads/logos/' ~ rss.image) }}" alt="{{ rss.name }}"
+                                 style="max-height:100px; max-width:150px;"
+                                 loading="lazy">
+                        </div>
+                        <div class="card-body">
+                            <div id="flux-{{ rss.id }}" class="row news-widget">
+                                <div class="pod-nav flex-row d-flex justify-content-around mb-4">
+                                    <a href="#" class="left btn btn-secondary disabled" data-page="0"
+                                       data-action="flux#prev">
+                                        <i class="bi bi-chevron-left"></i>
                                     </a>
-                                {% endif %}
-                                <a href="#" class="right btn btn-secondary" data-page="2" data-action="flux#next">
-                                    <i class="bi bi-chevron-right"></i>
-                                </a>
-                            </div>
-                            <div class="col-12">
-                                <div id="accordion-{{ rss.id }}" class="accordion text-center" data-url="{{ rss.url }}"
-                                     data-type="news">
+                                    {% if is_granted('FLUX_EDIT', rss) %}
+                                        <a href="{{ path('flux_edit', {'id': rss.id}) }}" class="btn btn-secondary">
+                                            <i class="bi bi-pencil-square"></i>&nbsp;Editer
+                                        </a>
+                                    {% endif %}
+                                    <a href="#" class="right btn btn-secondary" data-page="2" data-action="flux#next">
+                                        <i class="bi bi-chevron-right"></i>
+                                    </a>
+                                </div>
+                                <div class="col-12">
+                                    <div id="accordion-{{ rss.id }}" class="accordion text-center"
+                                         data-url="{{ rss.url }}"
+                                         data-type="news">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="card-footer flex-row d-flex justify-content-between small">
-                        <div>{{ rss.name }}</div>
-                        <div>{{ 'now'|date('d/m/Y H:i') }}</div>
+                        <div class="card-footer flex-row d-flex justify-content-between small">
+                            <div>{{ rss.name }}</div>
+                            <div>{{ 'now'|date('d/m/Y H:i') }}</div>
+                        </div>
                     </div>
                 </div>
             {% endfor %}
