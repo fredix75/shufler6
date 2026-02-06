@@ -18,34 +18,33 @@
                     {{ form_errors(form) }}
                     {{ form_widget(form) }}
                     <div class="row justify-content-center">
-                        <div class="col-6 col-md-3">
-                            <button type="submit" class="btn btn-primary btn-lg"><i
-                                        class="bi bi-check-circle-fill"></i> OK
+                        <div class="col-6 col-md-3 text-center">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-check-circle-fill"></i> OK
                             </button>
                         </div>
                     </div>
                     {{ form_end(form) }}
                     {% if video.id is defined and video.id != 0 %}
-                        <div class="row justify-content-around" style="margin-top:20px;">
-                            <div class="col-4">
-                                <a class="btn btn-secondary btn-lg" style="width:100%;"
+                        <div class="row row-cols-3 justify-content-between mt-4 text-center">
+                            <div class="col p-2">
+                                <a class="btn btn-secondary p-2"
                                    href="{{ path('api_video', {'search_api': video.auteur ~ ' ' ~ video.titre, 'id_video': video.id }) }}">
                                     <i class="bi bi-arrow-left-right"></i>&nbsp;change
                                 </a>
                             </div>
-                            <div class="col-4">
-                                <a class="btn btn-secondary btn-lg" style="width:100%;" href="{{ path('video_view', {'id':video.id}) }}">
+                            <div class="col p-2">
+                                <a class="btn btn-secondary p-2" href="{{ path('video_view', {'id':video.id}) }}">
                                     <i class="bi bi-eye-fill"></i>&nbsp;View
                                 </a>
                             </div>
-
                             {% if is_granted('VIDEO_DELETE') %}
-                                <div class="col-4">
+                                <div class="col p-2">
                                     <form action="{{ path('video_delete', {'id' : video.id}) }}" method="POST"
                                           onclick="return confirm('{{ 'Are You sure ?'|trans }}');">
                                         <input type="hidden" name="_token"
                                                value="{{ csrf_token('video_delete' ~ video.id) }}">
-                                        <button class="btn btn-danger btn-lg" style="width:100%;" type="submit"><i class="bi bi-trash-fill"></i>&nbsp;Virer
+                                        <button class="btn btn-danger p-2" type="submit"><i class="bi bi-trash-fill"></i>&nbsp;Virer
                                         </button>
                                     </form>
                                 </div>
