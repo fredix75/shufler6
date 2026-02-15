@@ -13,22 +13,9 @@
             </div>
             {% for album in albums %}
                 <div class="col col-12 col-md-6 col-xl-4 p-4">
-                    <a href="{{ path('music_couch', params|merge({'album':album.name})) }}">
-                        <div class="card">
-                            <div class="row g-0">
-                                <div class="col-4">
-                                    <img src="{{ album.picture }}" class="img-fluid rounded-start"
-                                         alt="{{ album.name }}">
-                                </div>
-                                <div class="col-8">
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{ album.name }}</h5>
-                                        <p class="card-text">{{ album.auteur }} {{ album.annee ? "(%d)"|format(album.annee) }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
+                    <twig:HorizontalCard title="{{ album.name }}" pictureSrc="{{ album.picture }}" path="{{ path('music_couch', params|merge({'album':album.name})) }}">
+                        <twig:block name="content">{{ album.auteur }} {{ album.annee ? "(%d)"|format(album.annee) }}</twig:block>
+                    </twig:HorizontalCard>
                 </div>
             {% endfor %}
         </div>

@@ -7,7 +7,7 @@ use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
-class ShuflerExtension extends AbstractExtension
+final class ShuflerExtension extends AbstractExtension
 {
     public function getFilters(): array
     {

@@ -6,7 +6,7 @@ use App\Entity\Video;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent]
-class VideoFrame
+final class VideoFrame
 {
     private Video $video;
 

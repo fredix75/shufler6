@@ -16,7 +16,7 @@
                     <a class="page-link" href="{{ path(this.pagination.route, this.pagination.route_params|merge({'page': p})) }}">{{ p }}</a>
                 </li>
             {% endfor %}
-            {% if this.pagination.page<this.pagination.pages_count %}
+            {% if this.pagination.page < this.pagination.pages_count %}
                 <li class="page-item">
                     <a class="page-link" href="{{ path(this.pagination.route, this.pagination.route_params|merge({'page': this.pagination.page + 1})) }}">></a>
                 </li>
