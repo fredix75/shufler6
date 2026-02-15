@@ -8,18 +8,18 @@
         <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-2 justify-content-center txt-center">
             {% for categ in categories %}
                 <div class="col p-2">
-                    <div class="link card bg-dark text-white">
-                        <div class="card-header text-center bg-black">
-                            <h2>{{ categ.name|capitalize }}</h2>
+                    <div class="flux card">
+                        <div class="card-header text-center">
+                            <h2><i class="bi bi-layers-fill me-2"></i>{{ categ.name|capitalize }}</h2>
                         </div>
                         <div class="card-body">
                             <div class="list-group">
                                 {% for link in liens %}
                                     {% if link.mood is not null and link.mood.id == categ.id %}
-                                        <div class="d-flex list-group-item list-group-item-action list-group-item-dark justify-content-between border-1">
-                                            <a href="{{ link.url }}" class="text-black" target="_blank"
+                                        <div class="d-flex list-group-item list-group-item-action list-group-item-info justify-content-between border-1">
+                                            <a href="{{ link.url }}" class="" target="_blank"
                                                rel="noopener noreferrer">
-                                                <h3 class="text-black">{{ link.name }}</h3>
+                                                <h3>{{ link.name }}</h3>
                                                 <p class="text-black-50">{{ link.description }}</p>
                                             </a>
                                             {% if is_granted('FLUX_EDIT', link) %}
