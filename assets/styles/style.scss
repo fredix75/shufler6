@@ -120,6 +120,33 @@ a.video-link:hover img, a.playlist-link:hover img {
     color: white;
 }
 
+.alert {
+    padding: 1.25rem 1.5rem;
+    font-family: "Courier New", serif;
+    font-size: 120%;
+}
+
+.alert-success {
+    --bs-alert-color: rgb(114,200,148);
+    --bs-alert-bg: #051b11;
+    --bs-alert-border-color: #0f5132;
+    --bs-alert-link-color: rgb(114,200,148);
+}
+
+.alert-warning {
+    --bs-alert-color: #ffda6a;
+    --bs-alert-bg: #332701;
+    --bs-alert-border-color: #997404;
+    --bs-alert-link-color: #ffda6a;
+}
+
+.alert-danger {
+    --bs-alert-color: #ea868f;
+    --bs-alert-bg: #2c0b0e;
+    --bs-alert-border-color: #842029;
+    --bs-alert-link-color: #ea868f;
+}
+
 .invalid-feedback {
   color: #ff5500;
 }

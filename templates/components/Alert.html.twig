@@ -1,7 +1,8 @@
 {% for type, messages in this.flashes %}
     {% for message in messages %}
-        <div {{ attributes.defaults({class: 'alert alert-' ~ type ~ ' mx-4 p-2'}) }}>
-            <p><i class="{{ type|toIconAlert }}"></i> {{ message }}</p>
+        <div {{ attributes.defaults({class: 'alert alert-' ~ type ~ ' mx-4 alert-dismissible fade show'}) }}>
+            <i class="{{ type|toIconAlert }}"></i> {{ message }}
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     {% endfor %}
 {% endfor %}

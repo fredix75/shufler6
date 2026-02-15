@@ -121,7 +121,7 @@ final class ShuflerRuntime implements RuntimeExtensionInterface
     {
         switch ($string) {
             case 'success' :
-                return 'bi bi-shield-fill-check';
+                return 'bi bi-check-circle me-3';
             case 'warning' :
                 return 'bi bi-shield-fill-exclamation';
             case 'danger' :
