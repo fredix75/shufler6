@@ -1,28 +1,39 @@
-{%  extends 'base.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}{{ parent() }} :: Extra notes{% endblock %}
 
 {% block body %}
     <h1><i class="bi bi-star"></i> Les extra notes</h1>
-    <br><br>
-    <h2>Les 4 <i class="bi bi-heart-fill"></i></h2>
-    <table class="table">
-        {% for track in tracks|filter(track => track.extraNote == 4) %}
-        <tr>
-            <td>{{ track.auteur }}</td>
-            <td>{{ track.titre }}</td>
-            <td>{{ track.album }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-    <h2>Les -1 <i class="bi bi-heartbreak-fill"></i></h2>
-    <table class="table">
-        {% for track in tracks|filter(track => track.extraNote == -1 and track.note > 1) %}
-            <tr>
-                <td>{{ track.auteur }}</td>
-                <td>{{ track.titre }}</td>
-                <td>{{ track.album }}</td>
-            </tr>
-        {% endfor %}
-    </table>
+    <div class="well" data-controller="modal-channel-form">
+        <div class="row justify-content-md-center txt-center">
+            <div class="col-12 col-lg-8 text-center">
+                <br><br>
+                <h2>Les 4 <i class="bi bi-heart-fill"></i></h2>
+                {{ form_start(form) }}
+                <table class="table table-dark table-striped">
+                    {% for index, track in form.extra_graduated_tracks %}
+                        <tr>
+                            <td>{{ form_widget(track) }}</td>
+                            <td>{{ tracks[index].auteur }}</td>
+                            <td>{{ tracks[index].titre }}</td>
+                            <td>{{ tracks[index].album }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                <button type="submit" class="btn btn-primary btn-lg" onclick="return confirm('Etes vous bien sûr ?')">OK</button>
+                {{ form_end(form) }}
+                <br><br>
+                <h2>Les -1 <i class="bi bi-heartbreak-fill"></i></h2>
+                <table class="table">
+                    {% for track in tracks|filter(track => track.extraNote == -1 and track.note > 1) %}
+                        <tr>
+                            <td>{{ track.auteur }}</td>
+                            <td>{{ track.titre }}</td>
+                            <td>{{ track.album }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
 {% endblock %}
