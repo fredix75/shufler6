@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
@@ -24,9 +23,6 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 #[IsGranted("ROLE_USER")]
 class VideoController extends AbstractController
 {
-    public function __construct(private readonly SerializerInterface $serializer)
-    {
-    }
 
     #[Route('/list/{categorie}/{genre}/{periode}/{page}',
         name: '_list',
@@ -94,32 +90,8 @@ class VideoController extends AbstractController
         ]);
 
         $videos = $videoRepository->getRandomVideos($search, $categorie, $genre, $periode, 'youtube');
-        $videoParameters = $this->getParameter('shufler_video');
 
-        $trackIntro = [
-            'titre' => ' * * * * * L O A D I N G * * * * * ',
-            'auteur' => '',
-            'annee' => null,
-            'youtubeKey' => $videoParameters['intro_couch']
-        ];
-
-        $list = [$trackIntro];
-        $playlist = [$trackIntro['youtubeKey']];
-
-        $i = 0;
-        foreach ($videos as $video) {
-            $video = $this->serializer->normalize($video);
-
-            if (!\in_array($videoHelper->getIdentifer($video['lien'], 'youtube'), $playlist)) {
-                $video['youtubeKey'] = $videoHelper->getIdentifer($video['lien'], 'youtube');
-                $list[] = $video;
-                $playlist[] = $video['youtubeKey'];
-                $i++;
-            }
-            if ($i >= $videoParameters['max_list_couch']) {
-                break;
-            }
-        }
+        list($list, $playlist) = $videoHelper->buildPlaylist($videos);
 
         return $this->render('video/couch.html.twig', [
             'list' => $list,

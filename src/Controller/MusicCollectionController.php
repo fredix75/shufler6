@@ -334,30 +334,7 @@ class MusicCollectionController extends AbstractController
             shuffle($pieces);
         }
 
-        $musicParameters = $this->getParameter('music_collection');
-        $videoParameters = $this->getParameter('shufler_video');
-        $trackIntro = [
-            'titre' => ' * * * * * L O A D I N G * * * * * ',
-            'auteur' => '',
-            'album' => '',
-            'annee' => null,
-            'youtubeKey' => $videoParameters['intro_couch'],
-        ];
-
-        $playlist = [$trackIntro['youtubeKey']];
-        $list = [$trackIntro];
-
-        $i = 0;
-        foreach ($pieces as $piece) {
-            if (!\in_array($piece['youtubeKey'], $playlist) && $piece['youtubeKey'] !== 'nope') {
-                $playlist[] = $piece['youtubeKey'];
-                $list[] = $piece;
-                $i++;
-            }
-            if ($i >= $musicParameters['max_random']) {
-                break;
-            }
-        }
+        list($list, $playlist) = $musicHelper->buildPlaylist($pieces);
 
         return $this->render('video/couch.html.twig', [
             'list' => $list,

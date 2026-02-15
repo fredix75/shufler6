@@ -3,6 +3,7 @@
 namespace App\Helper;
 
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class VideoHelper
 {
@@ -24,7 +25,7 @@ class VideoHelper
     const VIMEO = 'vimeo';
     const VIMEO_API = 'https://vimeo.com/api/v2/video/';
 
-    public function __construct(private readonly ParameterBagInterface $parameterBag) {}
+    public function __construct(private readonly ParameterBagInterface $parameterBag, private readonly SerializerInterface $serializer) {}
 
     public function getPlatform(string $lien): string
     {
@@ -72,5 +73,35 @@ class VideoHelper
         return $periode;
     }
 
+    public function buildPlaylist(array $videos): array
+    {
+        $videoParameters = $this->parameterBag->get('shufler_video');
 
+        $trackIntro = [
+            'titre' => ' * * * * * L O A D I N G * * * * * ',
+            'auteur' => '',
+            'annee' => null,
+            'youtubeKey' => $videoParameters['intro_couch']
+        ];
+
+        $list = [$trackIntro];
+        $playlist = [$trackIntro['youtubeKey']];
+
+        $i = 0;
+        foreach ($videos as $video) {
+            $video = $this->serializer->normalize($video);
+
+            if (!\in_array($this->getIdentifer($video['lien'], 'youtube'), $playlist)) {
+                $video['youtubeKey'] = $this->getIdentifer($video['lien'], 'youtube');
+                $list[] = $video;
+                $playlist[] = $video['youtubeKey'];
+                $i++;
+            }
+            if ($i >= $videoParameters['max_list_couch']) {
+                break;
+            }
+        }
+
+        return [$list, $playlist];
+    }
 }
