@@ -4,10 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Flux;
 use App\Form\FluxFormType;
+use App\Helper\FluxHelper;
 use App\Repository\FluxMoodRepository;
 use App\Repository\FluxRepository;
 use App\Repository\FluxTypeRepository;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\ExpressionLanguage\Expression;
@@ -104,38 +104,16 @@ class FluxController extends AbstractController
     }
 
     #[Route('/handle', name: '_handle_file')]
-    public function handleFlux(Request $request): Response
+    public function handleFlux(Request $request, FluxHelper $fluxHelper): Response
     {
         if ($request->isXmlHttpRequest()) {
             $id = $request->query->get('id');
             $url = $request->query->get('url');
             $type = $request->query->get('type');
-            $contenu = '';
-            try {
-                if (@simplexml_load_file($url, null, LIBXML_NOCDATA)->{'channel'}->{'item'}) {
-                    $contenu = @simplexml_load_file($url)->{'channel'}->{'item'};
-                }
-            } catch (Exception $e) {
-                return new Response('No data - ' . $e->getMessage());
-            }
-
             $page = $request->query->get('page');
-            $debut = ($page - 1) * 6;
-            $namespaces = $contenu ? $contenu->getNamespaces(true) : [];
-            $infos = [];
-
-            for ($i = $debut; $i < $debut + 6; $i++) {
-                if (empty($contenu[$i])) {
-                    break;
-                }
-                $infos[$i] = $contenu[$i];
-                $infos[$i]->title = stripcslashes($contenu[$i]->title);
-                $infos[$i]->description = $contenu[$i]->description;
-                if (!empty($namespaces['media']) && !empty($contenu[$i]->children($namespaces['media'])->attributes()->url)) {
-                    $infos[$i]->media = $contenu[$i]->children($namespaces['media'])->attributes()->url;
-                }
-            }
-
+            $nbParPage = $this->getParameter('shufler_flux')['max_flux_card'];
+            $offset = ($page - 1) * $nbParPage;
+            $infos = $fluxHelper->getContent($url, $nbParPage, $offset);
             $template = sprintf('%s_%s_list.html.twig', 'flux/part/', $type);
 
             return $this->render($template, [
@@ -185,33 +163,21 @@ class FluxController extends AbstractController
             return $this->redirectToRoute($routeToRedirect);
         }
 
-        $tabNews = array_reduce($fluxMoods, function ($carry, $m) {
-            if ($m->getType()->getId() === 1) {
-                $carry[$m->getId()] = $m->getName();
-            }
-            return $carry;
-        });
-
-        $tabRadios = array_reduce($fluxMoods, function ($carry, $m) {
-            if ($m->getType()->getId() === 3) {
-                $carry[$m->getId()] = $m->getName();
-            }
-            return $carry;
-        });
-
-        $tabLiens = array_reduce($fluxMoods, function ($carry, $m) {
-            if ($m->getType()->getId() === 4) {
-                $carry[$m->getId()] = $m->getName();
-            }
-            return $carry;
-        });
+        $moods = array_map(function($x) use ($fluxMoods) {
+            return array_reduce($fluxMoods, function ($carry, $m) use ($x) {
+                if ($m->getType()->getId() === $x) {
+                    $carry[$m->getId()] = $m->getName();
+                }
+                return $carry;
+            });
+        }, [1,3,4]);
 
         return $this->render('flux/edit.html.twig', [
             'form' => $form,
             'flux' => $flux,
-            'news' => $tabNews,
-            'radios' => $tabRadios,
-            'liens' => $tabLiens,
+            'news' => $moods[0],
+            'radios' => $moods[1],
+            'liens' => $moods[2],
         ]);
     }
 

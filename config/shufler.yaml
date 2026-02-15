@@ -53,6 +53,9 @@ parameters:
             - 3
             - 4
 
+    shufler_flux:
+        max_flux_card: 6
+
     youtube_api_url: 'https://www.googleapis.com/youtube/v3'
     youtube_key: '%env(YOUTUBE_KEY)%'
     vimeo_api_url: 'https://vimeo.com/api/v2'

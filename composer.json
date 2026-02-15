@@ -57,7 +57,8 @@
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/intl-extra": "^3.7",
         "twig/twig": "^2.12|^3.0",
-        "vimeo/vimeo-api": "^4.0"
+        "vimeo/vimeo-api": "^4.0",
+        "ext-simplexml": "*"
     },
     "config": {
         "allow-plugins": {
