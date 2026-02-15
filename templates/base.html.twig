@@ -8,7 +8,7 @@
         <meta name = "viewport" content = "width=device-width, initial-scale=1">
         <meta name = "robots" content = "index, follow">
         <title>{% block title %}Shufler{% endblock %}</title>
-        <link rel="icon" type="image/png" href="{{ asset('images/fav.png') }}" />
+        <link rel="icon" type="image/png" href="{{ asset('images/fav.png') }}">
         {% block stylesheets %}
         {% endblock %}
 
@@ -30,8 +30,8 @@
             {% endif %}
         </div>
         <footer>
-            <p style="position: absolute;z-index: 3"><br/>&nbsp;&nbsp;&nbsp;<i class="bi bi-wrench-adjustable"></i>&nbsp;Shufler © {{ 'now'|date('Y') }} - fred@shufler.fr<br/>&nbsp;&nbsp;&nbsp;<cite>"Life is just a joke...</cite></p>
-            <img src="{{ asset('images/vague.gif') }}" width="100%" height="100%" />
+            <p style="position: absolute;z-index: 3"><br>&nbsp;&nbsp;&nbsp;<i class="bi bi-wrench-adjustable"></i>&nbsp;Shufler © {{ 'now'|date('Y') }} - fred@shufler.fr<br>&nbsp;&nbsp;&nbsp;<cite>"Life is just a joke...</cite></p>
+            <img src="{{ asset('images/vague.gif') }}" width="100%" height="100%">
         </footer>
     </body>
 </html>

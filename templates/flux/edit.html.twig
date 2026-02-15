@@ -6,7 +6,7 @@
     <div class="p-4">
         {% if flux.id is defined and flux.id !=0 %}
             <h1 class="minor"><i class="bi bi-pencil"></i>&nbsp;Editer le Flux {{ flux.id }}</h1>
-            <span class="badge bg-secondary" style="float:right;">{{ flux.dateInsert|date("d/m/Y H:i:s") }}</span><br/>
+            <span class="badge bg-secondary" style="float:right;">{{ flux.dateInsert|date("d/m/Y H:i:s") }}</span><br>
         {% else %}
             <h1 class="minor"><i class="bi bi-plus-circle"></i>&nbsp;Ajouter un Flux</h1>
         {% endif %}
@@ -44,11 +44,11 @@
                     {% if flux.id is defined %}
                         {% if flux.image is not null %}
                             {% if 'http' in flux.image %}
-                                <img src="{{ asset(flux.image) }}" width="200px"/>
+                                <img src="{{ asset(flux.image) }}" width="200px" alt="Logo {{ flux.name }}">
                             {% elseif no_cover_picture in flux.image %}
-
+                                {# nothing to do #}
                             {% else %}
-                                <img src="{{ asset('uploads/logos/' ~ flux.image) }}" width="200px"/>
+                                <img src="{{ asset('uploads/logos/' ~ flux.image) }}" width="200px" alt="Logo {{ flux.name }}">
                                 <a href="{{ path('flux_delete_logo',{'id': flux.id}) }}"
                                    type="button"
                                    class="btn btn-danger"
@@ -61,10 +61,10 @@
                         {% endif %}
                         {% if flux.channel.id is defined and flux.channel.image is not null %}
                             {% if 'http' in flux.image %}
-                                <img src="{{ asset(flux.channel.image) }}" width="200px"/>
+                                <img src="{{ asset(flux.channel.image) }}" width="200px" alt="{{ flux.channel.name }}">
                             {% else %}
                                 <img class="channel-image" src="{{ asset('uploads/logos/' ~ flux.channel.image) }}"
-                                     width="200px"/>
+                                     width="200px" alt="{{ flux.channel.name }}">
                             {% endif %}
                         {% endif %}
                         {% if flux.channel.id is defined %}

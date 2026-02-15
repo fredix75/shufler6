@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
     <div class="container-fluid">
-        <a class="navbar-brand" href="{{ path('main_home') }}" aria-label="Go to Homepage"><img src="{{ asset('images/shufler_logo.png') }}" width=150px alt="logo Shufler" title="Back to Home" /></a>
+        <a class="navbar-brand" href="{{ path('main_home') }}" aria-label="Go to Homepage"><img src="{{ asset('images/shufler_logo.png') }}" width=150px alt="logo Shufler" title="Back to Home"></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar" role="button" aria-label="Menu">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -95,10 +95,10 @@
             {% if app.request.attributes.get('_route_params') is not null and app.request.attributes.get('_route') is not null %}
                 <ul class="nav navbar-nav navbar-right">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-label="Switch language"><img src="{{ asset('images/flags/flag-'~ app.request.locale ~'.png')}}" width="30px" alt="language-{{ app.request.locale }}" title="language-{{ app.request.locale }}" />&nbsp;<b class="caret"></b></a>
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-label="Switch language"><img src="{{ asset('images/flags/flag-'~ app.request.locale ~'.png')}}" width="30px" alt="language-{{ app.request.locale }}" title="language-{{ app.request.locale }}">&nbsp;<b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale' : 'en'})) }}" class="dropdown-item" aria-label="switch language english"><img src="{{ asset('images/flags/flag-en.png')}}" width="30px" alt="language-en" title="language-en" />&nbsp;English</a></li>
-                            <li><a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale' : 'fr'})) }}" class="dropdown-item" aria-label="switch language french"><img src="{{ asset('images/flags/flag-fr.png')}}" width="30px" alt="language-fr" title="language-fr" />&nbsp;Français</a></li>
+                            <li><a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale' : 'en'})) }}" class="dropdown-item" aria-label="switch language english"><img src="{{ asset('images/flags/flag-en.png')}}" width="30px" alt="language-en" title="language-en">&nbsp;English</a></li>
+                            <li><a href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({'_locale' : 'fr'})) }}" class="dropdown-item" aria-label="switch language french"><img src="{{ asset('images/flags/flag-fr.png')}}" width="30px" alt="language-fr" title="language-fr">&nbsp;Français</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -106,7 +106,7 @@
             <form class="d-flex" role="form" action="{{ url('main_search') }}">
                 <div data-controller="autocomplete" data-autocomplete-url-value="/fr/video/autocomplete" role="combobox" style="flex-direction: column;">
                     <input class="form-control me-2" type="search" id="search_field" name="search_field" data-autocomplete-target="input" placeholder="Y'en a ou pas?" autofocus>
-                    <input type="hidden" name="video_id" data-autocomplete-target="hidden"/>
+                    <input type="hidden" name="video_id" data-autocomplete-target="hidden">
                     <ul class="list-group" data-autocomplete-target="results" style="position:absolute;"></ul>
                 </div>&nbsp;&nbsp;
                 <button class="btn btn-primary" type="submit" role="button" aria-label="Search"><i class="bi bi-search"></i></button>

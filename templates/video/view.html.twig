@@ -26,9 +26,9 @@
             <div class="media">
                 {{ video.texte }}
             </div>
-            <br/>
+            <br>
             <div class="well">
-                <span class="badge bg-dark" style="float:right;">{{ video.dateInsert|date("d/m/Y H:i:s") }}</span><br/>
+                <span class="badge bg-dark" style="float:right;">{{ video.dateInsert|date("d/m/Y H:i:s") }}</span><br>
                 {% if is_granted('VIDEO_DELETE') %}
                     <form action="{{ path('video_delete', {'id' : video.id}) }}" method="POST" onclick="return confirm('{{ 'Are You sure ?'|trans }}');">
                         <input type="hidden" name="_token" value="{{ csrf_token('video_delete' ~ video.id) }}">

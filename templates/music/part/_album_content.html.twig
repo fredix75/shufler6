@@ -1,10 +1,10 @@
 <div class="row block-content-album" style="display:none;">
     <div class="col-12 col-md-4 col-lg-2 text-center div-img">
-        <img class="album-picture-{{ album.id }}" src="{{ album.picture }}"/>
+        <img class="album-picture-{{ album.id }}" src="{{ album.picture }}" alt="Cover {{ album.name }}">
     </div>
     <div class="col-12 col-md-8 col-lg-10" data-controller="music">
         <p class="music-title" style="color:white; border:none;">
-            <span class="music-album">{{ album.name }}</span><br/>
+            <span class="music-album">{{ album.name }}</span><br>
             by <span class="music-auteur">{{ album.auteur }}</span> ({{ album.annee }})
             <span class="badge bg-primary">{{ album.genre }}</span>
         </p>

@@ -6,7 +6,7 @@
     <div class="p-4">
         {% if video.id is defined and video.id !=0 %}
             <h1 class="minor"><i class="bi bi-pencil"></i>&nbsp;Editer la Vidéo {{ video.id }}</h1>
-            <span class="badge bg-secondary" style="float:right;">{{ video.dateInsert|date("d/m/Y H:i:s") }}</span><br/>
+            <span class="badge bg-secondary" style="float:right;">{{ video.dateInsert|date("d/m/Y H:i:s") }}</span><br>
         {% else %}
             <h1 class="minor"><i class="bi bi-plus-circle"></i>&nbsp;Ajouter une Vidéo</h1>
         {% endif %}

@@ -18,8 +18,8 @@
                             {% endif %}
                             <img class="album-picture-{{ album.id }}{{ class_no_picture }}" src="{{ album.picture }}"
                                  alt="{{ album.auteur ~ ' ' ~ album.name }}" title="{{ album.name }}" width="100%"
-                                 loading="lazy"/>
-                            <strong>{{ album.auteur }}</strong><br/>
+                                 loading="lazy">
+                            <strong>{{ album.auteur }}</strong><br>
                             {{ album.name }} <small>{{ album.annee  ? '('~ album.annee ~')' : '' }}</small>
                         </a>
                     </div>
