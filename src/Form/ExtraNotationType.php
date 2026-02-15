@@ -16,7 +16,7 @@ class ExtraNotationType extends AbstractType
             ->add('extra_graduated_tracks', ChoiceType::class, [
                 'choices' => $options['tracks'],
                 'choice_value' => fn(Track $track) => $track->getId(),
-                'choice_label' => fn(Track $track) => sprintf("%s - %s - %s", $track->getTitre(), $track->getAuteur(), $track->getAlbum()),
+                'choice_label' => false,
                 'multiple' => true,
                 'expanded' => true,
                 'row_attr'=> [
