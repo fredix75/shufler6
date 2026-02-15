@@ -8,39 +8,46 @@
             by <span class="music-auteur">{{ album.auteur }}</span> ({{ album.annee }})
             <span class="badge bg-primary">{{ album.genre }}</span>
         </p>
-        <div id="album-btn">
+        <div class="row justify-content-start text-center">
             {% if album.youtubeKey is not empty %}
-                <a id="album-youtube-{{ album.id }}" class="playlist-link icon-youtube"
-                   href="{{ album.youtubeKey|youtubeChannelLink }}" data-id="{{ album.youtubeKey }}"
-                   data-action="music#popupPlaylist" title="video Playlist">
-                    <i class="bi bi-youtube"></i>
-                </a>&nbsp;&nbsp;
+                <div class="col p-2">
+                    <a id="album-youtube-{{ album.id }}" class="playlist-link icon-youtube"
+                       href="{{ album.youtubeKey|youtubeChannelLink }}" data-id="{{ album.youtubeKey }}"
+                       data-action="music#popupPlaylist" title="video Playlist">
+                        <i class="bi bi-youtube"></i>
+                    </a>
+                </div>&nbsp;&nbsp;
             {% endif %}
             {% if tracks is not empty %}
-                <a class="btn btn-primary" href="{{ path('music_couch', {'auteur' : album.auteur, 'album': album.name }) }}"
-                   style="margin-top: -20px;" title="Enchaîner les titres">
-                    <i class="bi bi-youtube"></i> Enchainer les titres
-                </a>
+                <div class="col p-2">
+                    <a class="btn btn-primary"
+                       href="{{ path('music_couch', {'auteur' : album.auteur, 'album': album.name }) }}" title="Enchaîner les titres">
+                        <i class="bi bi-youtube"></i> Enchainer les titres
+                    </a>
+                </div>
             {% endif %}
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
-                        aria-expanded="false" style="margin-top: -20px;">
-                    <i class="bi bi-binoculars-fill"></i> Search
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item"
-                           href="{{ path('api_playlist', {'id_album': album.id, search_api: (album.auteur|lower != 'divers' ? album.auteur : '') ~ ' ' ~ album.name }) }}">Playlist</a>
-                    </li>
-                    <li><a class="dropdown-item"
-                           href="{{ path('api_album_picture', {'id_album': album.id, 'search_api': album.name, 'artist' : album.auteur }) }}">Cover</a>
-                    </li>
-                </ul>
+            <div class="col p-2">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        <i class="bi bi-binoculars-fill"></i> Search
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item"
+                               href="{{ path('api_playlist', {'id_album': album.id, search_api: (album.auteur|lower != 'divers' ? album.auteur : '') ~ ' ' ~ album.name }) }}">Playlist</a>
+                        </li>
+                        <li><a class="dropdown-item"
+                               href="{{ path('api_album_picture', {'id_album': album.id, 'search_api': album.name, 'artist' : album.auteur }) }}">Cover</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            &nbsp;
-            <a class="btn btn-secondary edit-album" href="#" data-id="{{ album.id }}" data-action="album#openEditModal"
-               style="margin-top: -20px;" title="album edit">
-                <i class="bi bi-pencil-square"></i>
-            </a>
+            <div class="col p-2">
+                <a class="btn btn-secondary edit-album" href="#" data-id="{{ album.id }}"
+                   data-action="album#openEditModal" title="album edit">
+                    <i class="bi bi-pencil-square"></i>
+                </a>
+            </div>
         </div>
         <table class="table table-dark">
             <tbody>
