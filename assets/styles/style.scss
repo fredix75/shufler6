@@ -189,9 +189,19 @@ a.video-link:hover img, a.playlist-link:hover img {
   text-align: center;
 }
 
-.flux-titre {
-  color: white;
-  font-weight: bold;
+.flux.card {
+    color: #6edff6;
+    background-color: #032830;
+}
+
+.flux.card .accordion {
+    --bs-accordion-bg: rgba(255,255,255,0.4);
+    --bs-accordion-border-color: #032830;
+    color: white;
+}
+
+.flux.card .accordion-body .btn {
+    border:1px solid white;
 }
 
 .list-group-item.video {
