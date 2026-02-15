@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} :: Albums list{% endblock %}
+
+{% block body %}
+    <div class="p-4">
+        <div class="row">
+            <div class="d-flex justify-content-evenly">
+                <a href="{{ path('music_filter_couch', params) }}" type="button"
+                   class="btn btn-secondary btn-lg"><i class="bi bi-arrow-left"></i> retour filtres</a>
+                <a href="{{ path('music_couch', params|merge({'is_disambiguate': true})) }}" type="button"
+                   class="btn btn-primary btn-lg">OK POUR TOUT !</a>
+            </div>
+            {% for album in albums %}
+                <div class="col col-12 col-md-6 col-xl-4 p-4">
+                    <a href="{{ path('music_couch', params|merge({'album':album.name})) }}">
+                        <div class="card">
+                            <div class="row g-0">
+                                <div class="col-4">
+                                    <img src="{{ album.picture }}" class="img-fluid rounded-start"
+                                         alt="{{ album.name }}">
+                                </div>
+                                <div class="col-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ album.name }}</h5>
+                                        <p class="card-text">{{ album.auteur }} {{ album.annee ? "(%d)"|format(album.annee) }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% if form_track is defined %}
+        {% include 'music/part/_filters.html.twig' %}
+    {% endif %}
+{% endblock %}

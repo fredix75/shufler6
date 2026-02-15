@@ -113,7 +113,10 @@ class TrackRepository extends ServiceEntityRepository
         $params[':sort'] = $sort;
         $params[':dir'] = $dir;
         $conn = $this->getEntityManager()->getConnection();
-        $rawSQL = 'SELECT a.id as id, t.album, t.artiste, a.youtube_key as youtubeKey, json_arrayagg(t.annee) as annees, json_arrayagg(t.genre) as genres FROM piece t';
+        $rawSQL = <<<SQL
+SELECT a.id as id, t.album, t.artiste, a.youtube_key as youtubeKey, json_arrayagg(t.annee) as annees, json_arrayagg(t.genre) as genres
+FROM piece t
+SQL;
         $rawSQL .= ' JOIN album a on a.auteur=t.artiste and a.name=t.album WHERE t.data_type = 1';
         if (!empty($data['query'])) {
             $rawSQL .= ' AND (artiste like "%'.$data['query'].'%" OR album like "%'.$data['query'].'%")';

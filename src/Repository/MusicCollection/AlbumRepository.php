@@ -91,7 +91,7 @@ class AlbumRepository extends ServiceEntityRepository
             }
         }
 
-        if ($params['random']) {
+        if (!empty($params['random'])) {
             $result = $query->getQuery()->getResult();
             shuffle($result);
             return array_slice($result, 0, 50);
