@@ -2,7 +2,12 @@
     <div class="accordion-item">
         <h2 class="accordion-header" id="heading-{{ id }}-{{index}}">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ id }}-{{index}}" aria-expanded="true" aria-controls="collapse-{{ id }}-{{index}}">
-                <span class="badge bg-secondary text-end" style="font-size:60%;">{{ value.pubDate|date('d/m/Y') }}</span>&nbsp;&nbsp;{{ value.title }}
+                <div class="d-flex justify-content-around">
+                    <div class="p-2">
+                        <span class="badge bg-dark">{{ value.pubDate|date('d/m/Y') }}</span>
+                    </div>
+                    <div class="">{{ value.title }}</div>
+                </div>
             </button>
         </h2>
         <div id="collapse-{{ id }}-{{index}}" class="accordion-collapse collapse" data-bs-parent="#{{ id }}">
