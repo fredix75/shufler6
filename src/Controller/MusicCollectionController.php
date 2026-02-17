@@ -230,6 +230,10 @@ class MusicCollectionController extends AbstractController
         $artist = $request->query->get('artist');
         $artist = $artistRepository->findOneBy(['name' => $artist]);
 
+        if (!$artist) {
+            throw $this->createNotFoundException('no artist');
+        }
+
         return $this->render('music/part/_artist.html.twig', [
             'artist' => $artist
         ]);
