@@ -106,9 +106,8 @@ class Track extends Piece
             .$this->annee.$this->bitrate.$this->duree.$this->genre.$this->note.$this->pays);
     }
 
-    #[ORM\PostLoad]
     public function onLoad(): void
     {
-        $this->note = $this->extraNote ?? $this->note;
+        $this->note = $this->extraNote > 0 && empty($this->note) || $this->extraNote < 0 && !empty($this->note) ? $this->extraNote : $this->note;
     }
 }

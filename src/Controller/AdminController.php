@@ -71,12 +71,14 @@ class AdminController extends AbstractController
     public function listExtraNote(Request $request, TrackRepository $trackRepository): Response
     {
         $tracks = $trackRepository->createQueryBuilder('t')
-            ->where('t.extraNote IS NOT NULL')
+            ->where('t.extraNote > 0 AND t.note IS NULL OR t.extraNote < 0 AND t.note > 0')
             ->getQuery()
             ->getResult();
+        $tracks4 = array_merge(array_filter($tracks, fn($t) => $t->getExtraNote() > 0));
+        $tracks0 = array_merge(array_filter($tracks, fn($t) => $t->getExtraNote() == -1 && $t->getNote() > 0));
 
         $form = $this->createForm(ExtraNotationType::class, null, [
-            'tracks' => $tracks,
+            'tracks' => $tracks4,
         ]);
         $form->handleRequest($request);
 
@@ -94,7 +96,8 @@ class AdminController extends AbstractController
 
         return $this->render('admin/extra_notes.html.twig', [
             'form' => $form,
-            'tracks' => $tracks,
+            'tracks_4' => $tracks4,
+            'tracks_0' => $tracks0,
         ]);
     }
 }

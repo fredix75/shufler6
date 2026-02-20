@@ -6,7 +6,7 @@
     <h1><i class="bi bi-star"></i> Les extra notes</h1>
     <div class="well" data-controller="modal-channel-form">
         <div class="row justify-content-md-center text-center">
-            <div class="col-12 col-lg-8">
+            <div class="col-12 col-lg-8" data-controller="music">
                 <br><br>
                 <h2>Les 4 <i class="bi bi-heart-fill"></i></h2>
                 {{ form_start(form) }}
@@ -14,9 +14,13 @@
                     {% for index, track in form.extra_graduated_tracks %}
                         <tr>
                             <td>{{ form_widget(track) }}</td>
-                            <td class="text-start">{{ tracks[index].titre }}</td>
-                            <td class="text-start">{{ tracks[index].auteur }}</td>
-                            <td class="text-start">{{ tracks[index].album }}</td>
+                            <td class="text-start">{{ tracks_4[index].titre }}</td>
+                            <td class="text-start">{{ tracks_4[index].auteur }}</td>
+                            <td class="text-start">{{ tracks_4[index].album }}</td>
+                            <td class="text-start">
+                                <a class="video-link" href="{{ tracks_4[index].youtubeKey|popUpYoutube }}"
+                                   data-action="music#popup"><i class="bi bi-youtube"></i></a>
+                            </td>
                         </tr>
                     {% endfor %}
                 </table>
@@ -24,12 +28,16 @@
                 {{ form_end(form) }}
                 <br><br>
                 <h2>Les -1 <i class="bi bi-heartbreak-fill"></i></h2>
-                <table class="table">
-                    {% for track in tracks|filter(track => track.extraNote == -1 and track.note > 1) %}
+                <table class="table table-dark table-striped">
+                    {% for track in tracks_0 %}
                         <tr>
                             <td>{{ track.auteur }}</td>
                             <td>{{ track.titre }}</td>
                             <td>{{ track.album }}</td>
+                            <td class="text-start">
+                                <a class="video-link" href="{{ track.youtubeKey|popUpYoutube }}"
+                                   data-action="music#popup"><i class="bi bi-youtube"></i></a>
+                            </td>
                         </tr>
                     {% endfor %}
                 </table>

@@ -53,20 +53,20 @@ final class ShuflerRuntime implements RuntimeExtensionInterface
     {
         $frame_prefix = '<img loading="lazy" class="embed-responsive-item" alt="'.$name.'" title="'.$name.'" src="';
         $width = '100%';
-        $frame = $frame_prefix . $this->assetMapper->getPublicPath($this->videoParameters['no_signal']) . '" width=' . $width . ' />';
+        $frame = $frame_prefix . $this->assetMapper->getPublicPath($this->videoParameters['no_signal']) . '" width=' . $width . ' >';
 
         $platform = $this->videoHelper->getPlatform($lien);
         $vid = $this->videoHelper->getIdentifer($lien, $platform);
 
         if ($platform === VideoHelper::YOUTUBE) {
             $video = VideoHelper::YOUTUBE_API . $vid .  '/0.jpg';
-            $frame = $frame_prefix . $video . '" width=' . $width . ' />';
+            $frame = $frame_prefix . $video . '" width=' . $width . ' >';
 
         } elseif ($platform === VideoHelper::VIMEO) {
             try {
                 $data = file_get_contents(VideoHelper::VIMEO_API . $vid . '.json');
                 if ($data && $data = json_decode($data)) {
-                    $frame = $frame_prefix . $data[0]->thumbnail_medium . '" width=' . $width . ' />';
+                    $frame = $frame_prefix . $data[0]->thumbnail_medium . '" width=' . $width . ' >';
                 }
             } catch (\Exception $e) {
                 error_log($e->getMessage());
@@ -81,7 +81,7 @@ final class ShuflerRuntime implements RuntimeExtensionInterface
             }
 
             if ($data && $data = json_decode($data)) {
-                $frame = $frame_prefix . $data->thumbnail_url . '" width=' . $width . ' />';
+                $frame = $frame_prefix . $data->thumbnail_url . '" width=' . $width . ' >';
             }
         }
 
