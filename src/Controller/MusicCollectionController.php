@@ -309,6 +309,7 @@ class MusicCollectionController extends AbstractController
     #[Route('/filter-couch', name: '_filter_couch', methods: ['GET'])]
     public function filterCouch(Request $request, FilterPieceRepository $filterPieceRepository, MusicHelper $musicHelper): Response {
         $params = $musicHelper->handleParams($request);
+
         $form = $this->createForm(FilterTracksFormType::class, $params);
         $filterlistes = $filterPieceRepository->findBy([], ['name' => 'ASC']);
 
@@ -327,7 +328,6 @@ class MusicCollectionController extends AbstractController
         }
 
         $form = $this->createForm(FilterTracksFormType::class, $params);
-        $params['note'] = $request->query->get('note') ?? null;
         $pieces = $pieceRepository->getPieces($params);
         if (empty($pieces)) {
             $this->addFlash('warning', 'No Result !');

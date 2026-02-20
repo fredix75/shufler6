@@ -18,6 +18,7 @@ class MusicHelper {
             'genres' => $p['genres'] ?? null,
             'annee' => $p['annee'] ?? null,
             'search' => $p['search'] ?? null,
+            'note' => $p['note'] ?? null,
             'hasYoutubeKey' => true,
             'is_disambiguate' => $p['is_disambiguate'] ?? false,
         ];
