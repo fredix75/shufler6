@@ -4,6 +4,13 @@
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
-        {{ form(search_form()) }}
+        {% set form = search_form() %}
+        {{ form_start(form) }}
+        <div><div class="input-group input-group-sm">
+            {{ form_widget(form.painter) }}
+            {{ form_widget(form.submit) }}
+            </div>
+        </div>
+        {{ form_end(form) }}
     </div>
 </div>

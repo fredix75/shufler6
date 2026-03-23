@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -12,17 +13,21 @@ class SearchPainterType extends AbstractType
     {
         $builder
             ->add('painter', SearchPainterAutocomplete::class, [
+                'label' => false,
+            ])
+            ->add('submit', SubmitType::class, [
                 'label' => '<i class="bi bi-search"></i>',
                 'label_html' => true,
                 'attr' => [
-                    'class' => 'select24',
-                ],
+                    'class' => 'btn btn-outline-secondary pe-3 ps-3',
+                ]
             ])
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([]);
+        $resolver->setDefaults([
+        ]);
     }
 }
