@@ -1,0 +1,16 @@
+{% extends 'picture/base.html.twig' %}
+
+{% block title %}{{ parent() }} :: Thèmes{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <!-- List group-->
+        <ul class="list-group shadow p-4">
+            {% for theme in themes %}
+                <li class="list-group-item mt-4 artist-tile">
+                    <a href="{{ path('picture_artist', { id: theme.id }) }}">{{ theme.name|title }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

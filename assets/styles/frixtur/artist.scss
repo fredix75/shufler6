@@ -1,0 +1,144 @@
+.bandeau {
+    background: radial-gradient(
+            circle,
+            rgba(0, 35, 55, 1) 0%,
+            rgba(0, 21, 33, 1) 100%
+    );
+    color: #00a3ff;
+    padding: 1em;
+    font-family: museo, serif;
+
+    h2 {
+        font-family: 'elite', serif;
+        font-weight: bold;
+    }
+
+    .artist-bio {
+        text-align: justify;
+    }
+}
+
+.bandeau.small {
+    height: 60px;
+    width: 100%;
+    position:fixed;
+    top:90px;
+    padding:0;
+    background: radial-gradient(
+            circle,
+            rgb(51, 51, 51) 0%,
+            rgb(47, 52, 55) 100%
+    );
+    color: white;
+    box-shadow: 0 0 5px rgba(0, 0, 0, .8);
+    h2 {
+        font-size: 1em;
+        line-height: 0;
+        font-weight: lighter;
+    }
+
+    @media (min-width: 755px) {
+        h2 {
+            font-size: 1.5em;
+            line-height: 0;
+            font-weight: lighter;
+        }
+    }
+
+    .artist-medaillon {
+        display: none;
+    }
+
+    @media (min-width: 755px) {
+        .artist-medaillon {
+            display: block;
+            width: 80px;
+            img {
+                height: 80px;
+                border: 1px solid white;
+            }
+        }
+    }
+
+    .artist-bio {
+        display:none;
+    }
+
+    .bio-source {
+        display: none;
+    }
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+    gap: 2em;
+    padding: 2em;
+    pointer-events: none;
+
+    img {
+        display: block;
+        width: 100%;
+        border-radius: .25em;
+        transition: 250ms 50ms;
+        pointer-events: auto;
+        //filter: saturate(.2) opacity(.5);
+        //filter: grayscale(80%);
+    }
+
+    &:hover div:hover {
+        //filter: none;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+    }
+}
+
+.lightbox {
+    /* Default to hidden */
+    display: none;
+
+    /* Overlay entire screen */
+    position: fixed;
+    z-index: 999;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /* A bit of padding around image */
+    padding: 1em;
+    /* Translucent background */
+    background: rgba(0, 0, 0, 0.9);
+}
+
+.lightbox span {
+    /* Full width and height */
+    display: block;
+    width: 100%;
+    height: 100%;
+
+    /* Size and position background image */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.thumbnail img {
+    height:400px;
+    object-fit: cover
+}
+
+.thumbnail {
+    text-decoration: none;
+    color:black;
+    font-size: 0.8em;
+}
+
+.artist-medaillon {
+    width:150px;
+    margin:auto;
+    img {
+        border: 3px solid white;
+        border-radius:50%;
+        height:150px;
+        object-fit: cover;
+    }
+}

@@ -17,9 +17,11 @@
         {% endblock %}
     </head>
     <body>
+        {% block header %}
         <header>
             {% include 'part/_nav.html.twig' %}
         </header>
+        {% endblock %}
 
         <div class="container-fluid content">
             <twig:Alert :flashes="app.flashes" withCloseButton />

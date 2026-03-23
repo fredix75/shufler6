@@ -1,0 +1,44 @@
+{% extends 'picture/base.html.twig' %}
+
+{% block title %}{{ parent() }} :: Peintres{% endblock %}
+
+{% block body %}
+    <div class="flex-column mt-3">
+        <div class="col-2">
+            truc
+        </div>
+        <twig:Pagination :pagination="pagination"/>
+    </div>
+    <div class="row">
+        <!-- List group-->
+        <ul class="list-group shadow p-4">
+            {% for artist in artists %}
+                <li class="list-group-item mt-4 artist-tile">
+                    <!-- Custom content-->
+                    <div class="media align-items-center row p-3">
+                        <div class="col-12 col-lg-2">
+                            <a href="{{ path('picture_artist', {id: artist.id}) }}">
+                                <img
+                                    src="{{ asset('uploads/peinture/' ~ (artist.paintings is not empty ? artist.paintings[0].file : '') ) }}"
+                                    class="img-thbnail" alt="{{ artist.name }}" width="100%">
+                            </a>
+                        </div>
+                        <div class="media-body col-12 col-lg-10">
+                            <h5 class="mt-2 font-weight-bold mb-2">{{ artist.firstName ~ ' ' ~artist.name }}</h5>
+                            <div class="d-flex align-items-center justify-content-between mt-1">
+                                <h6 class="font-weight-bold my-2">{{ artist.birthYear ~ ' - ' ~ artist.deathYear }}</h6>
+                            </div>
+                            <p class="font-italic text-muted mb-0 small">{{ artist.bio }}</p>
+                            <div class="text-center mt-4">
+                                <a class="btn btn-outline-secondary"
+                                   href="{{ path('picture_artist', {id: artist.id}) }}">Visiter pour pas cher</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End -->
+                </li> <!-- End -->
+            {% endfor %}
+        </ul>
+        <twig:Pagination :pagination="pagination"/>
+    </div>
+{% endblock %}

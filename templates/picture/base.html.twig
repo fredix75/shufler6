@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}friXtur{% endblock %}
+
+{% block stylesheet %}
+    {% block importmap %}{{ importmap('frixtur') }}{% endblock %}
+{% endblock %}
+
+{% block header %}
+    <div class="header" data-controller="picture">
+        <nav class="navbar">
+            <div class="container-fluid justify-content-between">
+                <button id="btn-offcanvas" class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling" aria-label="Menu" title="Menu">
+                    <i class="bi bi-box-arrow-in-right" style="font-size: 1.3em;"></i>
+                </button>
+                <div class="text-center">
+                    <a class="navbar-brand" href="{{ path('picture_home') }}" aria-label="Go to Homepage" title="FRIXTUR HOME">
+                        <h1 class="header_logo">fri<span class="letter-x">X</span>tur</h1>
+                    </a>
+                    <span class="sous-titre">L'Histoire de l'ART dans ta face</span>
+                </div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Menu" title="Menu">
+                    <i class="navbar-toggler-icon"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav text-center bg-white">
+                        <a class="nav-link {{ app.current_route == 'picture_home' ? 'active' : '' }}" aria-current="page" href="{{ path('picture_home') }}">Accueil</a>
+                        <a class="nav-link {{ app.current_route == 'picture_list' ? 'active' : '' }}" aria-current="page" href="{{ path('picture_list') }}">Les Peintres</a>
+                        <a class="nav-link {{ app.current_route == 'picture_themes' ? 'active' : '' }}" aria-current="page" href="{{ path('picture_themes') }}">Les Thèmes</a>
+                        <a class="nav-link" href="{{ path('main_home') }}">Shufler</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+    {% include 'picture/_offcanvas.html.twig' with { title: '' } %}
+{% endblock %}

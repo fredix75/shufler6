@@ -1,0 +1,137 @@
+@font-face {
+    src: url("../../fonts/SpecialElite-Regular.ttf");
+    font-family: 'elite';
+}
+
+@font-face {
+    src: url("../../fonts/Aldrich-Regular.ttf");
+    font-family: 'aldrich';
+}
+
+@font-face {
+    src: url("../../fonts/MuseoModerno-VariableFont_wght.ttf");
+    font-family: 'museo';
+}
+
+body {
+    font-family: aldrich, sans-serif;
+    background-image: url("../../images/bg-dot.png");
+    background-attachment: fixed;
+}
+
+.container-fluid.content {
+    margin-top: 0;
+    padding-top: 150px;
+    transition: .3s;
+}
+
+.header {
+    position: fixed;
+    width: 100%;
+    height: 155px;
+    font-weight: bold;
+    background-color: white;
+    transition: .3s;
+    padding: 2em;
+    color:red;
+    z-index: 999;
+    border-bottom: 1px solid grey;
+    h1 {
+        font-family: 'elite', serif;
+        letter-spacing: 7px;
+
+    }
+}
+
+.sous-titre {
+    display: block;
+    font-family: 'elite', serif;
+    font-size: 0.5em;
+    color: grey;
+}
+
+@media (min-width: 755px) {
+    .sous-titre {
+        display: block;
+        font-family: 'elite', serif;
+        letter-spacing: 10px;
+        font-size: 1.5em;
+    }
+}
+
+.header.small {
+    height: 90px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, .8);
+    padding: 1em;
+
+    & ~ .offset {
+        padding-top: 140px;
+    }
+
+    .header_logo {
+        font-size: 1.5em;
+        text-shadow: none;
+        text-align: center;
+    }
+
+    h1 {
+        letter-spacing: 8px;
+    }
+
+    @media (min-width: 755px) {
+        h1 {
+            letter-spacing: 50px;
+        }
+    }
+
+    .sous-titre {
+        display: none;
+    }
+}
+
+.header_logo {
+    margin: 0;
+    font-size: 1.5em;
+    text-align: center;
+    text-shadow: 3px 4px rgba(0, 0, 0, .1);
+    transition: .4s;
+}
+
+.letter-x {
+    color:rgb(255,150,0);
+}
+
+@media (min-width: 755px) {
+    .header_logo {
+        font-size: 3em;
+    }
+}
+
+.navbar-brand {
+    margin: 0;
+}
+
+.navbar-toggler {
+    border: 0;
+}
+
+/* sidebar */
+
+.offcanvas.offcanvas-start {
+    top: 155px;
+    transition: .3s;
+}
+
+.offcanvas.small {
+    top: 90px;
+}
+
+footer {
+    color: white;
+    height: 150px;
+    background: linear-gradient(to bottom, transparent, #301c91);
+    img {
+        opacity: 0.8;
+    }
+}
+

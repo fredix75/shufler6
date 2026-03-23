@@ -1,0 +1,35 @@
+{% extends 'picture/base.html.twig' %}
+
+{% block title %}{{ parent() }} :: {{ artist.firstName }} {{ artist.name }}{% endblock %}
+
+{% block body %}
+    <div class="bandeau row justify-content-center align-items-center">
+        <div class="col-12 col-md-2 text-center">
+            <div class="artist-medaillon">
+                <img src="{% if artist.picture != '' %}{{ artist.picture }}{% else %}{{ asset('uploads/peinture/' ~ artist.paintings[0].file) }}{% endif %}" style="width: 100%;">
+            </div>
+        </div>
+        <div class="col-12 col-md-10 p-4 text-center text-md-start">
+            <h2>{{ artist.firstName }} {{ artist.name }}</h2>
+            <p class="artist-bio">{{ artist.bio }}</p>
+            <span class="bio-source fst-italic ps-4 text-white">source: Wikipedia</span>
+        </div>
+    </div>
+    {% if is_granted('ROLE_ADMIN') %}
+    <div id="painter-form" class="m-4 p-4 text-center" style="display:none;">
+        {{ form(form) }}
+    </div>
+    {% endif %}
+    <section class="row gallery justify-content-center" data-controller="picture">
+        {% for painting in artist.paintings %}
+            <a href="#" class="thumbnail text-center" data-action="picture#displayPicture" data-src="{{ asset('uploads/peinture/' ~ painting.file) }}">
+                <div style="padding: 5px;background-color:white;">
+                    <img src="{{ asset('uploads/peinture/' ~ painting.file) }}"
+                         alt="{{ painting.name }}" loading="lazy">
+                    <p style="margin-top:5px;">{{ painting.name }}</p>
+                </div>
+            </a>
+        {% endfor %}
+    </section>
+    <a href="#" class="lightbox" id="img-bg" data-controller="picture" data-action="picture#hideBg"><span></span></a>
+{% endblock %}
