@@ -17,19 +17,30 @@ class PainterRepository extends ServiceEntityRepository
         parent::__construct($registry, Painter::class);
     }
 
-    public function getPaintersAndPaintings(int $nb, int $offset = 0): Paginator
+    public function getPaintersAndPaintings(int $nb, int $offset = 0, string $order = 'ASC', ?string $sort = null): Paginator|array
     {
         $q = $this->createQueryBuilder('p')
             ->leftJoin('p.paintings', 'paintings')
             ->addSelect('paintings')
-            ->where('p.type IS NULL')
-            ->orderBy('p.birthYear', 'ASC')
-            ->addOrderBy('p.deathYear', 'ASC')
-            ->getQuery()
-            ->setFirstResult($offset)
-            ->setMaxResults($nb);
+            ->where('p.type IS NULL');
 
-        return new Paginator($q, true);
+        if ($order && $sort) {
+
+            if ($sort === 'time') {
+                $q->orderBy('p.birthYear', $order)
+                    ->addOrderBy('p.deathYear', $order);
+            } elseif ($sort === 'alpha') {
+                $q->orderBy('p.name', $order);
+            }
+
+            $q->setFirstResult($offset)->setMaxResults($nb);
+            $q->getQuery();
+
+            return new Paginator($q, true);
+        }
+
+        return $q->getQuery()->getResult();
+
     }
 
     public function getPainterAndPaintings(int $id): Painter

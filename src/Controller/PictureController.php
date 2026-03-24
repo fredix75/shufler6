@@ -28,21 +28,36 @@ final class PictureController extends AbstractController
     }
 
     #[Route('/list/{page}', name: '_list', requirements: ['page' => '\d+'], defaults: ['page' => 1], methods: ['GET'])]
-    public function index(int $page, PainterRepository $painterRepository): Response
+    public function index(int $page, PainterRepository $painterRepository, Request $request): Response
     {
-        $offset = ($page - 1) * 25;
+        $limit = 25;
+
+        $offset = ($page - 1) * $limit;
+
+        $sort = $request->query->get('sort');
+        $order = $request->query->get('order') ?? 'ASC';
 
         $allArtists = $painterRepository->findBy(['type' => null]);
-        $artists = $painterRepository->getPaintersAndPaintings(25, $offset);
+        $pagination = [];
 
-        $pagination = [
-            'page' => $page,
-            'route' => 'picture_list',
-            'pages_count' => (int)ceil(count($allArtists) / 25),
-            'route_params' => []
-        ];
+        if ($sort) {
+            $artists = $painterRepository->getPaintersAndPaintings($limit, $offset, $order, $sort);
+            $pagination = [
+                'page' => $page,
+                'route' => 'picture_list',
+                'pages_count' => (int)ceil(count($allArtists) / 25),
+                'route_params' => [
+                    'sort' => $sort,
+                    'order' => strtoupper($order),
+                ],
+            ];
+        } else {
+            $artists = $painterRepository->getPaintersAndPaintings($limit);
+            shuffle($artists);
+            $artists = array_slice($artists, 0, $limit);
+        }
 
-        return $this->render('picture/index.html.twig', [
+        return $this->render('picture/artists_list.html.twig', [
             'artists' => $artists,
             'pagination' => $pagination,
         ]);

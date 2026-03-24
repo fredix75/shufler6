@@ -18,8 +18,13 @@
                             </a>
                         </div>
                     {% endfor %}
-                </div><!-- End row -->
-            </div><!-- End image gallery -->
-        </div><!-- End container -->
+                </div>
+            </div>
+            <br><br>
+            <div class="d-flex justify-content-around">
+                <a href="{{ path('picture_list') }}" class="btn btn-secondary">Tous les artistes</a>
+                <a href="{{ path('picture_themes') }}" class="btn btn-secondary">Tous les thèmes</a>
+            </div>
+        </div>
     </section>
 {% endblock %}

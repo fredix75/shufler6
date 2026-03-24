@@ -26,12 +26,16 @@ export default class extends Controller {
         const content = document.getElementsByClassName('content')[0];
         const btnIcon = document.getElementById('btn-offcanvas').querySelector('i');
         myOffcanvas.addEventListener('hidden.bs.offcanvas', event => {
-            content.style.paddingLeft = '0.75rem';
+            if (document.documentElement.clientWidth > 730) {
+                content.style.paddingLeft = '0.75rem';
+            }
             btnIcon.classList.remove('bi-box-arrow-in-left');
             btnIcon.classList.add('bi-box-arrow-in-right');
         })
         myOffcanvas.addEventListener('show.bs.offcanvas', event => {
-            content.style.paddingLeft = '410px';
+            if (document.documentElement.clientWidth > 730) {
+                content.style.paddingLeft = '410px';
+            }
             btnIcon.classList.remove('bi-box-arrow-in-right');
             btnIcon.classList.add('bi-box-arrow-in-left');
         })

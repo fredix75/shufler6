@@ -120,6 +120,7 @@ body {
 .offcanvas.offcanvas-start {
     top: 155px;
     transition: .3s;
+    z-index: 900;
 }
 
 .offcanvas.small {

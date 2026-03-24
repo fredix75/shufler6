@@ -3,11 +3,27 @@
 {% block title %}{{ parent() }} :: Peintres{% endblock %}
 
 {% block body %}
-    <div class="flex-column mt-3">
-        <div class="col-2">
-            truc
+    <div class="row mt-3 justify-content-center">
+        <div class="col-6 col-lg-3 btn-group" role="group" aria-label="Tri">
+            {% set sort = pagination is not empty ? pagination['route_params']['sort'] : '' %}
+            {% set order = pagination is not empty ? pagination['route_params']['order'] : '' %}
+            <a href="{{ path(app.current_route) }}" class="btn btn-light {{ (sort == '') ? 'active' : '' }}"
+               title="ordre aléatoire" type="button">
+                <i class="bi bi-shuffle"></i>
+            </a>
+            <a href="{{ path(app.current_route, {sort : 'alpha', order: (sort == 'alpha' and order == 'ASC') ? 'desc' : 'asc' }) }}"
+               class="btn btn-light {{ (sort == 'alpha') ? 'active' : '' }}" title="Tri alphabétique" type="button">
+                <i class="bi bi-sort-alpha-{{ (sort == 'alpha' and order == 'ASC') ? 'up' : 'down' }}"></i>
+            </a>
+            <a href="{{ path(app.current_route, {sort : 'time', order: (sort == 'time' and order == 'ASC') ? 'desc' : 'asc' }) }}"
+               class="btn btn-light {{ (sort == 'time') ? 'active' : '' }}" title="Tri chronolologique" type="button">
+                <i class="bi bi-arrow-{{ (sort == 'time' and order == 'ASC') ? 'up' : 'down' }}"></i>
+                <i class="bi bi-clock"></i>
+            </a>
         </div>
-        <twig:Pagination :pagination="pagination"/>
+        {% if pagination is not empty %}
+            <twig:Pagination :pagination="pagination"/>
+        {% endif %}
     </div>
     <div class="row">
         <!-- List group-->
@@ -39,6 +55,8 @@
                 </li> <!-- End -->
             {% endfor %}
         </ul>
-        <twig:Pagination :pagination="pagination"/>
+        {% if pagination is not empty %}
+            <twig:Pagination :pagination="pagination"/>
+        {% endif %}
     </div>
 {% endblock %}
