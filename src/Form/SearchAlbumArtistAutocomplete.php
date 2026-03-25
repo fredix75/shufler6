@@ -2,26 +2,26 @@
 
 namespace App\Form;
 
-use App\Entity\MusicCollection\Artist;
-use App\Repository\MusicCollection\ArtistRepository;
+use App\Entity\MusicCollection\Album;
+use App\Repository\MusicCollection\AlbumRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\Autocomplete\Form\AsEntityAutocompleteField;
 use Symfony\UX\Autocomplete\Form\BaseEntityAutocompleteType;
 
 #[AsEntityAutocompleteField]
-class SearchArtistAutocomplete extends AbstractType
+class SearchAlbumArtistAutocomplete extends AbstractType
 {
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'class' => Artist::class,
+            'class' => Album::class,
             'placeholder' => 'Auteur',
-            'choice_label' => 'name',
-            'choice_value' => 'name',
-            'searchable_fields' => ['name'],
-            'query_builder' => function (ArtistRepository $repository) {
-                return $repository->createQueryBuilder('artist')->orderBy('artist.name', 'ASC');
+            'choice_label' => 'auteur',
+            'choice_value' => 'auteur',
+            'searchable_fields' => ['auteur'],
+            'query_builder' => function (AlbumRepository $repository) {
+                return $repository->createQueryBuilder('album')->orderBy('album.auteur', 'ASC');
             },
         ]);
     }

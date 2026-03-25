@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\MusicCollection\Artist;
 use App\Form\ChoiceLoader\PieceGenresLoader;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
@@ -28,11 +29,20 @@ class FilterTracksFormType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Search',
                 ],
-            ])
-            ->add('auteur', SearchArtistAutocomplete::class, [
+            ]);
+        if ($options['mode'] === 'album') {
+            $builder->add('auteur', SearchAlbumArtistAutocomplete::class, [
                 'label' => false,
                 'required' => false,
-            ])
+            ]);
+        } else {
+            $builder->add('auteur', SearchArtistAutocomplete::class, [
+                'label' => false,
+                'required' => false,
+            ]);
+        }
+
+        $builder
             ->add('album', SearchAlbumAutocomplete::class, [
                 'label' => false,
                 'required' => false,
@@ -51,35 +61,34 @@ class FilterTracksFormType extends AbstractType
                 'required' => false,
                 'choice_loader' => $this->genresLoader,
                 'multiple' => true,
-                'attr'  => [
+                'attr' => [
                     'class' => 'select2',
                 ],
             ]);
 
-            if ($options['mode'] !== 'album') {
-                $builder->add('note', ChoiceType::class, [
-                    'label' => false,
-                    'placeholder' => 'Rating',
-                    'required' => false,
-                    'choice_loader' => new CallbackChoiceLoader(static function (): array {
-                        for($i = 5; $i > 0; $i--){
-                            $notes[$i] = $i;
-                        }
-                        return $notes;
-                    }),
-                ]);
-            } else {
-                $builder->add('page', HiddenType::class, [
-                        'data' => 0,
-                ])->add('random', CheckboxType::class, [
-                        'required' => false,
-                    ]);
-            }
+        if ($options['mode'] !== 'album') {
+            $builder->add('note', ChoiceType::class, [
+                'label' => false,
+                'placeholder' => 'Rating',
+                'required' => false,
+                'choice_loader' => new CallbackChoiceLoader(static function (): array {
+                    for ($i = 5; $i > 0; $i--) {
+                        $notes[$i] = $i;
+                    }
+                    return $notes;
+                }),
+            ]);
+        } else {
+            $builder->add('page', HiddenType::class, [
+                'data' => 0,
+            ])->add('random', CheckboxType::class, [
+                'required' => false,
+            ]);
+        }
 
-            $builder->add('submit', SubmitType::class, [
-                'label' => 'OK',
-            ])
-        ;
+        $builder->add('submit', SubmitType::class, [
+            'label' => 'OK',
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
