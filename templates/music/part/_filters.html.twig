@@ -1,8 +1,14 @@
 {% extends 'part/_slider.html.twig' %}
 
 {% block slider_content %}
+    <style>
+        .ts-dropdown {
+            top: auto !important;
+            bottom: 100% !important;
+        }
+    </style>
     {{ form_start(form_track, {'method' : 'GET'}) }}
-    <div class="row justify-content-center filter-form">
+    <div class="row justify-content-center align-items-center filter-form">
         <div class="col-6 col-md-4 col-lg-2">
             {{ form_row(form_track.genres) }}
         </div>

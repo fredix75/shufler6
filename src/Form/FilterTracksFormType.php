@@ -29,19 +29,13 @@ class FilterTracksFormType extends AbstractType
                     'placeholder' => 'Search',
                 ],
             ])
-            ->add('auteur', TextType::class, [
+            ->add('auteur', SearchArtistAutocomplete::class, [
                 'label' => false,
                 'required' => false,
-                'attr' => [
-                    'placeholder' => 'Auteur',
-                ],
             ])
-            ->add('album', TextType::class, [
+            ->add('album', SearchAlbumAutocomplete::class, [
                 'label' => false,
                 'required' => false,
-                'attr' => [
-                    'placeholder' => 'Album',
-                ],
             ])
             ->add('annee', TextType::class, [
                 'label' => false,

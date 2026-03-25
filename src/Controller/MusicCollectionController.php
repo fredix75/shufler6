@@ -33,11 +33,11 @@ class MusicCollectionController extends AbstractController
 {
     #[Route('/all/{mode}', name: '_all', requirements: ['mode' => 'tracks|albums'], defaults: ['mode' => 'tracks'], methods: ['GET'])]
     public function getAll(
-        Request                     $request,
-        ParameterBagInterface       $parameters,
-        TrackRepository             $trackRepository,
-        ShuflerRuntime              $shuflerRuntime,
-        string                      $mode
+        Request               $request,
+        ParameterBagInterface $parameters,
+        TrackRepository       $trackRepository,
+        ShuflerRuntime        $shuflerRuntime,
+        string                $mode
     ): Response
     {
 
@@ -181,10 +181,10 @@ class MusicCollectionController extends AbstractController
                         ]),
                         'id' => $track->getId(),
                         'auteur' => $track->getAuteur(),
-                        'titre' => '<a href="'.$this->generateUrl('music_cloudtrack_edit',  ['id' => $track->getId()]).'"><i class="bi bi-pencil-square"></i></a> ' . $track->getTitre(),
+                        'titre' => '<a href="' . $this->generateUrl('music_cloudtrack_edit', ['id' => $track->getId()]) . '"><i class="bi bi-pencil-square"></i></a> ' . $track->getTitre(),
                         'annee' => $track->getAnnee(),
                         'genre' => '<span class="badge bg-dark">' . $track->getGenre() . '</span>',
-                        'pays'  => $track->getPays(),
+                        'pays' => $track->getPays(),
                         'note' => $track->getNote() ? $shuflerRuntime->displayStarsFunction($track->getNote()) : '',
                     ];
                 }
@@ -204,7 +204,7 @@ class MusicCollectionController extends AbstractController
                             'album' => $album,
                             'youtube_key' => VideoHelper::YOUTUBE_WATCH . $album->getYoutubekey(),
                         ]),
-                        'name' => '<a href="'.$this->generateUrl('music_album_cloud_edit', ['id' => $album->getId()]).'"><i class="bi bi-pencil-square"></i></a> ' . $album->getName(),
+                        'name' => '<a href="' . $this->generateUrl('music_album_cloud_edit', ['id' => $album->getId()]) . '"><i class="bi bi-pencil-square"></i></a> ' . $album->getName(),
                         'auteur' => $album->getAuteur(),
                         'annee' => $album->getAnnee(),
                         'genre' => $album->getGenre(),
@@ -307,7 +307,8 @@ class MusicCollectionController extends AbstractController
     }
 
     #[Route('/filter-couch', name: '_filter_couch', methods: ['GET'])]
-    public function filterCouch(Request $request, FilterPieceRepository $filterPieceRepository, MusicHelper $musicHelper): Response {
+    public function filterCouch(Request $request, FilterPieceRepository $filterPieceRepository, MusicHelper $musicHelper): Response
+    {
         $params = $musicHelper->handleParams($request);
 
         $form = $this->createForm(FilterTracksFormType::class, $params);
@@ -320,14 +321,27 @@ class MusicCollectionController extends AbstractController
     }
 
     #[Route('/couch', name: '_couch', methods: ['GET'])]
-    public function couch(Request $request, PieceRepository $pieceRepository, MusicHelper $musicHelper): Response
+    public function couch(
+        Request $request,
+        PieceRepository $pieceRepository,
+        AlbumRepository $albumRepository,
+        MusicHelper $musicHelper
+    ): Response
     {
         $params = $musicHelper->handleParams($request);
+        $form = $this->createForm(FilterTracksFormType::class, $params);
+
         if (empty($params['album']) && empty($params['is_disambiguate']) && (!empty($params['auteur']) || !empty($params['genres'] || !empty($params['annee'])) || !empty($params['search']))) {
-            return $this->redirectToRoute('music_couch_list_albums', $params);
+            $albums = $albumRepository->getAlbums($params, 1, 100);
+            if (count($albums) > 0) {
+                return $this->render('music/couch_list_albums.html.twig', [
+                    'albums' => $albums,
+                    'params' => $params,
+                    'form_track' => $form,
+                ]);
+            }
         }
 
-        $form = $this->createForm(FilterTracksFormType::class, $params);
         $pieces = $pieceRepository->getPieces($params);
         if (empty($pieces)) {
             $this->addFlash('warning', 'No Result !');
@@ -343,25 +357,6 @@ class MusicCollectionController extends AbstractController
         return $this->render('video/couch.html.twig', [
             'list' => $list,
             'videos' => $playlist,
-            'form_track' => $form,
-        ]);
-    }
-
-    #[Route('/couch-list-albums', name: '_couch_list_albums', methods: ['GET'])]
-    public function couchListAlbums(Request $request, AlbumRepository $albumRepository, MusicHelper $musicHelper): Response
-    {
-        $params = $musicHelper->handleParams($request);
-        $albums = $albumRepository->getAlbums($params, 1, 100);
-        if (count($albums) === 0) {
-            $this->addFlash('warning', 'No Result !');
-            return $this->redirectToRoute('music_filter_couch', $params);
-        }
-
-        $form = $this->createForm(FilterTracksFormType::class, $params);
-
-        return $this->render('music/couch_list_albums.html.twig', [
-            'albums' => $albums,
-            'params' => $params,
             'form_track' => $form,
         ]);
     }
@@ -416,7 +411,8 @@ class MusicCollectionController extends AbstractController
     }
 
     #[Route('/set-extra-note/{id}', name: '_set_extra_note', methods: ['GET'])]
-    public function setExtraNote(Track $track, EntityManagerInterface $em): Response {
+    public function setExtraNote(Track $track, EntityManagerInterface $em): Response
+    {
         $note = ($track->getNote() > 0 || $track->getExtraNote() > 0) && $track->getExtraNote() != -1 ? -1 : 4;
         $track->setExtraNote($note);
         $em->flush();
