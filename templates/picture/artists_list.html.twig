@@ -33,9 +33,10 @@
                     <!-- Custom content-->
                     <div class="media align-items-center row p-3">
                         <div class="col-12 col-lg-2">
+                            {% set index = random(artist.paintings|length - 1) %}
                             <a href="{{ path('picture_artist', {id: artist.id}) }}">
                                 <img
-                                    src="{{ asset('uploads/peinture/' ~ (artist.paintings is not empty ? artist.paintings[0].file : '') ) }}"
+                                    src="{{ asset('uploads/peinture/' ~ (artist.paintings is not empty ? artist.paintings[index].file : '') ) }}"
                                     class="img-thbnail" alt="{{ artist.name }}" width="100%">
                             </a>
                         </div>

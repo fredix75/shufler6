@@ -108,4 +108,13 @@ final class PictureController extends AbstractController
             'themes' => $themes,
         ]);
     }
+
+    #[Route('/random', name: '_random', methods: ['GET'])]
+    public function painterRandom(PainterRepository $painterRepository): Response
+    {
+        $offset = rand(1,1020);
+        $painter = $painterRepository->findBy([], null, 1, $offset)[0];
+
+        return $this->redirectToRoute('picture_artist', ['id' => $painter->getId()]);
+    }
 }

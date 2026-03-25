@@ -3,7 +3,7 @@
         <h5 class="offcanvas-title" id="offcanvasScrollingLabel">{{ title }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
-    <div class="offcanvas-body">
+    <div class="offcanvas-body" data-controller="picture">
         {% set form = search_form() %}
         {{ form_start(form) }}
         <div><div class="input-group input-group-sm">
@@ -12,5 +12,13 @@
             </div>
         </div>
         {{ form_end(form) }}
+        <br>
+        <div class="row justify-content-center">
+            <a href="{{ path('picture_random') }}" class="btn btn-light">Aller au hasard</a>
+            <br><br>
+            {% if is_granted('ROLE_ADMIN') and 'picture_artist' == app.current_route %}
+                <a href="#" class="btn btn-light" data-action="picture#toggleForm">Editer</a>
+            {% endif %}
+        </div>
     </div>
 </div>

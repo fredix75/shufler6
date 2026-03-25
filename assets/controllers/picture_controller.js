@@ -8,8 +8,6 @@ import { Controller } from '@hotwired/stimulus';
 /* stimulusFetch: 'lazy' */
 export default class extends Controller {
 
-
-
     connect() {
         const bandeau = document.getElementsByClassName('bandeau');
         let bandeauHeight = 0;
@@ -62,42 +60,50 @@ export default class extends Controller {
             }
         }
 
+        function getRandomInt(max) {
+            return Math.floor(Math.random() * max);
+        }
+
         function changeColor() {
             const x = document.getElementsByClassName('letter-x')[0];
             let r = 255;
-            let r_asc = true;
-            let g = 150;
-            let g_asc = true;
-            let b = 0;
-            let b_asc = true;
+            let g = 255;
+            let b = 255;
+            let r_asc, g_asc, b_asc = false;
 
             setInterval(function () {
                 x.style.color = `rgb(${r}, ${g}, ${b})`;
                 if (r >= 255) {
                     r_asc = false;
                 }
-                if (r <= 100) {
+                if (r <= 0) {
                     r_asc = true;
                 }
 
-                if (g >= 200) {
+                if (g >= 255) {
                     g_asc = false;
                 }
-                if (g <= 50) {
+                if (g <= 0) {
                     g_asc = true;
                 }
 
-                if (b >= 150) {
+                if (b >= 255) {
                     b_asc = false;
                 }
                 if (b <= 0) {
                     b_asc = true;
                 }
-                r += r_asc ? 1 : -1;
-                g += g_asc ? 3 : -3;
-                b += b_asc ? 7 : -7;
+                r += (r_asc ? 1 : -1) * getRandomInt(2);
+                g += (g_asc ? 1 : -1) * getRandomInt(5);
+                b += (b_asc ? 1 : -1) * getRandomInt(7);
             }, 100);
         }
+    }
+
+    toggleForm(event) {
+        let form = document.querySelector('#painter-form');
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        event.preventDefault();
     }
 
     displayPicture(event) {

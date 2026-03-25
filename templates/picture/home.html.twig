@@ -3,6 +3,13 @@
 {% block body %}
     <section id="gallery" data-controller="picture-home">
         <div class="container">
+            <br>
+            <div class="d-flex justify-content-around">
+                <a href="{{ path('picture_list') }}" class="btn btn-outline-dark btn-lg">Tous les artistes</a>
+                <a href="{{ path('picture_random') }}" class="btn btn-outline-dark btn-lg">Au hasard</a>
+                <a href="{{ path('picture_themes') }}" class="btn btn-outline-dark btn-lg">Tous les thèmes</a>
+            </div>
+            <br>
             <div id="image-gallery">
                 <div class="row">
                     {% for painting in paintings %}
@@ -19,11 +26,6 @@
                         </div>
                     {% endfor %}
                 </div>
-            </div>
-            <br><br>
-            <div class="d-flex justify-content-around">
-                <a href="{{ path('picture_list') }}" class="btn btn-secondary">Tous les artistes</a>
-                <a href="{{ path('picture_themes') }}" class="btn btn-secondary">Tous les thèmes</a>
             </div>
         </div>
     </section>
