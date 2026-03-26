@@ -40,7 +40,41 @@ class PainterRepository extends ServiceEntityRepository
         }
 
         return $q->getQuery()->getResult();
+    }
 
+    public function getPaintersAndPaintingsByPeriode(int $periode, int $nb, int $offset = 0, string $order = 'ASC', ?string $sort = null): array
+    {
+        $year1 = ($periode - ($periode === 14 ? 2 : 1)) * 100 - 20;
+        $year2 = ($periode) * 100 + 20;
+
+        $q = $this->createQueryBuilder('p')
+            ->where('p.type IS NULL')
+            ->andWhere('p.birthYear >= :year1')
+            ->andWhere('p.deathYear <= :year2')
+            ->setParameter('year1', $year1)
+            ->setParameter('year2', $year2);
+
+        if ($order && $sort) {
+            if ($sort === 'time') {
+                $q->orderBy('p.birthYear', $order)
+                    ->addOrderBy('p.deathYear', $order);
+            } elseif ($sort === 'alpha') {
+                $q->orderBy('p.name', $order);
+            }
+
+            $q2 = clone $q;
+            $q2->select('COUNT(p.id)');
+
+            $q->leftJoin('p.paintings', 'paintings')
+                ->addSelect('paintings')
+                ->setFirstResult($offset)
+                ->setMaxResults($nb);
+            $q->getQuery();
+
+            return [$q2->getQuery()->getSingleScalarResult(), new Paginator($q)];
+        }
+
+        return $q->getQuery()->getResult();
     }
 
     public function getPainterAndPaintings(int $id): Painter

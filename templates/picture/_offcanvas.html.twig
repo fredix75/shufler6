@@ -19,6 +19,10 @@
             {% if is_granted('ROLE_ADMIN') and 'picture_artist' == app.current_route %}
                 <a href="#" class="btn btn-light" data-action="picture#toggleForm">Editer</a>
             {% endif %}
+            <br><br>
+            {% for i in 14..20 %}
+                <a href="{{ path('picture_list', {periode : i}) }}" class="btn btn-light">{{ i|periodeDisplay }}</a>
+            {% endfor %}
         </div>
     </div>
 </div>

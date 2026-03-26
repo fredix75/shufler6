@@ -27,32 +27,38 @@ final class PictureController extends AbstractController
         ]);
     }
 
-    #[Route('/list/{page}', name: '_list', requirements: ['page' => '\d+'], defaults: ['page' => 1], methods: ['GET'])]
-    public function index(int $page, PainterRepository $painterRepository, Request $request): Response
+    #[Route('/list/{periode}/{page}', name: '_list', requirements: ['periode' => '\d{2}|0', 'page' => '\d+'], defaults: ['periode' => 0, 'page' => 1], methods: ['GET'])]
+    public function index(int $periode, int $page, PainterRepository $painterRepository, Request $request): Response
     {
         $limit = 25;
 
         $offset = ($page - 1) * $limit;
-
+        $pagination = [];
         $sort = $request->query->get('sort');
         $order = $request->query->get('order') ?? 'ASC';
 
-        $allArtists = $painterRepository->findBy(['type' => null]);
-        $pagination = [];
-
         if ($sort) {
-            $artists = $painterRepository->getPaintersAndPaintings($limit, $offset, $order, $sort);
+            if ($periode) {
+                list($nbArtists, $artists) = $painterRepository->getPaintersAndPaintingsByPeriode($periode, $limit, $offset, $order, $sort);
+            } else {
+                $nbArtists = $painterRepository->count(['type' => null]);
+                $artists = $painterRepository->getPaintersAndPaintings($limit, $offset, $order, $sort);
+            }
             $pagination = [
                 'page' => $page,
                 'route' => 'picture_list',
-                'pages_count' => (int)ceil(count($allArtists) / 25),
-                'route_params' => [
+                'pages_count' => (int)ceil($nbArtists / 25),
+                'route_params' => array_merge($request->attributes->get('_route_params'),[
                     'sort' => $sort,
                     'order' => strtoupper($order),
-                ],
+                ]),
             ];
         } else {
-            $artists = $painterRepository->getPaintersAndPaintings($limit);
+            if ($periode) {
+                $artists = $painterRepository->getPaintersAndPaintingsByPeriode($periode, $limit);
+            } else {
+                $artists = $painterRepository->getPaintersAndPaintings($limit);
+            }
             shuffle($artists);
             $artists = array_slice($artists, 0, $limit);
         }
