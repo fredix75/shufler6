@@ -1,4 +1,4 @@
-{% extends 'picture/base.html.twig' %}
+{% extends 'frixtur/base.html.twig' %}
 
 {% block title %}{{ parent() }} :: {{ artist.firstName }} {{ artist.name }}{% endblock %}
 
@@ -20,9 +20,9 @@
         {{ form(form) }}
     </div>
     {% endif %}
-    <section class="row gallery justify-content-center" data-controller="picture">
+    <section class="row gallery justify-content-center" data-controller="frixtur">
         {% for painting in artist.paintings %}
-            <a href="#" class="thumbnail text-center" data-action="picture#displayPicture" data-src="{{ asset('uploads/peinture/' ~ painting.file) }}">
+            <a href="#" class="thumbnail text-center" data-action="frixtur#displayPicture" data-src="{{ asset('uploads/peinture/' ~ painting.file) }}">
                 <div style="padding: 5px;background-color:white;">
                     <img src="{{ asset('uploads/peinture/' ~ painting.file) }}"
                          alt="{{ painting.name }}" loading="lazy">
@@ -31,5 +31,5 @@
             </a>
         {% endfor %}
     </section>
-    <a href="#" class="lightbox" id="img-bg" data-controller="picture" data-action="picture#hideBg"><span></span></a>
+    <a href="#" class="lightbox" id="img-bg" data-controller="frixtur" data-action="frixtur#hideBg"><span></span></a>
 {% endblock %}

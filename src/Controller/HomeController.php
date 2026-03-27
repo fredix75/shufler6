@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/', name: 'main')]
-class HomeController extends AbstractController
+final class HomeController extends AbstractController
 {
     #[Route('', name: '_home')]
     public function home(VideoRepository $videoRepository, FluxRepository $fluxRepository): Response

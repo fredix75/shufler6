@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/channel', name: 'channel')]
-class ChannelFluxController extends AbstractController
+final class ChannelFluxController extends AbstractController
 {
     #[Route('/edit/{id}', name: '_edit', requirements: ['id' => '\d+'], defaults: ['id' => null])]
     #[IsGranted('ROLE_AUTEUR')]

@@ -21,7 +21,7 @@ use Vimeo\Exceptions\VimeoRequestException;
 use Vimeo\Vimeo;
 
 #[Route('/api', name: 'api')]
-class ApiController extends AbstractController
+final class ApiController extends AbstractController
 {
     /**
      * @throws TransportExceptionInterface

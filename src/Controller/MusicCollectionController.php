@@ -29,7 +29,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/music', name: 'music')]
 #[IsGranted('ROLE_ADMIN')]
-class MusicCollectionController extends AbstractController
+final class MusicCollectionController extends AbstractController
 {
     #[Route('/all/{mode}', name: '_all', requirements: ['mode' => 'tracks|albums'], defaults: ['mode' => 'tracks'], methods: ['GET'])]
     public function getAll(

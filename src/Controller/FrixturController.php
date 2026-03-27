@@ -13,16 +13,16 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('picture', name: 'picture')]
+#[Route('frixtur', name: 'frixtur')]
 #[IsGranted("ROLE_ADMIN")]
-final class PictureController extends AbstractController
+final class FrixturController extends AbstractController
 {
 
     #[Route('/', name: '_home', methods: ['GET'])]
     public function home(EntityManagerInterface $em): Response {
         $paintings = $em->getRepository(Painting::class)->getRandomPaintings();
 
-        return $this->render('picture/home.html.twig', [
+        return $this->render('frixtur/home.html.twig', [
             'paintings' => $paintings,
         ]);
     }
@@ -46,7 +46,7 @@ final class PictureController extends AbstractController
             }
             $pagination = [
                 'page' => $page,
-                'route' => 'picture_list',
+                'route' => 'frixtur_list',
                 'pages_count' => (int)ceil($nbArtists / 25),
                 'route_params' => array_merge($request->attributes->get('_route_params'),[
                     'sort' => $sort,
@@ -63,7 +63,7 @@ final class PictureController extends AbstractController
             $artists = array_slice($artists, 0, $limit);
         }
 
-        return $this->render('picture/artists_list.html.twig', [
+        return $this->render('frixtur/artists_list.html.twig', [
             'artists' => $artists,
             'pagination' => $pagination,
         ]);
@@ -84,12 +84,12 @@ final class PictureController extends AbstractController
 
             $this->addFlash('success', 'painter updated');
 
-            return $this->redirectToRoute('picture_artist', [
+            return $this->redirectToRoute('frixtur_artist', [
                 'id' => $painter->getId(),
             ]);
         }
 
-        return $this->render('picture/artist.html.twig', [
+        return $this->render('frixtur/artist.html.twig', [
             'artist' => $painter,
             'form' => $form
         ]);
@@ -100,7 +100,7 @@ final class PictureController extends AbstractController
     {
         $id = $request->request->all()['search_painter']['painter'];
 
-        return $this->redirectToRoute('picture_artist', [
+        return $this->redirectToRoute('frixtur_artist', [
             'id' => $id,
         ]);
     }
@@ -110,7 +110,7 @@ final class PictureController extends AbstractController
     {
         $themes = $em->getRepository(Painter::class)->findBy(['type' => 'THEM']);
 
-        return $this->render('picture/themes.html.twig', [
+        return $this->render('frixtur/themes.html.twig', [
             'themes' => $themes,
         ]);
     }
@@ -121,6 +121,6 @@ final class PictureController extends AbstractController
         $offset = rand(1,1020);
         $painter = $painterRepository->findBy([], null, 1, $offset)[0];
 
-        return $this->redirectToRoute('picture_artist', ['id' => $painter->getId()]);
+        return $this->redirectToRoute('frixtur_artist', ['id' => $painter->getId()]);
     }
 }

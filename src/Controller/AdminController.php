@@ -19,7 +19,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 #[Route('/admin', name: 'admin')]
 #[IsGranted('ROLE_ADMIN')]
-class AdminController extends AbstractController
+final class AdminController extends AbstractController
 {
     /**
      * @throws TransportExceptionInterface

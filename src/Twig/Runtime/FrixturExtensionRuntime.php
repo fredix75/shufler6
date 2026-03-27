@@ -78,7 +78,7 @@ class FrixturExtensionRuntime implements RuntimeExtensionInterface
     public function getSearchForm()
     {
         $form = $this->formFactory->create(SearchPainterType::class, null, [
-            'action' => $this->urlGenerator->generate('picture_search'),
+            'action' => $this->urlGenerator->generate('frixtur_search'),
         ]);
 
         return $form->createView();

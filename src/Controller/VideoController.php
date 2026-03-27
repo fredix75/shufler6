@@ -21,7 +21,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 #[Route('/video', name: 'video')]
 #[IsGranted("ROLE_USER")]
-class VideoController extends AbstractController
+final class VideoController extends AbstractController
 {
 
     #[Route('/list/{categorie}/{genre}/{periode}/{page}',

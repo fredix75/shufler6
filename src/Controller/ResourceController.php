@@ -12,7 +12,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/resource', name: 'resource')]
 #[IsGranted("ROLE_ADMIN")]
-class ResourceController extends AbstractController
+final class ResourceController extends AbstractController
 {
 
     /**

@@ -19,7 +19,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/flux', name: 'flux')]
 #[IsGranted('ROLE_USER')]
-class FluxController extends AbstractController
+final class FluxController extends AbstractController
 {
     #[Route('/podcasts', name: '_podcasts')]
     public function podcasts(FluxRepository $fluxRepository, Request $request, ParameterBagInterface $parameterBag): Response

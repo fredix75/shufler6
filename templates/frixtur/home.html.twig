@@ -1,20 +1,20 @@
-{% extends 'picture/base.html.twig' %}
+{% extends 'frixtur/base.html.twig' %}
 
 {% block body %}
-    <section id="gallery" data-controller="picture-home">
+    <section id="gallery" data-controller="frixtur-home">
         <div class="container">
             <br>
             <div class="d-flex justify-content-around">
-                <a href="{{ path('picture_list') }}" class="btn btn-outline-dark btn-lg">Tous les artistes</a>
-                <a href="{{ path('picture_random') }}" class="btn btn-outline-dark btn-lg">Au hasard</a>
-                <a href="{{ path('picture_themes') }}" class="btn btn-outline-dark btn-lg">Tous les thèmes</a>
+                <a href="{{ path('frixtur_list') }}" class="btn btn-outline-dark btn-lg">Tous les artistes</a>
+                <a href="{{ path('frixtur_random') }}" class="btn btn-outline-dark btn-lg">Au hasard</a>
+                <a href="{{ path('frixtur_themes') }}" class="btn btn-outline-dark btn-lg">Tous les thèmes</a>
             </div>
             <br>
             <div id="image-gallery">
                 <div class="row">
                     {% for painting in paintings %}
                         <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 image">
-                            <a href="{{ path('picture_artist', {id: painting.id}) }}" style="text-decoration:none;">
+                            <a href="{{ path('frixtur_artist', {id: painting.id}) }}" style="text-decoration:none;">
                                 <div class="img-wrapper">
                                     <img src="{{ asset('uploads/peinture/' ~ painting.file) }}" class="img-responsive"
                                          loading="lazy">

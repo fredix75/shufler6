@@ -13,7 +13,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/music', name: 'music')]
 #[IsGranted('ROLE_ADMIN')]
-class FilterPieceController extends AbstractController
+final class FilterPieceController extends AbstractController
 {
     #[Route('/filter-piece/edit/{id}', name: '_filter_piece_edit', requirements: ['id' => '\d+'], defaults: ['id' => null])]
     public function edit(?FilterPiece $filterPiece, Request $request, EntityManagerInterface $em): Response

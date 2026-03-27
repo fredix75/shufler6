@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Attribute\Route;
 
-class TestController extends AbstractController
+final class TestController extends AbstractController
 {
 
     #[Route('/test', name: 'test')]

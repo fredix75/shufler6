@@ -3,7 +3,7 @@
         <h5 class="offcanvas-title" id="offcanvasScrollingLabel">{{ title }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
-    <div class="offcanvas-body" data-controller="picture">
+    <div class="offcanvas-body" data-controller="frixtur">
         {% set form = search_form() %}
         {{ form_start(form) }}
         <div><div class="input-group input-group-sm">
@@ -14,14 +14,14 @@
         {{ form_end(form) }}
         <br>
         <div class="row justify-content-center">
-            <a href="{{ path('picture_random') }}" class="btn btn-light">Aller au hasard</a>
+            <a href="{{ path('frixtur_random') }}" class="btn btn-light">Aller au hasard</a>
             <br><br>
-            {% if is_granted('ROLE_ADMIN') and 'picture_artist' == app.current_route %}
-                <a href="#" class="btn btn-light" data-action="picture#toggleForm">Editer</a>
+            {% if is_granted('ROLE_ADMIN') and 'frixtur_artist' == app.current_route %}
+                <a href="#" class="btn btn-light" data-action="frixtur#toggleForm">Editer</a>
             {% endif %}
             <br><br>
             {% for i in 14..20 %}
-                <a href="{{ path('picture_list', {periode : i}) }}" class="btn btn-light">{{ i|periodeDisplay }}</a>
+                <a href="{{ path('frixtur_list', {periode : i}) }}" class="btn btn-light">{{ i|periodeDisplay }}</a>
             {% endfor %}
         </div>
     </div>

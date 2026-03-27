@@ -19,7 +19,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/music/album', name: 'music_album')]
 #[IsGranted('ROLE_ADMIN')]
-class AlbumController extends AbstractController
+final class AlbumController extends AbstractController
 {
     #[Route('/edit/{id}', name: '_edit', requirements: ['id' => '\d+'])]
     public function editAlbum(Album $album, Request $request, AlbumRepository $albumRepository): Response
