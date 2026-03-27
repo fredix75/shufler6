@@ -7,7 +7,7 @@ use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Twig\Extension\RuntimeExtensionInterface;
 
-final class ShuflerRuntime implements RuntimeExtensionInterface
+final class ShuflerExtensionRuntime implements RuntimeExtensionInterface
 {
     private array $videoParameters;
 

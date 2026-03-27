@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\PictureCollection\Painter;
+use App\Entity\Frixtur\Painter;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;

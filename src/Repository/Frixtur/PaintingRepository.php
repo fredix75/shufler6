@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repository\Painting;
+namespace App\Repository\Frixtur;
 
-use App\Entity\PictureCollection\Painting;
+use App\Entity\Frixtur\Painting;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

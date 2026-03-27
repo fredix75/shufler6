@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repository\Painting;
+namespace App\Repository\Frixtur;
 
-use App\Entity\PictureCollection\Painter;
+use App\Entity\Frixtur\Painter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity\PictureCollection;
+namespace App\Entity\Frixtur;
 
-use App\Repository\Painting\PainterRepository;
+use App\Repository\Frixtur\PainterRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;

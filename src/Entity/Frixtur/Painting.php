@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity\PictureCollection;
+namespace App\Entity\Frixtur;
 
-use App\Repository\Painting\PaintingRepository;
+use App\Repository\Frixtur\PaintingRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PaintingRepository::class)]

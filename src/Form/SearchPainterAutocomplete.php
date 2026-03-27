@@ -2,8 +2,8 @@
 
 namespace App\Form;
 
-use App\Entity\PictureCollection\Painter;
-use App\Repository\Painting\PainterRepository;
+use App\Entity\Frixtur\Painter;
+use App\Repository\Frixtur\PainterRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\Autocomplete\Form\AsEntityAutocompleteField;

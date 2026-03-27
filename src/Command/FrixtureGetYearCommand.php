@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\Entity\PictureCollection\Painter;
+use App\Entity\Frixtur\Painter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;

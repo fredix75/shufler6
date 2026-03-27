@@ -14,7 +14,7 @@ use App\Repository\MusicCollection\ArtistRepository;
 use App\Repository\MusicCollection\CloudAlbumRepository;
 use App\Repository\MusicCollection\CloudTrackRepository;
 use App\Repository\MusicCollection\PieceRepository;
-use App\Twig\Runtime\ShuflerRuntime;
+use App\Twig\Runtime\ShuflerExtensionRuntime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -33,11 +33,11 @@ final class MusicCollectionController extends AbstractController
 {
     #[Route('/all/{mode}', name: '_all', requirements: ['mode' => 'tracks|albums'], defaults: ['mode' => 'tracks'], methods: ['GET'])]
     public function getAll(
-        Request               $request,
-        ParameterBagInterface $parameters,
-        TrackRepository       $trackRepository,
-        ShuflerRuntime        $shuflerRuntime,
-        string                $mode
+        Request                 $request,
+        ParameterBagInterface   $parameters,
+        TrackRepository         $trackRepository,
+        ShuflerExtensionRuntime $shuflerRuntime,
+        string                  $mode
     ): Response
     {
 
@@ -133,12 +133,12 @@ final class MusicCollectionController extends AbstractController
 
     #[Route('/cloud-all/{mode}', name: '_cloud-all', requirements: ['mode' => 'tracks|albums'], defaults: ['mode' => 'tracks'], methods: ['GET'])]
     public function getCloudAll(
-        Request               $request,
-        ParameterBagInterface $parameters,
-        CloudTrackRepository  $cloudTrackRepository,
-        CloudAlbumRepository  $cloudAlbumRepository,
-        ShuflerRuntime        $shuflerRuntime,
-        string                $mode
+        Request                 $request,
+        ParameterBagInterface   $parameters,
+        CloudTrackRepository    $cloudTrackRepository,
+        CloudAlbumRepository    $cloudAlbumRepository,
+        ShuflerExtensionRuntime $shuflerRuntime,
+        string                  $mode
     ): Response
     {
         $columnsToDisplay = $parameters->get('music_collection')['cloud-track_fields'];

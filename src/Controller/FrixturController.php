@@ -2,10 +2,10 @@
 
 namespace App\Controller;
 
-use App\Entity\PictureCollection\Painter;
-use App\Entity\PictureCollection\Painting;
+use App\Entity\Frixtur\Painter;
 use App\Form\PainterType;
-use App\Repository\Painting\PainterRepository;
+use App\Repository\Frixtur\PainterRepository;
+use App\Repository\Frixtur\PaintingRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,8 +19,8 @@ final class FrixturController extends AbstractController
 {
 
     #[Route('/', name: '_home', methods: ['GET'])]
-    public function home(EntityManagerInterface $em): Response {
-        $paintings = $em->getRepository(Painting::class)->getRandomPaintings();
+    public function home(PaintingRepository $paintingRepository): Response {
+        $paintings = $paintingRepository->getRandomPaintings();
 
         return $this->render('frixtur/home.html.twig', [
             'paintings' => $paintings,
