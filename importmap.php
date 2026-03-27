@@ -24,36 +24,36 @@ return [
         'path' => './assets/weshtavu.js',
         'entrypoint' => true,
     ],
-    '@hotwired/stimulus' => [
-        'version' => '3.2.2',
-    ],
     '@symfony/stimulus-bundle' => [
         'path' => './vendor/symfony/stimulus-bundle/assets/dist/loader.js',
     ],
+    '@hotwired/stimulus' => [
+        'version' => '3.2.2',
+    ],
     'bootstrap' => [
-        'version' => '5.3.3',
+        'version' => '5.3.8',
     ],
     '@popperjs/core' => [
         'version' => '2.11.8',
     ],
     'bootstrap/dist/css/bootstrap.min.css' => [
-        'version' => '5.3.3',
+        'version' => '5.3.8',
         'type' => 'css',
     ],
     'immutable' => [
-        'version' => '4.3.6',
+        'version' => '5.1.5',
     ],
     'bootstrap-icons/font/bootstrap-icons' => [
-        'version' => '1.11.3',
+        'version' => '1.13.1',
     ],
     'tom-select' => [
-        'version' => '2.3.1',
+        'version' => '2.5.2',
     ],
     'datatables.net' => [
-        'version' => '2.0.8',
+        'version' => '2.3.7',
     ],
     'jquery' => [
-        'version' => '3.7.1',
+        'version' => '4.0.0',
     ],
     'stimulus-autocomplete' => [
         'version' => '3.1.0',
@@ -65,37 +65,37 @@ return [
         'version' => '3.0.2',
     ],
     'debug' => [
-        'version' => '4.3.5',
+        'version' => '4.4.3',
     ],
     'load-script' => [
-        'version' => '1.0.0',
+        'version' => '2.0.0',
     ],
     'ms' => [
-        'version' => '2.1.2',
+        'version' => '2.1.3',
     ],
     'magnific-popup' => [
-        'version' => '1.1.0',
+        'version' => '1.2.0',
     ],
     'magnific-popup/dist/magnific-popup.min.css' => [
-        'version' => '1.1.0',
+        'version' => '1.2.0',
         'type' => 'css',
     ],
     'bootstrap-icons/font/bootstrap-icons.css' => [
-        'version' => '1.11.3',
+        'version' => '1.13.1',
         'type' => 'css',
     ],
     '@hotwired/turbo' => [
-        'version' => '7.3.0',
+        'version' => '8.0.23',
     ],
     'tom-select/dist/css/tom-select.css' => [
-        'version' => '2.3.1',
+        'version' => '2.5.2',
         'type' => 'css',
     ],
     'datatables.net-dt' => [
-        'version' => '2.0.8',
+        'version' => '2.3.7',
     ],
     'datatables.net-dt/css/dataTables.dataTables.min.css' => [
-        'version' => '2.0.8',
+        'version' => '2.3.7',
         'type' => 'css',
     ],
     'tom-select/dist/css/tom-select.default.css' => [
@@ -117,15 +117,25 @@ return [
         'version' => '2.1.1',
     ],
     'get-size' => [
-        'version' => '2.0.3',
+        'version' => '3.0.0',
     ],
     'ev-emitter' => [
-        'version' => '1.1.0',
+        'version' => '2.1.2',
     ],
     'fizzy-ui-utils' => [
-        'version' => '2.0.5',
+        'version' => '3.0.0',
     ],
     'desandro-matches-selector' => [
         'version' => '2.0.2',
+    ],
+    '@orchidjs/sifter' => [
+        'version' => '1.1.0',
+    ],
+    '@orchidjs/unicode-variants' => [
+        'version' => '1.1.2',
+    ],
+    'tom-select/dist/css/tom-select.default.min.css' => [
+        'version' => '2.5.2',
+        'type' => 'css',
     ],
 ];
