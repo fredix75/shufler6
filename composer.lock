@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "api-platform/core",
-            "version": "v4.3.1",
+            "version": "v4.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/api-platform/core.git",
-                "reference": "bb36677b9e948661f2afe3d6a9a9721b541b2b5d"
+                "reference": "69fc5c37e0e294dbf3aa431a1cd135b372db6e6f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/api-platform/core/zipball/bb36677b9e948661f2afe3d6a9a9721b541b2b5d",
-                "reference": "bb36677b9e948661f2afe3d6a9a9721b541b2b5d",
+                "url": "https://api.github.com/repos/api-platform/core/zipball/69fc5c37e0e294dbf3aa431a1cd135b372db6e6f",
+                "reference": "69fc5c37e0e294dbf3aa431a1cd135b372db6e6f",
                 "shasum": ""
             },
             "require": {
@@ -87,18 +87,18 @@
                 "friends-of-behat/symfony-extension": "^2.1",
                 "friendsofphp/php-cs-fixer": "^3.93",
                 "guzzlehttp/guzzle": "^6.0 || ^7.0",
-                "illuminate/config": "^11.0 || ^12.0",
-                "illuminate/contracts": "^11.0 || ^12.0",
-                "illuminate/database": "^11.0 || ^12.0",
-                "illuminate/http": "^11.0 || ^12.0",
-                "illuminate/pagination": "^11.0 || ^12.0",
-                "illuminate/routing": "^11.0 || ^12.0",
-                "illuminate/support": "^11.0 || ^12.0",
+                "illuminate/config": "^11.0 || ^12.0 || ^13.0",
+                "illuminate/contracts": "^11.0 || ^12.0 || ^13.0",
+                "illuminate/database": "^11.0 || ^12.0 || ^13.0",
+                "illuminate/http": "^11.0 || ^12.0 || ^13.0",
+                "illuminate/pagination": "^11.0 || ^12.0 || ^13.0",
+                "illuminate/routing": "^11.0 || ^12.0 || ^13.0",
+                "illuminate/support": "^11.0 || ^12.0 || ^13.0",
                 "jangregor/phpstan-prophecy": "^2.1.11",
                 "justinrainbow/json-schema": "^6.5.2",
-                "laravel/framework": "^11.0 || ^12.0",
+                "laravel/framework": "^11.0 || ^12.0 || ^13.0",
                 "mcp/sdk": "^0.4.0",
-                "orchestra/testbench": "^10.9",
+                "orchestra/testbench": "^10.9 || ^11.0",
                 "phpspec/prophecy-phpunit": "^2.2",
                 "phpstan/extension-installer": "^1.1",
                 "phpstan/phpdoc-parser": "^1.29 || ^2.0",
@@ -226,9 +226,9 @@
             ],
             "support": {
                 "issues": "https://github.com/api-platform/core/issues",
-                "source": "https://github.com/api-platform/core/tree/v4.3.1"
+                "source": "https://github.com/api-platform/core/tree/v4.3.2"
             },
-            "time": "2026-03-20T10:57:31+00:00"
+            "time": "2026-03-27T07:05:36+00:00"
         },
         {
             "name": "composer/ca-bundle",
@@ -8843,29 +8843,30 @@
         },
         {
             "name": "symfonycasts/reset-password-bundle",
-            "version": "v1.24.0",
+            "version": "v1.25.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SymfonyCasts/reset-password-bundle.git",
-                "reference": "8e5f8f821260ccfe8085563a93b418d3ef9af29f"
+                "reference": "084aac1cc40ef75b26134c7967d1e423eeff72f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SymfonyCasts/reset-password-bundle/zipball/8e5f8f821260ccfe8085563a93b418d3ef9af29f",
-                "reference": "8e5f8f821260ccfe8085563a93b418d3ef9af29f",
+                "url": "https://api.github.com/repos/SymfonyCasts/reset-password-bundle/zipball/084aac1cc40ef75b26134c7967d1e423eeff72f4",
+                "reference": "084aac1cc40ef75b26134c7967d1e423eeff72f4",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.1.10",
+                "symfony/clock": "^6.3 | ^7.0 | ^8.0",
                 "symfony/config": "^5.4 | ^6.0 | ^7.0 | ^8.0",
                 "symfony/dependency-injection": "^5.4 | ^6.0 | ^7.0 | ^8.0",
                 "symfony/deprecation-contracts": "^2.2 | ^3.0",
                 "symfony/http-kernel": "^5.4 | ^6.0 | ^7.0 | ^8.0"
             },
             "require-dev": {
-                "doctrine/annotations": "^1.0",
-                "doctrine/doctrine-bundle": "^2.8",
-                "doctrine/orm": "^2.13",
+                "doctrine/annotations": "^1.0 | ^2.0",
+                "doctrine/doctrine-bundle": "^2.13 | ^3.0",
+                "doctrine/orm": "^2.20 | ^3.0",
                 "symfony/framework-bundle": "^5.4 | ^6.0 | ^7.0 | ^8.0",
                 "symfony/phpunit-bridge": "^5.4 | ^6.0 | ^7.0 | ^8.0",
                 "symfony/process": "^6.4 | ^7.0 | ^8.0",
@@ -8884,9 +8885,9 @@
             "description": "Symfony bundle that adds password reset functionality.",
             "support": {
                 "issues": "https://github.com/SymfonyCasts/reset-password-bundle/issues",
-                "source": "https://github.com/SymfonyCasts/reset-password-bundle/tree/v1.24.0"
+                "source": "https://github.com/SymfonyCasts/reset-password-bundle/tree/v1.25.0"
             },
-            "time": "2025-11-29T13:26:50+00:00"
+            "time": "2026-03-26T10:16:40+00:00"
         },
         {
             "name": "symfonycasts/sass-bundle",
