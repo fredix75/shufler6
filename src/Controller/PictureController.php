@@ -19,7 +19,7 @@ final class PictureController extends AbstractController
 {
 
     #[Route('/', name: '_home', methods: ['GET'])]
-    public function home(EntityManagerInterface $em) {
+    public function home(EntityManagerInterface $em): Response {
         $paintings = $em->getRepository(Painting::class)->getRandomPaintings();
 
         return $this->render('picture/home.html.twig', [
