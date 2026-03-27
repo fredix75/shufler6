@@ -1,0 +1,160 @@
+@font-face {
+    src: url('../../fonts/BarlowCondensed-Bold.ttf');
+    font-family: 'BarlowCondensedBold';
+}
+
+@font-face {
+    src: url('../../fonts/BarlowCondensed-Regular.ttf');
+    font-family: 'BarlowCondensedRegular';
+}
+
+body {
+    background-color: #ecece4;
+    color: #3a2725;
+    font-family: 'BarlowCondensedRegular', sans-serif;
+    line-height: 1.6;
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("../../images/taches.png");
+//background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    opacity: 0.2;
+    z-index: -1;
+}
+
+header {
+    text-align: center;
+}
+
+header span.subtitle {
+    letter-spacing: 8px;
+}
+
+h1 {
+    font-family: 'BarlowCondensedBold', sans-serif;
+    text-align: center;
+    font-size: 5em;
+    margin-top: 0.5em;
+    text-shadow: 0 1px #808d93, -1px 0 #cdd2d5, -1px 2px #808d93, -2px 1px #cdd2d5, -2px 3px #808d93, -3px 2px #cdd2d5, -3px 4px #808d93, -4px 3px #cdd2d5, -4px 5px #808d93, -5px 4px #cdd2d5, -5px 6px #808d93, -6px 5px #cdd2d5, -6px 7px #808d93, -7px 6px #cdd2d5, -7px 8px #808d93, -8px 7px #cdd2d5;
+    color: #3a2725;
+}
+
+h2 {
+    font-family: 'BarlowCondensedBold', sans-serif;
+//text-shadow: 0 1px #808d93, -1px 0 #cdd2d5, -1px 2px #808d93, -2px 1px #cdd2d5, -2px 3px #808d93, -3px 2px #cdd2d5, -3px 4px #808d93, -4px 3px #cdd2d5, -4px 5px #808d93, -5px 4px #cdd2d5, -5px 6px #808d93, -6px 5px #cdd2d5, -6px 7px #808d93, -7px 6px #cdd2d5, -7px 8px #808d93, -8px 7px #cdd2d5;
+}
+
+nav {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    background-color: #ecece4;
+}
+
+
+nav ul li {
+    margin:0 1.5em;
+}
+
+nav ul li a:hover {
+    color: red !important;
+    transition: 1s color ease-in;
+}
+
+.content {
+    background-color: #ecece4;
+}
+
+.articles-grid {
+//display: grid;
+}
+
+article {
+    text-align: justify;
+    margin-bottom: 5em;
+}
+
+article div.subtitle {
+    border-top: 1px dotted #3a2725;
+    border-bottom: 1px dotted #3a2725;
+}
+
+article div.subtitle .year{
+    font-weight: bold;
+    color: #872626;
+}
+
+.video-card {
+    box-shadow: rgba(0, 0, 0, 0.15) -1.95px 1.95px 2.6px;
+}
+
+footer {
+    border-top: 1px solid #3a2725;
+    background-color: #ccccc3;;
+}
+
+footer ul li{
+    display: inline;
+    margin:0 1.5em;
+}
+
+.carousel {
+    margin: 0 auto;
+    padding: 20px 0;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    > * {
+        flex: 0 0 100%;
+    }
+}
+
+.carte {
+    width: 100%;
+    color: white;
+    border-radius: 24px;
+    box-shadow: rgba(0, 0, 0, 10%) 5px 5px 20px 0;
+    padding: 20px;
+    font-size: xx-large;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+
+    &:nth-child(1) {
+        background: #7958ff;
+    }
+
+    &:nth-child(2) {
+        background: #5d34f2;
+    }
+
+    &:nth-child(3) {
+        background: #4300da;
+    }
+}
+
+/* Groupez les cartes pour une meilleure structure. */
+.group {
+    display: flex;
+    gap: 20px;
+    /* Ajoutez un padding à droite pour créer un espace entre la dernière et la première carte. */
+    padding-right: 20px;
+    will-change: transform; /* Nous devons être sympas avec le navigateur - lui indiquer ce que nous allons animer. */
+    animation: scrolling 50s linear infinite;
+    &:hover .group {
+        animation-play-state: paused;
+    }
+}
+
+@keyframes scrolling {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}

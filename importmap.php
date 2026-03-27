@@ -20,6 +20,10 @@ return [
         'path' => './assets/frixtur.js',
         'entrypoint' => true,
     ],
+    'weshtavu' => [
+        'path' => './assets/weshtavu.js',
+        'entrypoint' => true,
+    ],
     '@hotwired/stimulus' => [
         'version' => '3.2.2',
     ],
@@ -105,5 +109,23 @@ return [
     'tom-select/dist/css/tom-select.bootstrap5.css' => [
         'version' => '2.5.2',
         'type' => 'css',
+    ],
+    'masonry-layout' => [
+        'version' => '4.2.2',
+    ],
+    'outlayer' => [
+        'version' => '2.1.1',
+    ],
+    'get-size' => [
+        'version' => '2.0.3',
+    ],
+    'ev-emitter' => [
+        'version' => '1.1.0',
+    ],
+    'fizzy-ui-utils' => [
+        'version' => '2.0.5',
+    ],
+    'desandro-matches-selector' => [
+        'version' => '2.0.2',
     ],
 ];

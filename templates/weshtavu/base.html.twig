@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <link rel="icon"
+          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+    {% block stylesheets %}
+    {% endblock %}
+
+    {% block javascripts %}
+        {% block importmap %}{{ importmap('weshtavu') }}{% endblock %}
+    {% endblock %}
+</head>
+<body>
+<header>
+    <h1>>>--WESHTAVU--o(&nbsp;&nbsp;°></h1>
+    <span class="subtitle">&#9733; Le Webzine des gens qui ont que ça à foutre &#9733;</span>
+    <nav class="navbar navbar-expand-lg my-4">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+                <span>{{ "now"|date('l d M Y') }}</span>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Pricing</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+                    </li>
+                </ul>
+                <span>Edition spéciale</span>
+            </div>
+        </div>
+    </nav>
+</header>
+<div class="content px-4 mt-5">
+    {% block body %}{% endblock %}
+</div>
+<footer class="d-flex justify-content-center p-3 mt-3">
+    <ul>
+        <li>&copy; shufler {{ "now"|date('Y') }}</li>
+        <li>Contact</li>
+        <li>Mentions légales</li>
+        <li>Copyright</li>
+    </ul>
+</footer>
+</body>
+</html>
