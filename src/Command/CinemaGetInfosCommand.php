@@ -3,7 +3,7 @@
 namespace App\Command;
 
 use App\Entity\Film;
-use App\Kernel;
+use App\Helper\ApiRequester;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -13,6 +13,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\Response;
 
 #[AsCommand(
     name: 'cinema:get-infos',
@@ -20,7 +21,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 )]
 class CinemaGetInfosCommand extends Command
 {
-    public function __construct(private EntityManagerInterface $em, #[Autowire('%kernel.project_dir%')] private string $dir)
+    public function __construct(private EntityManagerInterface $em, private ApiRequester $apiRequester, #[Autowire('%kernel.project_dir%')] private string $dir)
     {
         parent::__construct();
     }
@@ -37,21 +38,43 @@ class CinemaGetInfosCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $dir = scandir($this->dir . '/public/uploads/cinema');
+        $movies = $this->em->getRepository(Film::class)->findBy(['year' => null], ['name' => 'ASC'], 100);
 
-        foreach($dir as $i => $file) {
-            if ($file === '.' || $file === '..') {
-                continue;
+        foreach ($movies as $i => $movie) {
+            $io->info($movie->getName());
+            try {
+                $response = $this->apiRequester->sendRequest('tmdb', '/search/movie', [
+                    'query'   => $movie->getName(),
+                ]);
+
+                if ($response->getStatusCode() === Response::HTTP_OK) {
+                    $response = json_decode($response->getContent(), true) ?? [];
+                    if (!empty($response['results'])) {
+                        $response = $response['results'][0];
+
+                        $movie->setYear(!empty($response['release_date']) ? (new \DateTime($response['release_date']))->format('Y') : null);
+                        $movie->setOverview($response['overview']);
+                        $movie->setOriginalTitle($response['original_title']);
+                        $movie->setOriginalLanguage($response['original_language']);
+                        $movie->setTmdbId($response['id']);
+                        $movie->setPosterPath($response['poster_path']);
+                        $movie->setBackdropPath($response['backdrop_path']);
+                        $movie->setPopularity($response['popularity']);
+                        $movie->setGenres($response['genre_ids']);
+                        $this->em->persist($movie);
+                    } else {
+                        $io->info(sprintf('Pas de résultat pour %s', $movie->getName()));
+                    }
+                }
+            } catch(\Exception $e) {
+                $io->error(sprintf('ERREUR pour %s', $movie->getName()));
             }
-            $nameWithoutExtension = pathinfo($file, PATHINFO_FILENAME);
-            $film = new Film();
-            $film->setName(ucfirst(strtolower($nameWithoutExtension)));
-            $film->setPicture($file);
-            $this->em->persist($film);
-            if ($i%500 === 0) {
+
+            if ($i%100 === 0) {
                 $this->em->flush();
             }
         }
+
         $this->em->flush();
 
         $io->success('Nickel');

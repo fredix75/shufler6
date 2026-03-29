@@ -136,6 +136,9 @@ parameters:
               orderable: true
             - data: genre
               orderable: true
+    cinema:
+        tmdb_api_url: '%env(TMDB_API_URL)%'
+        tmdb_api_key: '%env(TMDB_API_KEY)%'
     sniffer:
         upload_directory: 'sniffer'
 
