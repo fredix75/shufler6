@@ -26,22 +26,16 @@ class CinemaGetInfosCommand extends Command
         parent::__construct();
     }
 
-    protected function configure(): void
-    {
-        $this
-            ->addArgument('arg1', InputArgument::OPTIONAL, 'Argument description')
-            ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description')
-        ;
-    }
+
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
-        $movies = $this->em->getRepository(Film::class)->findBy(['year' => null], ['name' => 'ASC'], 100);
+        $movies = $this->em->getRepository(Film::class)->findBy(['year' => null, 'verified' => false], [], 1000);
 
         foreach ($movies as $i => $movie) {
-            $io->info($movie->getName());
+            $io->writeln($movie->getName());
             try {
                 $response = $this->apiRequester->sendRequest('tmdb', '/search/movie', [
                     'query'   => $movie->getName(),
@@ -63,7 +57,7 @@ class CinemaGetInfosCommand extends Command
                         $movie->setGenres($response['genre_ids']);
                         $this->em->persist($movie);
                     } else {
-                        $io->info(sprintf('Pas de résultat pour %s', $movie->getName()));
+                        $io->warning(sprintf('Pas de résultat pour %s', $movie->getName()));
                     }
                 }
             } catch(\Exception $e) {

@@ -16,6 +16,26 @@ class FilmRepository extends ServiceEntityRepository
         parent::__construct($registry, Film::class);
     }
 
+    public function getFilm(): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = <<<SQL
+SELECT f.*, JSON_ARRAYAGG(g.name) AS genres2
+FROM film f
+         JOIN JSON_TABLE(f.genres, '$[*]'
+                         COLUMNS (genres_id INT PATH '$')
+    ) jt
+         JOIN genrefilm g ON g.tmdb_id = jt.genres_id
+WHERE f.verified = 0
+GROUP BY f.id
+ORDER BY f.id
+LIMIT 1
+SQL;
+        $stmt = $conn->prepare($sql);
+
+        return $stmt->executeQuery()->fetchAssociative();
+    }
+
     //    /**
     //     * @return Film[] Returns an array of Film objects
     //     */

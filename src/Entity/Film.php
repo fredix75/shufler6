@@ -47,6 +47,16 @@ class Film
     #[ORM\Column(nullable: true)]
     private ?array $genres = null;
 
+    #[ORM\Column]
+    private ?bool $verified = null;
+
+    #[ORM\Column]
+    private ?bool $noRef = null;
+
+    private ?string $altName = null;
+
+    private array $genresLabels = [];
+
     public function getId(): ?int
     {
         return $this->id;
@@ -60,6 +70,18 @@ class Film
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getAltName(): ?string
+    {
+        return $this->altName;
+    }
+
+    public function setAltName(?string $altName): static
+    {
+        $this->altName = $altName;
 
         return $this;
     }
@@ -115,6 +137,33 @@ class Film
     public function getOriginalTitle(): ?string
     {
         return $this->originalTitle;
+    }
+
+    /**
+     * @return array
+     */
+    public function getGenresLabels(): array
+    {
+        return $this->genresLabels;
+    }
+
+    /**
+     * @param array $genresLabels
+     */
+    public function setGenresLabels(array $genresLabels): void
+    {
+        if (empty($this->genres)) {
+            return;
+        }
+        $genres = array_filter($genresLabels, function($genre) {
+            if (\in_array($genre->getTmdbId(), $this->genres)) {
+                return true;
+            }
+            return false;
+        });
+        $this->genresLabels = array_merge(array_map(function($genre) {
+            return $genre->getName();
+        }, $genres));
     }
 
     public function setOriginalTitle(?string $originalTitle): static
@@ -180,6 +229,30 @@ class Film
     public function setGenres(?array $genres): static
     {
         $this->genres = $genres;
+
+        return $this;
+    }
+
+    public function isVerified(): ?bool
+    {
+        return $this->verified;
+    }
+
+    public function setVerified(bool $verified): static
+    {
+        $this->verified = $verified;
+
+        return $this;
+    }
+
+    public function isNoRef(): ?bool
+    {
+        return $this->noRef;
+    }
+
+    public function setNoRef(bool $noRef): static
+    {
+        $this->noRef = $noRef;
 
         return $this;
     }
