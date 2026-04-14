@@ -15,9 +15,12 @@
             <div class="col-6 justify-content-around">
                 <h2>{{ film.name }}</h2>
                 <h3>{{ film.year }}</h3>
-                <a href="{{ path('cinema_index', {check: true}) }}" class="btn btn-success btn-lg">OK</a>
-                <a href="#" class="btn btn-info btn-lg" data-action="cinema#toggleForm">Form</a>
-                <a href="{{ path('cinema_index', {noRef: true}) }}" class="btn btn-danger btn-lg" data-action="">NOPE</a>
+                <a href="{{ path('cinema_index', {id: film.id, check: true}) }}" class="btn btn-success btn-lg">OK</a>
+                <a href="{{ path('cinema_index', {id: film.id, getInfos: true, altName: app.request.query.get('altName')}) }}" class="btn btn-info btn-lg">Form</a>
+                <a href="{{ path('cinema_index', {id: film.id, noRef: true}) }}" class="btn btn-warning btn-lg" data-action="">NOPE</a>
+                <div class="col-auto text-center">
+                    <a href="{{ path('cinema_index', {id: film.id, delete: true}) }}" class="btn btn-danger btn-lg" onclick="return confirm('sûr sûr ??')">Delete</a>
+                </div>
                 <p style="font-size:120%">{{ film.overview }}</p>
                 {% for genre in film.genresLabels %}
                     <span class="badge bg-dark">{{ genre }}</span>
@@ -26,6 +29,17 @@
                     {{ form(form) }}
                 </div>
             </div>
+        </div>
+        <div class="row">
+            {% for suggest in suggests %}
+                <a href="{{ path('cinema_get-film-ref', {id: film.id, offset: suggest.offset, altName: app.request.query.get('altName')}) }}" class="col-2">
+                    <div>
+                        <p>{{ suggest.name }}</p>
+                        <p>({{ suggest.original_title }}) {{ suggest.year }}</p>
+                         <img src="{{ asset('https://image.tmdb.org/t/p/w1280' ~ suggest.poster_path) }}" style="width: 100%;">
+                    </div>
+                </a>
+            {% endfor %}
         </div>
     </div>
 {% endblock %}

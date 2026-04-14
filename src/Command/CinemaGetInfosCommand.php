@@ -36,32 +36,40 @@ class CinemaGetInfosCommand extends Command
 
         foreach ($movies as $i => $movie) {
             $io->writeln($movie->getName());
-            try {
-                $response = $this->apiRequester->sendRequest('tmdb', '/search/movie', [
-                    'query'   => $movie->getName(),
-                ]);
+            $offset = 0;
+            while (true) {
+                try {
+                    $response = $this->apiRequester->sendRequest('tmdb', '/search/movie', [
+                        'query' => $movie->getName(),
+                    ]);
 
-                if ($response->getStatusCode() === Response::HTTP_OK) {
-                    $response = json_decode($response->getContent(), true) ?? [];
-                    if (!empty($response['results'])) {
-                        $response = $response['results'][0];
+                    if ($response->getStatusCode() === Response::HTTP_OK) {
+                        $response = json_decode($response->getContent(), true) ?? [];
+                        if (!empty($response['release_date']) && (new \DateTime($response['release_date']))->format('Y') > 2002) {
+                            $offset++;
+                            continue;
+                        }
+                        if (!empty($response['results'])) {
+                            $response = $response['results'][$offset];
 
-                        $movie->setYear(!empty($response['release_date']) ? (new \DateTime($response['release_date']))->format('Y') : null);
-                        $movie->setOverview($response['overview']);
-                        $movie->setOriginalTitle($response['original_title']);
-                        $movie->setOriginalLanguage($response['original_language']);
-                        $movie->setTmdbId($response['id']);
-                        $movie->setPosterPath($response['poster_path']);
-                        $movie->setBackdropPath($response['backdrop_path']);
-                        $movie->setPopularity($response['popularity']);
-                        $movie->setGenres($response['genre_ids']);
-                        $this->em->persist($movie);
-                    } else {
-                        $io->warning(sprintf('Pas de résultat pour %s', $movie->getName()));
+                            $movie->setYear(!empty($response['release_date']) ? (new \DateTime($response['release_date']))->format('Y') : null);
+                            $movie->setOverview($response['overview']);
+                            $movie->setOriginalTitle($response['original_title']);
+                            $movie->setOriginalLanguage($response['original_language']);
+                            $movie->setTmdbId($response['id']);
+                            $movie->setPosterPath($response['poster_path']);
+                            $movie->setBackdropPath($response['backdrop_path']);
+                            $movie->setPopularity($response['popularity']);
+                            $movie->setGenres($response['genre_ids']);
+                            $this->em->persist($movie);
+                        } else {
+                            $io->warning(sprintf('Pas de résultat pour %s', $movie->getName()));
+                        }
                     }
+                } catch (\Exception $e) {
+                    $io->error(sprintf('ERREUR pour %s', $movie->getName()));
                 }
-            } catch(\Exception $e) {
-                $io->error(sprintf('ERREUR pour %s', $movie->getName()));
+                break;
             }
 
             if ($i%100 === 0) {
