@@ -3,7 +3,12 @@
 {% block title %}Hello CinemaController!{% endblock %}
 
 {% block body %}
-
+    <style>
+        body {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.9)),
+            url("{{ asset('https://image.tmdb.org/t/p/w1280' ~ film.backdropPath) }}");
+        }
+    </style>
     <div class="container-fluid" data-controller="cinema">
         <div class="row">
             <div class="col-3">

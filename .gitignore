@@ -12,6 +12,10 @@
 /phpunit.xml
 .phpunit.result.cache
 ###< phpunit/phpunit ###
+/datas/*
+!/datas/fixtures.json
+
+!/dir/file.json
 /public/uploads/
 /public/sniffer/
 .idea/

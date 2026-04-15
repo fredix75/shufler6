@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Entity\Film;
+use App\Enum\FilmTypeEnum;
 use App\Helper\ApiRequester;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -21,38 +22,56 @@ use Symfony\Component\HttpFoundation\Response;
 )]
 class CinemaGetInfosCommand extends Command
 {
-    public function __construct(private EntityManagerInterface $em, private ApiRequester $apiRequester, #[Autowire('%kernel.project_dir%')] private string $dir)
+    public function __construct(private EntityManagerInterface $em, private ApiRequester $apiRequester)
     {
         parent::__construct();
     }
 
-
+    protected function configure(): void
+    {
+        $this
+            // ...
+            ->addArgument('type', InputArgument::REQUIRED, 'Type of the media')
+        ;
+    }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
-        $movies = $this->em->getRepository(Film::class)->findBy(['year' => null, 'verified' => false], [], 1000);
+        if (!\in_array($type = $input->getArgument('type'), array_column(FilmTypeEnum::cases(), 'value'))) {
+            $io->error('BAD ARGUMENT');
+            return Command::FAILURE;
+        }
+
+        $seuilDate = $type === FilmTypeEnum::FILM ? 2002 : null;
+        $movies = $this->em->getRepository(Film::class)->findBy(['verified' => false, 'type' => $type], []);
 
         foreach ($movies as $i => $movie) {
             $io->writeln($movie->getName());
             $offset = 0;
-            while (true) {
-                try {
-                    $response = $this->apiRequester->sendRequest('tmdb', '/search/movie', [
-                        'query' => $movie->getName(),
-                    ]);
 
-                    if ($response->getStatusCode() === Response::HTTP_OK) {
-                        $response = json_decode($response->getContent(), true) ?? [];
-                        if (!empty($response['release_date']) && (new \DateTime($response['release_date']))->format('Y') > 2002) {
-                            $offset++;
-                            continue;
-                        }
-                        if (!empty($response['results'])) {
-                            $response = $response['results'][$offset];
+            try {
+                $response = $this->apiRequester->sendRequest('tmdb', '/search/movie', [
+                    'query' => $movie->getName(),
+                ]);
+
+                if ($response->getStatusCode() === Response::HTTP_OK) {
+                    $result = json_decode($response->getContent(), true) ?? [];
+                    if (!empty($result['results'])) {
+                        while (true) {
+                            if (empty($result['results'][$offset])) {
+                                $io->info(sprintf('pas de résultat pertinent pour %s', $movie->getName()));
+                                break;
+                            }
+                            $response = $result['results'][$offset];
+                            if ($seuilDate && !empty($response['release_date']) && (new \DateTime($response['release_date']))->format('Y') > $seuilDate) {
+                                $offset++;
+                                continue;
+                            }
 
                             $movie->setYear(!empty($response['release_date']) ? (new \DateTime($response['release_date']))->format('Y') : null);
+                            $movie->setDate(!empty($response['release_date']) ? new \DateTime($response['release_date']) : null);
                             $movie->setOverview($response['overview']);
                             $movie->setOriginalTitle($response['original_title']);
                             $movie->setOriginalLanguage($response['original_language']);
@@ -62,17 +81,17 @@ class CinemaGetInfosCommand extends Command
                             $movie->setPopularity($response['popularity']);
                             $movie->setGenres($response['genre_ids']);
                             $this->em->persist($movie);
-                        } else {
-                            $io->warning(sprintf('Pas de résultat pour %s', $movie->getName()));
+                            break;
                         }
+                    } else {
+                        $io->warning(sprintf('Pas de résultat pour %s', $movie->getName()));
                     }
-                } catch (\Exception $e) {
-                    $io->error(sprintf('ERREUR pour %s', $movie->getName()));
                 }
-                break;
+            } catch (\Exception $e) {
+                $io->error(sprintf('ERREUR pour %s', $movie->getName()));
             }
 
-            if ($i%100 === 0) {
+            if ($i % 100 === 0) {
                 $this->em->flush();
             }
         }

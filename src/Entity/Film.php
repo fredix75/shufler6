@@ -48,14 +48,20 @@ class Film
     private ?array $genres = null;
 
     #[ORM\Column]
-    private ?bool $verified = null;
+    private ?bool $verified = false;
 
     #[ORM\Column]
-    private ?bool $noRef = null;
+    private ?bool $noRef = false;
 
     private ?string $altName = null;
 
     private array $genresLabels = [];
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTime $date = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $type = null;
 
     public function getId(): ?int
     {
@@ -238,7 +244,7 @@ class Film
         return $this->verified;
     }
 
-    public function setVerified(bool $verified): static
+    public function setVerified(?bool $verified): static
     {
         $this->verified = $verified;
 
@@ -250,9 +256,33 @@ class Film
         return $this->noRef;
     }
 
-    public function setNoRef(bool $noRef): static
+    public function setNoRef(?bool $noRef): static
     {
         $this->noRef = $noRef;
+
+        return $this;
+    }
+
+    public function getDate(): ?\DateTime
+    {
+        return $this->date;
+    }
+
+    public function setDate(?\DateTime $date): static
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(?string $type): static
+    {
+        $this->type = $type;
 
         return $this;
     }

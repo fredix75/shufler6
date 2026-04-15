@@ -23,6 +23,7 @@ class FilmType extends AbstractType
                 'data' => 1,
             ])
             ->add('year')
+            ->add('date')
             ->add('picture')
             ->add('overview')
             ->add('originalLanguage')

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Film;
 use App\Entity\Genrefilm;
+use App\Enum\FilmTypeEnum;
 use App\Form\FilmType;
 use App\Helper\ApiRequester;
 use Doctrine\ORM\EntityManagerInterface;
@@ -43,6 +44,7 @@ final class CinemaController extends AbstractController
                         foreach ($responses as $index => $item) {
                             if (!empty($item['release_date']) && (new \DateTime($item['release_date']))->format('Y') <= 2002) {
                                 $info['year'] = (new \DateTime($item['release_date']))->format('Y');
+                                $info['date'] = new \DateTime($item['release_date']);
                             } elseif ((new \DateTime($item['release_date']))->format('Y') > 2002) {
                                 continue;
                             }
@@ -62,6 +64,7 @@ final class CinemaController extends AbstractController
         }
         if ($film && $request->query->get('noRef') == 1) {
             $film->setYear(null)
+                ->setDate(null)
                 ->setOverview(null)
                 ->setOriginalLanguage(null)
                 ->setOriginalTitle(null)
@@ -85,7 +88,11 @@ final class CinemaController extends AbstractController
         }
 
         if (!$film) {
-            $film = $em->getRepository(Film::class)->findOneBy(['verified' => false]);
+            $film = $em->getRepository(Film::class)->findOneBy(['verified' => false, 'type' => FilmTypeEnum::FILM]);
+            if (!$film) {
+                $this->addFlash('warning', 'No more Resources, see u later');
+                return $this->redirectToRoute('main_home');
+            }
         }
         $genreLabels = $em->getRepository(Genrefilm::class)->findAll();
         $film->setGenresLabels($genreLabels);
@@ -125,6 +132,7 @@ final class CinemaController extends AbstractController
                         continue;
                     }
                     $movie->setYear(!empty($response['release_date']) ? (new \DateTime($response['release_date']))->format('Y') : null);
+                    $movie->setDate(!empty($response['release_date']) ? new \DateTime($response['release_date']) : null);
                     $movie->setOverview($response['overview']);
                     $movie->setOriginalTitle($response['original_title']);
                     $movie->setOriginalLanguage($response['original_language']);
