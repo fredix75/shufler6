@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CinemaController!{% endblock %}
+
+{% block body %}
+    <style>
+        body {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.9)),
+            url("{{ asset('https://image.tmdb.org/t/p/w1280' ~ film.backdrop_path) }}");
+        }
+    </style>
+    <div class="container-fluid" data-controller="cinema">
+        <div class="row">
+            <div class="col-3">
+                <img src="{{ asset('uploads/cinema/' ~ film.picture) }}" width="100%">
+            </div>
+            <div class="col-9 justify-content-around">
+                <h2>{{ film.name|upper }}</h2>
+                <h3>{{ film.year }}</h3>
+                <p style="font-size:120%">{{ film.overview }}</p>
+                {% for genre in film.genres2 %}
+                    <span class="badge bg-dark">{{ genre }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row">
+            {% for image in film.pictures %}
+                <a href="#" class="col-3">
+                    <div>
+                         <img src="{{ asset('https://image.tmdb.org/t/p/w1280' ~ image) }}" style="width: 100%;">
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

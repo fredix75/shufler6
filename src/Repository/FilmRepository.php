@@ -36,6 +36,35 @@ SQL;
         return $stmt->executeQuery()->fetchAssociative();
     }
 
+    public function getFilmFull(int $id): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = <<<SQL
+SELECT
+    f.*,
+    (
+        SELECT JSON_ARRAYAGG(t.name)
+        FROM (
+            SELECT DISTINCT g.name
+            FROM JSON_TABLE(f.genres, '$[*]'
+                COLUMNS (genres_id INT PATH '$')
+            ) jt
+            JOIN genrefilm g ON g.tmdb_id = jt.genres_id
+        ) t
+    ) AS genres2,
+    (
+        SELECT JSON_ARRAYAGG(pf.path)
+        FROM picture_film pf
+        WHERE pf.film_id = f.id
+    ) AS pictures
+FROM film f
+WHERE f.id = :id
+SQL;
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue('id', $id);
+        return $stmt->executeQuery()->fetchAssociative();
+    }
+
     //    /**
     //     * @return Film[] Returns an array of Film objects
     //     */

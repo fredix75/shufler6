@@ -55,9 +55,8 @@ class DataImportCommand extends Command
         if (!class_exists($entityClass)) {
             $io->error('Entity non available. Tu peux pas');
         }
-
-        if ($extension == FileTypeEnum::JSON) {
-            $n = 0;
+        $n = 0;
+        if ($extension == FileTypeEnum::JSON->value) {
             foreach (json_decode(file_get_contents($filePath)) as $i => $data) {
                 $data = $this->serializer->serialize($data, 'json');
                 $object = $this->serializer->deserialize($data, $entityClass, 'json');

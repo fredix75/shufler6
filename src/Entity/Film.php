@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\FilmRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -62,6 +64,17 @@ class Film
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $type = null;
+
+    /**
+     * @var Collection<int, PictureFilm>
+     */
+    #[ORM\OneToMany(targetEntity: PictureFilm::class, mappedBy: 'film', orphanRemoval: true)]
+    private Collection $pictureFilms;
+
+    public function __construct()
+    {
+        $this->pictureFilms = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -283,6 +296,36 @@ class Film
     public function setType(?string $type): static
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PictureFilm>
+     */
+    public function getPictureFilms(): Collection
+    {
+        return $this->pictureFilms;
+    }
+
+    public function addPictureFilm(PictureFilm $pictureFilm): static
+    {
+        if (!$this->pictureFilms->contains($pictureFilm)) {
+            $this->pictureFilms->add($pictureFilm);
+            $pictureFilm->setFilm($this);
+        }
+
+        return $this;
+    }
+
+    public function removePictureFilm(PictureFilm $pictureFilm): static
+    {
+        if ($this->pictureFilms->removeElement($pictureFilm)) {
+            // set the owning side to null (unless already changed)
+            if ($pictureFilm->getFilm() === $this) {
+                $pictureFilm->setFilm(null);
+            }
+        }
 
         return $this;
     }

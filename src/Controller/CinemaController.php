@@ -7,6 +7,7 @@ use App\Entity\Genrefilm;
 use App\Enum\FilmTypeEnum;
 use App\Form\FilmType;
 use App\Helper\ApiRequester;
+use App\Repository\FilmRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -154,5 +155,17 @@ final class CinemaController extends AbstractController
         }
 
         return $this->redirectToRoute('cinema_index', ['id' => $movie->getId(), 'altName' => $request->query->get('altName')]);
+    }
+
+    #[Route('/film/{id}', name: '_film', requirements: ['id' => '\d+'])]
+    public function detail(int $id, FilmRepository $filmRepository): Response
+    {
+        $film = $filmRepository->getFilmFull($id);
+        $film['genres2'] = json_decode($film['genres2'], true);
+        $film['pictures'] = json_decode($film['pictures'], true);
+
+        return $this->render('cinema/detail.html.twig', [
+            'film' => $film,
+        ]);
     }
 }
