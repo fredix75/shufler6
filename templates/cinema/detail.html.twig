@@ -24,6 +24,16 @@
             </div>
         </div>
         <div class="row">
+            <a href="#" class="col-3">
+                <div>
+                    <img src="{{ asset('https://image.tmdb.org/t/p/w1280' ~ film.poster_path) }}" style="width: 100%;">
+                </div>
+            </a>
+            <a href="#" class="col-3">
+                <div>
+                    <img src="{{ asset('https://image.tmdb.org/t/p/w1280' ~ film.backdrop_path) }}" style="width: 100%;">
+                </div>
+            </a>
             {% for image in film.pictures %}
                 <a href="#" class="col-3">
                     <div>

@@ -41,17 +41,17 @@ class CinemaGetImagesCommand extends Command
             return Command::FAILURE;
         }
 
-        $movies = $this->em->getRepository(Film::class)->findBy(['verified' => true, 'type' => $type], []);
+        $movies = $this->em->getRepository(Film::class)->findBy(['verified' => false, 'noRef' => false, 'type' => $type], [], 1);
         //$movies = [$this->em->getRepository(Film::class)->find(11950)];
 
-        foreach ($movies as $movie) {
+        foreach ($movies as $i => $movie) {
             $io->writeln($movie->getName());
             try {
                 $response = $this->apiRequester->sendRequest('tmdb', '/movie/' . $movie->getTmdbId() . '/images');
 
                 if ($response->getStatusCode() === Response::HTTP_OK) {
                     $result = json_decode($response->getContent(), true) ?? [];
-
+dd($result);
                     foreach ($result as $k => $images) {
                         if (is_array($images)) {
                             foreach ($images as $img) {
@@ -64,15 +64,16 @@ class CinemaGetImagesCommand extends Command
                         }
 
                     }
-                    $this->em->flush();
                 }
             } catch (\Exception $e) {
-                dd($e->getMessage());
                 $io->error(sprintf('ERREUR pour %s', $movie->getName()));
             }
-
+            $movie->setVerified(true);
+            if ($i%100 === 0) {
+                $this->em->flush();
+            }
         }
-
+        $this->em->flush();
         $io->success('bien gros, wesh');
 
         return Command::SUCCESS;

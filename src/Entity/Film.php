@@ -71,6 +71,15 @@ class Film
     #[ORM\OneToMany(targetEntity: PictureFilm::class, mappedBy: 'film', orphanRemoval: true)]
     private Collection $pictureFilms;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $belongsToCollection = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?array $country = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?array $production = null;
+
     public function __construct()
     {
         $this->pictureFilms = new ArrayCollection();
@@ -326,6 +335,42 @@ class Film
                 $pictureFilm->setFilm(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getBelongsToCollection(): ?int
+    {
+        return $this->belongsToCollection;
+    }
+
+    public function setBelongsToCollection(?int $belongsToCollection): static
+    {
+        $this->belongsToCollection = $belongsToCollection;
+
+        return $this;
+    }
+
+    public function getCountry(): ?array
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?array $country): static
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    public function getProduction(): ?array
+    {
+        return $this->production;
+    }
+
+    public function setProduction(?array $production): static
+    {
+        $this->production = $production;
 
         return $this;
     }
