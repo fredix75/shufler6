@@ -46,6 +46,8 @@ h1 {
 
 h2 {
     font-family: 'BarlowCondensedBold', sans-serif;
+    font-size: 2.6em;
+    margin-top: -0.2em;
 //text-shadow: 0 1px #808d93, -1px 0 #cdd2d5, -1px 2px #808d93, -2px 1px #cdd2d5, -2px 3px #808d93, -3px 2px #cdd2d5, -3px 4px #808d93, -4px 3px #cdd2d5, -4px 5px #808d93, -5px 4px #cdd2d5, -5px 6px #808d93, -6px 5px #cdd2d5, -6px 7px #808d93, -7px 6px #cdd2d5, -7px 8px #808d93, -8px 7px #cdd2d5;
 }
 
@@ -65,8 +67,27 @@ nav ul li a:hover {
     transition: 1s color ease-in;
 }
 
+.date {
+    font-size: 1.3em;
+}
+
 .content {
     background-color: #ecece4;
+}
+
+.event-type {
+    //background-color: #ff0000;
+    font-size: 2.2em;
+    font-weight: bold;
+    color: #a10f00;
+}
+
+.event-sousType {
+    line-height: 30pt;
+    padding-left:0.5em;
+//background-color: #ff0000;
+    font-size: 1.5em;
+    color: #815c59;
 }
 
 .articles-grid {

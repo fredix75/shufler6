@@ -7,6 +7,7 @@ import './stimulus_bootstrap.js';
  */
 
 import './vendor/bootstrap/dist/css/bootstrap.min.css';
+import './vendor/bootstrap-icons/font/bootstrap-icons.css';
 import './vendor/bootstrap/bootstrap.index.js';
 import './vendor/masonry-layout/masonry-layout.index.js';
 

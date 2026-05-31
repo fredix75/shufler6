@@ -5,15 +5,12 @@
 {% block body %}
     <div class="row row-cols-2 row-cols-xl-3 g-4" data-masonry='{"percentPosition": true }'>
         <section>
+            {% for event in events %}
             <article>
-                <h2><span style="color:#d5c9ad;">-o(</span> Du son, des images <span style="color:#d5c9ad;">°></span>
-                </h2>
-                <div class="subtitle d-flex justify-content-between">
-                    <span class="author">Kevin Smith</span>
-                    <span>&#9733; &#9733; &#9733;</span>
-                    <span class="year">1995</span>
-                </div>
-                <br>
+                <twig:Article :event="event" withCloseButton />
+            </article>
+            {% endfor %}
+            <article>
                 <div class="video-card card mb-3">
                     <div class="row g-0">
                         <div class="col-md-4">
@@ -28,6 +25,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="video-card card mb-3">
                     <div class="row g-0">
                         <div class="col-md-4 order-md-last order-first">
@@ -58,102 +56,39 @@
                     </div>
                 </div>
             </article>
+
+        </section>
+        <section style="background-color: rgba(255,255,255,0.7)">
             <article>
-                <h2>Plus rien à perdre!</h2>
+                <span class="event-type">AU CINOCHE</span>
+                <h2>Les films de la semaine</h2>
                 <div class="subtitle d-flex justify-content-between">
                     <span class="author">Kevin Smith</span>
                     <span>&#9733; &#9733; &#9733;</span>
                     <span class="year">1995</span>
                 </div>
-                <div class="video-card card m-5">
+                <div>
                     <div class="row g-0">
-                        <div class="col-12">
-                            <img src="https://img.youtube.com/vi/2Z-2Zonbano/0.jpg" class="img-fluid rounded-top"
-                                 alt="..." style="height:100%;">
-                        </div>
-                        <div class="col-12">
-                            <div class="card-body" style="text-align:center;">
-                                <h3 class="card-title">Travolta vs Rabbi Jacob</h3>
-                                <p class="card-text">Xtrem</p>
+                        {% for film in films %}
+                            <div class="col-12">
+                                <img src="{{ asset('uploads/cinema/' ~ film.picture) }}" class="img-fluid rounded-top"
+                                     alt="..." style="height:100%;">
                             </div>
-                        </div>
+                            <div class="col-12">
+                                <div class="card-body" style="text-align:center;">
+                                    <h3 class="card-title">{{ film.name }}</h3>
+                                    <p class="card-text">film</p>
+                                </div>
+                            </div>
+                        {% endfor %}
                     </div>
-                </div>
-                <p>
-                    Les menaces de Donald Trump contre le Groenland et l’Europe montrent comment le président américain
-                    manie la
-                    force brute pour imposer sa vision. Qu’importe les accords et les alliances, si l’Union européenne
-                    tente de
-                    protéger le territoire danois, le président américain riposte avec des menaces de droits de douanes.
-                    Résultat, les relations internationales se résument à un Far-West où ceux qui ont de la puissance
-                    font plier
-                    ceux qui n’en ont pas.
-
-                    C’est avec cette logique que Trump a mené la barre de son deuxième mandat, au point de
-                    progressivement
-                    transformer la démocratie américaine en Etat autoritaire. Mais jusqu’où pourra-t-il tenir sa ligne ?
-                    Pour
-                    répondre à vos questions sur le bilan du président américain, Libération reçoit Sonia
-                    Delesalle-Stolper,
-                    cheffe du service international et notre journaliste, Frédéric Autran, ancien correspondant aux
-                    Etats-Unis.
-                    Les menaces de Donald Trump contre le Groenland et l’Europe montrent comment le président américain
-                    manie la
-                    force brute pour imposer sa vision. Qu’importe les accords et les alliances, si l’Union européenne
-                    tente de
-                    protéger le territoire danois, le président américain riposte avec des menaces de droits de douanes.
-                    Résultat, les relations internationales se résument à un Far-West où ceux qui ont de la puissance
-                    font plier
-                    ceux qui n’en ont pas.
-
-                    C’est avec cette logique que Trump a mené la barre de son deuxième mandat, au point de
-                    progressivement
-                    transformer la démocratie américaine en Etat autoritaire. Mais jusqu’où pourra-t-il tenir sa ligne ?
-                    Pour
-                    répondre à vos questions sur le bilan du président américain, Libération reçoit Sonia
-                    Delesalle-Stolper,
-                    cheffe du service international et notre journaliste, Frédéric Autran, ancien correspondant aux
-                    Etats-Unis.
-                </p>
-            </article>
-        </section>
-        <section>
-            <article>
-                <div style="border: 10px solid white;overflow:hidden;">
-                    <img
-                        src="https://i.vimeocdn.com/video/675170740-51202829172686998d9101a49b4ecf3107b6b71c48271667a5cacab16ccef6b7-d_200x150?region=us"
-                        width="100%">
-                </div>
-                <h2><span style="color:red;font-weight:bold;">o( °></span> Melania, le film : beaucoup de fric pour un
-                    flop</h2>
-                <div class="subtitle d-flex justify-content-between mb-2">
-                    <span class="author">Kevin Smith</span>
-                    <span>&#9733; &#9733; &#9733;</span>
-                    <span class="year">1995</span>
-                </div>
-                <div class="d-flex justify-content-end mb-2">
-                    <span class="badge bg-dark">anim</span>
-                </div>
-                <p>
-                    Les menaces de Donald Trump contre le Groenland et l’Europe montrent comment le président américain
-                    manie la
-                    force brute pour imposer sa vision. Qu’importe les accords et les alliances, si l’Union européenne
-                    tente de
-                    protéger le territoire danois, le président américain riposte avec des menaces de droits de douanes.
-                    Résultat, les relations internationales se résument à un Far-West où ceux qui ont de la puissance
-                    font plier
-                    ceux qui n’en ont pas.
-                </p>
-                <div class="d-flex justify-content-center">
-                    <img src="{{ playlist.image }}" class="col-6" alt="{{ playlist.name }}"
-                         title="{{ playlist.name }}">
                 </div>
             </article>
         </section>
         <section>
             <article class="">
-                <h2><span style="color:#d5c9ad;">>></span> Un an de Trump II : comprendre la naissance d’un Etat
-                    autoritaire</h2>
+                <span class="event-type">A LA RADIO</span>
+                <h2>La playlist de la semaine</h2>
                 <div class="subtitle d-flex justify-content-between">
                     <span class="author">Kevin Smith</span>
                     <span>&#9733; &#9733; &#9733;</span>

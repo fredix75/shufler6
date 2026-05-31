@@ -65,28 +65,15 @@ SQL;
         return $stmt->executeQuery()->fetchAssociative();
     }
 
-    //    /**
-    //     * @return Film[] Returns an array of Film objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('f')
-    //            ->andWhere('f.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('f.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Film
-    //    {
-    //        return $this->createQueryBuilder('f')
-    //            ->andWhere('f.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function findByDateIntervall(\DateTime $start, \DateTime $end): array
+    {
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.date > :start')
+            ->andWhere('f.date <= :end')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->orderBy('f.popularity', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }
