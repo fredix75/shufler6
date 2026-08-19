@@ -1,5 +1,4 @@
-<span class="event-type">{{ event.type|upper }}</span> <span
-    class="event-sousType">{{ event.sousType|upper }}</span>
+<span class="event-type">{{ event.sousType|default(event.type)|upper }}</span>
 {% set desc = event.description|split('.') %}
 <h2>{{ desc[0] }}</h2>
 <br>

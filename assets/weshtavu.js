@@ -11,4 +11,4 @@ import './vendor/bootstrap-icons/font/bootstrap-icons.css';
 import './vendor/bootstrap/bootstrap.index.js';
 import './vendor/masonry-layout/masonry-layout.index.js';
 
-import './styles/weshtavu/wehtavu.css';
+import './styles/weshtavu/weshtavu.css';
