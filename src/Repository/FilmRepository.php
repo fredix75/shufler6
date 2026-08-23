@@ -53,7 +53,7 @@ SELECT
         ) t
     ) AS genres2,
     (
-        SELECT JSON_ARRAYAGG(pf.path)
+        SELECT JSON_ARRAYAGG(JSON_OBJECT('path', pf.path, 'type', pf.type, 'language', pf.language))
         FROM picture_film pf
         WHERE pf.film_id = f.id
     ) AS pictures

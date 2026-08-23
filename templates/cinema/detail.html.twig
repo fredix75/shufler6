@@ -6,38 +6,46 @@
     <style>
         body {
             background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.9)),
-            url("{{ asset('https://image.tmdb.org/t/p/w1280' ~ film.backdrop_path) }}");
+            url("{{ asset('https://image.tmdb.org/t/p/w1280' ~ film.backdrop_path|default(film.poster_path)) }}");
+            background-size: cover;
         }
     </style>
     <div class="container-fluid" data-controller="cinema">
-        <div class="row">
-            <div class="col-3">
-                <img src="{{ asset('uploads/cinema/' ~ film.picture) }}" width="100%">
+        <div class="row align-items-start" style="padding:4em;">
+            <div class="col-12 col-md-3 g-4">
+                <img src="{{ asset('uploads/cinema/' ~ film.picture) }}" width="100%" style="border:6px solid white;">
             </div>
-            <div class="col-9 justify-content-around">
-                <h2>{{ film.name|upper }}</h2>
-                <h3>{{ film.year }}</h3>
+            <div class="col-12 col-md-9 g-4 justify-content-center">
+                <div class="row">
+                    {% set logo = film.pictures|default([])|filter(image => image.type == 'logos')|first %}
+                    {% if logo %}
+                        <img class="col-3" src="{{ asset('https://image.tmdb.org/t/p/w1280' ~ logo.path) }}" width="300px">
+                    {% endif %}
+                    <div class="col-9">
+                        <h2 style="font-size: 400%;text-shadow: 3px 1px 1px #0b0b0b">{{ film.name|upper }}</h2>
+                        {% if film.original_title|upper != film.name|upper %}
+                            <h3 style="font-size: 200%;font-style: italic;">"{{ film.original_title }}"</h3>
+                        {% endif %}
+                        <h3>{% for genre in film.genres2 %}
+                                <span class="badge bg-dark">{{ genre }}</span>
+                            {% endfor %}{{ film.year }}</h3>
+                    </div>
+                </div>
+                <br><br>
                 <p style="font-size:120%">{{ film.overview }}</p>
-                {% for genre in film.genres2 %}
-                    <span class="badge bg-dark">{{ genre }}</span>
-                {% endfor %}
             </div>
         </div>
         <div class="row">
-            <a href="#" class="col-3">
-                <div>
-                    <img src="{{ asset('https://image.tmdb.org/t/p/w1280' ~ film.poster_path) }}" style="width: 100%;">
+            {% if film.poster_path %}
+                <div class="col-3 justify-content-center">
+                    <img src="{{ asset('https://image.tmdb.org/t/p/w1280' ~ film.poster_path) }}"
+                         style="width: 100%;">
                 </div>
-            </a>
-            <a href="#" class="col-3">
-                <div>
-                    <img src="{{ asset('https://image.tmdb.org/t/p/w1280' ~ film.backdrop_path) }}" style="width: 100%;">
-                </div>
-            </a>
-            {% for image in film.pictures %}
+            {% endif %}
+            {% for image in film.pictures|default([])|filter(image => image.type != 'logos') %}
                 <a href="#" class="col-3">
                     <div>
-                         <img src="{{ asset('https://image.tmdb.org/t/p/w1280' ~ image) }}" style="width: 100%;">
+                        <img src="{{ asset('https://image.tmdb.org/t/p/w1280' ~ image.path) }}" style="width: 100%;">
                     </div>
                 </a>
             {% endfor %}

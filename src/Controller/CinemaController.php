@@ -161,6 +161,7 @@ final class CinemaController extends AbstractController
     public function detail(int $id, FilmRepository $filmRepository): Response
     {
         $film = $filmRepository->getFilmFull($id);
+
         $film['genres2'] = json_decode($film['genres2'], true);
         $film['pictures'] = json_decode($film['pictures'], true);
 
