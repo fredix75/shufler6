@@ -80,9 +80,16 @@ class Film
     #[ORM\Column(nullable: true)]
     private ?array $production = null;
 
+    /**
+     * @var Collection<int, FilmCasting>
+     */
+    #[ORM\OneToMany(targetEntity: FilmCasting::class, mappedBy: 'film')]
+    private Collection $filmCastings;
+
     public function __construct()
     {
         $this->pictureFilms = new ArrayCollection();
+        $this->filmCastings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -371,6 +378,36 @@ class Film
     public function setProduction(?array $production): static
     {
         $this->production = $production;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FilmCasting>
+     */
+    public function getFilmCastings(): Collection
+    {
+        return $this->filmCastings;
+    }
+
+    public function addFilmCasting(FilmCasting $filmCasting): static
+    {
+        if (!$this->filmCastings->contains($filmCasting)) {
+            $this->filmCastings->add($filmCasting);
+            $filmCasting->setFilm($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFilmCasting(FilmCasting $filmCasting): static
+    {
+        if ($this->filmCastings->removeElement($filmCasting)) {
+            // set the owning side to null (unless already changed)
+            if ($filmCasting->getFilm() === $this) {
+                $filmCasting->setFilm(null);
+            }
+        }
 
         return $this;
     }
