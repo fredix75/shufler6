@@ -33,8 +33,8 @@ class CinemaGetCastingCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
 
-        //$movies = $this->em->getRepository(Film::class)->findBy(['type' => 'FILM', 'verified' => false, 'noRef' => false], [], 1);
-        $movies = [$this->em->getRepository(Film::class)->find(8055)];
+        $movies = $this->em->getRepository(Film::class)->findBy(['type' => 'FILM', 'verified' => false, 'noRef' => false], ['date' => 'ASC'], 1000);
+        //$movies = [$this->em->getRepository(Film::class)->find(2588)];
 
         foreach ($movies as $i => $movie) {
             $nbDirs = $nbActors = 0;
@@ -46,12 +46,21 @@ class CinemaGetCastingCommand extends Command
                 if ($response->getStatusCode() === Response::HTTP_OK) {
                     $result = json_decode($response->getContent(), true) ?? [];
 
-                    //dd($result);
-
                     foreach ($result as $k => $team) {
                         if (\in_array($k, ['cast', 'crew'])) {
-                            foreach ($team as $actor) {
-                                if (!($k === 'cast' && !empty($actor['character']) || $k === 'crew' && $actor['job'] === 'Director')) {
+                            $arr = $team;
+                            if ($k === 'cast') {
+                                $arr = [];
+                                foreach ($team as $item) {
+                                    if (!isset($arr[$item['id']]) && !empty($item['character'])) {
+                                        $arr[$item['id']] = $item;
+                                    }
+                                }
+                                $arr = array_values($arr);
+                            }
+
+                            foreach ($arr as $actor) {
+                                if ($k === 'crew' && $actor['job'] !== 'Director') {
                                     continue;
                                 }
 
@@ -65,7 +74,9 @@ class CinemaGetCastingCommand extends Command
                                         $people = new CinemaPeople();
                                         $people->setName($result['name']);
                                         $people->setBio($result['biography']);
-                                        $people->setBirthDate(new \DateTime($result['birthday']));
+                                        if (!empty($result['birthday'])) {
+                                            $people->setBirthDate(new \DateTime($result['birthday']));
+                                        }
                                         if (!empty($result['deathday'])) {
                                             $people->setDeathDate(new \DateTime($result['deathday']));
                                         }
@@ -96,25 +107,24 @@ class CinemaGetCastingCommand extends Command
                                 }
                                 $casting->setJob($job);
                                 $casting->setFilm($movie);
-
                                 $this->em->persist($casting);
                             }
                         }
                     }
+                    $this->em->flush();
                 } else {
                     $io->warning('BAD RESPONSE: ' . $response->getStatusCode());
                 }
             } catch (\Exception $e) {
+                dump($people);
                 $io->error(sprintf('ERREUR pour %s : %s', $movie->getName(), $e->getMessage()));
             }
 
             $movie->setVerified(true);
             $io->writeln(sprintf("    %d directors - %d actors", $nbDirs, $nbActors));
-            if ($i % 10 === 0) {
-                $this->em->flush();
-            }
+            $this->em->flush();
         }
-        $this->em->flush();
+
         $io->success('bien gros, wesh');
 
         return Command::SUCCESS;
