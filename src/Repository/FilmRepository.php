@@ -76,4 +76,21 @@ SQL;
             ->getQuery()
             ->getResult();
     }
+	
+	public function findDistinctProds(): array
+    {
+$conn = $this->getEntityManager()->getConnection();
+        $sql = <<<SQL
+SELECT DISTINCT jt.element
+FROM film f
+JOIN JSON_TABLE(
+    f.production,
+    '$[*]' COLUMNS (
+        element INT PATH '$'
+    )
+) AS jt;
+SQL;
+        $stmt = $conn->prepare($sql);
+        return $stmt->executeQuery()->fetchAllNumeric();
+    }
 }
