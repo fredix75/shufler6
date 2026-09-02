@@ -60,6 +60,9 @@ class ApiRequester
                     'Authorization' => 'Bearer ' . $this->parameterBag->get('cinema')['tmdb_api_key'],
                 ]);
                 break;
+			case 'gouv':
+                $url = 'https://geo.api.gouv.fr';
+                break;	
             default:
                 throw new \Exception('no supported API');
         }
