@@ -88,7 +88,8 @@ JOIN JSON_TABLE(
     '$[*]' COLUMNS (
         element INT PATH '$'
     )
-) AS jt;
+) AS jt
+ORDER BY f.date ASC;
 SQL;
         $stmt = $conn->prepare($sql);
         return $stmt->executeQuery()->fetchAllNumeric();

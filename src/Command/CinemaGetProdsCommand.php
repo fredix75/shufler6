@@ -32,6 +32,7 @@ class CinemaGetProdsCommand extends Command
         $io = new SymfonyStyle($input, $output);
 		
 		$productions = $this->em->getRepository(Film::class)->findDistinctProds();
+		$io->writeln(sprintf("%d prods", count($productions)));
 		$section = $output->section();
 		
 		foreach ($productions as $i => $prod) {
@@ -65,6 +66,8 @@ class CinemaGetProdsCommand extends Command
             } catch (\Exception $e) {
                 $io->error(sprintf('ERREUR pour %d : %s', $prod[0], $e->getMessage()));
             }
+			
+			sleep(0.5);
 		}
 		
 		$this->em->flush();
