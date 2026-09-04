@@ -56,7 +56,21 @@ SELECT
         SELECT JSON_ARRAYAGG(JSON_OBJECT('path', pf.path, 'type', pf.type, 'language', pf.language))
         FROM picture_film pf
         WHERE pf.film_id = f.id
-    ) AS pictures
+    ) AS pictures,
+    (
+        SELECT JSON_ARRAYAGG(JSON_OBJECT('name', cp.name, 'bio', cp.bio, 'birth_date', cp.birth_date, 'death_date', cp.death_date, 'picture', cp.picture))
+        FROM film_casting fc
+        JOIN cinema_people cp on fc.cinema_people_id = cp.id
+        WHERE fc.film_id = f.id
+        AND fc.job = 'DIRECTOR'
+    ) AS direction,
+    (
+        SELECT JSON_ARRAYAGG(JSON_OBJECT('name', cp.name, 'bio', cp.bio, 'birth_date', cp.birth_date, 'death_date', cp.death_date, 'picture', cp.picture, 'role', fc.role))
+        FROM film_casting fc
+        JOIN cinema_people cp on fc.cinema_people_id = cp.id
+        WHERE fc.film_id = f.id
+        AND fc.job = 'ACTOR'
+    ) AS casting
 FROM film f
 WHERE f.id = :id
 SQL;
@@ -76,7 +90,7 @@ SQL;
             ->getQuery()
             ->getResult();
     }
-	
+
 	public function findDistinctProds(): array
     {
 $conn = $this->getEntityManager()->getConnection();

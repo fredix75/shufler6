@@ -164,6 +164,8 @@ final class CinemaController extends AbstractController
 
         $film['genres2'] = json_decode($film['genres2'], true);
         $film['pictures'] = json_decode($film['pictures'], true);
+        $film['direction'] = json_decode($film['direction'], true);
+        $film['casting'] = json_decode($film['casting'], true);
 
         return $this->render('cinema/detail.html.twig', [
             'film' => $film,

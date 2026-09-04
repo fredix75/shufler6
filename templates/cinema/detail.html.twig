@@ -33,6 +33,12 @@
                 </div>
                 <br><br>
                 <p style="font-size:120%">{{ film.overview }}</p>
+                <div>
+                {% for director in film.direction %}
+                    <img src="{{ asset('https://image.tmdb.org/t/p/w1280' ~ director.picture) }}"
+                         style="width: 200px;"> {{ director.name }}
+                {% endfor %}
+                </div>
             </div>
         </div>
         <div class="row">
