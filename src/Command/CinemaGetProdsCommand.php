@@ -42,7 +42,7 @@ class CinemaGetProdsCommand extends Command
                 if ($response->getStatusCode() === Response::HTTP_OK) {
                     $response = json_decode($response->getContent(), true) ?? [];
 
-					$section->overwrite(sprintf('%d%% : %s', round(100 * ($i + 1) / count($productions), 0), $response['name']));
+					$section->overwrite(sprintf('%d%% : %d - %s', round(100 * ($i + 1) / count($productions), 0), $prod[0], $response['name']));
                     if (!empty($response)) {
 						$cinemaProd = new CinemaProd();
 						$cinemaProd->setName($response['name']);
@@ -56,7 +56,7 @@ class CinemaGetProdsCommand extends Command
                         $this->em->persist($cinemaProd);
                     }
                 } else {
-                    $io->warning(sprintf('Pas de résultat pour prod #%d', $prod[0]()));
+                    $io->warning(sprintf('Pas de résultat pour prod #%d', $prod[0]));
                 }
 
 				if ($i%100 === 0) {
