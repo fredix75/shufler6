@@ -30,11 +30,11 @@ class CinemaGetProdsCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-		
+
 		$productions = $this->em->getRepository(Film::class)->findDistinctProds();
 		$io->writeln(sprintf("%d prods", count($productions)));
 		$section = $output->section();
-		
+
 		foreach ($productions as $i => $prod) {
 			try {
                 $response = $this->apiRequester->sendRequest('tmdb', '/company/'.$prod[0]);
@@ -52,13 +52,13 @@ class CinemaGetProdsCommand extends Command
 						$cinemaProd->setHomePage($response['homepage']);
 						$cinemaProd->setTmdbId($response['id']);
 						$cinemaProd->setCountry($response['origin_country']);
-						$cinemaProd->setParentCompany($response['parent_company']);
+						$cinemaProd->setParentCompany(!empty($response['parent_company']) ? $response['parent_company']['id'] : null);
                         $this->em->persist($cinemaProd);
                     }
                 } else {
                     $io->warning(sprintf('Pas de résultat pour prod #%d', $prod[0]()));
                 }
-				
+
 				if ($i%100 === 0) {
 					$this->em->flush();
 				}
@@ -66,12 +66,12 @@ class CinemaGetProdsCommand extends Command
             } catch (\Exception $e) {
                 $io->error(sprintf('ERREUR pour %d : %s', $prod[0], $e->getMessage()));
             }
-			
+
 			sleep(0.5);
 		}
-		
+
 		$this->em->flush();
-		
+
         $io->success('Great job man!');
 
         return Command::SUCCESS;
