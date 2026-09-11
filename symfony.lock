@@ -371,6 +371,27 @@
             "config/routes/ux_autocomplete.yaml"
         ]
     },
+    "symfony/ux-leaflet-map": {
+        "version": "3.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "2.19",
+            "ref": "bed7e7f6d7c04e0de9665859ddbf0e842e5323e3"
+        }
+    },
+    "symfony/ux-map": {
+        "version": "3.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "2.19",
+            "ref": "04de870967555f00bd82f542e9e2d29683c3d39e"
+        },
+        "files": [
+            "config/packages/ux_map.yaml"
+        ]
+    },
     "symfony/ux-turbo": {
         "version": "v2.17.0"
     },

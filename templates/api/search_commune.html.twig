@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ parent() }} :: Chercher une commune
+{% endblock %}
+
+{% block body %}
+    {{ form(form) }}
+    {% if commune is not null %}
+    <div class="row" style="margin: 0 100px;">
+        <div class="col-6 text-right g-4">
+            <h3>{{ commune.nom }}</h3>
+            <ul>
+                <li><strong>CP: </strong>{{ commune.cp|number_format(0, ',', ' ') }}</li>
+                <li><strong>Surface: </strong>{{ commune.surface|number_format(2, ',', ' ') }} ha</li>
+                <li><strong>Population: </strong>{{ commune.population|number_format(0, ',', ' ') }} habitants</li>
+            </ul>
+        </div>
+        <div class="col-6 g-4">
+            {# The map must have a defined height #}
+            {{ ux_map(map, {style: 'height: 600px;z-index:0'}) }}
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}

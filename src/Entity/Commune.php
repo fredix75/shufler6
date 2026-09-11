@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CommuneRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CommuneRepository::class)]
@@ -46,6 +48,20 @@ class Commune
 
     #[ORM\Column]
     private ?float $surface = null;
+
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'arrdts')]
+    private ?self $arrdtFrom = null;
+
+    /**
+     * @var Collection<int, self>
+     */
+    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'arrdtFrom', cascade: ['all'])]
+    private Collection $arrdts;
+
+    public function __construct()
+    {
+        $this->arrdts = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -180,6 +196,48 @@ class Commune
     public function setSurface(float $surface): static
     {
         $this->surface = $surface;
+
+        return $this;
+    }
+
+    public function getArrdtFrom(): ?self
+    {
+        return $this->arrdtFrom;
+    }
+
+    public function setArrdtFrom(?self $arrdtFrom): static
+    {
+        $this->arrdtFrom = $arrdtFrom;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getArrdts(): Collection
+    {
+        return $this->arrdts;
+    }
+
+    public function addArrdt(self $arrdt): static
+    {
+        if (!$this->arrdts->contains($arrdt)) {
+            $this->arrdts->add($arrdt);
+            $arrdt->setArrdtFrom($this);
+        }
+
+        return $this;
+    }
+
+    public function removeArrdt(self $arrdt): static
+    {
+        if ($this->arrdts->removeElement($arrdt)) {
+            // set the owning side to null (unless already changed)
+            if ($arrdt->getArrdtFrom() === $this) {
+                $arrdt->setArrdtFrom(null);
+            }
+        }
 
         return $this;
     }

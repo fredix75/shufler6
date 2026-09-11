@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Commune;
+use App\Form\SearchCommuneType;
 use App\Helper\ApiRequester;
 use App\Helper\VideoHelper;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -17,6 +19,15 @@ use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\UX\Map\Bridge\Leaflet\LeafletOptions;
+use Symfony\UX\Map\Bridge\Leaflet\Option\AttributionControlOptions;
+use Symfony\UX\Map\Bridge\Leaflet\Option\ControlPosition;
+use Symfony\UX\Map\Bridge\Leaflet\Option\TileLayer;
+use Symfony\UX\Map\Bridge\Leaflet\Option\ZoomControlOptions;
+use Symfony\UX\Map\InfoWindow;
+use Symfony\UX\Map\Map;
+use Symfony\UX\Map\Marker;
+use Symfony\UX\Map\Point;
 use Vimeo\Exceptions\VimeoRequestException;
 use Vimeo\Vimeo;
 
@@ -346,5 +357,58 @@ final class ApiController extends AbstractController
         $content = $output->fetch();
 
         return new Response($content);
+    }
+
+    #[Route('/search-commune', name: '_search_commune')]
+    public function searchCommune(Request $request): Response
+    {
+        $form = $this->createForm(SearchCommuneType::class);
+
+        $form->handleRequest($request);
+
+        $map = (new Map('default'))
+            ->center(new Point(45.7534031, 4.8295061))
+            ->zoom(6);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $commune = $form->getData()['commune'];
+
+            if (!$commune instanceof Commune) {
+                throw $this->createNotFoundException('Commune not found');
+            }
+
+            $content = sprintf('<h4>%s</h4><p><strong>Surface:</strong> %.2f ha<br><strong>Population:</strong> %s</p>',$commune->getNom(), $commune->getSurface(), number_format($commune->getPopulation(), 0, ',', ' '));
+
+            $map = (new Map('default'))
+                ->center(new Point($commune->getCoord()[1], $commune->getCoord()[0]))
+                ->zoom(6)
+                ->addMarker(new Marker(
+                    position: new Point($commune->getCoord()[1], $commune->getCoord()[0]),
+                    title: $commune->getNom(),
+                    infoWindow: new InfoWindow(
+                        content: $content,
+                    )
+                ));
+//                ->fitBoundsToMarkers();
+            $leafletOptions = (new LeafletOptions())
+                ->tileLayer(new TileLayer(
+                   // url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+                    url: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
+                    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                    options: [
+                        'minZoom' => 2,
+                        'maxZoom' => 12,
+                    ]
+                ))
+            ;
+
+            $map->options($leafletOptions);
+        }
+
+        return $this->render('api/search_commune.html.twig', [
+            'form' => $form,
+            'commune' => $commune ?? null,
+            'map' => $map,
+        ]);
     }
 }
