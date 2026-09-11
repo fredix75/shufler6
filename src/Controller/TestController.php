@@ -2,31 +2,17 @@
 
 namespace App\Controller;
 
-use Symfony\AI\Agent\Agent;
 use Symfony\AI\Agent\AgentInterface;
-use Symfony\AI\Agent\Exception\ExceptionInterface;
-use Symfony\AI\Agent\InputProcessor\SystemPromptInputProcessor;
-use Symfony\AI\Agent\Memory\MemoryInputProcessor;
-use Symfony\AI\Agent\Memory\StaticMemoryProvider;
-use Symfony\AI\AiBundle\Exception\RuntimeException;
-use Symfony\AI\Platform\Bridge\OpenAi\PlatformFactory;
-use Symfony\AI\Platform\Exception\RateLimitExceededException;
+use Symfony\AI\Platform\Bridge\OpenAi\Factory;
 use Symfony\AI\Platform\Message\Message;
 use Symfony\AI\Platform\Message\MessageBag;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
-use function PHPUnit\Framework\isInstanceOf;
-use function PHPUnit\Framework\throwException;
 
 #[Route('/test', name: 'test')]
 class TestController extends AbstractController
@@ -68,22 +54,12 @@ class TestController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $prompt = $form->getData()['prompt'];
 
-            $messages = new MessageBag(Message::ofUser($prompt));
+            $platform = Factory::createPlatform($this->getParameter('ai')['openai_api_key']);
+            //$vectorResult = $platform->invoke('text-embedding-3-small', 'What is the capital of France?');
 
-            try {
-                $result = $agent->call($messages);
-                $response = $result->getContent().\PHP_EOL;
-                //$response = 'ok';
-            } catch (\Throwable $e) {
-                $response = "Sorry : Rate Limit Exception ! {$e->getMessage()}";
-            } finally {
-                try {
-                    return new Response('ok');
-                } catch(\Throwable $e) {
-                    dd($e);
-                }
-            }
-
+            // Generate a text completion with GPT, returns a Symfony\AI\Platform\Result\TextResult
+            $response = $platform->invoke('gpt-4o-mini', new MessageBag(Message::ofUser('What is the capital of France?')));
+            dd($response->asText());
             return $this->render('test/ai.html.twig', [
                 'form' => $form,
                 'reponse' => $response,

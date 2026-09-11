@@ -23,6 +23,7 @@
         "symfony/ai-agent": "^0.13.0",
         "symfony/ai-bundle": "*",
         "symfony/ai-open-ai-platform": "*",
+        "symfony/ai-platform": "^0.13.0",
         "symfony/apache-pack": "^1.0",
         "symfony/asset": "8.1.*",
         "symfony/asset-mapper": "8.1.*",

@@ -7,7 +7,7 @@ ai:
     agent:
         default:
             platform: 'ai.platform.openai'
-            model: 'gpt-5-mini'
+            model: 'gpt-4o-mini'
             tools: ['App\Helper\AiTools']
             prompt:
                 text: |

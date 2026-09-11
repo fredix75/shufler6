@@ -142,6 +142,8 @@ parameters:
         tmdb_api_key: '%env(TMDB_API_KEY)%'
     sniffer:
         upload_directory: 'sniffer'
+    ai:
+        openai_api_key: '%env(OPENAI_API_KEY)%'
 
     resources:
         downloads: 'resources'
