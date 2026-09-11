@@ -1,5 +1,6 @@
 parameters:
     mailer_sender: '%env(MAILER_SENDER)%'
+    import_directory: '%kernel.project_dir%/datas'
     shufler_video:
         max_list: 11
         max_list_couch: 99
@@ -53,6 +54,9 @@ parameters:
             - 3
             - 4
 
+    shufler_flux:
+        max_flux_card: 6
+
     youtube_api_url: 'https://www.googleapis.com/youtube/v3'
     youtube_key: '%env(YOUTUBE_KEY)%'
     vimeo_api_url: 'https://vimeo.com/api/v2'
@@ -72,38 +76,70 @@ parameters:
         max_nb_artists: 500
         max_random: 100
         track_fields:
-            - youtubeKey
-            - auteur
-            - titre
-            - numero
-            - album
-            - annee
-            - artiste
-            - genre
-            - duree
-            - pays
-            - bitrate
-            - note
+            - data: youtubeKey
+              orderable: false
+            - data: auteur
+              orderable: true
+            - data: titre
+              orderable: true
+            - data: numero
+              orderable: true
+            - data: album
+              orderable: true
+            - data: annee
+              orderable: true
+            - data: artiste
+              orderable: true
+            - data: genre
+              orderable: true
+            - data: duree
+              orderable: true
+            - data: pays
+              orderable: true
+            - data: bitrate
+              orderable: true
+            - data: note
+              orderable: true
         album_fields:
-            - youtubeKey
-            - album
-            - artiste
-            - annee
-            - genre
+            - data: youtubeKey
+              orderable: false
+            - data: album
+              orderable: true
+            - data: artiste
+              orderable: true
+            - data: annee
+              orderable: false
+            - data: genre
+              orderable: false
         cloud-track_fields:
-            - youtubeKey
-            - auteur
-            - titre
-            - annee
-            - genre
-            - pays
-            - note
+            - data: youtubeKey
+              orderable: false
+            - data: auteur
+              orderable: true
+            - data: titre
+              orderable: true
+            - data: annee
+              orderable: true
+            - data: genre
+              orderable: true
+            - data: pays
+              orderable: true
+            - data: note
+              orderable: true
         cloud-album_fields:
-            - youtubeKey
-            - name
-            - auteur
-            - annee
-            - genre
+            - data: youtubeKey
+              orderable: false
+            - data: name
+              orderable: true
+            - data: auteur
+              orderable: true
+            - data: annee
+              orderable: true
+            - data: genre
+              orderable: true
+    cinema:
+        tmdb_api_url: '%env(TMDB_API_URL)%'
+        tmdb_api_key: '%env(TMDB_API_KEY)%'
     sniffer:
         upload_directory: 'sniffer'
 

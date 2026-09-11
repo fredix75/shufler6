@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping\EntityListeners;
 
 #[ORM\Entity(repositoryClass: TrackRepository::class)]
 #[EntityListeners([TrackListener::class])]
+#[ORM\HasLifecycleCallbacks]
 class Track extends Piece
 {
     #[ORM\Column(nullable: true)]
@@ -103,5 +104,10 @@ class Track extends Piece
     {
         return hash('sha256', $this->numero.$this->titre.$this->auteur.$this->album.$this->artiste
             .$this->annee.$this->bitrate.$this->duree.$this->genre.$this->note.$this->pays);
+    }
+
+    public function onLoad(): void
+    {
+        $this->note = $this->extraNote > 0 && empty($this->note) || $this->extraNote < 0 && !empty($this->note) ? $this->extraNote : $this->note;
     }
 }

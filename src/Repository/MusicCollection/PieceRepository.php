@@ -40,7 +40,7 @@ class PieceRepository extends ServiceEntityRepository
             $p = array_merge($p, $params['genres']);
         }
         if (!empty($params['note'])) {
-            $sql .= "AND t.extra_note >= ? ";
+            $sql .= "AND COALESCE(t.extra_note, t.note) >= ? ";
             $p[] = $params['note'];
         }
         if (!empty($params['annee'])) {

@@ -10,17 +10,21 @@ import $ from 'jquery';
 export default class extends Controller {
 
     async displayContent(event) {
-        $('.block-content-album').remove();
-        let artist = $(event.target).closest('a').data('artist');
-        artist = artist.replaceAll('&', '%26');
-        let album = $(event.target).closest('a').data('album');
+        document.querySelectorAll('.block-content-album').forEach(el => el.hidden = true);
+        let artist = event.target.closest('a')?.dataset.artist;
+        artist = artist.toString().replaceAll('&', '%26');
+        let album = event.target.closest('a')?.dataset.album;
         album = album.toString().replaceAll('&', '%26');
         album = album.toString().replaceAll('#', '%23');
         album = album.toString().replaceAll('+', '%2B');
-        let url = '/fr/music/tracks_album';
-        let query = '?artist=' + artist + '&album=' + album;
-        let content = await $.ajax(url + query);
-        $(content).insertAfter($(event.target).closest('.album'));
+        const url = '/fr/music/tracks_album';
+        const query = '?artist=' + artist + '&album=' + album;
+        const response = await fetch(url + query);
+        const content = await response.text();
+        event.target
+            .closest('.album')
+            ?.insertAdjacentHTML('afterend', content);
+        // jquery inévitable !
         $('.block-content-album').toggle("slow");
     }
 
@@ -59,7 +63,9 @@ export default class extends Controller {
                 }
             }
             let modal = document.querySelector('#formModal');
-            Modal.getInstance(modal).hide();
+            if (Modal.getInstance(modal) !== null) {
+                Modal.getInstance(modal).hide();
+            }
         });
     }
 
@@ -68,9 +74,8 @@ export default class extends Controller {
         if ($(event.target).closest('a').data('id')) {
             let id = $(event.target).closest('a').data('id');
             let modal = document.querySelector('#formModal');
-            let m = Modal.getInstance(modal);
-            if (m != null) {
-                m.hide();
+            if (Modal.getInstance(modal) !== null) {
+                Modal.getInstance(modal).hide();
             }
             modal = new Modal('#formModal', {keyboard: false});
             modal.show();

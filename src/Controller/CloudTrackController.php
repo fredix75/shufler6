@@ -13,7 +13,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/music/cloudtrack', name: 'music_cloudtrack')]
 #[IsGranted('ROLE_ADMIN')]
-class CloudTrackController extends AbstractController
+final class CloudTrackController extends AbstractController
 {
     #[Route('/edit/{id}', name: '_edit', requirements: ['id' => '\d+'], defaults: ['id' => null])]
     public function editCloudTrack(?CloudTrack $cloudTrack, Request $request, EntityManagerInterface $em): Response

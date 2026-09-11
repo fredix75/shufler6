@@ -7,12 +7,12 @@
     <i class="bi bi-save-fill"></i>&nbsp;Save
 </button>&nbsp;
 {% if channelflux.id is not null %}
-    <br/>
+    <br>
     {% if channelflux.image is not null %}
         {% if 'http' in channelflux.image %}
-            <img src="{{ asset(channelflux.image) }}" width="200px" />
+            <img src="{{ asset(channelflux.image) }}" width="200px" alt="Logo {{ channelflux.name }}">
         {% else %}
-            <img class="channel-image" src="{{ asset('uploads/logos/' ~ channelflux.image) }}" width="200px" />
+            <img class="channel-image" src="{{ asset('uploads/logos/' ~ channelflux.image) }}" width="200px" alt="{{ channelflux.name }}">
             <a href="{{ path('channel_delete_logo',{'id': channelflux.id}) }}"
                type="button"
                class="btn btn-danger"

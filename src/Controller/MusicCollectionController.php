@@ -3,20 +3,18 @@
 namespace App\Controller;
 
 use App\Entity\MusicCollection\Album;
-use App\Entity\MusicCollection\CloudTrack;
 use App\Entity\MusicCollection\Track;
-use App\Form\AlbumFormType;
-use App\Form\CloudTrackFormType;
 use App\Form\FilterTracksFormType;
 use App\Form\TrackFormType;
 use App\Helper\ApiRequester;
+use App\Helper\MusicHelper;
 use App\Helper\VideoHelper;
 use App\Repository\FilterPieceRepository;
 use App\Repository\MusicCollection\ArtistRepository;
 use App\Repository\MusicCollection\CloudAlbumRepository;
 use App\Repository\MusicCollection\CloudTrackRepository;
 use App\Repository\MusicCollection\PieceRepository;
-use App\Twig\Runtime\ShuflerRuntime;
+use App\Twig\Runtime\ShuflerExtensionRuntime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -28,19 +26,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+
 #[Route('/music', name: 'music')]
 #[IsGranted('ROLE_ADMIN')]
-class MusicCollectionController extends AbstractController
+final class MusicCollectionController extends AbstractController
 {
-    #[Route('/all/{mode}', name: '_all', requirements: ['mode' => 'tracks|albums'], defaults: ['mode' => 'tracks'])]
+    #[Route('/all/{mode}', name: '_all', requirements: ['mode' => 'tracks|albums'], defaults: ['mode' => 'tracks'], methods: ['GET'])]
     public function getAll(
-        Request               $request,
-        ParameterBagInterface $parameters,
-        TrackRepository       $trackRepository,
-        ShuflerRuntime        $shuflerRuntime,
-        string                $mode
+        Request                 $request,
+        ParameterBagInterface   $parameters,
+        TrackRepository         $trackRepository,
+        ShuflerExtensionRuntime $shuflerRuntime,
+        string                  $mode
     ): Response
     {
+
         $columnsToDisplay = $parameters->get('music_collection')['track_fields'];
         if ($mode === 'albums') {
             $columnsToDisplay = $parameters->get('music_collection')['album_fields'];
@@ -61,7 +61,7 @@ class MusicCollectionController extends AbstractController
             ];
 
             $sort = $parameters['order'][0]['column'];
-            $sort = $columnsToDisplay[$sort];
+            $sort = $columnsToDisplay[$sort]['data'];
 
             $dir = @$parameters['order'][0]['dir'];
 
@@ -73,12 +73,10 @@ class MusicCollectionController extends AbstractController
                     'recordsFiltered' => count($trackRepository->getTracksAjax($filters, 0, false)),
                     'recordsTotal' => $trackRepository->count([]),
                 ];
-
                 foreach ($tracks as $track) {
                     $output['data'][] = [
                         'youtubeKey' => $this->renderView('music/part/_youtube_link.html.twig', [
                             'track' => $track,
-                            'youtube_key' => VideoHelper::YOUTUBE_WATCH . $track->getYoutubeKey(),
                         ]),
                         'id' => $track->getId(),
                         'auteur' => strtoupper($track->getAuteur()) !== 'DIVERS' ? '<a href="#" data-action="music#openModal" data-artist="' . $track->getAuteur() . '" onclick="return false;"><i class="bi bi-eye-fill"></i></a> ' . $track->getAuteur() : $track->getAuteur(),
@@ -133,14 +131,14 @@ class MusicCollectionController extends AbstractController
         ]);
     }
 
-    #[Route('/cloud-all/{mode}', name: '_cloud-all', requirements: ['mode' => 'tracks|albums'], defaults: ['mode' => 'tracks'])]
+    #[Route('/cloud-all/{mode}', name: '_cloud-all', requirements: ['mode' => 'tracks|albums'], defaults: ['mode' => 'tracks'], methods: ['GET'])]
     public function getCloudAll(
-        Request               $request,
-        ParameterBagInterface $parameters,
-        CloudTrackRepository  $cloudTrackRepository,
-        CloudAlbumRepository  $cloudAlbumRepository,
-        ShuflerRuntime        $shuflerRuntime,
-        string                $mode
+        Request                 $request,
+        ParameterBagInterface   $parameters,
+        CloudTrackRepository    $cloudTrackRepository,
+        CloudAlbumRepository    $cloudAlbumRepository,
+        ShuflerExtensionRuntime $shuflerRuntime,
+        string                  $mode
     ): Response
     {
         $columnsToDisplay = $parameters->get('music_collection')['cloud-track_fields'];
@@ -163,7 +161,7 @@ class MusicCollectionController extends AbstractController
             ];
 
             $sort = $parameters['order'][0]['column'];
-            $sort = $columnsToDisplay[$sort];
+            $sort = $columnsToDisplay[$sort]['data'];
 
             $dir = @$parameters['order'][0]['dir'];
 
@@ -179,15 +177,14 @@ class MusicCollectionController extends AbstractController
                 foreach ($tracks as $track) {
                     $output['data'][] = [
                         'youtubeKey' => $this->renderView('music/part/_youtube_link.html.twig', [
-                            'track' => $track,
-                            'youtube_key' => VideoHelper::YOUTUBE_WATCH . $track->getYoutubeKey(),
+                            'track' => $track
                         ]),
                         'id' => $track->getId(),
-                        'auteur' => strtoupper($track->getAuteur()) !== 'DIVERS' ? '<a href="#" data-action="music#openModal" data-artist="' . $track->getAuteur() . '" onclick="return false;"><i class="bi bi-eye-fill"></i></a> ' . $track->getAuteur() : $track->getAuteur(),
-                        'titre' => '<a href="'.$this->generateUrl('music_cloudtrack_edit',  ['id' => $track->getId()]).'"><i class="bi bi-pencil-square"></i></a> ' . $track->getTitre(),
+                        'auteur' => $track->getAuteur(),
+                        'titre' => '<a href="' . $this->generateUrl('music_cloudtrack_edit', ['id' => $track->getId()]) . '"><i class="bi bi-pencil-square"></i></a> ' . $track->getTitre(),
                         'annee' => $track->getAnnee(),
                         'genre' => '<span class="badge bg-dark">' . $track->getGenre() . '</span>',
-                        'pays'  => $track->getPays(),
+                        'pays' => $track->getPays(),
                         'note' => $track->getNote() ? $shuflerRuntime->displayStarsFunction($track->getNote()) : '',
                     ];
                 }
@@ -207,7 +204,7 @@ class MusicCollectionController extends AbstractController
                             'album' => $album,
                             'youtube_key' => VideoHelper::YOUTUBE_WATCH . $album->getYoutubekey(),
                         ]),
-                        'name' => '<a href="'.$this->generateUrl('music_album_cloud_edit', ['id' => $album->getId()]).'"><i class="bi bi-pencil-square"></i></a> ' . $album->getName(),
+                        'name' => '<a href="' . $this->generateUrl('music_album_cloud_edit', ['id' => $album->getId()]) . '"><i class="bi bi-pencil-square"></i></a> ' . $album->getName(),
                         'auteur' => $album->getAuteur(),
                         'annee' => $album->getAnnee(),
                         'genre' => $album->getGenre(),
@@ -227,18 +224,22 @@ class MusicCollectionController extends AbstractController
         ]);
     }
 
-    #[Route('/artist', name: '_artist')]
+    #[Route('/artist', name: '_artist', methods: ['GET'])]
     public function getArtist(Request $request, ArtistRepository $artistRepository): Response
     {
         $artist = $request->query->get('artist');
         $artist = $artistRepository->findOneBy(['name' => $artist]);
+
+        if (!$artist) {
+            throw $this->createNotFoundException('no artist');
+        }
 
         return $this->render('music/part/_artist.html.twig', [
             'artist' => $artist
         ]);
     }
 
-    #[Route('/tracks_album', name: '_tracks_album')]
+    #[Route('/tracks_album', name: '_tracks_album', methods: ['GET'])]
     public function getTracksByAlbumAjax(Request $request, TrackRepository $trackRepository, AlbumRepository $albumRepository): Response
     {
         $artist = $request->query->get('artist');
@@ -305,13 +306,12 @@ class MusicCollectionController extends AbstractController
         ]);
     }
 
+    #[Route('/filter-couch', name: '_filter_couch', methods: ['GET'])]
+    public function filterCouch(Request $request, FilterPieceRepository $filterPieceRepository, MusicHelper $musicHelper): Response
+    {
+        $params = $musicHelper->handleParams($request);
 
-
-    #[Route('/filter-couch', name: '_filter_couch')]
-    public function filterCouch(FilterPieceRepository $filterPieceRepository): Response {
-
-        $form = $this->createForm(FilterTracksFormType::class);
-
+        $form = $this->createForm(FilterTracksFormType::class, $params);
         $filterlistes = $filterPieceRepository->findBy([], ['name' => 'ASC']);
 
         return $this->render('music/filter_couch.html.twig', [
@@ -320,50 +320,39 @@ class MusicCollectionController extends AbstractController
         ]);
     }
 
-    #[Route('/couch', name: '_couch')]
-    public function couch(Request $request, PieceRepository $pieceRepository): Response
+    #[Route('/couch', name: '_couch', methods: ['GET'])]
+    public function couch(
+        Request $request,
+        PieceRepository $pieceRepository,
+        AlbumRepository $albumRepository,
+        MusicHelper $musicHelper
+    ): Response
     {
-        $params = [
-            'auteur' => $request->query->get('auteur') ?? null,
-            'album' => $request->query->get('album') ?? null,
-            'genres' => $request->query->get('genres') ?? null,
-            'annee' => $request->query->get('annee') ?? null,
-            'search' => $request->query->get('search') ?? null,
-            'hasYoutubeKey' => true,
-        ];
-
+        $params = $musicHelper->handleParams($request);
         $form = $this->createForm(FilterTracksFormType::class, $params);
 
-        $params['note'] = $request->query->get('note') ?? null;
+        if (empty($params['album']) && empty($params['is_disambiguate']) && (!empty($params['auteur']) || !empty($params['genres'] || !empty($params['annee'])) || !empty($params['search']))) {
+            $albums = $albumRepository->getAlbums($params, 1, 100);
+            if (count($albums) > 0) {
+                return $this->render('music/couch_list_albums.html.twig', [
+                    'albums' => $albums,
+                    'params' => $params,
+                    'form_track' => $form,
+                ]);
+            }
+        }
+
         $pieces = $pieceRepository->getPieces($params);
+        if (empty($pieces)) {
+            $this->addFlash('warning', 'No Result !');
+            return $this->redirectToRoute('music_filter_couch', $params);
+        }
 
         if (empty($params['album'])) {
             shuffle($pieces);
         }
-        $musicParameters = $this->getParameter('music_collection');
-        $videoParameters = $this->getParameter('shufler_video');
-        $trackIntro = [
-            'titre' => ' * * * * * L O A D I N G * * * * * ',
-            'auteur' => '',
-            'album' => '',
-            'annee' => null,
-            'youtubeKey' => $videoParameters['intro_couch'],
-        ];
 
-        $playlist = [$trackIntro['youtubeKey']];
-        $list = [$trackIntro];
-
-        $i = 0;
-        foreach ($pieces as $piece) {
-            if (!\in_array($piece['youtubeKey'], $playlist) && $piece['youtubeKey'] !== 'nope') {
-                $playlist[] = $piece['youtubeKey'];
-                $list[] = $piece;
-                $i++;
-            }
-            if ($i >= $musicParameters['max_random']) {
-                break;
-            }
-        }
+        list($list, $playlist) = $musicHelper->buildPlaylist($pieces);
 
         return $this->render('video/couch.html.twig', [
             'list' => $list,
@@ -421,8 +410,9 @@ class MusicCollectionController extends AbstractController
         return new Response(json_encode(['fail : ' . $response->getStatusCode()]), $response->getStatusCode());
     }
 
-    #[Route('/set-extra-note/{id}', name: '_set_extra_note')]
-    public function setExtraNote(Track $track, EntityManagerInterface $em): Response {
+    #[Route('/set-extra-note/{id}', name: '_set_extra_note', methods: ['GET'])]
+    public function setExtraNote(Track $track, EntityManagerInterface $em): Response
+    {
         $note = ($track->getNote() > 0 || $track->getExtraNote() > 0) && $track->getExtraNote() != -1 ? -1 : 4;
         $track->setExtraNote($note);
         $em->flush();

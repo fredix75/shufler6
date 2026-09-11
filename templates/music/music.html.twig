@@ -24,12 +24,12 @@
             pageLength: page_length
         }) }}>
             <div class="row">
-                <div class="datas-white" style="color:black;">
+                <div class="datas-white overflow-auto" style="color:black;">
                     <table id="container-datas" class="table display table-dark">
                         <thead>
                         <tr>
                             {% for column in columns_db %}
-                                <th>{{ column|capitalize }}</th>
+                                <th>{{ column.data|capitalize }}</th>
                             {% endfor %}
                         </tr>
                         </thead>
@@ -37,6 +37,7 @@
                 </div>
             </div>
             {% include 'part/_modal.html.twig' with { modalTitle: 'Music', class: 'music-modal' } %}
+            {% include 'part/_offcanvas.html.twig' with { title: 'Album' } %}
         </div>
     </div>
 {% endblock %}

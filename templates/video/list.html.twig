@@ -52,7 +52,7 @@
                                href="{{ path('video_couch', {'categorie' : pagination.route_params.categorie, 'genre' : pagination.route_params.genre, 'periode' : pagination.route_params.periode}) }}"><i
                                         class="bi bi-collection-play"></i>&nbsp;Couch' Mode</a>
                         </div>
-                        <br/><br/>
+                        <br><br>
                     </div>
                     <div class="col col-6">
                         {% if pagination.route_params.genre != 0 %}
@@ -75,11 +75,11 @@
                                 <a href="{{ path('video_list', {'categorie' : pagination.route_params.categorie, 'genre' : video.genre}) }}">{{ video.genre|genreDisplay }}</a>
                             {% endif %}
                         </div>
-                        {% include("video/part/_videoFrame.html.twig") %}
+                        <twig:VideoFrame :video="video" />
                     </div>
                 </div>
             {% endfor %}
         </section>
-        {% include "part/_pagination.html.twig" %}
+        <twig:Pagination :pagination="pagination" />
     </div>
 {% endblock %}

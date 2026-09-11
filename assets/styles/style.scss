@@ -117,16 +117,34 @@ a.video-link:hover img, a.playlist-link:hover img {
 }
 
 .btn-transparent {
-  color: white;
+    color: white;
 }
 
 .alert {
-  height: 105px;
+    padding: 1.25rem 1.5rem;
+    font-family: "Courier New", serif;
+    font-size: 120%;
 }
 
-.alert-error {
-  color: white;
-  background-color: red;
+.alert-success {
+    --bs-alert-color: rgb(114,200,148);
+    --bs-alert-bg: #051b11;
+    --bs-alert-border-color: #0f5132;
+    --bs-alert-link-color: rgb(114,200,148);
+}
+
+.alert-warning {
+    --bs-alert-color: #ffda6a;
+    --bs-alert-bg: #332701;
+    --bs-alert-border-color: #997404;
+    --bs-alert-link-color: #ffda6a;
+}
+
+.alert-danger {
+    --bs-alert-color: #ea868f;
+    --bs-alert-bg: #2c0b0e;
+    --bs-alert-border-color: #842029;
+    --bs-alert-link-color: #ea868f;
 }
 
 .invalid-feedback {
@@ -165,20 +183,29 @@ a.video-link:hover img, a.playlist-link:hover img {
   color:grey;
 }
 
-.flux-header {
-  background-color:#1b7780;
-  font-size: 1.6em;
-}
-
 #audio-stick .pres {
   padding: 10px;
   color: white;
   text-align: center;
 }
 
-.flux-titre {
-  color: white;
-  font-weight: bold;
+.flux.card {
+    color: #6edff6;
+    background-color: #032830;
+}
+
+.flux.card .accordion {
+    --bs-accordion-bg: rgba(255,255,255,0.4);
+    --bs-accordion-border-color: #032830;
+    color: white;
+}
+
+.flux.card .accordion-body .btn {
+    border:1px solid white;
+}
+
+.flux.card a h3 {
+    color: black;
 }
 
 .list-group-item.video {

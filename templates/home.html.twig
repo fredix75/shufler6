@@ -11,7 +11,7 @@
             </div>
             <div class="col-lg-6 col-12 texte my-auto p-5">
                 <img src="{{ asset('images/shufler_logo.png') }}" width=50% alt="logo Shufler"
-                     title="logo Shufler"><br>des clips en vrac..<br><br>
+                     title="logo Shufler"><br><span class="sous-titre">des clips en vrac..</span><br><br>
                 <div style="text-align:center">
                     <a class="btn btn-dark" href="{{ path('main_home') }}" role="button" aria-label="Reload"
                        style="background-color:black"><i class="bi bi-dice-{{ random(5) + 1 }}-fill"></i>&nbsp;{{ 'New Selection'|trans }}
@@ -23,7 +23,7 @@
                     {% if is_granted('ROLE_AUTEUR') %}
                         <a href="{{ path('video_edit', {'id':anims[0].id}) }}" role="button" aria-label="Edit the video"
                            class="link-edit btn btn-dark"
-                           aria-label="Edit video"><i class="bi bi-pencil-square"></i></a>
+                        ><i class="bi bi-pencil-square"></i></a>
                     {% endif %}
                 </div>
             </div>
@@ -33,7 +33,7 @@
             {% for video in anims|slice(1, 2) %}
                 <div class="col-12 col-md-6 col-lg-3 media-vignette">
                     <div class="media topcol embed-responsive-16by9">
-                        {% include("video/part/_videoFrame.html.twig") %}
+                        <twig:VideoFrame :video="video" />
                     </div>
                 </div>
             {% endfor %}
@@ -48,7 +48,7 @@
                                     href="{{ path('video_list', {'categorie' : video.categorie, 'genre' : video.genre}) }}"
                                     aria-label="Go to category {{ video.genre|genreDisplay }}">{{ video.genre|genreDisplay }}</a>
                         </div>
-                        {% include("video/part/_videoFrame.html.twig") %}
+                        <twig:VideoFrame :video="video" />
                     </div>
                 </div>
             {% endfor %}
@@ -62,11 +62,11 @@
                             <a class="playlist-link" href="{{ playlist.url|youtubeChannelLink }}" data-toggle="tooltip"
                                aria-label="Launch video {{ playlist.name }}">
                                 <img src="{{ playlist.image }}" width=60% alt="{{ playlist.name }}"
-                                     title="{{ playlist.name }}"/>
+                                     title="{{ playlist.name }}">
                             </a>
                         </div>
                         <div class="col col-12 col-sm-12 col-md-6 col-lg-6" style="font-size:130%;">
-                            <h3 style="background-color:#0153e7;color:white;">{{ playlist.name }}</h3>
+                            <h3 style="background-color:black;color:white;">{{ playlist.name }}</h3>
                             <p style="background-color:white;color:black;">Le meilleur et le pire de keski s'est passé
                                 chaque jour à la télé...</p>
                         </div>
@@ -80,7 +80,7 @@
                     {% for video in stranges|slice(0, 2) %}
                         <div class="col-12 col-md-6 col-lg-6 media-vignette">
                             <div class="media topcol embed-responsive-16by9">
-                                {% include("video/part/_videoFrame.html.twig") %}
+                                <twig:VideoFrame :video="video" />
                             </div>
                         </div>
                     {% endfor %}
@@ -97,7 +97,7 @@
                                     href="{{ path('video_list', {'categorie' : video.categorie, 'genre' : video.genre}) }}"
                                     aria-label="Go to category {{ video.genre|genreDisplay }}">{{ video.genre|genreDisplay }}</a>
                         </div>
-                        {% include("video/part/_videoFrame.html.twig") %}
+                        <twig:VideoFrame :video="video" />
                     </div>
                 </div>
             {% endfor %}

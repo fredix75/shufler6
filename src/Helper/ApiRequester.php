@@ -21,6 +21,11 @@ class ApiRequester
      */
     public function sendRequest(string $api, string $path = '', array $queryParams = [], string $method = 'GET'): ResponseInterface
     {
+        $headers = [
+            'Content-Type: application/json',
+            'Accept: application/json',
+        ];
+
         switch ($api) {
             case 'youtube':
                 $url = $this->parameterBag->get('youtube_api_url');
@@ -43,9 +48,17 @@ class ApiRequester
                         'format' => 'json',
                     ], $queryParams)
                 ];
-                $queryParams = array_merge([
-
-                ], $queryParams);
+                break;
+            case 'tmdb':
+                $url = $this->parameterBag->get('cinema')['tmdb_api_url'];
+                $queryParams = [
+                    'query' => array_merge([
+                        'language' => 'fr-FR',
+                    ], $queryParams)
+                ];
+                $headers = array_merge($headers, [
+                    'Authorization' => 'Bearer ' . $this->parameterBag->get('cinema')['tmdb_api_key'],
+                ]);
                 break;
             default:
                 throw new \Exception('no supported API');
@@ -53,10 +66,7 @@ class ApiRequester
         $url = sprintf('%s%s', $url, $path);
 
         $params = array_merge([
-            'headers' => [
-                'Content-Type: application/json',
-                'Accept: application/json',
-            ]
+            'headers' => $headers
         ], $queryParams);
 
         return $this->httpClient->request($method, $url, $params);

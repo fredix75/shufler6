@@ -7,7 +7,7 @@ use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Twig\Extension\RuntimeExtensionInterface;
 
-class ShuflerRuntime implements RuntimeExtensionInterface
+final class ShuflerExtensionRuntime implements RuntimeExtensionInterface
 {
     private array $videoParameters;
 
@@ -53,20 +53,20 @@ class ShuflerRuntime implements RuntimeExtensionInterface
     {
         $frame_prefix = '<img loading="lazy" class="embed-responsive-item" alt="'.$name.'" title="'.$name.'" src="';
         $width = '100%';
-        $frame = $frame_prefix . $this->assetMapper->getPublicPath($this->videoParameters['no_signal']) . '" width=' . $width . ' />';
+        $frame = $frame_prefix . $this->assetMapper->getPublicPath($this->videoParameters['no_signal']) . '" width=' . $width . ' >';
 
         $platform = $this->videoHelper->getPlatform($lien);
         $vid = $this->videoHelper->getIdentifer($lien, $platform);
 
         if ($platform === VideoHelper::YOUTUBE) {
             $video = VideoHelper::YOUTUBE_API . $vid .  '/0.jpg';
-            $frame = $frame_prefix . $video . '" width=' . $width . ' />';
+            $frame = $frame_prefix . $video . '" width=' . $width . ' >';
 
         } elseif ($platform === VideoHelper::VIMEO) {
             try {
                 $data = file_get_contents(VideoHelper::VIMEO_API . $vid . '.json');
                 if ($data && $data = json_decode($data)) {
-                    $frame = $frame_prefix . $data[0]->thumbnail_medium . '" width=' . $width . ' />';
+                    $frame = $frame_prefix . $data[0]->thumbnail_medium . '" width=' . $width . ' >';
                 }
             } catch (\Exception $e) {
                 error_log($e->getMessage());
@@ -81,7 +81,7 @@ class ShuflerRuntime implements RuntimeExtensionInterface
             }
 
             if ($data && $data = json_decode($data)) {
-                $frame = $frame_prefix . $data->thumbnail_url . '" width=' . $width . ' />';
+                $frame = $frame_prefix . $data->thumbnail_url . '" width=' . $width . ' >';
             }
         }
 
@@ -121,7 +121,7 @@ class ShuflerRuntime implements RuntimeExtensionInterface
     {
         switch ($string) {
             case 'success' :
-                return 'bi bi-shield-fill-check';
+                return 'bi bi-check-circle me-3';
             case 'warning' :
                 return 'bi bi-shield-fill-exclamation';
             case 'danger' :
@@ -147,5 +147,14 @@ class ShuflerRuntime implements RuntimeExtensionInterface
         }
         $stars .= '</span>';
         return $stars;
+    }
+
+    public function toIconYoutubeFilter(?string $key): string
+    {
+        if ('nope' !== $key) {
+            return '<i class="bi bi-youtube"></i>';
+        }
+
+        return '';
     }
 }

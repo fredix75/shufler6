@@ -45,7 +45,9 @@ export default class extends Controller {
             });
 
             let modal = document.querySelector('#formModal');
-            Modal.getInstance(modal).hide();
+            if (Modal.getInstance(modal) !== null) {
+                Modal.getInstance(modal).hide();
+            }
         } catch (error) {
             console.error('Error:', error);
         }

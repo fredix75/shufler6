@@ -1,0 +1,24 @@
+<div{{ attributes }}>
+    {% if this.path is not null %}
+        <a href="{{ this.path }}">
+    {% endif %}
+        <div class="card">
+            <div class="row g-0">
+                <div class="col-4">
+                    {% if this.pictureSrc is not null %}
+                    <img src="{{ this.pictureSrc }}" class="img-fluid rounded-start"
+                         alt="{{ this.title }}">
+                    {% endif %}
+                </div>
+                <div class="col-8">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ this.title }}</h5>
+                        <p class="card-text">{% block content %}{% endblock %}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% if this.path is not null %}
+        </a>
+    {% endif %}
+</div>

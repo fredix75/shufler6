@@ -1,0 +1,19 @@
+<span class="event-type">{{ event.type|upper }}</span> <span
+    class="event-sousType">{{ event.sousType|upper }}</span>
+{% set desc = event.description|split('.') %}
+<h2>{{ desc[0] }}</h2>
+<br>
+<div class="subtitle d-flex justify-content-between">
+    <span class="author">Wikipédia</span>
+    <span>&#9733; &#9733; &#9733;</span>
+    <span class="year">{{ event.date|date('D d M Y') }}</span>
+</div>
+<br>
+<div class="article-content">
+    {% for d in desc|slice(1) %}
+        {{ d }}
+    {% endfor %}
+    {% for key, value in event.keywords %}
+        <a href="https://fr.wikipedia.org{{ value }}">{{ key }}</a>{% if not loop.last %} | {% endif %}
+    {% endfor %}
+</div>

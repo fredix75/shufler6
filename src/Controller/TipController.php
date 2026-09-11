@@ -14,7 +14,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/tip', name: 'tip')]
 #[IsGranted('ROLE_ADMIN')]
-class TipController extends AbstractController
+final class TipController extends AbstractController
 {
     #[Route('/list/{id}', name: '_list', requirements: ['id' => '\d+'], defaults: ['id' => null])]
     public function index(?Tip $tip, TipRepository $tipRepository, Request $request, EntityManagerInterface $em): Response

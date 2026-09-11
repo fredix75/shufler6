@@ -1,0 +1,377 @@
+<?php
+
+namespace App\Entity;
+
+use App\Repository\FilmRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: FilmRepository::class)]
+class Film
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $year = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $picture = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $overview = null;
+
+    #[ORM\Column(length: 5, nullable: true)]
+    private ?string $originalLanguage = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $originalTitle = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $tmdbId = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $posterPath = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $backdropPath = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?float $popularity = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?array $genres = null;
+
+    #[ORM\Column]
+    private ?bool $verified = false;
+
+    #[ORM\Column]
+    private ?bool $noRef = false;
+
+    private ?string $altName = null;
+
+    private array $genresLabels = [];
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTime $date = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $type = null;
+
+    /**
+     * @var Collection<int, PictureFilm>
+     */
+    #[ORM\OneToMany(targetEntity: PictureFilm::class, mappedBy: 'film', orphanRemoval: true)]
+    private Collection $pictureFilms;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $belongsToCollection = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?array $country = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?array $production = null;
+
+    public function __construct()
+    {
+        $this->pictureFilms = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getAltName(): ?string
+    {
+        return $this->altName;
+    }
+
+    public function setAltName(?string $altName): static
+    {
+        $this->altName = $altName;
+
+        return $this;
+    }
+
+    public function getYear(): ?int
+    {
+        return $this->year;
+    }
+
+    public function setYear(?int $year): static
+    {
+        $this->year = $year;
+
+        return $this;
+    }
+
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?string $picture): static
+    {
+        $this->picture = $picture;
+
+        return $this;
+    }
+
+    public function getOverview(): ?string
+    {
+        return $this->overview;
+    }
+
+    public function setOverview(?string $overview): static
+    {
+        $this->overview = $overview;
+
+        return $this;
+    }
+
+    public function getOriginalLanguage(): ?string
+    {
+        return $this->originalLanguage;
+    }
+
+    public function setOriginalLanguage(?string $originalLanguage): static
+    {
+        $this->originalLanguage = $originalLanguage;
+
+        return $this;
+    }
+
+    public function getOriginalTitle(): ?string
+    {
+        return $this->originalTitle;
+    }
+
+    /**
+     * @return array
+     */
+    public function getGenresLabels(): array
+    {
+        return $this->genresLabels;
+    }
+
+    /**
+     * @param array $genresLabels
+     */
+    public function setGenresLabels(array $genresLabels): void
+    {
+        if (empty($this->genres)) {
+            return;
+        }
+        $genres = array_filter($genresLabels, function($genre) {
+            if (\in_array($genre->getTmdbId(), $this->genres)) {
+                return true;
+            }
+            return false;
+        });
+        $this->genresLabels = array_merge(array_map(function($genre) {
+            return $genre->getName();
+        }, $genres));
+    }
+
+    public function setOriginalTitle(?string $originalTitle): static
+    {
+        $this->originalTitle = $originalTitle;
+
+        return $this;
+    }
+
+    public function getTmdbId(): ?int
+    {
+        return $this->tmdbId;
+    }
+
+    public function setTmdbId(?int $tmdbId): static
+    {
+        $this->tmdbId = $tmdbId;
+
+        return $this;
+    }
+
+    public function getPosterPath(): ?string
+    {
+        return $this->posterPath;
+    }
+
+    public function setPosterPath(?string $posterPath): static
+    {
+        $this->posterPath = $posterPath;
+
+        return $this;
+    }
+
+    public function getBackdropPath(): ?string
+    {
+        return $this->backdropPath;
+    }
+
+    public function setBackdropPath(?string $backdropPath): static
+    {
+        $this->backdropPath = $backdropPath;
+
+        return $this;
+    }
+
+    public function getPopularity(): ?float
+    {
+        return $this->popularity;
+    }
+
+    public function setPopularity(?float $popularity): static
+    {
+        $this->popularity = $popularity;
+
+        return $this;
+    }
+
+    public function getGenres(): ?array
+    {
+        return $this->genres;
+    }
+
+    public function setGenres(?array $genres): static
+    {
+        $this->genres = $genres;
+
+        return $this;
+    }
+
+    public function isVerified(): ?bool
+    {
+        return $this->verified;
+    }
+
+    public function setVerified(?bool $verified): static
+    {
+        $this->verified = $verified;
+
+        return $this;
+    }
+
+    public function isNoRef(): ?bool
+    {
+        return $this->noRef;
+    }
+
+    public function setNoRef(?bool $noRef): static
+    {
+        $this->noRef = $noRef;
+
+        return $this;
+    }
+
+    public function getDate(): ?\DateTime
+    {
+        return $this->date;
+    }
+
+    public function setDate(?\DateTime $date): static
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(?string $type): static
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PictureFilm>
+     */
+    public function getPictureFilms(): Collection
+    {
+        return $this->pictureFilms;
+    }
+
+    public function addPictureFilm(PictureFilm $pictureFilm): static
+    {
+        if (!$this->pictureFilms->contains($pictureFilm)) {
+            $this->pictureFilms->add($pictureFilm);
+            $pictureFilm->setFilm($this);
+        }
+
+        return $this;
+    }
+
+    public function removePictureFilm(PictureFilm $pictureFilm): static
+    {
+        if ($this->pictureFilms->removeElement($pictureFilm)) {
+            // set the owning side to null (unless already changed)
+            if ($pictureFilm->getFilm() === $this) {
+                $pictureFilm->setFilm(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getBelongsToCollection(): ?int
+    {
+        return $this->belongsToCollection;
+    }
+
+    public function setBelongsToCollection(?int $belongsToCollection): static
+    {
+        $this->belongsToCollection = $belongsToCollection;
+
+        return $this;
+    }
+
+    public function getCountry(): ?array
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?array $country): static
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    public function getProduction(): ?array
+    {
+        return $this->production;
+    }
+
+    public function setProduction(?array $production): static
+    {
+        $this->production = $production;
+
+        return $this;
+    }
+}

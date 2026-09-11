@@ -10,21 +10,28 @@
                 <div class="col-12 col-lg-6">
                     {{ form_start(form) }}
                     {{ form_widget(form) }}
-                    {% if cloudTrack.id is not null %}
-                        <a class="btn btn-secondary"
-                           href="{{ path('api_video', {'search_api': cloudTrack.auteur ~ ' ' ~ cloudTrack.titre, 'id_cloud_track': cloudTrack.id }) }}">
-                            <i class="bi bi-arrow-left-right"></i>&nbsp;Exchange on Api
-                        </a>
-                    {% endif %}
-                    <button class="btn btn-primary" type="submit">
-                        <i class="bi bi-save-fill"></i>&nbsp;Save
-                    </button>
-                    {% if cloudTrack.id is not null %}
-                        &nbsp;
-                        <a href="{{ path('music_cloudtrack_delete', {'id' : cloudTrack.id, '_token' : csrf_token('delete'~cloudTrack.id)}) }}"
-                           type="button" class="btn btn-danger"
-                           onclick="return confirm('Etes--vous sûr ?')">Supprimer</a> &nbsp;
-                    {% endif %}
+                    <div class="row justify-content-center text-center">
+                        {% if cloudTrack.id is not null %}
+                            <div class="col-4 p-2">
+                                <a class="btn btn-secondary p-2"
+                                   href="{{ path('api_video', {'search_api': cloudTrack.auteur ~ ' ' ~ cloudTrack.titre, 'id_cloud_track': cloudTrack.id }) }}">
+                                    <i class="bi bi-arrow-left-right"></i>&nbsp;Exchange on Api
+                                </a>
+                            </div>
+                        {% endif %}
+                        <div class="col-4 p-2">
+                            <button class="btn btn-primary p-2" type="submit">
+                                <i class="bi bi-save-fill"></i>&nbsp;Save
+                            </button>
+                        </div>
+                        {% if cloudTrack.id is not null %}
+                            <div class="col-4 p-2">
+                                <a href="{{ path('music_cloudtrack_delete', {'id' : cloudTrack.id, '_token' : csrf_token('delete'~cloudTrack.id)}) }}"
+                                   type="button" class="btn btn-danger p-2"
+                                   onclick="return confirm('Etes--vous sûr ?')">Supprimer</a>
+                            </div>
+                        {% endif %}
+                    </div>
                     {{ form_end(form) }}
                 </div>
             </div>

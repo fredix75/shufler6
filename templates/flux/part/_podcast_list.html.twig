@@ -17,7 +17,7 @@
                             <a href="#" data-url="{{ value.enclosure.attributes.url }}" type="button" class="btn btn-secondary" data-type="{{ value.enclosure.attributes.type }}" data-action="flux#download" data-title="{{ value.title }}" style="width:100%;" download><i class="bi bi-download"></i></a>
                         </div>
                         {% endif %}
-                    </div><br />
+                    </div><br>
                 {% endif %}
                 {% if value.description is defined %}
                     <p>{{ value.description|raw }}</p>

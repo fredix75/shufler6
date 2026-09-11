@@ -91,7 +91,7 @@ class AlbumRepository extends ServiceEntityRepository
             }
         }
 
-        if ($params['random']) {
+        if (!empty($params['random'])) {
             $result = $query->getQuery()->getResult();
             shuffle($result);
             return array_slice($result, 0, 50);
@@ -106,29 +106,4 @@ class AlbumRepository extends ServiceEntityRepository
 
         return $paginator;
     }
-
-//    /**
-//     * @return Album[] Returns an array of Album objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('a.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Album
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
 }

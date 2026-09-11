@@ -111,7 +111,7 @@ function bindContent(id, data) {
 function getLoading(id) {
     $('#slider').show();
     let div = $('#' + id);
-    div.html('<div class="spinner-border" role="status">' +
+    div.html('<div class="spinner-grow text-warning" role="status">' +
         '        <span class="visually-hidden">Loading...</span>' +
         '    </div>'
     );

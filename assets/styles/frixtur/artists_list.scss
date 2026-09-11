@@ -1,0 +1,27 @@
+body{
+    min-height: 100vh
+}
+.text-gray{
+    color: #aaa
+}
+
+.artist-tile {
+    background-color: rgba(228, 234, 220, 0.5);
+}
+
+.artist-tile:hover {
+    background-color: rgba(228, 234, 220, 0.9);
+    .img-thbnail {
+        opacity: 0.9;
+    }
+}
+
+.artist-tile a{
+    text-decoration: none;
+    color: black;
+}
+
+.img-thbnail {
+    height: 170px;
+    object-fit: cover
+}

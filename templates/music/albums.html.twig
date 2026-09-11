@@ -18,8 +18,8 @@
                             {% endif %}
                             <img class="album-picture-{{ album.id }}{{ class_no_picture }}" src="{{ album.picture }}"
                                  alt="{{ album.auteur ~ ' ' ~ album.name }}" title="{{ album.name }}" width="100%"
-                                 loading="lazy"/>
-                            <strong>{{ album.auteur }}</strong><br/>
+                                 loading="lazy">
+                            <strong>{{ album.auteur }}</strong><br>
                             {{ album.name }} <small>{{ album.annee  ? '('~ album.annee ~')' : '' }}</small>
                         </a>
                     </div>
@@ -27,7 +27,7 @@
             {% endfor %}
             {% if pagination is not empty %}
                 <section class="col-sm-12 col-md-12" style="margin-top: 20px;">
-                    {% include "part/_pagination.html.twig" %}
+                    <twig:Pagination :pagination="pagination" />
                 </section>
             {% endif %}
         </div>

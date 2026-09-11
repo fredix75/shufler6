@@ -1,4 +1,3 @@
-import { Controller } from '@hotwired/stimulus';
 import $ from 'jquery';
 
 /**
@@ -32,22 +31,20 @@ export default class extends PieceController {
     };
 
     connect() {
-        let player;
-
-        player = YouTubePlayer('player', {
+        this.player = YouTubePlayer('player', {
             width: '100%',
             height: '500px'
         });
 
-        player.on('ready', e => {
+        this.player.on('ready', e => {
             e.target.loadPlaylist(this.videosValue);
         });
 
-        player.on('error', e => {
-            player.nextVideo();
+        this.player.on('error', e => {
+            this.player.nextVideo();
         });
 
-        player.on('stateChange', e => {
+        this.player.on('stateChange', e => {
             if (e.data === 1) {
                 let key = e.target.getVideoData().video_id;
                 if (key) {
@@ -72,6 +69,20 @@ export default class extends PieceController {
                 }
             });
         }
+    }
+
+    prev(event) {
+        if (this.player) {
+            this.player.previousVideo();
+        }
+        event.preventDefault();
+    }
+
+    next(event) {
+        if (this.player) {
+            this.player.nextVideo();
+        }
+        event.preventDefault();
     }
 
 }
