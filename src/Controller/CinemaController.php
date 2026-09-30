@@ -163,12 +163,28 @@ final class CinemaController extends AbstractController
         $film = $filmRepository->getFilmFull($id);
 
         $film['genres2'] = json_decode($film['genres2'], true);
+        $film['country'] = json_decode($film['country'], true);
         $film['pictures'] = json_decode($film['pictures'], true);
         $film['direction'] = json_decode($film['direction'], true);
         $film['casting'] = json_decode($film['casting'], true);
+        $film['prod'] = json_decode($film['prod'], true);
 
-        return $this->render('cinema/detail.html.twig', [
+        return $this->render('cinema/detail2.html.twig', [
             'film' => $film,
+        ]);
+    }
+
+    #[Route('/people/{id}', name: '_people', requirements: ['id' => '\d+'])]
+    public function people(int $id, FilmRepository $filmRepository): Response
+    {
+        $films = $filmRepository->getFilmsByPeople($id);
+        $films = array_map(function ($film) {
+            $film['direction'] = json_decode($film['direction'], true);
+            return $film;
+        }, $films);
+
+        return $this->render('cinema/people.html.twig', [
+            'films' => $films,
         ]);
     }
 }

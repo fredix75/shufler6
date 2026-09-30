@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ films[0].nom }} :: Fiche</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Anton&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Work+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    {% block stylesheets %}
+    {% endblock %}
+
+    {% block javascripts %}
+        {% block importmap %}{{ importmap('cinema') }}{% endblock %}
+    {% endblock %}
+</head>
+<body>
+
+<!-- ============ HERO PORTRAIT ============ -->
+<header class="header__people">
+    <a href="{{ app.request.headers.get('referer')|default(path('main_home')) }}" class="hero__back"
+       aria-label="Retour">
+        <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+            <path d="M44 24H6M22 8L6 24l16 16"
+                  fill="none" stroke="currentColor" stroke-width="5"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <span class="hero__back-text">Retour</span>
+    </a>
+
+    <div class="hero__people">
+        <figure class="portrait">
+            <div class="portrait__frame">
+                {%  if films[0].people_picture is not null %}
+                <img src="https://image.tmdb.org/t/p/w1280{{ films[0].people_picture }}"
+                     alt="Portrait de {{ films[0].nom }}">
+                {% else %}
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path opacity="0.4" d="M12.1207 12.78C12.0507 12.77 11.9607 12.77 11.8807 12.78C10.1207 12.72 8.7207 11.28 8.7207 9.50998C8.7207 7.69998 10.1807 6.22998 12.0007 6.22998C13.8107 6.22998 15.2807 7.69998 15.2807 9.50998C15.2707 11.28 13.8807 12.72 12.1207 12.78Z" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path opacity="0.34" d="M18.7398 19.3801C16.9598 21.0101 14.5998 22.0001 11.9998 22.0001C9.39977 22.0001 7.03977 21.0101 5.25977 19.3801C5.35977 18.4401 5.95977 17.5201 7.02977 16.8001C9.76977 14.9801 14.2498 14.9801 16.9698 16.8001C18.0398 17.5201 18.6398 18.4401 18.7398 19.3801Z" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                {% endif %}
+            </div>
+        </figure>
+        <div>
+            <h1 class="film__people">{{ films[0].nom }}</h1>
+            <div class="hero__meta">
+                {% if films[0].death_date is not null %}
+                    <span>{{ films[0].birth_date|date('d M Y') }} - {{ films[0].death_date|date('d M Y') }}</span>
+                {% else %}
+                    <span>Né le {{ films[0].birth_date|date('d M Y') }}</span>
+                {% endif %}
+                <span class="dot">•</span>
+                <span>{{ films[0].birth_place }}</span>
+            </div>
+        </div>
+
+    </div>
+</header>
+
+<!-- ============ BIOGRAPHIE ============ -->
+{% if films[0].bio != '' %}
+    <section class="synopsis">
+        <div class="synopsis__wrap">
+            <span class="synopsis__label">Biographie</span>
+            <p class="synopsis__text">
+                <span class="dropcap">{{ films[0].bio|slice(0,1) }}</span>{{ films[0].bio|slice(1) }}
+            </p>
+        </div>
+    </section>
+{% endif %}
+
+<!-- ============ FILMOGRAPHIE ============ -->
+<section class="casting filmo">
+    <div class="casting__wrap">
+        <span class="casting__label">Longs métrages</span>
+        {% if films|filter(film => film.job == 'DIRECTOR') is not empty %}
+            <h2 class="casting__heading">Réalisateur</h2>
+
+            <ol class="filmo__list">
+                {% for film in films|filter(film => film.job == 'DIRECTOR') %}
+                    <a href="{{ path('cinema_film', {id : film.id}) }}">
+                        <li class="film">
+                            <span class="film__year">{{ film.date|date('Y') }}</span>
+                            <div class="film__body">
+                                <img src="{{ asset('uploads/cinema/' ~ film.picture) }}" class="film__picture-mini">
+                                <div>
+                                    <h3 class="film__title">{{ film.name|upper }}</h3>
+                                    <p class="film__note"
+                                       style="text-overflow-ellipsis: var(2em)">{{ film.overview|slice(0,400) }}{% if film.overview|length > 400 %} [...]{% endif %}</p>
+                                </div>
+                            </div>
+                        </li>
+                    </a>
+                {% endfor %}
+            </ol>
+        {% endif %}
+
+        {% if films|filter(film => film.job == 'ACTOR') is not empty %}
+            <h2 class="casting__heading">Acteur</h2>
+
+            <ol class="filmo__list">
+                {% for film in films|filter(film => film.job == 'ACTOR') %}
+                    <a href="{{ path('cinema_film', {id : film.id}) }}">
+                        <li class="film">
+                            <span class="film__year">{{ film.date|date('Y') }}</span>
+                            <div class="film__body">
+                                <img src="{{ asset('uploads/cinema/' ~ film.picture) }}" class="film__picture-mini">
+                                <div>
+                                    <h3 class="film__title">{{ film.name|upper }} <small>({{ film.direction|map(a => a.name)|join(', ') }})</small></h3>
+                                    <p class="film__note"
+                                       style="text-overflow-ellipsis: var(2em)">{{ film.overview|slice(0,400) }}{% if film.overview|length > 400 %} [...]{% endif %}</p>
+                                    <span class="film__role"><strong>ROLE:</strong> {{ film.role }}</span>
+                                </div>
+                            </div>
+                        </li>
+                    </a>
+                {% endfor %}
+            </ol>
+        {% endif %}
+    </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+    <p>Sources — Crédit photo : TMDB.</p>
+</footer>
+
+</body>
+</html>

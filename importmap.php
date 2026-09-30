@@ -26,6 +26,7 @@ return [
     'app' => ['path' => './assets/app.js', 'entrypoint' => true],
     'frixtur' => ['path' => './assets/frixtur.js', 'entrypoint' => true],
     'weshtavu' => ['path' => './assets/weshtavu.js', 'entrypoint' => true],
+    'cinema' => ['path' => './assets/cinema.js', 'entrypoint' => true],
     '@symfony/stimulus-bundle' => ['path' => './vendor/symfony/stimulus-bundle/assets/dist/loader.js'],
     '@hotwired/stimulus' => ['version' => '3.2.2'],
     'bootstrap' => ['version' => '5.3.8'],
