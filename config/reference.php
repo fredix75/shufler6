@@ -2123,6 +2123,12 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         }>,
  *     },
  * }
+ * @psalm-type UxMapConfig = array{
+ *     renderer?: scalar|Param|null, // Default: null
+ *     google_maps?: array{
+ *         default_map_id?: scalar|Param|null, // Default: null
+ *     },
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
@@ -2143,6 +2149,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     turbo?: TurboConfig,
  *     twig_component?: TwigComponentConfig,
  *     nelmio_security?: NelmioSecurityConfig,
+ *     ux_map?: UxMapConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -2166,6 +2173,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         turbo?: TurboConfig,
  *         twig_component?: TwigComponentConfig,
  *         nelmio_security?: NelmioSecurityConfig,
+ *         ux_map?: UxMapConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -2187,6 +2195,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         turbo?: TurboConfig,
  *         twig_component?: TwigComponentConfig,
  *         nelmio_security?: NelmioSecurityConfig,
+ *         ux_map?: UxMapConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
@@ -2209,6 +2218,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         turbo?: TurboConfig,
  *         twig_component?: TwigComponentConfig,
  *         nelmio_security?: NelmioSecurityConfig,
+ *         ux_map?: UxMapConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,

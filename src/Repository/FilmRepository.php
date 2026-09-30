@@ -53,16 +53,101 @@ SELECT
         ) t
     ) AS genres2,
     (
-        SELECT JSON_ARRAYAGG(pf.path)
+        SELECT JSON_ARRAYAGG(JSON_OBJECT('path', pf.path, 'type', pf.type, 'language', pf.language))
         FROM picture_film pf
         WHERE pf.film_id = f.id
-    ) AS pictures
+    ) AS pictures,
+    (
+        SELECT JSON_ARRAYAGG(JSON_OBJECT('id', cp.id, 'name', cp.name, 'bio', cp.bio, 'birth_date', cp.birth_date, 'death_date', cp.death_date, 'picture', cp.picture))
+        FROM film_casting fc
+        JOIN cinema_people cp on fc.cinema_people_id = cp.id
+        WHERE fc.film_id = f.id
+        AND fc.job = 'DIRECTOR'
+    ) AS direction,
+    (
+        SELECT JSON_ARRAYAGG(JSON_OBJECT('id', cp.id, 'name', cp.name, 'bio', cp.bio, 'birth_date', cp.birth_date, 'death_date', cp.death_date, 'picture', cp.picture, 'role', fc.role))
+        FROM film_casting fc
+        JOIN cinema_people cp on fc.cinema_people_id = cp.id
+        WHERE fc.film_id = f.id
+        AND fc.job = 'ACTOR'
+    ) AS casting,
+    (
+        SELECT JSON_ARRAYAGG(JSON_OBJECT('nom', name, 'description', description, 'logo', logo)) FROM cinema_prod where tmdb_id IN (
+            SELECT DISTINCT jt.element
+            FROM JSON_TABLE(
+                    f.production,
+                    '$[*]' COLUMNS (
+                        element INT PATH '$'
+                        )
+                          ) AS jt
+            -- where f.id = f.id
+        )
+) AS prod
 FROM film f
 WHERE f.id = :id
 SQL;
         $stmt = $conn->prepare($sql);
         $stmt->bindValue('id', $id);
         return $stmt->executeQuery()->fetchAssociative();
+    }
+
+    public function getFilmsByPeople(int $id): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = <<<SQL
+SELECT
+    cp.name as nom, cp.picture as people_picture, cp.*,
+    fc.*,
+    f.*,
+    (
+        SELECT JSON_ARRAYAGG(t.name)
+        FROM (
+            SELECT DISTINCT g.name
+            FROM JSON_TABLE(f.genres, '$[*]'
+                COLUMNS (genres_id INT PATH '$')
+            ) jt
+            JOIN genrefilm g ON g.tmdb_id = jt.genres_id
+        ) t
+    ) AS genres2,
+    (
+        SELECT JSON_ARRAYAGG(JSON_OBJECT('path', pf.path, 'type', pf.type, 'language', pf.language))
+        FROM picture_film pf
+        WHERE pf.film_id = f.id
+    ) AS pictures,
+    (
+        SELECT JSON_ARRAYAGG(JSON_OBJECT('id', cp.id, 'name', cp.name, 'bio', cp.bio, 'birth_date', cp.birth_date, 'death_date', cp.death_date, 'picture', cp.picture))
+        FROM film_casting fc
+        JOIN cinema_people cp on fc.cinema_people_id = cp.id
+        WHERE fc.film_id = f.id
+        AND fc.job = 'DIRECTOR'
+    ) AS direction,
+    (
+        SELECT JSON_ARRAYAGG(JSON_OBJECT('id', cp.id, 'name', cp.name, 'bio', cp.bio, 'birth_date', cp.birth_date, 'death_date', cp.death_date, 'picture', cp.picture, 'role', fc.role))
+        FROM film_casting fc
+        JOIN cinema_people cp on fc.cinema_people_id = cp.id
+        WHERE fc.film_id = f.id
+        AND fc.job = 'ACTOR'
+    ) AS casting,
+    (
+        SELECT JSON_ARRAYAGG(JSON_OBJECT('nom', name, 'description', description, 'logo', logo)) FROM cinema_prod where tmdb_id IN (
+            SELECT DISTINCT jt.element
+            FROM JSON_TABLE(
+                    f.production,
+                    '$[*]' COLUMNS (
+                        element INT PATH '$'
+                        )
+                          ) AS jt
+            -- where f.id = f.id
+        )
+) AS prod
+FROM film f
+JOIN film_casting fc ON fc.film_id = f.id
+JOIN cinema_people cp ON cp.id = fc.cinema_people_id
+WHERE fc.cinema_people_id = :id
+SQL;
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue('id', $id);
+        return $stmt->executeQuery()->fetchAllAssociative();
     }
 
     public function findByDateIntervall(\DateTime $start, \DateTime $end): array
@@ -75,5 +160,22 @@ SQL;
             ->orderBy('f.popularity', 'DESC')
             ->getQuery()
             ->getResult();
+    }
+
+	public function findDistinctProds(): array
+    {
+$conn = $this->getEntityManager()->getConnection();
+        $sql = <<<SQL
+SELECT DISTINCT jt.element
+FROM film f
+JOIN JSON_TABLE(
+    f.production,
+    '$[*]' COLUMNS (
+        element INT PATH '$'
+    )
+) AS jt
+SQL;
+        $stmt = $conn->prepare($sql);
+        return $stmt->executeQuery()->fetchAllNumeric();
     }
 }

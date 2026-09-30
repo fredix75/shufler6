@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ film.name }} ({{ film.date|date('Y') }}) — Fiche du film</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Anton&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Work+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    {% block stylesheets %}
+    {% endblock %}
+
+    {% block javascripts %}
+        {% block importmap %}{{ importmap('cinema') }}{% endblock %}
+    {% endblock %}
+</head>
+<body>
+<!-- ============ HERO ============ -->
+<header class="hero">
+    <div class="hero__backdrop"
+         style="background-image:url('{{ film.backdrop_path ? 'https://image.tmdb.org/t/p/w1280' ~ film.backdrop_path : asset('images/cinema_default.jpg') }}');"></div>
+    <div class="hero__scrim"></div>
+    <div class="hero__grain"></div>
+    <a href="{{ app.request.headers.get('referer')|default(path('main_home')) }}" class="hero__back" aria-label="Retour">
+        <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+            <path d="M44 24H6M22 8L6 24l16 16"
+                  fill="none" stroke="currentColor" stroke-width="5"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <span class="hero__back-text">Retour</span>
+    </a>
+    <div class="hero__content">
+        <p class="hero__eyebrow"></p>
+        <h1 class="hero__title">{{ film.name }}</h1>
+        <p class="hero__tagline">{% if film.original_title|upper != film.name|upper %}{{ film.original_title }}{% endif %}</p>
+        <div class="hero__meta">
+            <span>{{ film.year }}</span>
+            <span class="dot">•</span>
+            <span>{{ film.country|join(' - ') }}</span>
+            <span class="dot">•</span>
+            <span>{{ film.genres2|join(', ') }}</span>
+        </div>
+    </div>
+
+    <a href="#fiche" class="hero__scroll" aria-label="Découvrir le film">
+        <span></span>
+    </a>
+</header>
+
+<!-- ============ FICHE : AFFICHE + INFOS ============ -->
+<section class="fiche" id="fiche">
+    <div class="fiche__grid">
+
+        <!-- Affiche recréée façon pulp -->
+        <figure class="poster">
+            <img src="{{ asset('uploads/cinema/' ~ film.picture) }}">
+        </figure>
+
+        <!-- Fiche technique -->
+        <div class="infos">
+            {% set logo = film.pictures|default([])|filter(image => image.type == 'logos')|first %}
+            {% if logo is not empty %}
+                <img src="{{ asset('https://image.tmdb.org/t/p/w1280' ~ logo.path) }}" width=200 class="logo_img">
+            {% endif %}
+            <h2 class="infos__heading">La fiche du film</h2>
+
+            <dl class="infos__list">
+                <div class="infos__row">
+                    <dt>Réalisation</dt>
+                    <dd>{{ film.direction|map(a => a.name)|join(', ') }}</dd>
+                </div>
+                <div class="infos__row">
+                    <dt>Sortie</dt>
+                    <dd>{{ film.date|date('d M Y') }}</dd>
+                </div>
+                <div class="infos__row">
+                    <dt>Genre</dt>
+                    <dd>{{ film.genres2|join(', ') }}</dd>
+                </div>
+                <div class="infos__row">
+                    <dt>Langue</dt>
+                    <dd>{{ film.original_language }}</dd>
+                </div>
+                <div class="infos__row">
+                    <dt>Production</dt>
+                    <dd>{{ film.prod|default([])|map(p => p.nom)|join(', ') }}</dd>
+                </div>
+                <div class="infos__row">
+                    <dt>Pays de production</dt>
+                    <dd>{{ film.country|join(', ') }}</dd>
+                </div>
+                <div class="infos__row">
+                    <dt>Popularité TMDB</dt>
+                    <dd>{{ film.popularity }}</dd>
+                </div>
+            </dl>
+        </div>
+
+    </div>
+</section>
+
+<!-- ============ RÉSUMÉ ============ -->
+{% if film.overview is not empty %}
+    <section class="synopsis">
+        <div class="synopsis__wrap">
+            <span class="synopsis__label">Résumé</span>
+            <p class="synopsis__text">
+                <span class="dropcap">{{ film.overview|slice(0,1) }}</span>{{ film.overview|slice(1) }}
+            </p>
+        </div>
+    </section>
+{% endif %}
+
+<!-- ============ CASTING ============ -->
+<section class="casting">
+    <div class="casting__wrap">
+    {% for prod in film.prod %}
+        {% if prod.logo != '' %}
+            <img src="https://image.tmdb.org/t/p/w1280{{ prod.logo }}" alt="{{ prod.nom }}" title="{{ prod.nom }}" width="200">
+        {% endif %}
+    {% endfor %}
+    </div>
+    <div class="casting__wrap">
+        <span class="casting__label">Équipe du film</span>
+        <h2 class="casting__heading">Réalisateur &amp; casting</h2>
+        {% for director in film.direction %}
+            <div class="director">
+                <div class="avatar avatar--director" style="overflow: hidden;">
+                    <a href="{{ path('cinema_people', {id : director.id }) }}">
+                    {% if director.picture != '' %}
+                        <img src="https://image.tmdb.org/t/p/w1280{{ director.picture }}">
+                    {% else %}
+                        <span>QT</span>
+                    {% endif %}
+                    </a>
+                </div>
+                <div class="director__text">
+                    <p class="director__name"><a href="{{ path('cinema_people', {id : director.id }) }}">{{ director.name }}</a></p>
+                    <p class="director__role">Réalisateur</p>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="cast-grid">
+            {% for actor in film.casting %}
+                <div class="cast-card">
+                    <div class="avatar" style="overflow: hidden;">
+                        <a href="{{ path('cinema_people', {id : actor.id }) }}">
+                        {% if actor.picture != '' %}
+                            <img src="https://image.tmdb.org/t/p/w1280{{ actor.picture }}">
+                        {% else %}
+                            <span>{{ actor.name|split(' ')|map(a => a|slice(0,1))|join() }}</span>
+                        {% endif %}
+                        </a>
+                    </div>
+                    <p class="cast-card__name"><a href="{{ path('cinema_people', {id : actor.id }) }}">{{ actor.name }}</a></p>
+                    <p class="cast-card__role">{{ actor.role }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+<footer class="site-footer">
+    <p>{{ film.name }} © {{ film.date|date('Y')}} {{ film.prod[0].name ?? '' }} — Fiche du film.</p>
+</footer>
+
+</body>
+</html>

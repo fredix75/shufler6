@@ -17,6 +17,7 @@ final class WeshtavuController extends AbstractController
     {
         list($firstDate, $endDate) = $eventHelper->getDateIntervall($index);
         $events = $eventRepository->findByDateIntervall($firstDate, $endDate);
+        $events = $eventHelper->sanitizeEvents($events);
         $films = $filmRepository->findByDateIntervall($firstDate, $endDate);
 
         $playlist = $fluxRepository->findOneBy(['name' => 'Vu - France 2']);

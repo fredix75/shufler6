@@ -23,6 +23,9 @@ class PictureFilm
     #[ORM\JoinColumn(nullable: false)]
     private ?Film $film = null;
 
+    #[ORM\Column(length: 5, nullable: true)]
+    private ?string $language = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -60,6 +63,18 @@ class PictureFilm
     public function setFilm(?Film $film): static
     {
         $this->film = $film;
+
+        return $this;
+    }
+
+    public function getLanguage(): ?string
+    {
+        return $this->language;
+    }
+
+    public function setLanguage(?string $language): static
+    {
+        $this->language = $language;
 
         return $this;
     }

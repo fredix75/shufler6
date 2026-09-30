@@ -141,6 +141,7 @@ parameters:
         tmdb_api_url: '%env(TMDB_API_URL)%'
         tmdb_api_key: '%env(TMDB_API_KEY)%'
     sniffer:
+        url: '%env(SNIFFER_URL)%'
         upload_directory: 'sniffer'
 
     resources:

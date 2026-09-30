@@ -25,9 +25,12 @@ class BDSniffCommand extends Command
 
     private string $directory;
 
+    private string $url;
+
     public function __construct(Filesystem $filesystem, ParameterBagInterface $parameterBag, ?string $name = null) {
         $this->filesystem = $filesystem;
         $this->directory = $parameterBag->get('uploads').'sniffer/Revues/';
+        $this->url = $parameterBag->get('sniffer')['url'];
         parent::__construct($name);
     }
 
@@ -47,16 +50,16 @@ class BDSniffCommand extends Command
         $pattern = $input->getArgument('pattern');
         $limit = $input->getArgument('limite');
 
-        $url = 'URL root';
+        $url = $this->url;
 
         $browser = new HttpBrowser(HttpClient::create());
 
         $section = $output->section();
 
         while (@file_get_contents($url.$pattern)) {
-            preg_match_all('/__[0-9]/', $pattern, $match);
-            $index = preg_replace('/[^0-9]+/', '', $match[count($match)-1])[0] ?? 0;
+            preg_match_all('/__[0-9]+/', $pattern, $match);
 
+            $index = preg_replace('/[^0-9]+/', '', $match[count($match)-1])[0] ?? 0;
             $section->writeln($pattern);
             $crawler = $browser->request('GET', $url.$pattern);
             $li = $crawler->filter('.liste-revues')->children();
@@ -81,6 +84,7 @@ class BDSniffCommand extends Command
                 }
 
                 if ($this->filesystem->exists($this->directory . 'Revue_' . $id . '.jpg') && !$this->filesystem->exists($this->directory . $revue.'_' . $numero . '_' . $date . '.jpg')) {
+                    dump($this->directory . 'Revue_' . $id . '.jpg');
                     $this->filesystem->rename($this->directory . 'Revue_' . $id . '.jpg', $this->directory . $revue.'_' . $numero . '_' . $date . '.jpg');
                 }
 
@@ -91,11 +95,12 @@ class BDSniffCommand extends Command
             }
 
             $index++;
+
             if ($index >= $limit) {
                 break;
             }
             $pattern= preg_replace( '~(.*)[0-9]+~su', '${1}'.$index, $pattern);
-            sleep(3);
+            sleep(rand(3,7));
         }
 
 

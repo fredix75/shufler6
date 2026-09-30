@@ -41,33 +41,49 @@ class CinemaGetImagesCommand extends Command
             return Command::FAILURE;
         }
 
-        $movies = $this->em->getRepository(Film::class)->findBy(['verified' => false, 'noRef' => false, 'type' => $type], [], 1);
-        //$movies = [$this->em->getRepository(Film::class)->find(11950)];
+        $movies = $this->em->getRepository(Film::class)->findBy(['verified' => false, 'noRef' => false, 'type' => $type], [], 1000);
+        //$movies = [$this->em->getRepository(Film::class)->find(7393)];
 
         foreach ($movies as $i => $movie) {
-            $io->writeln($movie->getName());
-            try {
-                $response = $this->apiRequester->sendRequest('tmdb', '/movie/' . $movie->getTmdbId() . '/images');
+            $io->writeln('<fg=#FF57CA;options=bold>'.$movie->getName().'</>');
 
-                if ($response->getStatusCode() === Response::HTTP_OK) {
-                    $result = json_decode($response->getContent(), true) ?? [];
-dd($result);
-                    foreach ($result as $k => $images) {
-                        if (is_array($images)) {
-                            foreach ($images as $img) {
-                                $picture = new PictureFilm();
-                                $picture->setFilm($movie);
-                                $picture->setType($k);
-                                $picture->setPath($img['file_path']);
-                                $this->em->persist($picture);
-                            }
-                        }
-
-                    }
-                }
-            } catch (\Exception $e) {
-                $io->error(sprintf('ERREUR pour %s', $movie->getName()));
+            $languages = ['fr-FR'];
+            if ($movie->getOriginalLanguage() !== 'fr') {
+                $languages[] = $movie->getOriginalLanguage();
             }
+
+            foreach ($languages as $language) {
+                $io->writeln(' - language: <fg=#FFB20D;>' .$language.'</>');
+                try {
+                    $response = $this->apiRequester->sendRequest('tmdb', '/movie/' . $movie->getTmdbId() . '/images', ['language' => $language]);
+                    $language = 'fr-FR' ? 'fr' : $language;
+                    if ($response->getStatusCode() === Response::HTTP_OK) {
+                        $result = json_decode($response->getContent(), true) ?? [];
+
+                        foreach ($result as $k => $images) {
+                            if (is_array($images)) {
+                                foreach ($images as $img) {
+                                    if ($img['file_path'] === $movie->getPosterPath() || $img['file_path'] === $movie->getBackdropPath()) {
+                                        continue;
+                                    }
+                                    $picture = new PictureFilm();
+                                    $picture->setFilm($movie);
+                                    $picture->setType($k);
+                                    $picture->setPath($img['file_path']);
+                                    $picture->setLanguage($language);
+                                    $this->em->persist($picture);
+                                }
+                            }
+
+                        }
+                    } else {
+                        $io->warning('BAD RESPONSE: ' . $response->getStatusCode());
+                    }
+                } catch (\Exception $e) {
+                    $io->error(sprintf('ERREUR pour %s', $movie->getName()));
+                }
+            }
+
             $movie->setVerified(true);
             if ($i%100 === 0) {
                 $this->em->flush();

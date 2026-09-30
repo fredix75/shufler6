@@ -4,7 +4,7 @@
 
 {% block body %}
     <div class="row row-cols-2 row-cols-xl-3 g-4" data-masonry='{"percentPosition": true }'>
-        <section>
+        <section style="padding: 0 2.25em">
             {% for event in events %}
             <article>
                 <twig:Article :event="event" withCloseButton />
@@ -58,7 +58,7 @@
             </article>
 
         </section>
-        <section style="background-color: rgba(255,255,255,0.7)">
+        <section style="background-color: rgba(255,255,255,0.7); padding: 0 2.25em">
             <article>
                 <span class="event-type">AU CINOCHE</span>
                 <h2>Les films de la semaine</h2>
@@ -70,9 +70,10 @@
                 <div>
                     <div class="row g-0">
                         {% for film in films %}
-                            <div class="col-12">
+                            <div class="col-12 text-center">
+                                <br><br>
                                 <img src="{{ asset('uploads/cinema/' ~ film.picture) }}" class="img-fluid rounded-top"
-                                     alt="..." style="height:100%;">
+                                     alt="..." style="width:80%;">
                             </div>
                             <div class="col-12">
                                 <div class="card-body" style="text-align:center;">
@@ -85,7 +86,7 @@
                 </div>
             </article>
         </section>
-        <section>
+        <section style="padding: 0 2.25em;">
             <article class="">
                 <span class="event-type">A LA RADIO</span>
                 <h2>La playlist de la semaine</h2>
@@ -135,7 +136,7 @@
                 </p>
             </article>
         </section>
-        <section>
+        <section style="padding: 0 2.25em;">
             <article class="">
                 <h2>Un an de Trump II : comprendre la naissance d’un Etat autoritaire</h2>
                 <div class="subtitle d-flex justify-content-between">
