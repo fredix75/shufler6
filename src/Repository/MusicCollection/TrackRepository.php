@@ -48,7 +48,7 @@ class TrackRepository extends ServiceEntityRepository
             ->setParameter(':artiste', $artiste)
             ->andWhere('t.album = :album')
             ->setParameter(':album', $album)
-            ->orderBy('t.numero', 'ASC')
+            ->orderBy('t.numero', \SortDirection::Ascending)
             ->getQuery()
             ->getResult();
     }
@@ -67,29 +67,29 @@ class TrackRepository extends ServiceEntityRepository
             $qb->andWhere('t.auteur like :query OR t.artiste like :query OR t.titre like :query OR t.album like :query')
                 ->setParameter(':query', "%" . $data['query'] . "%");
         }
-
-        $qb->orderBy('t.' . $sort, $dir);
+        $direction = $dir === 'ASC' ? \SortDirection::Ascending : \SortDirection::Descending;
+        $qb->orderBy('t.' . $sort, $direction);
 
         if ($sort !== 'annee') {
-            $qb->addOrderBy('t.annee', $dir);
+            $qb->addOrderBy('t.annee', $direction);
         }
 
         if ($sort !== 'album') {
-            $qb->addOrderBy('t.album', $dir);
+            $qb->addOrderBy('t.album', $direction);
         }
 
         if ($sort !== 'auteur') {
-            $qb->addOrderBy('t.auteur', $dir);
+            $qb->addOrderBy('t.auteur', $direction);
         }
 
         if ($sort !== 'artiste') {
-            $qb->addOrderBy('t.artiste', $dir);
+            $qb->addOrderBy('t.artiste', $direction);
         }
 
-        $qb->addOrderBy('t.numero', $dir);
+        $qb->addOrderBy('t.numero', $direction);
 
         if ($sort !== 'titre')
-            $qb->addOrderBy('t.titre', $dir);
+            $qb->addOrderBy('t.titre', $direction);
 
         if ($max) {
             $qb->setMaxResults($max)
@@ -164,7 +164,7 @@ SQL;
             ->select('t.auteur')
             ->andWhere('t.auteur like :search')
             ->setParameter('search', '%' . $search . '%')
-            ->orderBy('t.auteur', 'ASC')
+            ->orderBy('t.auteur', \SortDirection::Ascending)
             ->groupBy('t.auteur')
             ->setMaxResults(3)
             ->getQuery()
@@ -174,7 +174,7 @@ SQL;
             ->select('t.titre')
             ->andWhere('t.titre like :search')
             ->setParameter('search', '%' . $search . '%')
-            ->orderBy('t.titre', 'ASC')
+            ->orderBy('t.titre', \SortDirection::Ascending)
             ->groupBy('t.titre')
             ->setMaxResults(3)
             ->getQuery()
@@ -184,7 +184,7 @@ SQL;
             ->select('t.album')
             ->andWhere('t.album like :search')
             ->setParameter('search', '%' . $search . '%')
-            ->orderBy('t.album', 'ASC')
+            ->orderBy('t.album', \SortDirection::Ascending)
             ->groupBy('t.album')
             ->setMaxResults(3)
             ->getQuery()

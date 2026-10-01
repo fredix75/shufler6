@@ -96,7 +96,7 @@ class AlbumRepository extends ServiceEntityRepository
             shuffle($result);
             return array_slice($result, 0, 50);
         } else {
-            $query->orderBy('a.name', 'ASC')
+            $query->orderBy('a.name', \SortDirection::Ascending)
                 ->setMaxResults($max)->setFirstResult(($page-1)*$max);
         }
 

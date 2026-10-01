@@ -2,7 +2,10 @@
 
 namespace App\Command;
 
+use App\Helper\ApiRequester;
 use App\Helper\VideoHelper;
+use App\Repository\RadialRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -12,16 +15,28 @@ use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 
 #[AsCommand(
-    name: 'shufler:update-music-track',
-    description: 'Search key for tracks',
+    name: 'shufler:update-music-radial',
+    description: 'Search key for radial tracks',
 )]
-class UpdateMusicTrackCommand extends ImportTracksCommand
+class UpdateMusicRadialCommand extends Command
 {
+
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly RadialRepository       $radialRepository,
+        private readonly ApiRequester           $apiRequester,
+        protected readonly Environment          $twig,
+        ?string                                 $name = null
+    ) {
+        parent::__construct($name);
+    }
+
     /**
      * @throws RedirectionExceptionInterface
      * @throws RuntimeError
@@ -33,13 +48,10 @@ class UpdateMusicTrackCommand extends ImportTracksCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $tracks  = $this->trackRepository
-            ->createQueryBuilder('t')
-            ->orderBy('t.titre', \SortDirection::Ascending)
-            ->addOrderBy('t.auteur', \SortDirection::Ascending)
-            ->addOrderBy('t.album', \SortDirection::Ascending)
-            ->addOrderBy('t.numero', \SortDirection::Ascending)
-            ->andWhere("t.youtubeKey IS NULL")
+        $tracks  = $this->radialRepository
+            ->createQueryBuilder('r')
+            ->orderBy('r.year', \SortDirection::Descending)
+            ->andWhere("r.youtubeKey IS NULL")
             ->setMaxResults(200)
             ->getQuery()->getResult();
 
@@ -47,7 +59,7 @@ class UpdateMusicTrackCommand extends ImportTracksCommand
         $message = '';
         foreach ($tracks as $track) {
             try {
-                $search = $track->getAuteur() . ' ' . $track->getTitre();
+                $search = $track->getAuthor() . ' ' . $track->getName();
                 $response = $this->apiRequester->sendRequest(VideoHelper::YOUTUBE,'/search', [
                     'q' => $search,
                 ]);
@@ -56,7 +68,6 @@ class UpdateMusicTrackCommand extends ImportTracksCommand
                     $resultYouTube = json_decode($response->getContent(), true)['items'] ?? [];
                     if (!empty($resultYouTube[0]['id']['videoId'])) {
                         $track->setYoutubeKey($resultYouTube[0]['id']['videoId']);
-                        $track->setIsCheck(true);
                     } else {
                         $track->setYoutubeKey('nope');
                         $nbNope++;
@@ -67,7 +78,7 @@ class UpdateMusicTrackCommand extends ImportTracksCommand
                     $track->setYoutubeKey('nope');
                     $nbNope++;
                 } else {
-                    $message = sprintf('No more request : %s %s', $track->getAuteur(), $track->getTitre());
+                    $message = sprintf('No more request : %s %s', $track->getAuthor(), $track->getName());
                     break;
                 }
             } catch (\Exception $e) {

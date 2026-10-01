@@ -110,7 +110,7 @@ class VideoRepository extends ServiceEntityRepository
             $q->andWhere('a.lien like :plateforme')
                 ->setParameter('plateforme', '%'.$plateforme.'%');
         }
-            $q->orderBy('a.id', 'DESC');
+            $q->orderBy('a.id', \SortDirection::Descending);
 
         if ($categorie) {
             $q->andWhere('a.categorie= :categorie')
@@ -177,7 +177,7 @@ class VideoRepository extends ServiceEntityRepository
             ->andWhere('a.auteur like :search OR a.chapo like :search')
             ->setParameter('priorite', 1)
             ->setParameter('search', '%' . $search . '%')
-            ->orderBy('a.auteur', 'ASC')
+            ->orderBy('a.auteur', \SortDirection::Ascending)
             ->groupBy('a.auteur')
             ->setMaxResults(3)
             ->getQuery()
@@ -190,7 +190,7 @@ class VideoRepository extends ServiceEntityRepository
             ->andWhere('a.titre like :search')
             ->setParameter('priorite', 1)
             ->setParameter('search', '%' . $search . '%')
-            ->orderBy('a.titre', 'ASC')
+            ->orderBy('a.titre', \SortDirection::Ascending)
             ->groupBy('a.titre')
             ->setMaxResults(3)
             ->getQuery()
@@ -218,9 +218,9 @@ class VideoRepository extends ServiceEntityRepository
             ->setParameter('priorite', 1)
             ->orWhere('a.published is null')
             ->orWhere('a.published = false')
-            ->orderBy('a.published', 'DESC')
-            ->addOrderBy('a.priorite', 'ASC')
-            ->addOrderBy('a.id', 'DESC')
+            ->orderBy('a.published', \SortDirection::Descending)
+            ->addOrderBy('a.priorite', \SortDirection::Ascending)
+            ->addOrderBy('a.id', \SortDirection::Descending)
             ->setFirstResult(($page - 1) * $maxperpage)
             ->setMaxResults($maxperpage);
 

@@ -46,10 +46,10 @@ class CleanVideosCommand extends Command
     public function initialize(InputInterface $input, OutputInterface $output): void
     {
         $this->tracks = $this->trackRepository->createQueryBuilder('t')
-            ->orderBy('t.titre', 'ASC')
-            ->addOrderBy('t.auteur', 'ASC')
-            ->addOrderBy('t.numero', 'ASC')
-            ->addOrderBy('t.album', 'ASC')
+            ->orderBy('t.titre', \SortDirection::Ascending)
+            ->addOrderBy('t.auteur', \SortDirection::Ascending)
+            ->addOrderBy('t.numero', \SortDirection::Ascending)
+            ->addOrderBy('t.album', \SortDirection::Ascending)
             ->andWhere("t.youtubeKey IS NOT NULL")
             ->andWhere("t.youtubeKey != 'nope'")
             ->andWhere("t.isCheck = FALSE")
@@ -127,8 +127,8 @@ class CleanVideosCommand extends Command
         $io->writeln('<comment>Step 3. Checking Playlists</comment>');
 
         $albums = $this->albumRepository->createQueryBuilder('a')
-            ->orderBy('a.name', 'ASC')
-            ->addOrderBy('a.auteur', 'ASC')
+            ->orderBy('a.name', \SortDirection::Ascending)
+            ->addOrderBy('a.auteur', \SortDirection::Ascending)
             ->andWhere("a.youtubeKey IS NOT NULL")
             ->andWhere("a.youtubeKey != 'nope'")
             ->getQuery()->getResult();

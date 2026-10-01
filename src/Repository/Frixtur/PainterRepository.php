@@ -17,7 +17,7 @@ class PainterRepository extends ServiceEntityRepository
         parent::__construct($registry, Painter::class);
     }
 
-    public function getPaintersAndPaintings(int $nb, int $offset = 0, string $order = 'ASC', ?string $sort = null): Paginator|array
+    public function getPaintersAndPaintings(int $nb, int $offset = 0, \SortDirection $order = \SortDirection::Ascending, ?string $sort = null): Paginator|array
     {
         $q = $this->createQueryBuilder('p')
             ->leftJoin('p.paintings', 'paintings')
@@ -42,7 +42,7 @@ class PainterRepository extends ServiceEntityRepository
         return $q->getQuery()->getResult();
     }
 
-    public function getPaintersAndPaintingsByPeriode(int $periode, int $nb, int $offset = 0, string $order = 'ASC', ?string $sort = null): array
+    public function getPaintersAndPaintingsByPeriode(int $periode, int $nb, int $offset = 0, \SortDirection $order = \SortDirection::Ascending, ?string $sort = null): array
     {
         $year1 = ($periode - ($periode === 14 ? 2 : 1)) * 100 - 20;
         $year2 = ($periode) * 100 + 20;

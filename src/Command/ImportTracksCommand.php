@@ -56,7 +56,7 @@ class ImportTracksCommand extends Command
         protected readonly Environment            $twig,
         protected readonly AssetMapperInterface   $assetMapper,
         ParameterBagInterface                     $parameterBag,
-        ?string                                    $name = null
+        ?string                                   $name = null
     ) {
         $this->parameters = $parameterBag->get('music_collection');
         parent::__construct($name);
@@ -114,10 +114,10 @@ class ImportTracksCommand extends Command
 
         $this->tracks  = $this->trackRepository
             ->createQueryBuilder('t')
-            ->orderBy('t.titre', 'ASC')
-            ->addOrderBy('t.auteur', 'ASC')
-            ->addOrderBy('t.numero', 'ASC')
-            ->addOrderBy('t.album', 'ASC')
+            ->orderBy('t.titre', \SortDirection::Ascending)
+            ->addOrderBy('t.auteur', \SortDirection::Ascending)
+            ->addOrderBy('t.numero', \SortDirection::Ascending)
+            ->addOrderBy('t.album', \SortDirection::Ascending)
             ->getQuery()->getResult();
 
         array_walk_recursive($this->tracks, function($a) use (&$return) {

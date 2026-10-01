@@ -60,7 +60,7 @@ class FluxRepository extends ServiceEntityRepository
             ->addSelect('type')
             ->andWhere('a.mood= :category')
             ->setParameter('category', $category)
-            ->orderBy('a.id', 'ASC')
+            ->orderBy('a.id', \SortDirection::Ascending)
             ->getQuery()
             ->getResult();
     }
@@ -74,7 +74,7 @@ class FluxRepository extends ServiceEntityRepository
             ->addSelect('channel')
             ->leftJoin('a.type', 'type')
             ->addSelect('type')
-            ->orderBy('a.id', 'ASC')
+            ->orderBy('a.id', \SortDirection::Ascending)
             ->getQuery()
             ->getResult();
     }
@@ -89,7 +89,7 @@ class FluxRepository extends ServiceEntityRepository
             ->join('f.mood', 'mood')
             ->addSelect('type')
             ->addSelect('mood')
-            ->orderBy('f.id', 'ASC')
+            ->orderBy('f.id', \SortDirection::Ascending)
             ->getQuery();
 
             return $q->getResult();
@@ -104,7 +104,7 @@ class FluxRepository extends ServiceEntityRepository
             ->addSelect('mood')
             ->leftJoin('a.type', 'type')
             ->addSelect('type')
-            ->orderBy('a.mood, a.id', 'ASC')
+            ->orderBy('a.mood, a.id', \SortDirection::Ascending)
             ->getQuery()
             ->getResult();
     }
@@ -116,7 +116,7 @@ class FluxRepository extends ServiceEntityRepository
             ->addSelect('type')
             ->where('a.type= :type')
             ->setParameter('type', 5)
-            ->orderBy('a.name', 'ASC')
+            ->orderBy('a.name', \SortDirection::Ascending)
             ->getQuery()
             ->getResult();
     }

@@ -30,19 +30,19 @@ class CloudAlbumRepository extends ServiceEntityRepository
             $qb->andWhere('a.auteur like :query OR a.name like :query')
                 ->setParameter(':query', "%" . $data['query'] . "%");
         }
-
-        $qb->orderBy('a.' . $sort, $dir);
+        $direction = $dir === 'ASC' ? \SortDirection::Ascending : \SortDirection::Descending;
+        $qb->orderBy('a.' . $sort, $direction);
 
         if ($sort !== 'annee') {
-            $qb->addOrderBy('a.annee', $dir);
+            $qb->addOrderBy('a.annee', $direction);
         }
 
         if ($sort !== 'auteur') {
-            $qb->addOrderBy('a.auteur', $dir);
+            $qb->addOrderBy('a.auteur', $direction);
         }
 
         if ($sort !== 'name')
-            $qb->addOrderBy('a.name', $dir);
+            $qb->addOrderBy('a.name', $direction);
 
         if ($max) {
             $qb->setMaxResults($max)

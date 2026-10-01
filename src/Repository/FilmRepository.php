@@ -157,7 +157,7 @@ SQL;
             ->andWhere('f.date <= :end')
             ->setParameter('start', $start)
             ->setParameter('end', $end)
-            ->orderBy('f.popularity', 'DESC')
+            ->orderBy('f.popularity', \SortDirection::Descending)
             ->getQuery()
             ->getResult();
     }

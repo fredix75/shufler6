@@ -33,10 +33,10 @@ class Radial
     private ?string $label = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $picture_key = null;
+    private ?string $pictureKey = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $youtube_key = null;
+    private ?string $youtubeKey = null;
 
     public function getId(): ?int
     {
@@ -117,24 +117,24 @@ class Radial
 
     public function getPictureKey(): ?string
     {
-        return $this->picture_key;
+        return $this->pictureKey;
     }
 
-    public function setPictureKey(?string $picture_key): static
+    public function setPictureKey(?string $pictureKey): static
     {
-        $this->picture_key = $picture_key;
+        $this->pictureKey = $pictureKey;
 
         return $this;
     }
 
     public function getYoutubeKey(): ?string
     {
-        return $this->youtube_key;
+        return $this->youtubeKey;
     }
 
-    public function setYoutubeKey(?string $youtube_key): static
+    public function setYoutubeKey(?string $youtubeKey): static
     {
-        $this->youtube_key = $youtube_key;
+        $this->youtubeKey = $youtubeKey;
 
         return $this;
     }

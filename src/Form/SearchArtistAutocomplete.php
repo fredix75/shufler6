@@ -21,7 +21,7 @@ class SearchArtistAutocomplete extends AbstractType
             'choice_value' => 'name',
             'searchable_fields' => ['name'],
             'query_builder' => function (ArtistRepository $repository) {
-                return $repository->createQueryBuilder('artist')->orderBy('artist.name', 'ASC');
+                return $repository->createQueryBuilder('artist')->orderBy('artist.name', \SortDirection::Ascending);
             },
         ]);
     }

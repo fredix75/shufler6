@@ -36,8 +36,8 @@ class UpdateMusicAlbumCommand extends ImportTracksCommand
     {
         $albums  = $this->albumRepository
             ->createQueryBuilder('a')
-            ->orderBy('a.name', 'ASC')
-            ->addOrderBy('a.auteur', 'ASC')
+            ->orderBy('a.name', \SortDirection::Ascending)
+            ->addOrderBy('a.auteur', \SortDirection::Ascending)
             ->andWhere("a.youtubeKey IS NULL")
             ->setMaxResults(200)
             ->getQuery()->getResult();

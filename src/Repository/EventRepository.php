@@ -23,9 +23,9 @@ class EventRepository extends ServiceEntityRepository
             ->andWhere('e.date <= :end')
             ->setParameter('start', $start)
             ->setParameter('end', $end)
-            ->orderBy('e.type', 'ASC')
-            ->orderBy('e.sousType', 'ASC')
-            ->orderBy('e.date', 'DESC')
+            ->orderBy('e.type', \SortDirection::Ascending)
+            ->orderBy('e.sousType', \SortDirection::Ascending)
+            ->orderBy('e.date', \SortDirection::Descending)
             ->getQuery()
             ->getResult();
     }

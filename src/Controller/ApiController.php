@@ -310,6 +310,26 @@ final class ApiController extends AbstractController
         return new Response("Method not allowed", 405);
     }
 
+    #[Route('/update-radial-launch', name: '_update_radial_launch')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function launchUpdateRadialCommand(KernelInterface $kernel): Response
+    {
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput([
+            'command' => 'shufler:update-music-radial',
+        ]);
+
+        // You can use NullOutput() if you don't need the output
+        $output = new BufferedOutput();
+        $application->run($input, $output);
+
+        // return the output, don't use if you used NullOutput()
+        $content = $output->fetch();
+
+        return new Response($content);
+    }
 
     /**
      * @throws \Exception

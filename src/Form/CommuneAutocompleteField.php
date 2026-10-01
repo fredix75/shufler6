@@ -22,7 +22,7 @@ class CommuneAutocompleteField extends AbstractType
             'choice_value' => 'id',
             //'searchable_fields' => ['nom', 'cp'],
             'query_builder' => function (CommuneRepository $repository) {
-                return $repository->createQueryBuilder('c')->orderBy('c.nom', 'ASC');
+                return $repository->createQueryBuilder('c')->orderBy('c.nom', \SortDirection::Ascending);
             },
             'filter_query' => function(QueryBuilder $qb, string $query) {
                 if (!$query) {
@@ -31,8 +31,8 @@ class CommuneAutocompleteField extends AbstractType
 
                 $qb->andWhere('c.nom LIKE :filter OR c.cp LIKE :filter')
                     ->setParameter('filter', '%'.$query.'%')
-                    ->orderBy('c.population', 'DESC')
-                    ->addOrderBy('c.nom', 'ASC')
+                    ->orderBy('c.population', \SortDirection::Descending)
+                    ->addOrderBy('c.nom', \SortDirection::Ascending)
                 ;
             },
 

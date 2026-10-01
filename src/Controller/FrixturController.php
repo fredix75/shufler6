@@ -35,7 +35,7 @@ final class FrixturController extends AbstractController
         $offset = ($page - 1) * $limit;
         $pagination = [];
         $sort = $request->query->get('sort');
-        $order = $request->query->get('order') ?? 'ASC';
+        $order = $request->query->get('order') === 'DESC' ? \SortDirection::Descending : \SortDirection::Ascending;
 
         if ($sort) {
             if ($periode) {
@@ -50,7 +50,7 @@ final class FrixturController extends AbstractController
                 'pages_count' => (int)ceil($nbArtists / 25),
                 'route_params' => array_merge($request->attributes->get('_route_params'),[
                     'sort' => $sort,
-                    'order' => strtoupper($order),
+                    'order' => strtoupper($request->query->get('order') ?? 'ASC'),
                 ]),
             ];
         } else {

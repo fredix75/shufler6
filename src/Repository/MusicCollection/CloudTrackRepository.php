@@ -30,19 +30,19 @@ class CloudTrackRepository extends ServiceEntityRepository
             $qb->andWhere('t.auteur like :query OR t.titre like :query')
                 ->setParameter(':query', "%" . $data['query'] . "%");
         }
-
-        $qb->orderBy('t.' . $sort, $dir);
+        $direction = $dir === 'ASC' ? \SortDirection::Ascending : \SortDirection::Descending;
+        $qb->orderBy('t.' . $sort, $direction);
 
         if ($sort !== 'annee') {
-            $qb->addOrderBy('t.annee', $dir);
+            $qb->addOrderBy('t.annee', $direction);
         }
 
         if ($sort !== 'auteur') {
-            $qb->addOrderBy('t.auteur', $dir);
+            $qb->addOrderBy('t.auteur', $direction);
         }
 
         if ($sort !== 'titre')
-            $qb->addOrderBy('t.titre', $dir);
+            $qb->addOrderBy('t.titre', $direction);
 
         if ($max) {
             $qb->setMaxResults($max)

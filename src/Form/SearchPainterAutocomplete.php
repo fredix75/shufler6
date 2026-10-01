@@ -20,7 +20,7 @@ class SearchPainterAutocomplete extends AbstractType
             'choice_label' => fn(Painter $painter) => sprintf('%s %s', $painter->getFirstName(), $painter->getName()),
             'searchable_fields' => ['name', 'firstName'],
             'query_builder' => function (PainterRepository $repository) {
-                return $repository->createQueryBuilder('painter')->orderBy('painter.name', 'ASC');
+                return $repository->createQueryBuilder('painter')->orderBy('painter.name', \SortDirection::Ascending);
             }
         ]);
     }

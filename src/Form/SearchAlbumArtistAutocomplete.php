@@ -21,7 +21,7 @@ class SearchAlbumArtistAutocomplete extends AbstractType
             'choice_value' => 'auteur',
             'searchable_fields' => ['auteur'],
             'query_builder' => function (AlbumRepository $repository) {
-                return $repository->createQueryBuilder('album')->orderBy('album.auteur', 'ASC');
+                return $repository->createQueryBuilder('album')->orderBy('album.auteur', \SortDirection::Ascending);
             },
         ]);
     }

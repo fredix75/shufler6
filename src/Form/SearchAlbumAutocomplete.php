@@ -23,7 +23,7 @@ class SearchAlbumAutocomplete extends AbstractType
             'choice_value' => 'name',
             'searchable_fields' => ['name'],
             'query_builder' => function (AlbumRepository $repository) {
-                return $repository->createQueryBuilder('album')->orderBy('album.name', 'ASC');
+                return $repository->createQueryBuilder('album')->orderBy('album.name', \SortDirection::Ascending);
             }
         ]);
     }
