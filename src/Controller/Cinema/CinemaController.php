@@ -26,7 +26,8 @@ final class CinemaController extends AbstractController
     }
 
     #[Route('/update/film/{id}', name: '_update_film', defaults: ['id' => 0])]
-    public function index(Request $request, EntityManagerInterface $em, ApiRequester $apiRequester, ?Film $film = null): Response
+    #[IsGranted('ROLE_NO_ACCESS')]
+    public function updateFilm(Request $request, EntityManagerInterface $em, ApiRequester $apiRequester, ?Film $film = null): Response
     {
         if ($film && $request->query->get('delete') == true) {
             $em->remove($film);
@@ -84,14 +85,14 @@ final class CinemaController extends AbstractController
             $film->setNoref(true);
             $em->flush();
             $this->addFlash('success', 'Film no ref updated');
-            return $this->redirectToRoute('cinema_index');
+            return $this->redirectToRoute('cinema_update_film');
         }
 
         if ($film && $request->query->get('check') == 1) {
             $film->setVerified(true);
             $em->flush();
             $this->addFlash('success', 'Film updated');
-            return $this->redirectToRoute('cinema_index');
+            return $this->redirectToRoute('cinema_update_film');
         }
 
         if (!$film) {
@@ -122,6 +123,7 @@ final class CinemaController extends AbstractController
     }
 
     #[Route('/get-film-ref/{id}/{offset}', name: '_get-film-ref', requirements: ['id' => '\d+', 'offset' => '\d+'], defaults: ['offset' => 0])]
+    #[IsGranted('ROLE_NO_ACCESS')]
     public function getFilmRef(Request $request, ApiRequester $apiRequester, EntityManagerInterface $em, Film $movie, ?int $offset): Response
     {
         while (true) {
@@ -160,7 +162,7 @@ final class CinemaController extends AbstractController
             break;
         }
 
-        return $this->redirectToRoute('cinema_index', ['id' => $movie->getId(), 'altName' => $request->query->get('altName')]);
+        return $this->redirectToRoute('cinema_update_film', ['id' => $movie->getId(), 'altName' => $request->query->get('altName')]);
     }
 
     #[Route('/film/{id}', name: '_film', requirements: ['id' => '\d+'])]
