@@ -5,7 +5,7 @@ framework:
     # Enables session support. Note that the session will ONLY be started if you read or write from it.
     # Remove or comment this section to explicitly disable session support.
     session:
-        cookie_domain: '.%env(HOST_FRONT)%'
+        cookie_domain: '.%env(HOST_DOMAIN)%'
         cookie_secure: auto
         cookie_httponly: true
         cookie_samesite: lax
