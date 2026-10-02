@@ -7,6 +7,16 @@
 # To list all registered routes, run the following command:
 #   bin/console debug:router
 
+cinema_routes:
+    resource: '../src/Controller/Cinema/'
+    type: attribute
+    host: '%env(HOST_CINEMA)%'
+
+# Les autres routes classiques (sans restriction d'hôte)
+app_routes:
+    resource: '../src/Controller/'
+    type: attribute
+
 controllers:
     resource: routing.controllers
     prefix: /{_locale}

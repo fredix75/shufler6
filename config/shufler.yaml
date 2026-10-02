@@ -1,4 +1,6 @@
 parameters:
+    host_front: '%env(HOST_FRONT)%'
+    host_cinema: '%env(HOST_CINEMA)%'
     mailer_sender: '%env(MAILER_SENDER)%'
     import_directory: '%kernel.project_dir%/datas'
     shufler_video:

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Cinema;
 
 use App\Entity\Film;
 use App\Entity\Genrefilm;
@@ -15,11 +15,17 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/cinema', name: 'cinema')]
+#[Route('', name: 'cinema', host: '%host_cinema%')]
 #[IsGranted('ROLE_ADMIN')]
 final class CinemaController extends AbstractController
 {
-    #[Route('/{id}', name: '_index', defaults: ['id' => 0])]
+    #[Route('/', name: '_home')]
+    public function homeCine(): Response
+    {
+        return new Response('CINEMA !!');
+    }
+
+    #[Route('/update/film/{id}', name: '_update_film', defaults: ['id' => 0])]
     public function index(Request $request, EntityManagerInterface $em, ApiRequester $apiRequester, ?Film $film = null): Response
     {
         if ($film && $request->query->get('delete') == true) {

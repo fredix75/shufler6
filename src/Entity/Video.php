@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Odm\Filter\ExactFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
@@ -11,6 +12,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\QueryParameter;
 use App\Controller\Api\RandomVideoController;
 use App\Controller\Api\VideoController;
 use App\EntityListener\VideoListener;
@@ -78,7 +80,10 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
     ],
     security: "is_granted('ROLE_USER')",
 )]
-#[ApiFilter(SearchFilter::class, properties: ['categorie' => 'exact', 'genre' => 'exact', 'periode' => 'exact'])]
+
+#[QueryParameter(key: 'categorie', filter: ExactFilter::class)]
+#[QueryParameter(key: 'genre', filter: ExactFilter::class)]
+#[QueryParameter(key: 'periode', filter: ExactFilter::class)]
 class Video
 {
     #[ORM\Id]
