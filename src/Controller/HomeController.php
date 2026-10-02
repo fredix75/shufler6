@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/', name: 'main')]
+#[Route('/', name: 'main', host: '%host_front%')]
 final class HomeController extends AbstractController
 {
     #[Route('', name: '_home')]

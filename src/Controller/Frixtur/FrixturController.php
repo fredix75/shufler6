@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Frixtur;
 
 use App\Entity\Frixtur\Painter;
 use App\Form\PainterType;
@@ -13,11 +13,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('frixtur', name: 'frixtur')]
+#[Route('', name: 'frixtur', host: '%host_frixtur%')]
 #[IsGranted("ROLE_ADMIN")]
 final class FrixturController extends AbstractController
 {
-
     #[Route('/', name: '_home', methods: ['GET'])]
     public function home(PaintingRepository $paintingRepository): Response {
         $paintings = $paintingRepository->getRandomPaintings();

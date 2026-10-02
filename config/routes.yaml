@@ -12,6 +12,11 @@ cinema_routes:
     type: attribute
     host: '%env(HOST_CINEMA)%'
 
+frixtur_routes:
+    resource: '../src/Controller/Frixtur/'
+    type: attribute
+    host: '%env(HOST_FRIXTUR)%'
+
 # Les autres routes classiques (sans restriction d'hôte)
 app_routes:
     resource: '../src/Controller/'
