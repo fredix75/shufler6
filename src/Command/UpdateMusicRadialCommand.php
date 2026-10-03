@@ -47,7 +47,6 @@ class UpdateMusicRadialCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $io = new SymfonyStyle($input, $output);
         $tracks  = $this->radialRepository
             ->createQueryBuilder('r')
             ->orderBy('r.year', \SortDirection::Descending)
@@ -56,7 +55,7 @@ class UpdateMusicRadialCommand extends Command
             ->getQuery()->getResult();
 
         $i = $nbNope = 0;
-        $message = '';
+
         foreach ($tracks as $track) {
             try {
                 $search = $track->getAuthor() . ' ' . $track->getName();
@@ -82,14 +81,14 @@ class UpdateMusicRadialCommand extends Command
                     break;
                 }
             } catch (\Exception $e) {
-                $message = $e->getMessage();
+                $output->writeln($e->getMessage());
                 break;
             }
         }
         $this->entityManager->flush();
 
         $now = new \DateTime();
-        $io->writeln(sprintf('%s: %d tracks updated, %d ignorés', $now->format('d-m-Y G:i:s'), $i, $nbNope));
+        $output->writeln(sprintf('%s: %d tracks updated, %d ignorés', $now->format('d-m-Y G:i:s'), $i, $nbNope));
 
         return Command::SUCCESS;
     }

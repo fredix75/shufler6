@@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RadialRepository::class)]
+#[ORM\Index(columns: ['author', 'album'])]
 class Radial
 {
     #[ORM\Id]
