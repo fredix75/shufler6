@@ -10,12 +10,12 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
-use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
@@ -31,7 +31,6 @@ class UpdateMusicRadialCommand extends Command
         private readonly EntityManagerInterface $entityManager,
         private readonly RadialRepository       $radialRepository,
         private readonly ApiRequester           $apiRequester,
-        protected readonly Environment          $twig,
         ?string                                 $name = null
     ) {
         parent::__construct($name);
@@ -48,6 +47,7 @@ class UpdateMusicRadialCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $io = new SymfonyStyle($input, $output);
         $tracks  = $this->radialRepository
             ->createQueryBuilder('r')
             ->orderBy('r.year', \SortDirection::Descending)
@@ -86,15 +86,10 @@ class UpdateMusicRadialCommand extends Command
                 break;
             }
         }
-        $message .= sprintf(' %d nopes', $nbNope);
         $this->entityManager->flush();
 
-        $html = $this->twig->render('api/updateTracks.html.twig', [
-            'message' => $message,
-            'nb' => $i
-        ]);
-
-        $output->writeln($html);
+        $now = new \DateTime();
+        $io->writeln(sprintf('%s: %d tracks updated, %d ignorés', $now->format('d-m-Y G:i:s'), $i, $nbNope));
 
         return Command::SUCCESS;
     }
