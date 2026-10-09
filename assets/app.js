@@ -17,6 +17,26 @@ import './vendor/bootstrap-icons/font/bootstrap-icons.css';
 // window.$ = window.jQuery = $
 
 import TomSelect from "tom-select"
+
+const navbar = document.querySelector('.navbar');
+
+if (navbar) {
+    const scrollThreshold = 450;
+
+    const updateNavbar = () => {
+        navbar.classList.toggle(
+            'is-scrolled',
+            window.scrollY > scrollThreshold
+        );
+    };
+
+    window.addEventListener('scroll', updateNavbar, {
+        passive: true
+    });
+
+    updateNavbar();
+}
+
 document.querySelectorAll('.select2').forEach((el)=>{
     let settings = {
         onDropdownOpen:function(dropdown){

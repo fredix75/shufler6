@@ -1,3 +1,10 @@
+$primary: orange;
+$primary-hover: green;
+$primary-rgb: red;
+$primary-active: aqua;
+
+$navbar-bg-color: rgba(31, 15, 45, 0.65);
+
 @font-face {
   font-family: "blippok";
   src: url('../fonts/BLIPPOK.TTF');
@@ -8,303 +15,83 @@
   src: url('../fonts/FUTURAN.TTF');
 }
 
-body {
-  background-image: linear-gradient(rgba(10, 0, 100, 0.5), rgba(0, 0, 0, 0.9)), url('../images/sky.jpg');
-  background-attachment: fixed;
-  background-position: center;
-  font-family: "futuran", sans-serif;
-}
+.btn-primary {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: #{$primary};
+    --bs-btn-border-color: #fff;
 
-.container {
-  max-width: 100%;
-}
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #9a5800;
+    --bs-btn-hover-border-color: #{$primary};
 
-.content {
-  margin-top: 60px;
-  padding: 20px 0;
-  min-height: 1200px;
-  color: white;
-}
+    --bs-btn-focus-shadow-rgb: #{$primary-rgb};
 
-.navbar {
-  border-bottom: 1px solid #fff;
-  background-color: $navbar-bg-color;
-}
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #{$primary-active};
+    --bs-btn-active-border-color: #{$primary-active};
 
-.nav-item {
-  padding: 0 10px;
-}
-
-.nav-link {
-  color: white;
-}
-
-footer {
-  color: white;
-  height: 150px;
-  background: linear-gradient(to bottom, transparent, #301c91);
-  img {
-    opacity: 0.8;
-  }
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: grey;
+    --bs-btn-disabled-border-color: #{$primary-rgb};
 }
 
 h1 {
-  color: $orange-simple;
-  font-family: blippok, sans-serif;
-  font-size: 3.6em;
-  text-shadow: 1px 1px 3px red;
-  border-bottom: 2px dashed white;
-
-  &.minor {
-    font-size: 2.5em;
-  }
-}
-
-@media ( max-width : 1500px) {
-  h1 {
+    font-family: "blippok", sans-serif;
     font-size: 3em;
-  }
+    color: #fff;
 }
 
-@media ( max-width : 755px) {
-  h1 {
+h2 {
+    font-family: "blippok", sans-serif;
     font-size: 2em;
-  }
+    color: #fff;
 }
 
-h1 .bi {
-  color: $orange-red;
-  font-size:60%;
-}
-
-h3 {
-  font-size: 1.2em;
-  color: $white-broken;
-}
-
-a {
-  color: orange;
-  text-decoration: none;
-}
-
-a:hover, a:active {
-  text-decoration: none;
-  color: #B27300;
-}
-
-a.video-link {
-  color: white;
-}
-
-a.video-link img, a.playlist-link img{
-  transition: all 1s ease;
-  max-width: 100%;
-}
-
-a.video-link:hover img, a.playlist-link:hover img {
-  scale: 1.3;
-}
-
-.btn-primary {
-  background-color: #001b44;
-  border: 2px solid #6f42c1;
-}
-
-.btn-primary:hover {
-  background-color: #001b44;
-  border: 2px solid #001b44;
-  color: violet;
-}
-
-.btn-transparent {
+body {
+    background-image: linear-gradient(rgba(10, 0, 100, 0.5), rgba(0, 0, 0, 0.9)), url('../images/sky.jpg');
+    background-attachment: fixed;
+    background-position: center;
+    font-family: "futuran", sans-serif;
     color: white;
 }
 
-.alert {
-    padding: 1.25rem 1.5rem;
-    font-family: "Courier New", serif;
-    font-size: 120%;
+.container {
+    max-width: 100%;
+    padding: 0;
 }
 
-.alert-success {
-    --bs-alert-color: rgb(114,200,148);
-    --bs-alert-bg: #051b11;
-    --bs-alert-border-color: #0f5132;
-    --bs-alert-link-color: rgb(114,200,148);
+.navbar {
+    height:60px;
+    background-color: $navbar-bg-color;
+    border-bottom: 1px solid #fff;
+    padding: 1em 0;
 }
 
-.alert-warning {
-    --bs-alert-color: #ffda6a;
-    --bs-alert-bg: #332701;
-    --bs-alert-border-color: #997404;
-    --bs-alert-link-color: #ffda6a;
-}
-
-.alert-danger {
-    --bs-alert-color: #ea868f;
-    --bs-alert-bg: #2c0b0e;
-    --bs-alert-border-color: #842029;
-    --bs-alert-link-color: #ea868f;
-}
-
-.invalid-feedback {
-  color: #ff5500;
-}
-
-.submenu .nav-link:hover {
-  color: $orange-red;
-}
-
-.submenu .nav-link.active {
-  background-color: $orange-red;
-}
-
-.submenu .nav-link.active:hover {
-  color: yellow;
-}
-
-.mfp-content {
-  max-width: 800px;
-}
-
-.well {
-  background-color: #6882a475;
-  padding:40px;
-  border-radius: 12px;
-  border: 1px solid $border-color-2;
-}
-
-.help-text {
-  color: orange;
-}
-
-.accordion-body.subAccordion {
-  font-size: 80%;
-  color:grey;
-}
-
-#audio-stick .pres {
-  padding: 10px;
-  color: white;
-  text-align: center;
-}
-
-.flux.card {
-    color: #6edff6;
-    background-color: #032830;
-}
-
-.flux.card .accordion {
-    --bs-accordion-bg: rgba(255,255,255,0.4);
-    --bs-accordion-border-color: #032830;
+.nav-link {
     color: white;
 }
 
-.flux.card .accordion-body .btn {
-    border:1px solid white;
+.nav-item {
+    padding: 0 10px;
 }
 
-.flux.card a h3 {
-    color: black;
+.content {
+    margin-top: 75px;
 }
 
-.list-group-item.video {
-  background-color: #f9f9e7;
+.media img {
+    border-radius: 12px;
+    border: 2px solid white;
 }
 
-.list-group-item.track {
-  background-color: #ffe8e8;
+
+.media-body h3 {
+    font-family: "futuran", sans-serif;
+    color: orange;
 }
 
-.list-group-item.active  {
-  background-color: var(--bs-list-group-active-bg);
-  color: white;
-}
-
-.datas-white {
-  background-color: #d9d3d3;
-  padding: 10px;
-}
-
-.icon-youtube {
-  font-size: 2em;
-  color: red;
-}
-
-.modal-header {
-  color: yellow;
-  background-color: #061e49;
-}
-
-.modal-content {
-  color:black;
-}
-
-.modal-footer {
-  color: yellow;
-  background-color: #061e49;
-}
-
-.music-modal {
-  background-color: black;
-  color: white;
-}
-
-.music-title {
-  border-top : 2px solid white;
-  border-bottom : 2px solid white;
-  padding: 1em;
-}
-
-.music-album {
-  font-size: 2.5em;
-  color: orange;
-  line-height: 1;
-}
-
-.music-auteur {
-  font-size: 1.5em;
-  color: red;
-}
-
-.slider {
-  color: white;
-  border-top:1px solid white;
-  background-color: $navbar-bg-color;
-  border-radius: 10px 10px 0 0;
-  padding: 0 10px 10px 10px;
-}
-
-.big-input {
-  background-color:#8f719140;
-  color:white;
-  font-size:200%;
-  height:50px;
-    &:focus {
-      background-color: $navbar-bg-color;
-      color:white;
-    }
-}
-
-.block-content-album {
-  background-color: black;
-  min-height: 200px;
-  .div-img img {
-    width:50%;
-  }
-
-  @media (min-width: 755px) {
-    .div-img img {
-      width:100%;
-    }
-  }
-}
-
-.stars {
-  font-size: 60%;
-}
-
-.cover-search-album {
-    border: 3px solid white;
-    border-radius: 25px;
+.media-body h4 {
+    font-family: "futuran", sans-serif;
+    color: #fff;
+    font-size: 110%;
 }
