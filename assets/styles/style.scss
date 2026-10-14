@@ -106,7 +106,7 @@ body {
     left: 10px;
 
     a {
-        padding: 0.2em;
+        padding: 0.4em;
         background-color:black;
         color: white;
         text-decoration: none;
@@ -115,4 +115,14 @@ body {
     a:hover {
         color: orange;
     }
+}
+
+footer {
+    color: white;
+    height: 150px;
+    background: linear-gradient(to bottom, transparent, #301c91);
+    img {
+        opacity: 0.8;
+    }
+    margin-top: 10em;
 }

@@ -56,29 +56,35 @@
         <!-- Son & Images !-->
 
         <section class="row g-4 justify-content-center" style="background-color:black;">
-            <div class="row col-md-8 col-12 mx-auto">
+            <div class="row col-12 mx-auto">
                 <div class="text-center p-4">
                     <h2>Du son, des images</h2>
                     <p>Une palanquée de morceaux d'anthologie, parfois méconnus, amoureusement choisis</p>
                 </div>
-                {% for video in musics|slice(0, 4) %}
-                    <div class="col-12 col-md-6 col-lg-6 col-xl-3 media-vignette">
-                        <div class="media topcol embed-responsive-16by9">
-                            <div class="categorie"><a
-                                    href="{{ path('video_list', {'categorie' : video.categorie, 'genre' : video.genre}) }}"
-                                    aria-label="Go to category {{ video.genre|genreDisplay }}">{{ video.genre|genreDisplay }}</a>
+                <div class="row justify-content-around">
+                    {% for video in musics|slice(0, 4) %}
+                        <div class="media-vignette" style="width: 250px;">
+                            <div class="media topcol embed-responsive-16by9">
+                                <div class="categorie"><a
+                                        href="{{ path('video_list', {'categorie' : video.categorie, 'genre' : video.genre}) }}"
+                                        aria-label="Go to category {{ video.genre|genreDisplay }}">{{ video.genre|genreDisplay }}</a>
+                                </div>
+                                <twig:VideoFrame :video="video"/>
                             </div>
-                            <twig:VideoFrame :video="video"/>
                         </div>
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                </div>
             </div>
         </section>
 
+        <!-- Juke-Box !-->
+
         <section class="row g-4">
-            <div class="col-12 col-md-6 p-4 text-center" data-controller="music">
-                <h2>Juke-Box</h2>
-                <p>Des morceaux de choix</p>
+            <div class="col-12 col-md-6 p-4" data-controller="music">
+                <div class="text-center">
+                    <h2>Juke-Box</h2>
+                    <p>Des morceaux de choix</p>
+                </div>
                 <div class="row g-4 p-4 row-cols-1 row-cols-xl-2">
                     {% for track in tracks %}
                         <twig:PieceFrame :piece="track"/>
@@ -90,16 +96,18 @@
                 <p>Du bizarre, du cheulou comme disent les jeunes.. On y trouve aussi du mdr, voire du ptdr</p>
                 <div class="row g-4 p-4 row-cols-1 row-cols-xl-2">
                     {% for video in stranges|slice(0, 2) %}
-                            <div class="media topcol embed-responsive-16by9">
-                                <twig:VideoFrame :video="video"/>
-                            </div>
+                        <div class="media topcol embed-responsive-16by9">
+                            <twig:VideoFrame :video="video"/>
+                        </div>
                     {% endfor %}
                 </div>
             </div>
         </section>
         <br>
-        <div class="row g-4 p-4 text-center" style="background-color:#4a008f;">
-            <h2>En v'la encore</h2>
+        <!-- Etc !-->
+
+        <section class="row g-4 p-4" style="background-color:#4a008f;">
+            <h2 style="text-align: center;">En v'la encore...</h2>
             {% for video in musics|slice(4,8) %}
                 <div class="col-12 col-md-6 col-lg-3 media-vignette">
                     <div class="media topcol embed-responsive-16by9">
@@ -111,6 +119,6 @@
                     </div>
                 </div>
             {% endfor %}
-        </div>
+        </section>
     </div>
 {% endblock %}
