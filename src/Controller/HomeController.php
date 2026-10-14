@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Repository\FluxRepository;
 use App\Repository\MusicCollection\PieceRepository;
+use App\Repository\MusicCollection\TrackRepository;
 use App\Repository\VideoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,10 +14,12 @@ use Symfony\Component\Routing\Attribute\Route;
 final class HomeController extends AbstractController
 {
     #[Route('', name: '_home')]
-    public function home(VideoRepository $videoRepository, FluxRepository $fluxRepository): Response
+    public function home(VideoRepository $videoRepository, TrackRepository $trackRepository): Response
     {
         $videos = $videoRepository->getRandomVideos();
         $anims = $musics = $stranges = [];
+        $tracks = $trackRepository->getRandomTracks(4);
+
         $videoParameters = $this->getParameter('shufler_video');
 
         $i = 0;
@@ -41,14 +43,12 @@ final class HomeController extends AbstractController
             }
         }
 
-        $playlist = $fluxRepository->findOneBy(['name' => 'Vu - France 2']);
-
         return $this->render('home.html.twig', [
             'videos' => $videos,
-            'playlist' => $playlist,
             'anims' => $anims,
             'musics' => $musics,
-            'stranges' => $stranges
+            'stranges' => $stranges,
+            'tracks' => $tracks,
         ]);
     }
 

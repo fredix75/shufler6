@@ -1,65 +1,106 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<section class="container" data-controller="video">
-    <section class="row g-4 justify-content-center">
-        <div class="col-lg-6 col-12">
-            <div class="ratio ratio-16x9">
-                <iframe class="media embed-responsive-item" src="{{ anims[0].lien }}" allowfullscreen
-                        title="{{ anims[0].auteur ~ '-' ~ anims[0].titre }}" style="width:100%"></iframe>
+    <div class="container" data-controller="video">
+        <section class="row g-4 justify-content-center">
+            <div class="col-lg-6 col-12">
+                <div class="ratio ratio-16x9">
+                    <iframe class="media embed-responsive-item" src="{{ anims[0].lien }}" allowfullscreen
+                            title="{{ anims[0].auteur ~ '-' ~ anims[0].titre }}" style="width:100%"></iframe>
+                </div>
             </div>
-        </div>
-    </section>
-    <section class="row g-4 pt-4 justify-content-center">
-        <div class="col-lg-6 col-12 text-center my-auto p-5">
-            <img src="{{ asset('images/shufler_logo.png') }}" width=50% alt="logo Shufler"
-                 title="logo Shufler"><br>
-            <h1>des clips en vrac..</h1><br><br>
-            <div style="text-align:center">
-                <a class="btn btn-dark" href="{{ path('main_home') }}" role="button" aria-label="Reload"
-                   style="background-color:black"><i
-                        class="bi bi-dice-{{ random(5) + 1 }}-fill"></i>&nbsp;{{ 'New Selection'|trans }}
-                    <i class="bi bi-dice-{{ random(5) + 1 }}-fill"></i></a>&nbsp;&nbsp;
-                {% if not app.user %}
-                    <a id="register_second" class="btn btn-dark" role="button" aria-label="Create an account"
-                       data-toggle="modal" data-target="#userModal" href="{{ path('account') }}"
-                       style="background-color:black">
-                        <span class="glyphicon glyphicon-flag"></span>&nbsp;{{ 'Create an account'|trans }}</a>
-                {% endif %}
-                {% if is_granted('ROLE_AUTEUR') %}
-                    <a href="{{ path('video_edit', {'id':anims[0].id}) }}" role="button" aria-label="Edit the video"
-                       class="link-edit btn btn-dark"
-                    ><i class="bi bi-pencil-square"></i></a>
-                {% endif %}
+        </section>
+        <section class="row g-4 pt-4 justify-content-center">
+            <div class="col-lg-6 col-12 text-center my-auto p-5">
+                <img src="{{ asset('images/shufler_logo.png') }}" width=50% alt="logo Shufler"
+                     title="logo Shufler"><br>
+                <h1>des clips en vrac..</h1><br><br>
+                <div style="text-align:center">
+                    <a class="btn btn-dark" href="{{ path('main_home') }}" role="button" aria-label="Reload"
+                       style="background-color:black"><i
+                            class="bi bi-dice-{{ random(5) + 1 }}-fill"></i>&nbsp;{{ 'New Selection'|trans }}
+                        <i class="bi bi-dice-{{ random(5) + 1 }}-fill"></i></a>&nbsp;&nbsp;
+                    {% if not app.user %}
+                        <a id="register_second" class="btn btn-dark" role="button" aria-label="Create an account"
+                           data-toggle="modal" data-target="#userModal" href="{{ path('account') }}"
+                           style="background-color:black">
+                            <span class="glyphicon glyphicon-flag"></span>&nbsp;{{ 'Create an account'|trans }}</a>
+                    {% endif %}
+                    {% if is_granted('ROLE_AUTEUR') %}
+                        <a href="{{ path('video_edit', {'id':anims[0].id}) }}" role="button" aria-label="Edit the video"
+                           class="link-edit btn btn-dark"
+                        ><i class="bi bi-pencil-square"></i></a>
+                    {% endif %}
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- ANIMS !-->
-    <section class="row g-4 justify-content-center">
-        <div class="row col-md-8 col-12 mx-auto">
-            {% for video in anims|slice(1, 5) %}
-                <div class="col-12 col-md-6 col-lg-4 media-vignette">
-                    <div class="media topcol embed-responsive-16by9">
-                        <twig:VideoFrame :video="video"/>
+        <!-- ANIMS !-->
+        <section class="row g-4 justify-content-center">
+            <div class="row col-md-8 col-12 mx-auto">
+                {% for video in anims|slice(1, 5) %}
+                    <div
+                        class="col-12 col-md-6 col-lg-4 media-vignette order-{{ loop.index%2 == 0 ? loop.index + 2 : loop.index + 1 }} order-md-{{ loop.index%2 == 0 ? loop.index + 1 : loop.index + 2 }} order-lg-{{ loop.index + 1 }}">
+                        <div class="media topcol embed-responsive-16by9">
+                            <twig:VideoFrame :video="video"/>
+                        </div>
                     </div>
-                </div>
-                <div class="col-12 col-md-6 col-lg-4 media-vignette">
-                </div>
-            {% endfor %}
-        </div>
-    </section>
-    <br><br>
-
-    <!-- Son & Images !-->
-
-    <section class="row g-4 justify-content-center" style="background-color:black;">
-        <div class="row col-md-8 col-12 mx-auto">
-            <div class="text-center p-4">
-                <h2>Du son, des images</h2>
-                <p>Une palanquée de morceaux d'anthologie, parfois méconnus, amoureusement choisis</p>
+                    <div
+                        class="col-12 col-md-6 col-lg-4 media-vignette justify-content-center order-{{ loop.index%2 == 0 ? loop.index + 1 : loop.index + 2 }} order-md-{{ loop.index%2 == 0 ? loop.index + 2 : loop.index + 1 }} order-lg-{{ loop.index + 2 }}">
+                    </div>
+                {% endfor %}
             </div>
-            {% for video in musics|slice(0, 4) %}
+        </section>
+        <br><br>
+
+        <!-- Son & Images !-->
+
+        <section class="row g-4 justify-content-center" style="background-color:black;">
+            <div class="row col-md-8 col-12 mx-auto">
+                <div class="text-center p-4">
+                    <h2>Du son, des images</h2>
+                    <p>Une palanquée de morceaux d'anthologie, parfois méconnus, amoureusement choisis</p>
+                </div>
+                {% for video in musics|slice(0, 4) %}
+                    <div class="col-12 col-md-6 col-lg-6 col-xl-3 media-vignette">
+                        <div class="media topcol embed-responsive-16by9">
+                            <div class="categorie"><a
+                                    href="{{ path('video_list', {'categorie' : video.categorie, 'genre' : video.genre}) }}"
+                                    aria-label="Go to category {{ video.genre|genreDisplay }}">{{ video.genre|genreDisplay }}</a>
+                            </div>
+                            <twig:VideoFrame :video="video"/>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="row g-4">
+            <div class="col-12 col-md-6 p-4 text-center" data-controller="music">
+                <h2>Juke-Box</h2>
+                <p>Des morceaux de choix</p>
+                <div class="row g-4 p-4 row-cols-1 row-cols-xl-2">
+                    {% for track in tracks %}
+                        <twig:PieceFrame :piece="track"/>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-12 col-md-12 col-lg-6 p-4 text-center" style="background-color:#4d1500;">
+                <h2>OMG, WTF ??</h2>
+                <p>Du bizarre, du cheulou comme disent les jeunes.. On y trouve aussi du mdr, voire du ptdr</p>
+                <div class="row g-4 p-4 row-cols-1 row-cols-xl-2">
+                    {% for video in stranges|slice(0, 2) %}
+                            <div class="media topcol embed-responsive-16by9">
+                                <twig:VideoFrame :video="video"/>
+                            </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        <br>
+        <div class="row g-4 p-4 text-center" style="background-color:#4a008f;">
+            <h2>En v'la encore</h2>
+            {% for video in musics|slice(4,8) %}
                 <div class="col-12 col-md-6 col-lg-3 media-vignette">
                     <div class="media topcol embed-responsive-16by9">
                         <div class="categorie"><a
@@ -71,39 +112,5 @@
                 </div>
             {% endfor %}
         </div>
-    </section>
-    <div class="row g-4">
-        <div class="col-12 col-md-12 col-lg-6 p-4">
-
-        </div>
-        <div class="col-12 col-md-12 col-lg-6 p-4" style="background-color: black;">
-            <h2>OMG, WTF ??</h2>
-            <p>Du bizarre, du cheulou comme disent les jeunes.. On y trouve aussi du mdr, voire du ptdr</p>
-            <div class="row g-4 p-4 row-cols-1 row-cols-lg-2">
-                {% for video in stranges|slice(0, 2) %}
-                    <div class="col-12 col-md-6 col-lg-6 media-vignette">
-                        <div class="media topcol embed-responsive-16by9">
-                            <twig:VideoFrame :video="video"/>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
     </div>
-    <br>
-    <div class="row g-4 p-4" style="background-color:#4a008f;">
-        <h2>En v'la encore</h2>
-        {% for video in musics|slice(4,8) %}
-            <div class="col-12 col-md-6 col-lg-3 media-vignette">
-                <div class="media topcol embed-responsive-16by9">
-                    <div class="categorie"><a
-                            href="{{ path('video_list', {'categorie' : video.categorie, 'genre' : video.genre}) }}"
-                            aria-label="Go to category {{ video.genre|genreDisplay }}">{{ video.genre|genreDisplay }}</a>
-                    </div>
-                    <twig:VideoFrame :video="video"/>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
-    </div>
-    {% endblock %}
+{% endblock %}

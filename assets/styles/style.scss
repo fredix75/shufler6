@@ -61,7 +61,7 @@ body {
 }
 
 .navbar {
-    height:60px;
+    height:70px;
     background-color: $navbar-bg-color;
     border-bottom: 1px solid #fff;
     padding: 1em 0;
@@ -73,6 +73,10 @@ body {
 
 .nav-item {
     padding: 0 10px;
+}
+
+.navbar-collapse {
+    background-color: $navbar-bg-color;
 }
 
 .content {
@@ -94,4 +98,21 @@ body {
     font-family: "futuran", sans-serif;
     color: #fff;
     font-size: 110%;
+}
+
+.media .categorie {
+    position: relative;
+    top:15px;
+    left: 10px;
+
+    a {
+        padding: 0.2em;
+        background-color:black;
+        color: white;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: orange;
+    }
 }

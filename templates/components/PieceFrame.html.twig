@@ -1,0 +1,21 @@
+<div{{ attributes }}>
+    <div class="card">
+        <div class="row g-0">
+            <div class="col-4">
+                <a class="video-link" href="{{ this.piece.youtube_key|popUpYoutube }}"
+                   data-action="music#popup">
+                <img src="{{ this.piece.picture|default(asset('images/no_cover.jpeg')) }}"
+                     class="img-fluid rounded-start"
+                     alt="{{ this.piece.titre }}">
+                </a>
+            </div>
+            <div class="col-8">
+                <div class="card-body">
+                    <h5 class="card-title">{{ this.piece.auteur|upper }}</h5>
+                    <span class="card-subtitle">{{ this.piece.titre }} ({{ this.piece.annee }})</span>
+                    <p class="card-text">{% block content %}{% endblock %}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
