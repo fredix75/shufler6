@@ -1,12 +1,12 @@
 <div{{ attributes }}>
     <div class="card">
         <div class="row g-0">
-            <div class="col-4">
+            <div class="col-4" style="overflow: hidden;">
                 <a class="video-link" href="{{ this.piece.youtube_key|popUpYoutube }}"
                    data-action="music#popup">
-                <img src="{{ this.piece.picture|default(asset('images/no_cover.jpeg')) }}"
-                     class="img-fluid rounded-start"
-                     alt="{{ this.piece.titre }}">
+                    <img src="{{ this.piece.picture|default(asset('images/no_cover.jpeg')) }}"
+                         class="img-fluid rounded-start"
+                         alt="{{ this.piece.titre }}">
                 </a>
             </div>
             <div class="col-8">
