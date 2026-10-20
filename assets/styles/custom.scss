@@ -1,12 +1,16 @@
-$primary: orange;
-$primary-hover: #ffd587;
+$primary: #f5921e;
 
-$link-primary: yellow;
+$link-primary: #cfadf0;
+$link-primary-hover: #d968ff;
+
+$link-secondary-bg: #202020;
+$link-secondary: #f5921e;
+$link-secondary-hover-bg: #171414;
 
 $navbar-bg-color: rgba(31, 15, 45, 0.65);
 
 $pagination-color: black;
-$pagination-bg-color: #202020;
+$pagination-bg-color: #{$link-secondary-bg};
 $pagination-active-color: white;
 $pagination-active-bg: black;
 $pagination-active-border-color: black;

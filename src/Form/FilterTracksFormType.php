@@ -88,6 +88,9 @@ class FilterTracksFormType extends AbstractType
 
         $builder->add('submit', SubmitType::class, [
             'label' => 'OK',
+            'attr' => [
+                'class' => 'btn btn-primary btn-lg',
+            ]
         ]);
     }
 

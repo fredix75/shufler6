@@ -4,7 +4,7 @@
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ id }}-{{index}}" aria-expanded="true" aria-controls="collapse-{{ id }}-{{index}}">
                 <div class="d-flex justify-content-around">
                     <div class="p-2">
-                        <span class="badge bg-dark">{{ value.pubDate|date('d/m/Y') }}</span>
+                        <span class="badge bg-secondary">{{ value.pubDate|date('d/m/Y') }}</span>
                     </div>
                     <div class="">{{ value.title }}</div>
                 </div>
@@ -12,9 +12,9 @@
         </h2>
         <div id="collapse-{{ id }}-{{index}}" class="accordion-collapse collapse" data-bs-parent="#{{ id }}">
             <div class="accordion-body accordion">
-                <a href="{{ value.link }}" class="btn btn-info" target="_blank" rel="noopener noreferrer">Lire l'article</a>
+                <a href="{{ value.link }}" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">Lire l'article</a>
                 {% if value.description is defined %}
-                    <p>{{ value.description|raw }}</p>
+                    <p class="text-start">{{ value.description|raw }}</p>
                 {% endif %}
                 {% if value.media is defined and value.media != null %}
                     <div class="row">

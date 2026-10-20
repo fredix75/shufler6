@@ -23,13 +23,13 @@
         }
     }
     &.active {
-        color:orange;
+        color: #{$primary}e;
     }
 }
 
 .pagination\:active {
     background: lighten(#202020, 3%);
-    color:orange;
+    color: #{$primary};
     position: relative;
 }
 

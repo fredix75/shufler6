@@ -4,11 +4,10 @@
 
 {% block body %}
     <div class="p-4">
-        <div class="row justify-content-center g-2 g-lg-3" data-controller="album">
+        <div class="row d-flex row-cols-1 row-cols-md-3 row-cols-lg-6 justify-content-center m-4" data-controller="album">
             {% for album in albums %}
                 {% if album.picture is not null %}
-                    <div id="album-{{ album.id }}" class="col-6 col-md-4 col-lg-2 album"
-                         style="background-color: black; color:white;border:1px solid #052660;">
+                    <div id="album-{{ album.id }}" class="album g-4">
                         <a href="#album-{{ album.id }}" data-action="album#displayContent"
                            data-artist="{{ album.auteur }}"
                            data-album="{{ album.name }}">
@@ -19,8 +18,10 @@
                             <img class="album-picture-{{ album.id }}{{ class_no_picture }}" src="{{ album.picture }}"
                                  alt="{{ album.auteur ~ ' ' ~ album.name }}" title="{{ album.name }}" width="100%"
                                  loading="lazy">
-                            <strong>{{ album.auteur }}</strong><br>
-                            {{ album.name }} <small>{{ album.annee  ? '('~ album.annee ~')' : '' }}</small>
+                            <div class="album-label text-center">
+                                <strong>{{ album.auteur }}</strong><br>
+                                {{ album.name }} <small>{{ album.annee  ? '('~ album.annee ~')' : '' }}</small>
+                            </div>
                         </a>
                     </div>
                 {% endif %}

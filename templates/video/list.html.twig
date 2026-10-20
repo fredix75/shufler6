@@ -3,71 +3,72 @@
 {% block title %}{{ parent() }} :: Gallerie{% endblock %}
 
 {% block body %}
-        <section class="row d-flex row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 m-4" data-controller="video">
-            <div>
-                <h1>{{ pagination.route_params.categorie|categorieDisplay|trans }}</h1>
-                <div class="row justify-content-start">
-                    <div class="col col-8">
-                        <div class="d-grid gap-1 dropend">
+    <section class="row d-flex row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 m-4"
+             data-controller="video">
+        <div>
+            <h1>{{ pagination.route_params.categorie|categorieDisplay|trans }}</h1>
+            <div class="row justify-content-start">
+                <div class="col col-8">
+                    <div class="d-grid gap-1 dropend">
+                        <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                            <i class="bi bi-list-stars"></i> Categorie
+                        </button>
+                        <ul class="dropdown-menu">
+                            {% for index, value in categories %}
+                                <li>
+                                    <a class="dropdown-item {% if index == pagination.route_params.categorie %}active{% endif %}"
+                                       href="{{ path('video_list', {'categorie' : index , 'genre' : index == 2 ? pagination.route_params.genre : 0, 'periode' : pagination.route_params.periode}) }}">{{ value }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        {% if pagination.route_params.categorie == 2 %}
                             <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown"
                                     aria-expanded="false">
-                                <i class="bi bi-list-stars"></i> Categorie
+                                <i class="bi bi-list-task"></i> Genre
                             </button>
                             <ul class="dropdown-menu">
-                                {% for index, value in categories %}
+                                {% for index, value in genres %}
                                     <li>
-                                        <a class="dropdown-item {% if index == pagination.route_params.categorie %}active{% endif %}"
-                                           href="{{ path('video_list', {'categorie' : index , 'genre' : index == 2 ? pagination.route_params.genre : 0, 'periode' : pagination.route_params.periode}) }}">{{ value }}</a>
+                                        <a class="dropdown-item {% if index == pagination.route_params.genre %}active{% endif %}"
+                                           href="{{ path('video_list', {'categorie' : pagination.route_params.categorie, 'genre' : index, 'periode' : pagination.route_params.periode}) }}">{{ value }}</a>
                                     </li>
                                 {% endfor %}
                             </ul>
-                            {% if pagination.route_params.categorie == 2 %}
-                                <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown"
-                                        aria-expanded="false">
-                                    <i class="bi bi-list-task"></i> Genre
-                                </button>
-                                <ul class="dropdown-menu">
-                                    {% for index, value in genres %}
-                                        <li>
-                                            <a class="dropdown-item {% if index == pagination.route_params.genre %}active{% endif %}"
-                                               href="{{ path('video_list', {'categorie' : pagination.route_params.categorie, 'genre' : index, 'periode' : pagination.route_params.periode}) }}">{{ value }}</a>
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
-                            <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                <i class="bi bi-calendar-x"></i> Période
-                            </button>
-                            <ul class="dropdown-menu">
-                                {% for index, value in periodes %}
-                                    <li>
-                                        <a class="dropdown-item {% if index == pagination.route_params.periode %}active{% endif %}"
-                                           href="{{ path('video_list', {'categorie' : pagination.route_params.categorie, 'genre' : pagination.route_params.genre, 'periode' : index}) }}">{{ value }}</a>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                            <a type="button" class="btn btn-dark"
-                               href="{{ path('video_couch', {'categorie' : pagination.route_params.categorie, 'genre' : pagination.route_params.genre, 'periode' : pagination.route_params.periode}) }}"><i
-                                        class="bi bi-collection-play"></i>&nbsp;Couch' Mode</a>
-                        </div>
-                        <br><br>
-                    </div>
-                    <div class="col col-12 text-center">
-                        {% if pagination.route_params.genre != 0 %}
-                            <div class="page_videos_genre">{{ pagination.route_params.genre|genreDisplay|trans }}</div>
                         {% endif %}
-                        {% if pagination.route_params.periode != 0 %}
-                            <div class="page_videos_periode">{{ pagination.route_params.periode }}</div>
-                        {% endif %}
+                        <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                            <i class="bi bi-calendar-x"></i> Période
+                        </button>
+                        <ul class="dropdown-menu">
+                            {% for index, value in periodes %}
+                                <li>
+                                    <a class="dropdown-item {% if index == pagination.route_params.periode %}active{% endif %}"
+                                       href="{{ path('video_list', {'categorie' : pagination.route_params.categorie, 'genre' : pagination.route_params.genre, 'periode' : index}) }}">{{ value }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <a type="button" class="btn btn-secondary"
+                           href="{{ path('video_couch', {'categorie' : pagination.route_params.categorie, 'genre' : pagination.route_params.genre, 'periode' : pagination.route_params.periode}) }}"><i
+                                class="bi bi-collection-play"></i>&nbsp;Couch' Mode</a>
                     </div>
+                    <br><br>
+                </div>
+                <div class="col col-12 text-center">
+                    {% if pagination.route_params.genre != 0 %}
+                        <div class="page_videos_genre">{{ pagination.route_params.genre|genreDisplay|trans }}</div>
+                    {% endif %}
+                    {% if pagination.route_params.periode != 0 %}
+                        <div class="page_videos_periode">{{ pagination.route_params.periode }}</div>
+                    {% endif %}
                 </div>
             </div>
-            {% for video in videos %}
-                <div class="g-4 media-vignette">
-                        <twig:VideoFrame :video="video" categorie="true"/>
-                </div>
-            {% endfor %}
-        </section>
-        <twig:Pagination :pagination="pagination" />
+        </div>
+        {% for video in videos %}
+            <div class="g-4 media-vignette">
+                <twig:VideoFrame :video="video" categorie="true"/>
+            </div>
+        {% endfor %}
+    </section>
+    <twig:Pagination :pagination="pagination"/>
 {% endblock %}

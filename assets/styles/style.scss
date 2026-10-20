@@ -10,27 +10,62 @@
 
 :root {
     --bs-link-color: #{$link-primary};
-    --bs-link-hover-color: #{$primary-hover};
+    --bs-link-hover-color: #{$link-primary-hover};
+}
+
+.btn {
+    transition: 0.7s all ease;
 }
 
 .btn-primary {
+    --bs-btn-color: #{$link-primary};
+    --bs-btn-bg: #0b2842;
+    --bs-btn-border-color: #{$link-primary};
+
+    --bs-btn-hover-color: #0b2842;
+    --bs-btn-hover-bg: #{$link-primary};
+    --bs-btn-hover-border-color: #0b2842;
+}
+
+.btn-secondary {
     --bs-btn-color: #fff;
-    --bs-btn-bg: #{$primary};
+    --bs-btn-bg: #{$link-secondary-bg};
     --bs-btn-border-color: #fff;
 
-    --bs-btn-hover-color: #fff;
-    --bs-btn-hover-bg: #9a5800;
-    --bs-btn-hover-border-color: #{$primary};
+    --bs-btn-hover-color: grey;
+    --bs-btn-hover-bg: #{$link-secondary-hover-bg};
+    --bs-btn-hover-border-color: #{$link-secondary-hover-bg};
+}
 
-    --bs-btn-focus-shadow-rgb: #{$primary};
+.nav-pills {
+    --bs-nav-pills-link-active-bg: #{$link-primary-hover}
+}
 
-    --bs-btn-active-color: #fff;
-    --bs-btn-active-bg: #{$primary};
-    --bs-btn-active-border-color: #{$primary};
+.alert {
+    padding: 1.25rem 1.5rem;
+    font-family: "Courier New", serif;
+    font-size: 120%;
+}
 
-    --bs-btn-disabled-color: #fff;
-    --bs-btn-disabled-bg: grey;
-    --bs-btn-disabled-border-color: #{$primary};
+.alert-success {
+    --bs-alert-color: rgb(114,200,148);
+    --bs-alert-bg: #051b11;
+    --bs-alert-border-color: #0f5132;
+    --bs-alert-link-color: rgb(114,200,148);
+}
+
+.alert-warning {
+    --bs-alert-color: #ffda6a;
+    --bs-alert-bg: #332701;
+    --bs-alert-border-color: #997404;
+    --bs-alert-link-color: #ffda6a;
+}
+
+.alert-danger {
+    --bs-alert-color: #ea868f;
+    --bs-alert-bg: #2c0b0e;
+    --bs-alert-border-color: #842029;
+    --bs-alert-link-color: #ea868f;
 }
 
 a {
@@ -51,6 +86,11 @@ h2 {
     font-family: "blippok", sans-serif;
     font-size: 2.5em;
     color: #fff;
+}
+
+h2.accordion-header {
+    font-family: "futuran", sans-serif;
+    font-weight: bold;
 }
 
 body {
@@ -170,4 +210,44 @@ a.video-link:hover img, a.playlist-link:hover img {
 
 .link-edit {
     font-weight: bold;
+}
+
+.no-picture {
+    opacity: 0.4;
+}
+
+.slider {
+    color: white;
+    border-top:1px solid white;
+    background-color: $navbar-bg-color;
+    border-radius: 10px 10px 0 0;
+    padding: 0 10px 10px 10px;
+}
+
+.card-header h2 {
+    color: purple;
+}
+
+.card-body a {
+    text-decoration:none;
+    color: black;
+}
+
+.list-group-item-action {
+    text-decoration: none;
+}
+
+.album {
+    background-color: black;
+    color:white;
+    border:1px solid #fff;
+}
+
+.album a {
+    text-decoration: none;
+}
+
+.album-label {
+    font-size: 120%;
+    text-decoration: none;
 }

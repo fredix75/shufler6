@@ -22,13 +22,13 @@
             </label>
         </div>
     </div>
-    <div class="d-flex justify-content-center">
-        <button class="btn btn-lg btn-primary text-center" type="submit">
+    <div class="text-center m-4">
+        <button class="btn btn-lg btn-dark text-center" type="submit">
             Connexion
         </button>
+        <br><br>
+        <a href="{{ path('app_forgot_password_request') }}">Mot de passe oublié</a>
+        <br><br>
+        <a href="{{ path('account') }}" class="btn btn-light">Créer carrément un compte</a>
     </div>
-    <br>
-    <a href="{{ path('app_forgot_password_request') }}" class="d-flex justify-content-center">Mot de passe oublié</a>
-    <br>
-    <a href="{{ path('account') }}" class="btn btn-secondary d-flex justify-content-center">Créer carrément un compte</a>
 </form>
