@@ -3,7 +3,7 @@
 {% block body %}
     <div class="container" data-controller="video">
         <section class="row g-4 justify-content-center">
-            <div class="col-lg-6 col-12">
+            <div class="col-12 col-md-8 col-xl-6">
                 <div class="ratio ratio-16x9">
                     <iframe class="media embed-responsive-item" src="{{ anims[0].lien }}" allowfullscreen
                             title="{{ anims[0].auteur ~ '-' ~ anims[0].titre }}" style="width:100%"></iframe>
@@ -11,7 +11,7 @@
             </div>
         </section>
         <section class="row g-4 pt-4 justify-content-center">
-            <div class="col-lg-6 col-12 text-center my-auto p-5">
+            <div class="col-12 col-md-8 col-xl-6 text-center my-auto p-5">
                 <img src="{{ asset('images/shufler_logo.png') }}" width=50% alt="logo Shufler"
                      title="logo Shufler"><br>
                 <h1>des clips en vrac..</h1><br><br>
@@ -37,7 +37,7 @@
 
         <!-- ANIMS !-->
         <section class="row g-4 justify-content-center">
-            <div class="row col-md-8 col-12 mx-auto">
+            <div class="row col-12 col-xl-8  mx-auto">
                 {% for video in anims|slice(1, 5) %}
                     <div
                         class="col-12 col-md-6 col-lg-4 media-vignette order-{{ loop.index%2 == 0 ? loop.index + 2 : loop.index + 1 }} order-md-{{ loop.index%2 == 0 ? loop.index + 1 : loop.index + 2 }} order-lg-{{ loop.index + 1 }}">
@@ -61,7 +61,7 @@
                 </div>
                 <div class="row d-flex justify-content-around">
                     {% for video in musics|slice(0, 4) %}
-                        <div class="col-12 col-md-6 col-lg-4 col-xl-2 g-4 g-md-2 media-vignette">
+                        <div class="col-12 col-md-6 col-lg-3 col-xl-2 g-4 g-md-2 media-vignette">
                             <twig:VideoFrame :video="video" categorie="true"/>
                         </div>
                     {% endfor %}
@@ -89,9 +89,9 @@
             <div class="col-12 col-md-12 col-lg-6 p-4 text-center" style="background-color:#4d1500;">
                 <h2>OMG, WTF ??</h2>
                 <p>Du bizarre, du cheulou comme disent les jeunes.. On y trouve aussi du mdr, voire du ptdr</p>
-                <div class="row g-4 p-4 row-cols-1 row-cols-xl-2">
+                <div class="row g-4 p-4 row-cols-2 row-cols-lg-1 row-cols-xl-2">
                     {% for video in stranges|slice(0, 2) %}
-                        <div class="col-12 col-md-6 col-lg-3 media-vignette">
+                        <div class="media-vignette">
                             <twig:VideoFrame :video="video"/>
                         </div>
                     {% endfor %}

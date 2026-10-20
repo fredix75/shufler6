@@ -1,6 +1,6 @@
 .pagination\:container {
     display: flex;
-    background-color: #1a1d20;
+    background-color: #20202069;
 }
 
 .pagination\:number {
@@ -8,7 +8,7 @@
     --margin: 6px;
     margin: 0 var(--margin);
     border-radius: 6px;
-    background: #202020;
+    background: #{$pagination-bg-color};
     color: white;
     max-width: auto;
     min-width: var(--size);
