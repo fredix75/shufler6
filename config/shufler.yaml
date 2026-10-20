@@ -8,8 +8,8 @@ parameters:
         max_list: 11
         max_list_couch: 99
         index_max_anim: 6
-        index_max_music: 12
-        index_max_autre: 4
+        index_max_music: 16
+        index_max_autre: 2
         api_max_list: 25
         intro_couch: '67lnjV6SrFw'
         no_signal: '/images/no_signal.png'
