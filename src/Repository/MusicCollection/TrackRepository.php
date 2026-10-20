@@ -67,7 +67,7 @@ class TrackRepository extends ServiceEntityRepository
             $qb->andWhere('t.auteur like :query OR t.artiste like :query OR t.titre like :query OR t.album like :query')
                 ->setParameter(':query', "%" . $data['query'] . "%");
         }
-        $direction = $dir === 'ASC' ? \SortDirection::Ascending : \SortDirection::Descending;
+        $direction = strtoupper($dir) === 'ASC' ? \SortDirection::Ascending : \SortDirection::Descending;
         $qb->orderBy('t.' . $sort, $direction);
 
         if ($sort !== 'annee') {
@@ -248,7 +248,7 @@ SQL;
     public function getRandomTracks(int $note = 4)
     {
         $conn = $this->getEntityManager()->getConnection();
-        $rawSql = "SELECT p.id, p.titre, p.auteur, p.artiste, p.annee, p.genre, p.youtube_key, p.note, a.name, a.picture, a.youtube_key as track_youtube_key, p.*  FROM piece p LEFT JOIN album a ON a.name = p.album and a.auteur = p.artiste WHERE p.note >= :note ORDER BY random() LIMIT 12";
+        $rawSql = "SELECT p.id, p.titre, p.auteur, p.artiste, p.annee, p.genre, p.youtube_key, p.note, a.name, a.picture, a.youtube_key as track_youtube_key, p.*  FROM piece p LEFT JOIN album a ON a.name = p.album and a.auteur = p.artiste WHERE p.note >= :note ORDER BY RAND() LIMIT 12";
         $stmt = $conn->prepare($rawSql);
         $stmt->bindValue('note', $note, ParameterType::INTEGER);
 
