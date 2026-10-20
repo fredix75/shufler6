@@ -1,0 +1,26 @@
+{% set class_no_picture = '' %}
+
+{% if no_cover_picture in this.playlist.image %}
+    {% set class_no_picture = ' no-picture' %}
+{% endif %}
+<div class="media">
+    <a class="playlist-link" href="{{ this.playlist.url|youtubeChannelLink }}">
+        <img src="{{ this.playlist.image }}" class="embed-responsive-item{{ class_no_picture }}"
+             width="100%" loading="lazy">
+    </a>
+</div>
+<div class="media-body">
+    <div class="text-center p-2">
+        <h3 class="media-heading">{{ this.playlist.name }}</h3>
+    </div>
+    <div class="d-flex justify-content-between p-2">
+        <span></span>
+        <span>
+            {% if is_granted('FLUX_EDIT', playlist) %}
+                <a href="{{ path('flux_edit',{'id':playlist.id}) }}" class="link_edit">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+            {% endif %}
+        </span>
+    </div>
+</div>
