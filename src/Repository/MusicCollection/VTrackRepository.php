@@ -19,8 +19,8 @@ class VTrackRepository extends ServiceEntityRepository
     public function findRandomVTracks(int $note = 4): array
     {
         $vTracks = $this->createQueryBuilder('vt')
-            ->where('vt.note >= :note')
-            ->orWhere('vt.dataOrigin = :origin')
+            ->where('vt.note >= :note or vt.dataOrigin = :origin')
+            ->andWhere('vt.youtubeKey IS NOT NULL')
             ->setParameter('note', $note)
             ->setParameter('origin', 'radial')
             ->getQuery()->getResult();

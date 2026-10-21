@@ -22,6 +22,7 @@ final class HomeController extends AbstractController
         $videos = $videoRepository->getRandomVideos();
         $anims = $musics = $stranges = [];
         $tracks = $vTrackRepository->findRandomVTracks();
+        $tracks = array_slice($tracks, 0, $videoParameters['index_max_track']);
 
         $i = 0;
         foreach ($videos as $key => $video) {
