@@ -3,36 +3,21 @@
 {% block title %}{{ parent() }} :: Music Albums{% endblock %}
 
 {% block body %}
-    <div class="p-4">
-        <div class="row d-flex row-cols-1 row-cols-md-3 row-cols-lg-6 justify-content-center m-4" data-controller="album">
-            {% for album in albums %}
-                {% if album.picture is not null %}
-                    <div id="album-{{ album.id }}" class="album g-4">
-                        <a href="#album-{{ album.id }}" data-action="album#displayContent"
-                           data-artist="{{ album.auteur }}"
-                           data-album="{{ album.name }}">
-                            {% set class_no_picture = '' %}
-                            {% if no_cover_picture in album.picture %}
-                                {% set class_no_picture = ' no-picture' %}
-                            {% endif %}
-                            <img class="album-picture-{{ album.id }}{{ class_no_picture }}" src="{{ album.picture }}"
-                                 alt="{{ album.auteur ~ ' ' ~ album.name }}" title="{{ album.name }}" width="100%"
-                                 loading="lazy">
-                            <div class="album-label text-center">
-                                <strong>{{ album.auteur }}</strong><br>
-                                {{ album.name }} <small>{{ album.annee  ? '('~ album.annee ~')' : '' }}</small>
-                            </div>
-                        </a>
-                    </div>
-                {% endif %}
-            {% endfor %}
-            {% if pagination is not empty %}
-                <section class="col-sm-12 col-md-12" style="margin-top: 20px;">
-                    <twig:Pagination :pagination="pagination" />
-                </section>
+    <div class="row d-flex row-cols-1 row-cols-md-3 row-cols-lg-6 justify-content-center"
+         data-controller="album">
+        {% for album in albums %}
+            {% if album.picture is not null %}
+                <div class="g-4 media-vignette album">
+                    <twig:AlbumFrame :album="album"/>
+                </div>
             {% endif %}
-        </div>
-        {% include 'part/_modal.html.twig' with { modalTitle: 'Music', class: 'music-modal' } %}
-        {% include 'music/part/_filters.html.twig' %}
+        {% endfor %}
+        {% if pagination is not empty %}
+            <section class="col-sm-12 col-md-12" style="margin-top: 20px;">
+                <twig:Pagination :pagination="pagination"/>
+            </section>
+        {% endif %}
     </div>
+    {% include 'part/_modal.html.twig' with { modalTitle: 'Music', class: 'music-modal' } %}
+    {% include 'music/part/_filters.html.twig' %}
 {% endblock %}

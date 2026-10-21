@@ -1,0 +1,26 @@
+{% set class_no_picture = '' %}
+
+{% if no_cover_picture in this.album.picture %}
+    {% set class_no_picture = ' no-picture' %}
+{% endif %}
+<div id="album-{{ this.album.id }}" class="media g-4">
+    <a href="#album-{{ this.album.id }}" data-action="album#displayContent"
+       data-artist="{{ this.album.auteur }}"
+       data-album="{{ this.album.name }}">
+        {% set class_no_picture = '' %}
+        {% if no_cover_picture in album.picture %}
+            {% set class_no_picture = ' no-picture' %}
+        {% endif %}
+        <img class="album-picture-{{ this.album.id }}{{ class_no_picture }}" src="{{ this.album.picture }}"
+             alt="{{ this.album.auteur ~ ' ' ~ this.album.name }}" title="{{ this.album.name }}" width="100%"
+             loading="lazy">
+    </a>
+</div>
+<div class="media-body text-center p-2">
+        <h3 class="media-heading">{{ this.album.name }}</h3>
+        <h4>{{ this.album.auteur }}</h4>
+    <div class="d-flex justify-content-between p-2">
+        <span class="categorie">{{ this.album.genre }}</span>
+        <span>{{ this.album.annee }}</span>
+    </div>
+</div>

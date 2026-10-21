@@ -251,12 +251,6 @@ a.video-link:hover img, a.playlist-link:hover img {
     text-decoration: none;
 }
 
-.album {
-    background-color: black;
-    color:white;
-    border:1px solid #fff;
-}
-
 .album a {
     text-decoration: none;
 }
@@ -264,4 +258,19 @@ a.video-link:hover img, a.playlist-link:hover img {
 .album-label {
     font-size: 120%;
     text-decoration: none;
+}
+
+.block-content-album {
+    background-color: black;
+}
+
+.block-content-album .album-media {
+    object-fit: cover;
+    @media (max-width: 750px) {
+        display: none;
+    }
+}
+
+.video-link .bi-youtube {
+    font-size: 200%;
 }

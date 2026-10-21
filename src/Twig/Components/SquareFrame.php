@@ -19,6 +19,4 @@ final class SquareFrame
     {
         $this->playlist = $playlist;
     }
-
-
 }

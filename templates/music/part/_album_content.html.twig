@@ -1,34 +1,27 @@
-<div class="row block-content-album" style="display:none;">
-    <div class="col-12 col-md-4 col-lg-2 text-center div-img">
-        <img class="album-picture-{{ album.id }}" src="{{ album.picture }}" alt="Cover {{ album.name }}">
+<div class="row block-content-album" style="display:none;width:100% !important;">
+    <div class="col-12 col-md-4 col-lg-2 album-media">
+        <twig:AlbumFrame :album="album" />
     </div>
     <div class="col-12 col-md-8 col-lg-10" data-controller="music">
-        <p class="music-title" style="color:white; border:none;">
-            <span class="music-album">{{ album.name }}</span><br>
-            by <span class="music-auteur">{{ album.auteur }}</span> ({{ album.annee }})
-            <span class="badge bg-primary">{{ album.genre }}</span>
-        </p>
-        <div class="row justify-content-start text-center">
-            {% if album.youtubeKey is not empty %}
-                <div class="col p-2">
-                    <a id="album-youtube-{{ album.id }}" class="playlist-link icon-youtube"
-                       href="{{ album.youtubeKey|youtubeChannelLink }}" data-id="{{ album.youtubeKey }}"
-                       data-action="music#popupPlaylist" title="video Playlist">
-                        <i class="bi bi-youtube"></i>
-                    </a>
-                </div>&nbsp;&nbsp;
-            {% endif %}
+        <div class="row d-flex justify-content-center align-items-center text-center my-4">
+            <div class="col">
+                <a class="btn btn-dark edit-album" href="#" data-id="{{ album.id }}"
+                   data-action="album#openEditModal" title="album edit">
+                    <i class="bi bi-pencil-square"></i>
+                </a>
+            </div>
             {% if tracks is not empty %}
-                <div class="col p-2">
-                    <a class="btn btn-primary"
-                       href="{{ path('music_couch', {'auteur' : album.auteur, 'album': album.name }) }}" title="Enchaîner les titres">
-                        <i class="bi bi-youtube"></i> Enchainer les titres
+                <div class="col">
+                    <a class="btn btn-dark"
+                       href="{{ path('music_couch', {'auteur' : album.auteur, 'album': album.name }) }}"
+                       title="Enchaîner les titres">
+                        <i class="bi bi-youtube"></i>
                     </a>
                 </div>
             {% endif %}
-            <div class="col p-2">
+            <div class="col">
                 <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
+                    <button type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown"
                             aria-expanded="false">
                         <i class="bi bi-binoculars-fill"></i> Search
                     </button>
@@ -42,11 +35,14 @@
                     </ul>
                 </div>
             </div>
-            <div class="col p-2">
-                <a class="btn btn-secondary edit-album" href="#" data-id="{{ album.id }}"
-                   data-action="album#openEditModal" title="album edit">
-                    <i class="bi bi-pencil-square"></i>
-                </a>
+            <div class="col">
+                {% if album.youtubeKey is not empty %}
+                        <a id="album-youtube-{{ album.id }}" class="playlist-link icon-youtube"
+                           href="{{ album.youtubeKey|youtubeChannelLink }}" data-id="{{ album.youtubeKey }}"
+                           data-action="music#popupPlaylist" title="video Playlist">
+                            <img src="{{ asset('images/disk-icon.png') }}" width="50px">
+                        </a>
+                {% endif %}
             </div>
         </div>
         <table class="table table-dark">
