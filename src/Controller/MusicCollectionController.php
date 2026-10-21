@@ -60,7 +60,7 @@ final class MusicCollectionController extends AbstractController
                 'query' => @$search['value']
             ];
 
-            $sort = $parameters['order'][0]['column'];
+            $sort = !empty($parameters['order'][0]['column']) ? $parameters['order'][0]['column'] : 1;
             $sort = $columnsToDisplay[$sort]['data'];
 
             $dir = @$parameters['order'][0]['dir'];
@@ -160,7 +160,7 @@ final class MusicCollectionController extends AbstractController
                 'query' => @$search['value']
             ];
 
-            $sort = $parameters['order'][0]['column'];
+            $sort = !empty($parameters['order'][0]['column']) ? $parameters['order'][0]['column'] : 1;
             $sort = $columnsToDisplay[$sort]['data'];
 
             $dir = @$parameters['order'][0]['dir'];

@@ -30,7 +30,7 @@ class CloudTrackRepository extends ServiceEntityRepository
             $qb->andWhere('t.auteur like :query OR t.titre like :query')
                 ->setParameter(':query', "%" . $data['query'] . "%");
         }
-        $direction = $dir === 'ASC' ? \SortDirection::Ascending : \SortDirection::Descending;
+        $direction = strtoupper($dir) === 'ASC' ? \SortDirection::Ascending : \SortDirection::Descending;
         $qb->orderBy('t.' . $sort, $direction);
 
         if ($sort !== 'annee') {

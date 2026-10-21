@@ -147,6 +147,8 @@ parameters:
     sniffer:
         url: '%env(SNIFFER_URL)%'
         upload_directory: 'sniffer'
+    radial:
+        picture_url: '%env(RADIAL_PICTURE_URL)%'
 
     resources:
         downloads: 'resources'

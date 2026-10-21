@@ -6,14 +6,14 @@
                    data-action="music#popup">
                     <img src="{{ this.piece.albumPicture|default(asset('images/no_cover.jpeg')) }}"
                          class="img-fluid rounded-start"
-                         alt="{{ this.piece.title }}">
+                         alt="{{ this.piece.title }}" loading="lazy" width="100%">
                 </a>
             </div>
             <div class="col-8">
                 <div class="card-body">
                     <h5 class="card-title">{{ this.piece.author|upper }}</h5>
                     <span class="card-subtitle">{{ this.piece.title }}</span>
-                    <div class="card-text d-flex justify-content-between"><small>{{ this.piece.year }}</small><span class="categorie" style="font-size:60%;color:grey">{{ this.piece.kind }}</span></div>
+                    <div class="card-text d-flex justify-content-between"><small>{{ this.piece.year|yearDisplay }}</small><span class="categorie" style="font-size:60%;color:grey">{{ this.piece.kind }}</span></div>
                 </div>
             </div>
         </div>

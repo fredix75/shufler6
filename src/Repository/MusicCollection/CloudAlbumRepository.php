@@ -30,7 +30,7 @@ class CloudAlbumRepository extends ServiceEntityRepository
             $qb->andWhere('a.auteur like :query OR a.name like :query')
                 ->setParameter(':query', "%" . $data['query'] . "%");
         }
-        $direction = $dir === 'ASC' ? \SortDirection::Ascending : \SortDirection::Descending;
+        $direction = strtoupper($dir) === 'ASC' ? \SortDirection::Ascending : \SortDirection::Descending;
         $qb->orderBy('a.' . $sort, $direction);
 
         if ($sort !== 'annee') {

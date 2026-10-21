@@ -72,3 +72,9 @@ services:
             - { name: 'doctrine.orm.entity_listener', event: 'prePersist' }
             - { name: 'doctrine.orm.entity_listener', event: 'preUpdate' }
             - { name: 'doctrine.orm.entity_listener', event: 'postLoad' }
+
+    App\EntityListener\VTrackListener:
+        arguments:
+            $parameters: '@=parameter("radial")'
+        tags:
+            - { name: 'doctrine.orm.entity_listener', event: 'postLoad' }

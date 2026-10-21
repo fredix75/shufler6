@@ -2,11 +2,13 @@
 
 namespace App\Entity\MusicCollection;
 
+use App\EntityListener\VTrackListener;
 use App\Repository\MusicCollection\VTrackRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: VTrackRepository::class, readOnly: true)]
 #[ORM\Table(name: 'v_track')]
+#[ORM\EntityListeners([VTrackListener::class])]
 class VTrack
 {
     #[ORM\Id]

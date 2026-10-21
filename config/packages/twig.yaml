@@ -3,6 +3,7 @@ twig:
     form_themes: ['form/shufler_form_theme_layout.html.twig']
     globals:
         no_cover_picture: 'no_cover'
+        radial_picture_url: '%env(RADIAL_PICTURE_URL)%'
 when@test:
     twig:
         strict_variables: true
