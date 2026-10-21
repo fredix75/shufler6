@@ -4,51 +4,57 @@
 
 {% block body %}
     <div class="row justify-content-center">
-        <section class="col-12 col-lg-6" style="height:500px">
+        <section class="col-12 col-lg-6">
             <div class="ratio ratio-16x9">
                 <iframe class="media embed-responsive-item" src="{{ video.lien }}"></iframe>
             </div>
-            <div class="topcom media-body">
-                <div class="col-md-10">
-                    <h2 class="media-heading">{{ video.titre }}</h2>
-                    <span class="top-auteur">{{ video.auteur }}</span>
-                    <p class="topchapo">{{ video.chapo }}</p>
+            <div class="media-body text-center p-4">
+                <h2>{{ video.titre }}</h2>
+                <h3>{{ video.auteur }}</h3>
+                <p>{{ video.chapo }}</p>
+                <div class="d-flex justify-content-around g-4" style="border-top: 1px solid grey;">
+                    <span class="categorie">{{ video.categorie|categorieDisplay }}</span>
+                    <span class="top-annee">{{ video.annee|yearDisplay }}</span>
+                    {% for mood in video.moods %}
+                        <span class="badge bg-secondary">{{ mood.name }}</span>
+                    {% endfor %}
                 </div>
-                <div class="col-md-2 col-push-right">
-                    <div class="categorie col-md-12"
-                         style="position:relative;">{{ video.categorie|categorieDisplay }}</div>
-                    <div class="col-md-12"><span class="top-annee">{{ video.annee|yearDisplay }}</span></div>
+                <p class="m-4">
+                    {{ video.texte }}
+                </p>
+                <div class="text-end">
+                    <span class="badge bg-dark">{{ video.dateInsert|date("d/m/Y H:i:s") }}</span>
                 </div>
-                {% for mood in video.moods %}
-                    <span class="badge bg-secondary">{{ mood.name }}</span>
-                {% endfor %}
-            </div>
-            <div class="media">
-                {{ video.texte }}
             </div>
             <br>
-            <div class="well">
-                <span class="badge bg-dark" style="float:right;">{{ video.dateInsert|date("d/m/Y H:i:s") }}</span><br>
-                {% if is_granted('VIDEO_DELETE') %}
-                    <form action="{{ path('video_delete', {'id' : video.id}) }}" method="POST" onclick="return confirm('{{ 'Are You sure ?'|trans }}');">
-                        <input type="hidden" name="_token" value="{{ csrf_token('video_delete' ~ video.id) }}">
-                        <button class="btn btn-danger" type="submit"><i class="bi bi-trash"></i>&nbsp;Virer</button>
-                    </form>
-                {% endif %}
-                {% if is_granted('VIDEO_EDIT') %}
-                    <a class="btn btn-secondary" href="{{ path('video_edit', {'id':video.id}) }}"><span
-                                class="glyphicon glyphicon-edit"></span>&nbsp;Edit the reference</a>
-                    &nbsp;
-                    {% if video.published == 1 %}
-                        <a class="btn btn-warning" href="{{ path('video_edit', { 'id':video.id }) }}"><span
-                                    class="glyphicon glyphicon-remove-sign"></span>&nbsp;Retirer</a>
-                    {% else %}
-                        <a class="btn btn-primary"
-                           href="{{ path('video_edit', { 'id':video.id, 'publish': true }) }}"><span
-                                    class="glyphicon glyphicon-ok-sign"></span>&nbsp;Publier</a>
+            <div class="d-flex justify-content-between">
+                <div>
+                    {% if is_granted('VIDEO_DELETE') %}
+                        <form action="{{ path('video_delete', {'id' : video.id}) }}" method="POST"
+                              onclick="return confirm('{{ 'Are You sure ?'|trans }}');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('video_delete' ~ video.id) }}">
+                            <button class="btn btn-danger btn-lg" type="submit"><i class="bi bi-trash"></i>&nbsp;Virer</button>
+                        </form>
                     {% endif %}
-                {% endif %} &nbsp;
-            </div>
-        </section>
+                </div>
+                {% if is_granted('VIDEO_EDIT') %}
+                    <div>
+                        <a class="btn btn-secondary btn-lg" href="{{ path('video_edit', {'id':video.id}) }}"><i
+                                class="bi bi-pen"></i>&nbsp;Edit the reference</a>
+                    </div>
+                    <div>
+                        {% if video.published == 1 %}
+                            <a class="btn btn-warning btn-lg" href="{{ path('video_edit', { 'id':video.id, 'publish': 'false' }) }}"><i
+                                    class="bi bi-slash-circle"></i>&nbsp;Retirer</a>
+                        {% else %}
+                            <a class="btn btn-primary btn-lg"
+                               href="{{ path('video_edit', { 'id':video.id, 'publish': '1' }) }}"><i
+                                    class="bi bi-check"></i>&nbsp;Publier</a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>&nbsp;
+    </div>
+    </section>
     </div>
 {% endblock %}

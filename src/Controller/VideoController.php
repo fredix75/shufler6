@@ -108,6 +108,18 @@ final class VideoController extends AbstractController
         ?Video          $video
     ): Response
     {
+        if ($video && !empty($request->query->get('publish'))) {
+            if ($request->query->get('publish') === '1') {
+                $video->setPublished(true);
+                $this->addFlash('success', 'Vidéo publiée');
+            } else {
+                $video->setPublished(false);
+                $this->addFlash('success', 'Vidéo dépubliée');
+            }
+            $videoRepository->save($video, true);
+            return $this->redirectToRoute('video_view', ['id' => $video->getId()]);
+        }
+
         $video = $video ?? new Video();
 
         if ($request->request->get('videokey')) {

@@ -37,14 +37,14 @@
 
         <!-- ANIMS !-->
         <section class="row g-4 justify-content-center">
-            <div class="row col-12 col-xl-8  mx-auto">
+            <div class="row col-12 col-xl-8 mx-auto">
                 {% for video in anims|slice(1, 5) %}
                     <div
-                        class="col-12 col-md-6 col-lg-4 media-vignette order-{{ loop.index%2 == 0 ? loop.index + 2 : loop.index + 1 }} order-md-{{ loop.index%2 == 0 ? loop.index + 1 : loop.index + 2 }} order-lg-{{ loop.index + 1 }}">
+                        class="col-12 col-sm-6 col-lg-4 order-{{ loop.index%2 == 0 ? loop.index + 2 : loop.index + 1 }} order-sm-{{ loop.index%2 == 0 ? loop.index + 1 : loop.index + 2 }} order-lg-{{ loop.index + 1 }} g-2">
                         <twig:VideoFrame :video="video"/>
                     </div>
                     <div
-                        class="col-12 col-md-6 col-lg-4 media-vignette justify-content-center order-{{ loop.index%2 == 0 ? loop.index + 1 : loop.index + 2 }} order-md-{{ loop.index%2 == 0 ? loop.index + 2 : loop.index + 1 }} order-lg-{{ loop.index + 2 }}">
+                        class="col-12 col-sm-6 col-lg-4 justify-content-center order-{{ loop.index%2 == 0 ? loop.index + 1 : loop.index + 2 }} order-sm-{{ loop.index%2 == 0 ? loop.index + 2 : loop.index + 1 }} order-lg-{{ loop.index + 2 }}">
                     </div>
                 {% endfor %}
             </div>
@@ -53,7 +53,7 @@
 
         <!-- Son & Images !-->
 
-        <section class="row g-4 justify-content-center" style="background-color:black;">
+        <section class="row justify-content-center" style="background-color:black;">
             <div class="row col-12 mx-auto p-4">
                 <div class="text-center p-4">
                     <h2>Du son, des images</h2>
@@ -61,7 +61,7 @@
                 </div>
                 <div class="row d-flex justify-content-around">
                     {% for video in musics|slice(0, 4) %}
-                        <div class="col-12 col-md-6 col-lg-3 col-xl-2 g-4 g-md-2 media-vignette">
+                        <div class="col-12 col-sm-6 col-lg-3 col-xl-2 g-4 g-sm-2">
                             <twig:VideoFrame :video="video" categorie="true"/>
                         </div>
                     {% endfor %}
@@ -72,12 +72,12 @@
         <!-- Juke-Box !-->
 
         <section class="row g-4">
-            <div class="col-12 col-md-6 p-4" data-controller="music">
+            <div class="col-12 col-lg-6 p-4 mx-auto" data-controller="music">
                 <div class="text-center">
                     <h2>Juke-Box</h2>
                     <p>Des morceaux de choix</p>
                 </div>
-                <div class="row g-4 p-4 row-cols-1 row-cols-xl-2">
+                <div class="row g-4 row-cols-1 row-cols-sm-2 row-cols-lg-1 row-cols-xl-2">
                     {% for track in tracks %}
                         <twig:PieceFrame :piece="track"/>
                     {% endfor %}
@@ -86,12 +86,12 @@
 
             <!-- OMG !-->
 
-            <div class="col-12 col-md-12 col-lg-6 p-4 text-center" style="background-color:#4d1500;">
+            <div class="col-12 col-md-12 col-lg-6 p-4 text-center mx-auto" style="background-color:#4d1500;">
                 <h2>OMG, WTF ??</h2>
                 <p>Du bizarre, du cheulou comme disent les jeunes.. On y trouve aussi du mdr, voire du ptdr</p>
-                <div class="row g-4 p-4 row-cols-2 row-cols-lg-1 row-cols-xl-2">
-                    {% for video in stranges|slice(0, 2) %}
-                        <div class="media-vignette">
+                <div class="row g-4 p-2 row-cols-1 row-cols-sm-2 row-cols-lg-1 row-cols-xl-2 justify-content-center">
+                    {% for video in stranges|slice(0, 4) %}
+                        <div>
                             <twig:VideoFrame :video="video"/>
                         </div>
                     {% endfor %}
@@ -103,9 +103,9 @@
 
         <section class="row g-4 p-4" style="background-color:#4a008f;">
             <h2 style="text-align: center;">En v'la encore...</h2>
-            <div class="row d-flex justify-content-around">
-            {% for video in musics|slice(4,8) %}
-                <div class="col-12 col-md-6 col-lg-4 col-xl-2 g-4 g-md-2 media-vignette">
+            <div class="row d-flex justify-content-around mx-auto">
+            {% for video in musics|slice(4,12) %}
+                <div class="col-12 col-sm-6 col-lg-4 col-xl-2 g-4 g-sm-2">
                     <twig:VideoFrame :video="video" categorie="true"/>
                 </div>
             {% endfor %}

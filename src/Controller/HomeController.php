@@ -16,11 +16,11 @@ final class HomeController extends AbstractController
     #[Route('', name: '_home')]
     public function home(VideoRepository $videoRepository, TrackRepository $trackRepository): Response
     {
+        $videoParameters = $this->getParameter('shufler_video');
+
         $videos = $videoRepository->getRandomVideos();
         $anims = $musics = $stranges = [];
-        $tracks = $trackRepository->getRandomTracks(4);
-
-        $videoParameters = $this->getParameter('shufler_video');
+        $tracks = $trackRepository->getRandomTracks($videoParameters['index_max_track'], 4);
 
         $i = 0;
         foreach ($videos as $key => $video) {

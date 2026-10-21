@@ -27,7 +27,7 @@
                 </a>
             {% endif %}
         </span>
-        <span>{{ this.video.annee|yearDisplay }}</span>
+        <span>{{ this.video.annee|yearDisplay|default('#') }}</span>
     </div>
 </div>
 
