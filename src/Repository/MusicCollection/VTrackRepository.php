@@ -16,6 +16,22 @@ class VTrackRepository extends ServiceEntityRepository
         parent::__construct($registry, VTrack::class);
     }
 
+    public function findRandomVTracks(int $note = 4): array
+    {
+        $vTracks = $this->createQueryBuilder('vt')
+            ->where('vt.note >= :note')
+            ->orWhere('vt.dataOrigin = :origin')
+            ->setParameter('note', $note)
+            ->setParameter('origin', 'radial')
+            ->getQuery()->getResult();
+
+        for ($i = 0; $i < 5; $i++) {
+            shuffle($vTracks);
+        }
+
+        return $vTracks;
+    }
+
 //    /**
 //     * @return VTrack[] Returns an array of VTrack objects
 //     */

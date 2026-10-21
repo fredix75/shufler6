@@ -21,14 +21,44 @@ final class Version20261012121549 extends AbstractMigration
     {
         $this->addSql(
 <<<SQL
-    CREATE VIEW v_track AS
-        SELECT p.auteur as author, p.titre as title, p.annee as year, p.genre as kind, p.pays as country, p.youtube_key as youtube_key, p.note,
-               a.name as album_name, a.annee as album_year, a.auteur as album_artist, a.genre as album_genre, a.picture as picture, a.youtube_key as album_youtube_key, 'piece' as data_origin
-        FROM piece p
-                 LEFT JOIN album a ON a.name = p.album and a.auteur = p.artiste union
-        SELECT r.author as author, r.name as title, r.year as annee, '' as kind, '' as country, r.youtube_key as youtube_key, '' as note,
-               r.album as album_name, r.year as album_year, r.author as album_artist, '' as album_genre, r.picture_key as picture, '' as album_youtube_key, 'radial' as data_origin
-        FROM radial r
+CREATE VIEW v_track AS
+SELECT ROW_NUMBER() OVER() as id, *
+FROM (SELECT p.id as id_track,
+    p.auteur      as author,
+    p.titre       as title,
+    p.annee       as year,
+    p.genre       as kind,
+    p.pays        as country,
+    p.youtube_key as youtube_key,
+    p.note,
+    a.id          as id_album,
+    a.name        as album_name,
+    a.annee       as album_year,
+    a.auteur      as album_artist,
+    a.genre       as album_genre,
+    a.picture     as album_picture,
+    a.youtube_key as album_youtube_key,
+    'piece'       as data_origin
+FROM piece p
+LEFT JOIN album a ON a.name = p.album and a.auteur = p.artiste
+UNION
+SELECT r.id as id_track,
+    r.author      as author,
+    r.name        as title,
+    r.year        as annee,
+    ''            as kind,
+    ''            as country,
+    r.youtube_key as youtube_key,
+    ''            as note,
+    null          as id_album,
+    r.album       as album_name,
+    r.year        as album_year,
+    r.author      as album_artist,
+    ''            as album_genre,
+    r.picture_key as album_picture,
+    ''            as album_youtube_key,
+    'radial'      as data_origin
+FROM radial r)
 SQL
         );
 

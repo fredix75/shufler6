@@ -5,13 +5,37 @@ namespace App\Entity\MusicCollection;
 use App\Repository\MusicCollection\VTrackRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: VTrackRepository::class)]
+#[ORM\Entity(repositoryClass: VTrackRepository::class, readOnly: true)]
+#[ORM\Table(name: 'v_track')]
 class VTrack
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
+
+    #[ORM\Column]
+    private ?int $idTrack = null;
+
+    public function getIdTrack(): ?int
+    {
+        return $this->idTrack;
+    }
+
+    public function setIdTrack(?int $idTrack): void
+    {
+        $this->idTrack = $idTrack;
+    }
+
+    public function getIdAlbum(): ?int
+    {
+        return $this->idAlbum;
+    }
+
+    public function setIdAlbum(?int $idAlbum): void
+    {
+        $this->idAlbum = $idAlbum;
+    }
 
     #[ORM\Column(length: 255)]
     private ?string $author = null;
@@ -33,6 +57,9 @@ class VTrack
 
     #[ORM\Column(nullable: true)]
     private ?int $note = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $idAlbum = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $albumName = null;

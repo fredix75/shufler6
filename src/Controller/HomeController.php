@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Repository\MusicCollection\PieceRepository;
 use App\Repository\MusicCollection\TrackRepository;
+use App\Repository\MusicCollection\VTrackRepository;
 use App\Repository\VideoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,13 +15,13 @@ use Symfony\Component\Routing\Attribute\Route;
 final class HomeController extends AbstractController
 {
     #[Route('', name: '_home')]
-    public function home(VideoRepository $videoRepository, TrackRepository $trackRepository): Response
+    public function home(VideoRepository $videoRepository, VTrackRepository $vTrackRepository): Response
     {
         $videoParameters = $this->getParameter('shufler_video');
 
         $videos = $videoRepository->getRandomVideos();
         $anims = $musics = $stranges = [];
-        $tracks = $trackRepository->getRandomTracks($videoParameters['index_max_track'], 4);
+        $tracks = $vTrackRepository->findRandomVTracks();
 
         $i = 0;
         foreach ($videos as $key => $video) {

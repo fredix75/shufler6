@@ -2,18 +2,18 @@
     <div class="card">
         <div class="row g-0">
             <div class="col-4" style="overflow: hidden;">
-                <a class="video-link" href="{{ this.piece.youtube_key|popUpYoutube }}"
+                <a class="video-link" href="{{ this.piece.youtubeKey|popUpYoutube }}"
                    data-action="music#popup">
-                    <img src="{{ this.piece.picture|default(asset('images/no_cover.jpeg')) }}"
+                    <img src="{{ this.piece.albumPicture|default(asset('images/no_cover.jpeg')) }}"
                          class="img-fluid rounded-start"
-                         alt="{{ this.piece.titre }}">
+                         alt="{{ this.piece.title }}">
                 </a>
             </div>
             <div class="col-8">
                 <div class="card-body">
-                    <h5 class="card-title">{{ this.piece.auteur|upper }}</h5>
-                    <span class="card-subtitle">{{ this.piece.titre }}</span>
-                    <div class="card-text d-flex justify-content-between"><small>{{ this.piece.annee }}</small><span class="categorie" style="font-size:60%;color:grey">{{ this.piece.genre }}</span></div>
+                    <h5 class="card-title">{{ this.piece.author|upper }}</h5>
+                    <span class="card-subtitle">{{ this.piece.title }}</span>
+                    <div class="card-text d-flex justify-content-between"><small>{{ this.piece.year }}</small><span class="categorie" style="font-size:60%;color:grey">{{ this.piece.kind }}</span></div>
                 </div>
             </div>
         </div>
