@@ -59,7 +59,7 @@ SELECT r.id as id_track,
     r.picture_key as album_picture,
     ''            as album_youtube_key,
     'radial'      as data_origin
-FROM radial r)
+FROM radial r) AS vt
 SQL
         );
 
