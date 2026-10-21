@@ -22,7 +22,8 @@ final class Version20261012121549 extends AbstractMigration
         $this->addSql(
 <<<SQL
 CREATE VIEW v_track AS
-SELECT ROW_NUMBER() OVER() as id, *
+SELECT ROW_NUMBER() OVER() as id, id_track, author, title, year, kind, country, youtube_key, note,
+       id_album, album_name, album_year, album_artist, album_genre, album_picture, album_youtube_key, data_origin
 FROM (SELECT p.id as id_track,
     p.auteur      as author,
     p.titre       as title,
