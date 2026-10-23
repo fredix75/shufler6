@@ -76,7 +76,6 @@ class UpdateMusicRadialCommand extends Command
                     $track->setYoutubeKey('nope');
                     $nbNope++;
                 } else {
-                    $message = sprintf('No more request : %s %s', $track->getAuthor(), $track->getName());
                     break;
                 }
             } catch (\Exception $e) {

@@ -6,7 +6,7 @@
                    data-action="music#popup">
                     <img src="{{ this.piece.albumPicture|default(asset('images/no_cover.jpeg')) }}"
                          class="img-fluid rounded-start"
-                         alt="{{ this.piece.title }}" loading="lazy" width="100%">
+                         alt="{{ this.piece.author ~ ' ' ~ this.piece.title }}" title="{{ this.piece.author ~ ' ' ~ this.piece.title }}" loading="lazy" width="100%">
                 </a>
             </div>
             <div class="col-8">

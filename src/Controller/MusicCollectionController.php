@@ -14,6 +14,7 @@ use App\Repository\MusicCollection\ArtistRepository;
 use App\Repository\MusicCollection\CloudAlbumRepository;
 use App\Repository\MusicCollection\CloudTrackRepository;
 use App\Repository\MusicCollection\PieceRepository;
+use App\Repository\MusicCollection\VTrackRepository;
 use App\Twig\Runtime\ShuflerExtensionRuntime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -23,6 +24,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Repository\MusicCollection\AlbumRepository;
 use App\Repository\MusicCollection\TrackRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\Attribute\Cache;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -418,5 +420,19 @@ final class MusicCollectionController extends AbstractController
         $em->flush();
 
         return new JsonResponse(['note' => $note]);
+    }
+
+    #[Route('/juke-box', name: '_juke-box', methods: ['GET'])]
+    #[Cache(maxage: 60)]
+    public function jukeBox(VTrackRepository $vTrackRepository): Response
+    {
+        $videoParameters = $this->getParameter('music_collection');
+
+        $tracks = $vTrackRepository->findRandomVTracks();
+        $tracks = array_slice($tracks, 0, $videoParameters['index_max_track']);
+
+        return $this->render('music/part/_juke-box.html.twig', [
+            'tracks' => $tracks,
+        ]);
     }
 }

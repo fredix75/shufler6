@@ -1,0 +1,7 @@
+<turbo-frame id="juke-box">
+    <div class="row g-4 row-cols-1 row-cols-sm-2 row-cols-lg-1">
+        {% for track in tracks %}
+            <twig:PieceFrame :piece="track"/>
+        {% endfor %}
+    </div>
+</turbo-frame>

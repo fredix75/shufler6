@@ -15,14 +15,12 @@ use Symfony\Component\Routing\Attribute\Route;
 final class HomeController extends AbstractController
 {
     #[Route('', name: '_home')]
-    public function home(VideoRepository $videoRepository, VTrackRepository $vTrackRepository): Response
+    public function home(VideoRepository $videoRepository): Response
     {
         $videoParameters = $this->getParameter('shufler_video');
 
         $videos = $videoRepository->getRandomVideos();
         $anims = $musics = $stranges = [];
-        $tracks = $vTrackRepository->findRandomVTracks();
-        $tracks = array_slice($tracks, 0, $videoParameters['index_max_track']);
 
         $i = 0;
         foreach ($videos as $key => $video) {
@@ -50,7 +48,6 @@ final class HomeController extends AbstractController
             'anims' => $anims,
             'musics' => $musics,
             'stranges' => $stranges,
-            'tracks' => $tracks,
         ]);
     }
 

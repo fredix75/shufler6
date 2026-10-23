@@ -4,6 +4,7 @@ twig:
     globals:
         no_cover_picture: 'no_cover'
         radial_picture_url: '%env(RADIAL_PICTURE_URL)%'
+        illustration_dir: '%illustration_directory%'
 when@test:
     twig:
         strict_variables: true

@@ -4,13 +4,13 @@ parameters:
     host_frixtur: '%env(HOST_FRIXTUR)%'
     mailer_sender: '%env(MAILER_SENDER)%'
     import_directory: '%kernel.project_dir%/datas'
+    illustration_directory: 'uploads/villemot'
     shufler_video:
         max_list: 11
         max_list_couch: 99
         index_max_anim: 6
         index_max_music: 20
-        index_max_autre: 4
-        index_max_track: 12
+        index_max_autre: 2
         api_max_list: 25
         intro_couch: '67lnjV6SrFw'
         no_signal: '/images/no_signal.png'
@@ -79,6 +79,7 @@ parameters:
         max_nb_albums: 60
         max_nb_artists: 500
         max_random: 100
+        index_max_track: 6
         track_fields:
             - data: youtubeKey
               orderable: false
