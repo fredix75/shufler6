@@ -20,10 +20,7 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\UX\Map\Bridge\Leaflet\LeafletOptions;
-use Symfony\UX\Map\Bridge\Leaflet\Option\AttributionControlOptions;
-use Symfony\UX\Map\Bridge\Leaflet\Option\ControlPosition;
 use Symfony\UX\Map\Bridge\Leaflet\Option\TileLayer;
-use Symfony\UX\Map\Bridge\Leaflet\Option\ZoomControlOptions;
 use Symfony\UX\Map\InfoWindow;
 use Symfony\UX\Map\Map;
 use Symfony\UX\Map\Marker;
@@ -152,6 +149,7 @@ final class ApiController extends AbstractController
     {
         $search = $idChannel = null;
         $resultat = [];
+
         if ($request->request->get('search_api')) {
             $search = $request->request->get('search_api');
 
@@ -175,6 +173,7 @@ final class ApiController extends AbstractController
                 }
             }
         }
+
         return $this->render('api/channels.html.twig', [
             'resultats' => $resultat,
             'search' => $search,
@@ -228,6 +227,7 @@ final class ApiController extends AbstractController
         $resultat = [];
         if ($request->query->get('search_api') || $request->request->get('search_api')
             || $request->query->get('artist') || $request->request->get('artist')) {
+
             $album = $request->request->get('search_api') ?? $request->query->get('search_api');
             $artist = $request->request->get('artist') ?? $request->query->get('artist');
             $idAlbum = $request->request->get('id_album') ?? $request->query->get('id_album') ?? null;
@@ -275,6 +275,7 @@ final class ApiController extends AbstractController
                 }
             }
         }
+
         return $this->render('api/album_pictures.html.twig', [
             'resultats' => $resultat,
             'search' => $album,
@@ -289,25 +290,21 @@ final class ApiController extends AbstractController
      * @throws RedirectionExceptionInterface
      * @throws ClientExceptionInterface
      */
-    #[Route('/channel/handle', name: '_handle_channel')]
-    public function handleChannel(Request $request, ApiRequester $apiRequester): Response
+    #[Route('/channel/handle/{id}', name: '_handle_channel')]
+    public function handleChannel(Request $request, ApiRequester $apiRequester, $id): Response
     {
-        if ($request->isXmlHttpRequest()) {
-            $channelId = $request->query->get('id');
-            $response = $apiRequester->sendRequest(VideoHelper::YOUTUBE, '/playlists', [
-                'channelId' => $channelId,
-                'part' => 'snippet, contentDetails',
-                'maxResults' => 75,
-            ]);
+        $response = $apiRequester->sendRequest(VideoHelper::YOUTUBE, '/playlists', [
+            'channelId' => $id,
+            'part' => 'snippet, contentDetails',
+            'maxResults' => 75,
+        ]);
 
-            $playlists = json_decode($response->getContent(), true)['items'] ?? [];
+        $playlists = json_decode($response->getContent(), true)['items'] ?? [];
 
-            return $this->render('api/part/_playlists.html.twig', [
-                'playlists' => $playlists,
-            ]);
-        }
-
-        return new Response("Method not allowed", 405);
+        return $this->render('api/part/_playlists.html.twig', [
+            'playlists' => $playlists,
+            'channel_id' => $id,
+        ]);
     }
 
     /**
@@ -376,7 +373,7 @@ final class ApiController extends AbstractController
                 throw $this->createNotFoundException('Commune not found');
             }
 
-            $content = sprintf('<h4>%s</h4><p><strong>Surface:</strong> %.2f ha<br><strong>Population:</strong> %s</p>',$commune->getNom(), $commune->getSurface(), number_format($commune->getPopulation(), 0, ',', ' '));
+            $content = sprintf('<h4>%s</h4><p><strong>Surface:</strong> %.2f ha<br><strong>Population:</strong> %s</p>', $commune->getNom(), $commune->getSurface(), number_format($commune->getPopulation(), 0, ',', ' '));
 
             $map = (new Map('default'))
                 ->center(new Point($commune->getCoord()[1], $commune->getCoord()[0]))
@@ -391,15 +388,14 @@ final class ApiController extends AbstractController
 //                ->fitBoundsToMarkers();
             $leafletOptions = (new LeafletOptions())
                 ->tileLayer(new TileLayer(
-                   // url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+                // url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
                     url: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
                     attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
                     options: [
                         'minZoom' => 2,
                         'maxZoom' => 12,
                     ]
-                ))
-            ;
+                ));
 
             $map->options($leafletOptions);
         }

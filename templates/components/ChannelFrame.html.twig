@@ -1,0 +1,39 @@
+<div class="card">
+    <div class="row g-0">
+        <div class="col-12 card-header text-center">
+            <a href="https://www.youtube.com/channel/{{ this.channel.channelId }}" target="_blank"
+               rel="noopener noreferrer">
+                <img src="{{ this.channel.link }}" alt="{{ this.channel.name }}"
+                     width="25%" loading="lazy">
+            </a>
+        </div>
+        <div class="col-12">
+            <div class="card-body text-center">
+                <h5 class="card-title">{{ this.channel.name }}</h5>
+                <div class="pod-nav row justify-content-center p-4" data-controller="other-channel">
+                    <div class="col col-2 col-sm-2 col-lg-2">
+                        <a href="#" class="left btn btn-secondary disabled" data-page="0"
+                           data-action="other-channel#prev"><i class="bi bi-chevron-left"></i></a>
+                    </div>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <div class="col col-auto text-center">
+                            <a href="#" class="btn btn-secondary"><i
+                                    class="bi bi-save-fill"></i>&nbsp;Enregistrer</a>
+                        </div>
+                    {% endif %}
+                    <div class="col col-2 col-sm-2 col-lg-2 text-end">
+                        <a href="#" class="right btn btn-secondary" data-page="2"
+                           data-action="other-channel#next"><i class="bi bi-chevron-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-12 p-4 ps-md-0" data-controller="video">
+                    <div id="{{ this.channel.channelId }}" class="accordion">
+                        <turbo-frame id="channel-playlist-{{ this.channel.channelId }}" src="{{ path('api_handle_channel', {'id' : this.channel.channelId }) }}" loading="lazy">
+                        </turbo-frame>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -49,7 +49,7 @@
                                 {# nothing to do #}
                             {% else %}
                                 <img src="{{ asset('uploads/logos/' ~ flux.image) }}" width="200px" alt="Logo {{ flux.name }}">
-                                <a href="{{ path('flux_delete_logo',{'id': flux.id}) }}"
+                                <a href="#"
                                    type="button"
                                    class="btn btn-danger"
                                    onclick="return confirm('{{ 'Are You sure ?'|trans }}');"

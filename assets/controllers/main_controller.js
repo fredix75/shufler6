@@ -13,7 +13,7 @@ export default class extends Controller {
         modal.show();
         $(document).find('.modal-body').html(await $.ajax(this.formUrlValue));
     }
-    
+
     toggleSlide(event) {
         $('#slider').slideToggle();
     }

@@ -6,12 +6,11 @@
         {% for podcast in podcasts %}
             <div class="col p-2">
                 <div class="flux card">
-                    <div class="card-header d-flex flex-row justify-content-between"
-                         style="background-color: #0a53be; color:yellow;">
+                    <div class="card-header d-flex flex-row justify-content-between">
                         {% if podcast.channel is defined and podcast.channel.image is defined %}
-                    <img src="{{ asset('uploads/logos/' ~ podcast.channel.image) }}" height="50px" loading="lazy">&nbsp;
+                            <img src="{{ asset('uploads/logos/' ~ podcast.channel.image) }}" height="50px" loading="lazy">&nbsp;
                         {% endif %}&nbsp;
-                        <h2>{{ podcast.name }}</h2>
+                        <h5>{{ podcast.name }}</h5>
                     </div>
                     <div class="card-body">
                         <div id="flux-{{ podcast.id }}" class="row news-widget">
@@ -37,7 +36,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card-footer flex-row d-flex justify-content-between small bg-dark-subtle text-bg-light">
+                    <div class="card-footer d-flex justify-content-between small">
                         <div>{{ podcast.name }}</div>
                         <div>{{ 'now'|date('d/m/Y H:i') }}</div>
                     </div>

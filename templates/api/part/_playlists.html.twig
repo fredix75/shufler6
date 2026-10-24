@@ -1,21 +1,24 @@
-<ul class="list-group">
-    {% for index, playlist in playlists %}
-        {% set page = ((index + 1)/6)|round(0, 'ceil') %}
-        <li class="list-group-item" data-page="{{ page }}">
-            <div class="row flex">
-                <div class="col col-3" style="overflow: hidden">
-                    <a class="playlist-link" href="{{ playlist.id|youtubeChannelLink }}" data-toggle="tooltip">
-                        <img src="{{ playlist.snippet.thumbnails.default.url }}" loading="lazy">
-                    </a>
+<turbo-frame id="channel-playlist-{{ channel_id }}">
+    <ul class="list-group" data-controller="other-channel">
+        {% for index, playlist in playlists %}
+            {% set page = ((index + 1)/6)|round(0, 'ceil') %}
+            <li class="list-group-item {{ page > 1 ? 'd-none' : '' }}" data-page="{{ page }}">
+                <div class="row flex">
+                    <div class="col col-3" style="overflow: hidden">
+                        <a class="playlist-link" href="{{ playlist.id|youtubeChannelLink }}" data-toggle="tooltip">
+                            <img src="{{ playlist.snippet.thumbnails.default.url }}" loading="lazy">
+                        </a>
+                    </div>
+                    <div class="col col-8 text-start px-4">
+                        {{ playlist.snippet.title }}
+                        <span class="badge bg-secondary">{{ playlist.contentDetails.itemCount }}</span>
+                    </div>
+                    <div class="col col-1">
+                        <a href="#" type="btn btn-secondary" data-action="other-channel#editChannel"><i class="bi bi-save"></i></a>
+                    </div>
                 </div>
-                <div class="col col-8">
-                    {{ playlist.snippet.title }}
-                    <span class="badge bg-secondary">{{ playlist.contentDetails.itemCount }}</span>
-                </div>
-                <div class="col col-1">
-                    <a href="#" type="btn btn-secondary" data-action="other-channel#editChannel"><i class="bi bi-save"></i></a>
-                </div>
-            </div>
-        </li>
-    {% endfor %}
-</ul>
+            </li>
+        {% endfor %}
+    </ul>
+</turbo-frame>
+

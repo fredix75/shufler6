@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Repository\MusicCollection\PieceRepository;
-use App\Repository\MusicCollection\TrackRepository;
 use App\Repository\MusicCollection\VTrackRepository;
 use App\Repository\VideoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -89,6 +88,19 @@ final class HomeController extends AbstractController
             'tracks' => $tracks,
             'picture' => $picture,
             'track_columns' => $this->getParameter('music_collection')['track_fields'],
+        ]);
+    }
+
+    #[Route('/juke-box', name: '_juke-box', methods: ['GET'])]
+    public function jukeBox(VTrackRepository $vTrackRepository): Response
+    {
+        $videoParameters = $this->getParameter('music_collection');
+
+        $tracks = $vTrackRepository->findRandomVTracks();
+        $tracks = array_slice($tracks, 0, $videoParameters['index_max_track']);
+
+        return $this->render('music/part/_juke-box.html.twig', [
+            'tracks' => $tracks,
         ]);
     }
 }

@@ -1,0 +1,26 @@
+<div class="card">
+    <div class="row g-0">
+        <div class="col-4" style="overflow: hidden;">
+            <a href="{{ this.cover.url }}" target="_blank" rel="noopener noreferrer">
+                <img src="{{ this.cover.link }}" width="100%" alt="{{ this.cover.name }}" loading="lazy">
+            </a>
+        </div>
+        <div class="col-8">
+            <div class="card-body">
+                <h5 class="card-title">{{ this.cover.artist }}</h5>
+                <span>{{ this.cover.name }}</span>
+                <p class="card-text">{{ this.cover.txt|default('')|raw }}</p>
+                {% if is_granted('ROLE_AUTEUR') %}
+                    {% if this.idAlbum == 0 %}
+                        <a href="{{ path('api_playlist', {'search_api' : this.cover.artist ~ ' ' ~ this.cover.name}) }}"
+                           class="btn btn-primary icon-youtube" title="chercher l'album sur youtube"><i class="bi bi-youtube"></i></a>
+                    {% else %}
+                        <a href="#" class="btn btn-primary" data-action="album#editPicture"
+                               data-url="{{ this.cover.link }}" title="assigner cette pochette"><i class="bi bi-arrow-left-right"></i></a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+

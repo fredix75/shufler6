@@ -10,6 +10,7 @@ use App\Repository\ChannelFluxRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
@@ -45,6 +46,9 @@ class FluxFormType extends AbstractType
                     'id' => 'file',
                 ],
                 'help' => 'Formats: .jpeg, .jpg or .png. Max: 1Mo',
+            ])
+            ->add('image', HiddenType::class, [
+                'required' => false,
             ])
             ->add('mood',EntityType::class, [
                 'class' => FluxMood::class,

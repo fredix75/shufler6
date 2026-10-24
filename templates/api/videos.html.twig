@@ -6,7 +6,7 @@
     <div class="p-4">
         <h1 class="minor"><i class="bi bi-youtube"></i> Videos Search</h1>
         <div class="row" data-controller="video">
-            <form name="form_search" action="{{ path('api_video') }}" method="POST" class="row justify-content-center">
+            <form name="form_search" action="{{ path('api_video') }}" method="POST" class="row justify-content-center" data-turbo="false">
                 <div class="col col-10 col-sm-10 col-lg-6">
                     <input type="search" id="search_api" name="search_api" value="{{ search|trim }}"
                            class="input-sm form-control big-input" placeholder="videos on youtube">
@@ -56,6 +56,8 @@
                     <h1><i class="bi bi-{{ index }}"></i> {{ plateforme['label'] }}</h1>
                     {% if plateforme['items'] is not null %}
                         {% for vignette in plateforme['items'] %}
+                            <twig:VideoFrame :video />
+
                             <div class="row vignette-item g-0 bg-body-secondary position-relative">
                                 <div class="col-6 col-md-6 mb-md-0 p-md-4">
                                     <div class="media topcol embed-responsive-16by9">

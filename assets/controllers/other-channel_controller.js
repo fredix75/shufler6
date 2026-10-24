@@ -3,16 +3,8 @@ import $ from 'jquery';
 
 export default class extends Controller {
 
-    connect() {
-        $.each($('.accordion'), function (index, value) {
-            let id = $(value).attr('id');
-            let channelId = $(value).data('channel');
-            getData(channelId, id);
-        });
-    }
-
     prev(event) {
-        let id = $(event.target).closest('.channel').find('.accordion').attr('id');
+        let id = $(event.target).closest('.card-body').find('.accordion').attr('id');
         let page = parseInt($(event.target).closest('a.left').data('page'));
         handlePagination(id, page);
         $(event.target).closest('.pod-nav').find('a.right').data('page', page + 1);
@@ -25,7 +17,7 @@ export default class extends Controller {
     }
 
     next(event) {
-        let id = $(event.target).closest('.channel').find('.accordion').attr('id');
+        let id = $(event.target).closest('.card-body').find('.accordion').attr('id');
         let page = parseInt($(event.target).closest('a.right').data('page'));
         handlePagination(id, page);
         $(event.target).closest('a.right').data('page', page + 1);
@@ -43,31 +35,12 @@ export default class extends Controller {
 
     editChannel(event) {
         let key = $(event.target).closest('.list-group-item').find('.playlist-link').attr('href');
-        let image = $(event.target).closest('.channel').find('.channel-picture img').attr('src');
+        let image = $(event.target).closest('.card').find('.card-header img').attr('src');
         $('input[name="channelkey"]').val(key);
         $('input[name="channelpicture"]').val(image);
         $('form[name="form_video_edit"]').submit();
         event.preventDefault();
     }
-}
-
-function getData(channelId, id) {
-    $.get('/fr/api/channel/handle',
-        {id: channelId},
-        function(data){
-            bindContent(id, data);
-        }
-    );
-}
-
-function bindContent(id, data) {
-    let div = $('#' + id);
-    div.html(data);
-    $.each(div.find('li'), function(index, value) {
-        if ($(value).data('page') != 1) {
-            $(value).addClass('d-none');
-        }
-    });
 }
 
 function handlePagination(id, page) {

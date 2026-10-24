@@ -76,8 +76,11 @@
                 <div class="text-center">
                     <h2>Juke-Box</h2>
                     <p>Des morceaux de choix</p>
+                    <a href="{{ path('main_juke-box') }}" data-turbo-frame="juke-box">
+                        Reload
+                    </a>
                 </div>
-                <turbo-frame id="juke-box" src="{{ path('music_juke-box') }}" loading="lazy">
+                <turbo-frame id="juke-box" src="{{ path('main_juke-box') }}" loading="lazy">
                     <div class="d-flex justify-content-center">
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="font-size:6em;color:orange;"></span>
                     </div>
