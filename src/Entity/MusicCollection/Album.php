@@ -14,7 +14,6 @@ use Doctrine\ORM\Mapping\InheritanceType;
 #[InheritanceType('SINGLE_TABLE')]
 #[DiscriminatorColumn(name: 'is_cloud', type: 'integer')]
 #[DiscriminatorMap([0 => Album::class, 1 => CloudAlbum::class])]
-#[EntityListeners([AlbumListener::class])]
 #[ORM\Index(columns: ['auteur', 'name'])]
 class Album
 {

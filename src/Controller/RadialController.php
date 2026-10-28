@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Repository\RadialRepository;
+use App\Repository\MusicCollection\VTrackRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -14,10 +14,12 @@ final class RadialController extends AbstractController
 {
 
     #[Route('/', name: '_index')]
-    public function index(RadialRepository $radialRepository): Response
+    public function index(VTrackRepository $vTrackRepository): Response
     {
-        $tracks = $radialRepository->createQueryBuilder('r')
-            ->where('r.youtubeKey IS NOT NULL')
+        $tracks = $vTrackRepository->createQueryBuilder('vt')
+            ->where('vt.dataOrigin = :origin')
+            ->andWhere('vt.youtubeKey IS NOT NULL')
+            ->setParameter('origin', 'radial')
             ->getQuery()->getResult();
 
         shuffle($tracks);

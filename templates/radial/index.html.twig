@@ -3,23 +3,10 @@
 {% block title %}{{ parent() }} :: Radial{% endblock %}
 
 {% block body %}
-    <div class="p-4">
-        <div class="row justify-content-center g-2 g-lg-3" data-controller="album">
-            {% for track in tracks %}
-                {% if track.pictureKey is not null %}
-                    <div id="album-{{ track.id }}" class="col-6 col-md-4 col-lg-2 album"
-                         style="background-color: black; color:white;border:1px solid #052660;">
-                        <a href="#album-{{ track.id }}">
-                            <img class="album-picture-{{ track.id }}" src="{{ radial_picture_url ~ track.pictureKey }}/400x400"
-                                 alt="{{ track.author ~ ' ' ~ track.name ~ '(' ~ track.album ~ ')' }}" title="{{ track.author ~ ' ' ~ track.name ~ '(' ~ track.album ~ ')' }}" width="100%"
-                                 loading="lazy">
-                            <strong>{{ track.author }}</strong><br>
-                            {{ track.name }} - {{ track.album }}<small> ({{ track.year }})</small>
-                        </a>
-                    </div>
-                {% endif %}
-            {% endfor %}
-        </div>
-        {# include 'music/part/_filters.html.twig' #}
+    <h1>Radial</h1>
+    <div class="row g-4 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4" data-controller="music">
+        {% for track in tracks %}
+            <twig:PieceFrame :piece="track"/>
+        {% endfor %}
     </div>
 {% endblock %}

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\EntityListener\RadialListener;
 use App\Repository\RadialRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -38,6 +39,8 @@ class Radial
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $youtubeKey = null;
+
+    private ?string $albumPicture = null;
 
     public function getId(): ?int
     {
@@ -138,5 +141,15 @@ class Radial
         $this->youtubeKey = $youtubeKey;
 
         return $this;
+    }
+
+    public function getAlbumPicture(): ?string
+    {
+        return $this->albumPicture;
+    }
+
+    public function setAlbumPicture(?string $albumPicture): void
+    {
+        $this->albumPicture = $albumPicture;
     }
 }

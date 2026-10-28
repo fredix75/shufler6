@@ -2,7 +2,6 @@
 
 namespace App\Twig\Components;
 
-use App\Entity\MusicCollection\Piece;
 use App\Entity\MusicCollection\VTrack;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 

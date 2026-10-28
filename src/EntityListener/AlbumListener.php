@@ -4,15 +4,21 @@ namespace App\EntityListener;
 
 use App\Entity\MusicCollection\Album;
 use App\Helper\VideoHelper;
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
+use Doctrine\ORM\Events;
 use Symfony\Component\AssetMapper\AssetMapperInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
+#[AsEntityListener(event: Events::postLoad, entity: Album::class)]
+#[AsEntityListener(event: Events::prePersist, entity: Album::class)]
+#[AsEntityListener(event: Events::preUpdate, entity: Album::class)]
 class AlbumListener
 {
     private string $noCoverPath;
 
     private VideoHelper $videoHelper;
 
-    public function __construct(array $parameters, AssetMapperInterface $assetMapper, VideoHelper $videoHelper)
+    public function __construct(AssetMapperInterface $assetMapper, VideoHelper $videoHelper, #[Autowire('%music_collection%')] $parameters)
     {
         $this->noCoverPath = $assetMapper->getPublicPath($parameters['no_cover_path']);
         $this->videoHelper = $videoHelper;

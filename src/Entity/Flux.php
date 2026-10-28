@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 #[ORM\Entity(repositoryClass: FluxRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[UniqueEntity('url', message: "flux.validation.is_uniq")]
-#[ORM\EntityListeners([FluxListener::class])]
 class Flux implements UploadInterface
 {
     #[ORM\Id]

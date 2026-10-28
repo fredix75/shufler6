@@ -8,7 +8,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: VTrackRepository::class, readOnly: true)]
 #[ORM\Table(name: 'v_track')]
-#[ORM\EntityListeners([VTrackListener::class])]
 class VTrack
 {
     #[ORM\Id]
