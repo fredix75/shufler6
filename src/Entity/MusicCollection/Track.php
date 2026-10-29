@@ -8,7 +8,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\EntityListeners;
 
 #[ORM\Entity(repositoryClass: TrackRepository::class)]
-#[EntityListeners([TrackListener::class])]
 #[ORM\HasLifecycleCallbacks]
 class Track extends Piece
 {

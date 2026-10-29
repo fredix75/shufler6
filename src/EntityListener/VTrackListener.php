@@ -10,7 +10,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 #[AsEntityListener(event: Events::postLoad, entity: VTrack::class)]
 final readonly class VTrackListener
 {
-    public function __construct(#[Autowire('%radial%')]private array $parameters)
+    public function __construct(#[Autowire('%radial%')] private array $parameters)
     {}
 
     public function postLoad(VTrack $track): void

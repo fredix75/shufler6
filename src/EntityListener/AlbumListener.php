@@ -16,12 +16,9 @@ class AlbumListener
 {
     private string $noCoverPath;
 
-    private VideoHelper $videoHelper;
-
-    public function __construct(AssetMapperInterface $assetMapper, VideoHelper $videoHelper, #[Autowire('%music_collection%')] $parameters)
+    public function __construct(AssetMapperInterface $assetMapper, private readonly VideoHelper $videoHelper, #[Autowire('%music_collection%')] $parameters)
     {
         $this->noCoverPath = $assetMapper->getPublicPath($parameters['no_cover_path']);
-        $this->videoHelper = $videoHelper;
     }
 
     public function postLoad(Album $album): void

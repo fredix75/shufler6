@@ -4,7 +4,12 @@ namespace App\EntityListener;
 
 use App\Entity\Video;
 use App\Helper\VideoHelper;
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
+use Doctrine\ORM\Events;
 
+#[AsEntityListener(event: Events::postLoad, entity: Video::class)]
+#[AsEntityListener(event: Events::prePersist, entity: Video::class)]
+#[AsEntityListener(event: Events::preUpdate, entity: Video::class)]
 class VideoListener
 {
     public function __construct(private readonly VideoHelper $videoHelper){

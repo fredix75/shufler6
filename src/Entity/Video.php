@@ -32,7 +32,6 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
 #[Assert\Callback([VideoValidator::class, 'validate'])]
 #[UniqueEntity('lien', message: 'Cet URL est déja utilisée')]
 #[ORM\HasLifecycleCallbacks]
-#[EntityListeners([VideoListener::class])]
 #[ApiResource(
     operations: [
         new GetCollection(
