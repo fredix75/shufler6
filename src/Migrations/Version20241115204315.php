@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DoctrineMigrations;
+namespace App\Migrations;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20261003094450 extends AbstractMigration
+final class Version20241115204315 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,13 +20,13 @@ final class Version20261003094450 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE INDEX IDX_98DAB4FABDAFD8C839986E43 ON radial (author, album)');
+        $this->addSql('CREATE TABLE tip (id INT AUTO_INCREMENT NOT NULL, content LONGTEXT NOT NULL, date_insert DATETIME NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('DROP INDEX IDX_98DAB4FABDAFD8C839986E43 ON radial');
+        $this->addSql('DROP TABLE tip');
     }
 
     public function isTransactional(): bool
