@@ -6,58 +6,58 @@
     <div class="row justify-content-center" {{ stimulus_controller('videos-couch', {
         videos : videos
     }) }}>
-        <div class="col-12 col-lg-6" style="height:500px">
-            <div id="player"></div>
-            <div id="title">
+        <section class="col-12 col-lg-6">
+            <div id="player" style="background-color:black;"></div>
+            <div id="title" class="row g-0 m-0 p-0">
                 {% for track in list %}
-                    <div id="{{ track.youtubeKey }}" class="row"
-                         style="display:none;background-color: #1b1b1b;margin:0;">
-                        <div class="col-6 col-md-3 col-xl-3" style="padding:0">
-                            <img src="{{ track.picture|default('') }}" width="100%" loading="lazy">
-                        </div>
-                        <div class="col-6 col-md-9 col-xl-9" style="position:relative;">
-                            <div class="col-12">
-                                <span style="font-size: 1.5em; color: orange;">{{ track.auteur }}</span>
-                                {% if form_track is defined and track.genre is defined %}
-                                    <span class="badge text-bg-warning"
-                                          style="position:absolute;right:10px;">{{ track.genre }}</span>
-                                {% endif %}
-                                {% if form_video is defined %}
-                                    <span class="badge text-bg-warning" style="position:absolute;right:10px;">
-									{% if track.genre is defined and track.genre != -1 %}
-                                        {{ track.genre|genreDisplay }}
-                                    {% elseif track.categorie is defined %}
-                                        {{ track.categorie|categorieDisplay }}
+                    <div id="{{ track.youtubeKey }}" style="display:none;">
+                        <div class="row media-body text-center m-0 p-0 g-0" style="background-color: rgb(27, 27, 27);width:100%;">
+                            <div class="col-6 col-md-3 p-0">
+                                <img src="{{ track.picture|default('') }}" width="100%" loading="lazy">
+                            </div>
+                            <div class="col-6 col-md-9 p-4">
+                                <h2>{{ track.titre }}</h2>
+                                <h3>{{ track.auteur }}</h3>
+                                <div class="d-flex justify-content-around g-4">
+                                    {% if form_track is defined and track.genre is defined %}
+                                        <span class="categorie">{{ track.genre }}</span>
                                     {% endif %}
-								</span>
-                                {% endif %}
-                                <br><span style="font-size: 1.2em">{{ track.titre }}</span>
-                                <br>
+                                    {% if form_video is defined %}
+                                        <span class="categorie">
+                                        {% if track.genre is defined and track.genre != -1 %}
+                                            {{ track.genre|genreDisplay }}
+                                        {% elseif track.categorie is defined %}
+                                            {{ track.categorie|categorieDisplay }}
+                                        {% endif %}
+                                    </span>
+                                    {% endif %}
+                                    <span>{{ track.album|default('') }}</span>
+                                    {% if track.annee is not empty %}<span>{{ track.annee }}</span>{% endif %}
+                                </div>
                                 {% if track.note is defined and track.note != 0 %}
                                     <span class="stars-note">{{ displayStars(track.note|default(0), false) }}</span><br>
                                 {% endif %}
-                                {{ track.album|default('') }} {% if track.annee is not empty %}({{ track.annee }}){% endif %}
-                            </div>
-                            <div class="col-12 d-flex justify-content-around mt-4" style="font-size:200%;">
-                                <a href="#" class="btn btn-dark video-controls" data-action="videos-couch#prev"
-                                   style="text-align:center;font-size:1em;" title="Vidéo précédente">
-                                    <i class="bi bi-skip-backward"></i>
-                                </a>
-                                {% if is_granted('ROLE_ADMIN') and track.note is defined %}
-                                <a href="#" data-action="videos-couch#setNote" data-id={{ track.id }}>
-                                    <i class="bi bi-heart{{ track.note != null and track.note != -1 ? '-fill' : '' }}"></i>
-                                </a>
-                                {% endif %}
-                                <a href="#" class="btn btn-dark video-controls" data-action="videos-couch#next"
-                                   style="text-align:center;font-size:1em;" title="Vidéo suivante">
-                                    <i class="bi bi-skip-forward"></i>
-                                </a>
+                                <div class="col-12 d-flex justify-content-around mt-4" style="font-size:200%;">
+                                    <a href="#" class="btn btn-dark video-controls" data-action="videos-couch#prev"
+                                       style="text-align:center;font-size:1em;" title="Vidéo précédente">
+                                        <i class="bi bi-skip-backward"></i>
+                                    </a>
+                                    {% if is_granted('ROLE_ADMIN') and track.note is defined %}
+                                        <a href="#" data-action="videos-couch#setNote" data-id={{ track.id }}>
+                                            <i class="bi bi-heart{{ track.note != null and track.note != -1 ? '-fill' : '' }}"></i>
+                                        </a>
+                                    {% endif %}
+                                    <a href="#" class="btn btn-dark video-controls" data-action="videos-couch#next"
+                                       style="text-align:center;font-size:1em;" title="Vidéo suivante">
+                                        <i class="bi bi-skip-forward"></i>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 {% endfor %}
             </div>
-        </div>
+        </section>
     </div>
     {% if form_track is defined %}
         {% include 'music/part/_filters.html.twig' %}
