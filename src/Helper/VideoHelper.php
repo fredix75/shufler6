@@ -81,7 +81,8 @@ class VideoHelper
             'titre' => ' * * * * * L O A D I N G * * * * * ',
             'auteur' => '',
             'annee' => null,
-            'youtubeKey' => $videoParameters['intro_couch']
+            'youtubeKey' => $videoParameters['intro_couch'],
+            'dataOrigin' => 'intro',
         ];
 
         $list = [$trackIntro];
@@ -93,6 +94,7 @@ class VideoHelper
 
             if (!\in_array($this->getIdentifer($video['lien'], 'youtube'), $playlist)) {
                 $video['youtubeKey'] = $this->getIdentifer($video['lien'], 'youtube');
+                $video['dataOrigin'] = 'video';
                 $list[] = $video;
                 $playlist[] = $video['youtubeKey'];
                 $i++;

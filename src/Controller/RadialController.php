@@ -40,7 +40,7 @@ final class RadialController extends AbstractController
         $form = $this->createForm(FilterVTrackType::class, $params, [
             'mode' => 'radial',
         ]);
-
+        $params['dataOrigin'] = 'radial';
         $pieces = $vTrackRepository->getVTracks($params);
 
         shuffle($pieces);

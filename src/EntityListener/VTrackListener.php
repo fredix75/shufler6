@@ -21,7 +21,7 @@ final readonly class VTrackListener
     public function postLoad(VTrack $track): void
     {
         if ($track->getDataOrigin() === 'radial' && $track->getAlbumPicture()) {
-            $track->setAlbumPicture(sprintf('%s/%s/%s', $this->parameters['picture_url'], $track->getAlbumPicture(), '120x120'));
+            $track->setAlbumPicture(sprintf('%s/%s/%s', $this->radialParameters['picture_url'], $track->getAlbumPicture(), '120x120'));
         } else if ($track->getDataOrigin() === 'piece' && !$track->getAlbumPicture()) {
             $track->setAlbumPicture($this->noCoverPath);
         }

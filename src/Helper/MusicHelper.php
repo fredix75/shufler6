@@ -1,13 +1,17 @@
 <?php
+
 namespace App\Helper;
 
 use App\Entity\MusicCollection\VTrack;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class MusicHelper {
+class MusicHelper
+{
 
-    public function __construct(private readonly ParameterBagInterface $parameterBag) {}
+    public function __construct(private readonly ParameterBagInterface $parameterBag)
+    {
+    }
 
     public function handleParams(Request $request): array
     {
@@ -36,6 +40,7 @@ class MusicHelper {
             'album' => '',
             'annee' => null,
             'youtubeKey' => $videoParameters['intro_couch'],
+            'dataOrigin' => 'intro',
         ];
 
         $playlist = [$trackIntro['youtubeKey']];
@@ -43,27 +48,23 @@ class MusicHelper {
 
         $i = 0;
         foreach ($pieces as $piece) {
-            if ($piece instanceof VTrack) {
-                $playlist[] = $piece->getYoutubeKey();
-                $list[] = [
-                    'id' => $piece->getIdTrack(),
-                    'titre' => $piece->getTitle(),
-                    'auteur' => $piece->getAuthor(),
-                    'album' => $piece->getAlbumName(),
-                    'genre' => $piece->getKind(),
-                    'picture' => $piece->getAlbumPicture(),
-                    'annee' => $piece->getYear(),
-                    'note' => $piece->getNote(),
-                    'youtubeKey' => $piece->getYoutubeKey(),
-                ];
-                $i++;
-            } else {
-                if (!\in_array($piece['youtubeKey'], $playlist) && $piece['youtubeKey'] !== 'nope') {
-                    $playlist[] = $piece['youtubeKey'];
-                    $list[] = $piece;
-                    $i++;
-                }
+            if (!$piece instanceof VTrack) {
+                continue;
             }
+            $playlist[] = $piece->getYoutubeKey();
+            $list[] = [
+                'id' => $piece->getIdTrack(),
+                'titre' => $piece->getTitle(),
+                'auteur' => $piece->getAuthor(),
+                'album' => $piece->getAlbumName(),
+                'genre' => $piece->getKind(),
+                'picture' => $piece->getAlbumPicture(),
+                'annee' => $piece->getYear(),
+                'note' => $piece->getNote(),
+                'youtubeKey' => $piece->getYoutubeKey(),
+                'dataOrigin' => $piece->getDataOrigin(),
+            ];
+            $i++;
 
             if ($i >= $musicParameters['max_random']) {
                 break;
