@@ -6,7 +6,6 @@ use App\Entity\MusicCollection\Album;
 use App\Entity\MusicCollection\CloudAlbum;
 use App\Form\AlbumFormType;
 use App\Form\CloudAlbumFormType;
-use App\Form\FilterTracksFormType;
 use App\Form\FilterVTrackType;
 use App\Helper\ApiRequester;
 use App\Repository\MusicCollection\AlbumRepository;
