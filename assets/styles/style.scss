@@ -159,6 +159,10 @@ a.video-link:hover img, a.playlist-link:hover img {
     background: linear-gradient(184deg,rgba(20, 0, 0, 0.5) 50%, rgba(10, 0, 0, 0.8) 100%);
 }
 
+.media-body h2 {
+    font-family: "futuran", sans-serif;
+ }
+
 .media-body h3 {
     font-family: "futuran", sans-serif;
     font-size: max(1.4rem, 1.2vw);
@@ -261,7 +265,7 @@ a.video-link:hover img, a.playlist-link:hover img {
 }
 
 .block-content-album {
-    background-color: black;
+    background-color: $dark-color;
 }
 
 .block-content-album .album-media {
@@ -273,4 +277,9 @@ a.video-link:hover img, a.playlist-link:hover img {
 
 .video-link .bi-youtube {
     font-size: 200%;
+}
+
+.datas-white {
+    background-color: $dark-color;
+    color:white;
 }

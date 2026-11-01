@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\MusicCollection\Album;
 use App\Entity\MusicCollection\Track;
 use App\Form\FilterTracksFormType;
+use App\Form\FilterVTrackType;
 use App\Form\TrackFormType;
 use App\Helper\ApiRequester;
 use App\Helper\MusicHelper;
@@ -14,6 +15,7 @@ use App\Repository\MusicCollection\ArtistRepository;
 use App\Repository\MusicCollection\CloudAlbumRepository;
 use App\Repository\MusicCollection\CloudTrackRepository;
 use App\Repository\MusicCollection\PieceRepository;
+use App\Repository\MusicCollection\VTrackRepository;
 use App\Twig\Runtime\ShuflerExtensionRuntime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -310,8 +312,7 @@ final class MusicCollectionController extends AbstractController
     public function filterCouch(Request $request, FilterPieceRepository $filterPieceRepository, MusicHelper $musicHelper): Response
     {
         $params = $musicHelper->handleParams($request);
-
-        $form = $this->createForm(FilterTracksFormType::class, $params);
+        $form = $this->createForm(FilterVTrackType::class, $params, ['mode' => 'pieces']);
         $filterlistes = $filterPieceRepository->findBy([], ['name' => 'ASC']);
 
         return $this->render('music/filter_couch.html.twig', [
@@ -323,13 +324,14 @@ final class MusicCollectionController extends AbstractController
     #[Route('/couch', name: '_couch', methods: ['GET'])]
     public function couch(
         Request $request,
-        PieceRepository $pieceRepository,
+        VTrackRepository $vTrackRepository,
         AlbumRepository $albumRepository,
         MusicHelper $musicHelper
     ): Response
     {
         $params = $musicHelper->handleParams($request);
-        $form = $this->createForm(FilterTracksFormType::class, $params);
+        $params['dataOrigin'] = 'piece';
+        $form = $this->createForm(FilterVTrackType::class, $params, ['mode' => 'pieces']);
 
         if (empty($params['album']) && empty($params['is_disambiguate']) && (!empty($params['auteur']) || !empty($params['genres'] || !empty($params['annee'])) || !empty($params['search']))) {
             $albums = $albumRepository->getAlbums($params, 1, 100);
@@ -342,7 +344,8 @@ final class MusicCollectionController extends AbstractController
             }
         }
 
-        $pieces = $pieceRepository->getPieces($params);
+        $pieces = $vTrackRepository->getVTracks($params);
+
         if (empty($pieces)) {
             $this->addFlash('warning', 'No Result !');
             return $this->redirectToRoute('music_filter_couch', $params);

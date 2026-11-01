@@ -78,6 +78,15 @@
                         </ul>
                     </li>
                 {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-label="Radial"><i class="bi bi-vinyl-fill"></i> Radial</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ path('radial_couch') }}" aria-label="Radial player"><i class="bi bi-music-player-fill"></i> Player</a></li>
+                            <li><a class="dropdown-item" href="{{ path('radial_index') }}" aria-label="Radial Tracks au hasard"><i class="bi bi-music-note-list"></i> Au hasard</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
                 {% if is_granted('IS_AUTHENTICATED') %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-label="My account"><i class="bi bi-person-vcard"></i> Mon compte</a>

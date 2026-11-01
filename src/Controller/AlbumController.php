@@ -4,10 +4,10 @@ namespace App\Controller;
 
 use App\Entity\MusicCollection\Album;
 use App\Entity\MusicCollection\CloudAlbum;
-use App\Entity\MusicCollection\CloudTrack;
 use App\Form\AlbumFormType;
 use App\Form\CloudAlbumFormType;
 use App\Form\FilterTracksFormType;
+use App\Form\FilterVTrackType;
 use App\Helper\ApiRequester;
 use App\Repository\MusicCollection\AlbumRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -126,7 +126,7 @@ final class AlbumController extends AbstractController
             'random' => !empty($p['random']) && $p['random'] === '1',
         ];
 
-        $form = $this->createForm(FilterTracksFormType::class, $params, ['mode' => 'album']);
+        $form = $this->createForm(FilterVTrackType::class, $params, ['mode' => 'album']);
         $form->handleRequest($request);
 
         $max = $this->getParameter('music_collection')['max_nb_albums'];

@@ -9,9 +9,11 @@
     </style>
     {{ form_start(form_track, {'method' : 'GET'}) }}
     <div class="row justify-content-center align-items-center filter-form">
+        {% if form_track.genres is defined %}
         <div class="col-6 col-md-4 col-lg-2">
             {{ form_row(form_track.genres) }}
         </div>
+        {% endif %}
         <div class="col-6 col-md-4 col-lg-2">
             {{ form_row(form_track.search) }}
         </div>

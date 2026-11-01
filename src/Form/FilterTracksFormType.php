@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use App\Entity\MusicCollection\Artist;
 use App\Form\ChoiceLoader\PieceGenresLoader;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;

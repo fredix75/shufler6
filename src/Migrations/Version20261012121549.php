@@ -22,16 +22,17 @@ final class Version20261012121549 extends AbstractMigration
         $this->addSql(
 <<<SQL
 CREATE VIEW v_track AS
-SELECT ROW_NUMBER() OVER() as id, id_track, author, title, year, kind, country, youtube_key, note,
+SELECT ROW_NUMBER() OVER() as id, id_track, author, title, numero, year, kind, country, youtube_key, note,
        id_album, album_name, album_year, album_artist, album_genre, album_picture, album_youtube_key, data_origin
 FROM (SELECT p.id as id_track,
     p.auteur      as author,
     p.titre       as title,
+    p.numero      as numero,
     p.annee       as year,
     p.genre       as kind,
     p.pays        as country,
     p.youtube_key as youtube_key,
-    p.note,
+    COALESCE(p.extra_note, p.note) as note,
     a.id          as id_album,
     a.name        as album_name,
     a.annee       as album_year,
@@ -46,6 +47,7 @@ UNION
 SELECT r.id as id_track,
     r.author      as author,
     r.name        as title,
+    ''            as numero,
     r.year        as annee,
     ''            as kind,
     ''            as country,

@@ -32,6 +32,62 @@ class VTrackRepository extends ServiceEntityRepository
         return $vTracks;
     }
 
+    public function getVTracks(array $params = []): array
+    {
+        $builder = $this->createQueryBuilder('vt');
+
+        if (!empty($params['dataOrigin'])) {
+            $builder->andWhere('vt.dataOrigin = :dataOrigin')
+                ->setParameter('dataOrigin', $params['dataOrigin']);
+        }
+
+        if (!empty($params['hasYoutubeKey'])) {
+            $builder->andWhere('vt.youtubeKey IS NOT NULL');
+        }
+
+        if (!empty($params['auteur'])) {
+            $builder->andWhere('vt.author LIKE :auteur OR vt.albumArtist LIKE :auteur')
+                ->setParameter('auteur', '%' . $params['auteur'] . '%');
+        }
+
+        if (!empty($params['album'])) {
+            $builder->andWhere('vt.albumName LIKE :album')
+                ->setParameter('album', '%' . $params['album'] . '%')
+                ->addOrderBy('vt.numero', 'ASC');
+        } else {
+            $builder->addOrderBy('vt.title', 'ASC');
+        }
+
+        if (!empty($params['genres'])) {
+            $builder->andWhere('vt.kind IN (:genres)')
+                ->setParameter('genres', implode(',', $params['genres']));
+        }
+
+        if (!empty($params['annee'])) {
+            $annee = $params['annee'];
+            if (substr_count($annee, '-')) {
+                $annee1 = (explode('-', $annee)[0] && is_numeric(explode('-', $annee)[0])) ? explode('-', $annee)[0] : 1;
+                $annee2 = (explode('-', $annee)[1] && is_numeric(explode('-', $annee)[1])) ? explode('-', $annee)[1] : date('Y');
+                if ($annee1 && $annee2) {
+                    $builder->andWhere('vt.year >= :annee1 AND vt.year <= :annee2')
+                        ->setParameter('annee1', $annee1)
+                        ->setParameter('annee2', $annee2);
+                }
+            } elseif (is_numeric($annee)) {
+                $builder->andWhere('vt.year >= :annee')
+                    ->setParameter('annee', $annee);
+            }
+        }
+
+        if (!empty($params['search'])) {
+            $builder->andWhere('vt.title LIKE :search OR vt.author LIKE :search OR vt.albumName LIKE :search OR vt.albumArtist LIKE :search')
+                ->setParameter('search', '%' . $params['search'] . '%');
+        }
+
+        return $builder->getQuery()->getResult();
+    }
+
+
 //    /**
 //     * @return VTrack[] Returns an array of VTrack objects
 //     */

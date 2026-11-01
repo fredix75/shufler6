@@ -32,12 +32,12 @@
                                     </span>
                                     {% endif %}
                                     <span>{{ track.album|default('') }}</span>
-                                    {% if track.annee is not empty %}<span>{{ track.annee }}</span>{% endif %}
+                                    {% if track.annee is not empty %}<span>{{ track.annee|yearDisplay }}</span>{% endif %}
                                 </div>
                                 {% if track.note is defined and track.note != 0 %}
                                     <span class="stars-note">{{ displayStars(track.note|default(0), false) }}</span><br>
                                 {% endif %}
-                                <div class="col-12 d-flex justify-content-around mt-4" style="font-size:200%;">
+                                <div class="col-12 d-flex justify-content-around mt-4" style="font-size:150%;">
                                     <a href="#" class="btn btn-dark video-controls" data-action="videos-couch#prev"
                                        style="text-align:center;font-size:1em;" title="Vidéo précédente">
                                         <i class="bi bi-skip-backward"></i>

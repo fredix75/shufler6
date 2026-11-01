@@ -45,6 +45,9 @@ class VTrack
     private ?string $title = null;
 
     #[ORM\Column(nullable: true)]
+    private ?int $numero = null;
+
+    #[ORM\Column(nullable: true)]
     private ?int $year = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -110,6 +113,16 @@ class VTrack
         $this->title = $title;
 
         return $this;
+    }
+
+    public function getNumero(): ?int
+    {
+        return $this->numero;
+    }
+
+    public function setNumero(?int $numero): void
+    {
+        $this->numero = $numero;
     }
 
     public function getYear(): ?int

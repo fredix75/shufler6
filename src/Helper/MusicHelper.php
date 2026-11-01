@@ -1,6 +1,7 @@
 <?php
 namespace App\Helper;
 
+use App\Entity\MusicCollection\VTrack;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -42,11 +43,28 @@ class MusicHelper {
 
         $i = 0;
         foreach ($pieces as $piece) {
-            if (!\in_array($piece['youtubeKey'], $playlist) && $piece['youtubeKey'] !== 'nope') {
-                $playlist[] = $piece['youtubeKey'];
-                $list[] = $piece;
+            if ($piece instanceof VTrack) {
+                $playlist[] = $piece->getYoutubeKey();
+                $list[] = [
+                    'id' => $piece->getIdTrack(),
+                    'titre' => $piece->getTitle(),
+                    'auteur' => $piece->getAuthor(),
+                    'album' => $piece->getAlbumName(),
+                    'genre' => $piece->getKind(),
+                    'picture' => $piece->getAlbumPicture(),
+                    'annee' => $piece->getYear(),
+                    'note' => $piece->getNote(),
+                    'youtubeKey' => $piece->getYoutubeKey(),
+                ];
                 $i++;
+            } else {
+                if (!\in_array($piece['youtubeKey'], $playlist) && $piece['youtubeKey'] !== 'nope') {
+                    $playlist[] = $piece['youtubeKey'];
+                    $list[] = $piece;
+                    $i++;
+                }
             }
+
             if ($i >= $musicParameters['max_random']) {
                 break;
             }
