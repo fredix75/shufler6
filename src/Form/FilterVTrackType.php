@@ -9,6 +9,7 @@ use Symfony\Component\Form\ChoiceList\Loader\CallbackChoiceLoader;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\RadioType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -35,6 +36,14 @@ class FilterVTrackType extends AbstractType
                 'label' => false,
                 'required' => false,
             ]);
+        } elseif($options['mode'] === 'radial') {
+            $builder->add('auteur', TextType::class, [
+                'label' => false,
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'Auteur',
+                ],
+            ]);
         } else {
             $builder->add('auteur', SearchArtistAutocomplete::class, [
                 'label' => false,
@@ -42,12 +51,23 @@ class FilterVTrackType extends AbstractType
             ]);
         }
 
-        $builder
-            ->add('album', SearchAlbumAutocomplete::class, [
+        if (\in_array($options['mode'], ['pieces', 'album'])) {
+            $builder
+                ->add('album', SearchAlbumAutocomplete::class, [
+                    'label' => false,
+                    'required' => false,
+                ]);
+        } elseif ($options['mode'] === 'radial') {
+            $builder->add('album', TextType::class, [
                 'label' => false,
                 'required' => false,
-            ])
-            ->add('annee', TextType::class, [
+                'attr' => [
+                    'placeholder' => 'Album',
+                ],
+            ]);
+        }
+
+        $builder->add('annee', TextType::class, [
                 'label' => false,
                 'required' => false,
                 'attr' => [

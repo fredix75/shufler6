@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Form\FilterVTrackType;
 use App\Helper\MusicHelper;
+use App\Repository\FilterPieceRepository;
 use App\Repository\MusicCollection\VTrackRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,6 +31,17 @@ final class RadialController extends AbstractController
 
         return $this->render('radial/index.html.twig', [
             'tracks' => $tracks,
+        ]);
+    }
+
+    #[Route('/filter-couch', name: '_filter_couch', methods: ['GET'])]
+    public function filterCouch(Request $request, MusicHelper $musicHelper): Response
+    {
+        $params = $musicHelper->handleParams($request);
+        $form = $this->createForm(FilterVTrackType::class, $params, ['mode' => 'radial']);
+
+        return $this->render('radial/filter_couch.html.twig', [
+            'form' => $form,
         ]);
     }
 
