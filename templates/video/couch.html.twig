@@ -11,14 +11,14 @@
             <div id="title" class="row g-0 m-0 p-0">
                 {% for track in list %}
                     <div id="{{ track.youtubeKey }}" style="display:none;">
-                        <div class="row media-body text-center m-0 p-0 g-0" style="width:100%;">
-                            <div class="col-6 col-md-3 p-0">
+                        <div class="row media-body text-center align-items-center m-0 p-0 g-0" style="width:100%;">
+                            <div class="col-4 col-md-3 p-0">
                                 <img src="{{ track.picture|default('') }}" width="100%" loading="lazy">
                             </div>
-                            <div class="col-6 col-md-9 p-4">
+                            <div class="col-8 col-md-9 p-4">
                                 <h2>{{ track.titre }}</h2>
                                 <h3>{{ track.auteur }}</h3>
-                                <div class="d-flex justify-content-around g-4">
+                                <div class="d-flex d-flex flex-column flex-lg-row justify-content-lg-around align-items-center g-4">
                                     {% if form_track is defined and track.genre is defined %}
                                         <span class="categorie">{{ track.genre }}</span>
                                     {% endif %}
