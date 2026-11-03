@@ -150,6 +150,7 @@ parameters:
         upload_directory: 'sniffer'
     radial:
         picture_url: '%env(RADIAL_PICTURE_URL)%'
+        max_nb_tracks: 60
 
     resources:
         downloads: 'resources'

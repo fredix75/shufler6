@@ -203,6 +203,11 @@ a.video-link:hover img, a.playlist-link:hover img {
     }
 }
 
+.page-link .active {
+    color: $primary;
+    font-weight: bold;
+}
+
 .page_videos_genre {
     font-size: 1.5em;
     color: #{$primary};

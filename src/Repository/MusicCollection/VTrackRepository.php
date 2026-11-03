@@ -5,6 +5,7 @@ namespace App\Repository\MusicCollection;
 use App\Entity\MusicCollection\VTrack;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * @extends ServiceEntityRepository<VTrack>
@@ -32,7 +33,7 @@ class VTrackRepository extends ServiceEntityRepository
         return $vTracks;
     }
 
-    public function getVTracks(array $params = []): array
+    public function getVTracks(array $params = [], int $offset = 0, int $max = 100): array
     {
         $builder = $this->createQueryBuilder('vt');
 
@@ -42,7 +43,9 @@ class VTrackRepository extends ServiceEntityRepository
         }
 
         if (!empty($params['hasYoutubeKey'])) {
-            $builder->andWhere('vt.youtubeKey IS NOT NULL');
+            $builder->andWhere('vt.youtubeKey IS NOT NULL')
+            ->andWhere('vt.youtubeKey <> :nope')
+            ->setParameter('nope', 'nope');
         }
 
         if (!empty($params['auteur'])) {
@@ -53,9 +56,9 @@ class VTrackRepository extends ServiceEntityRepository
         if (!empty($params['album'])) {
             $builder->andWhere('vt.albumName LIKE :album')
                 ->setParameter('album', '%' . $params['album'] . '%')
-                ->addOrderBy('vt.numero', 'ASC');
+                ->addOrderBy('vt.numero', \SortDirection::Ascending);
         } else {
-            $builder->addOrderBy('vt.title', 'ASC');
+            $builder->addOrderBy('vt.title', \SortDirection::Ascending);
         }
 
         if (!empty($params['genres'])) {
@@ -74,7 +77,7 @@ class VTrackRepository extends ServiceEntityRepository
                         ->setParameter('annee2', $annee2);
                 }
             } elseif (is_numeric($annee)) {
-                $builder->andWhere('vt.year >= :annee')
+                $builder->andWhere('vt.year = :annee')
                     ->setParameter('annee', $annee);
             }
         }
@@ -82,6 +85,13 @@ class VTrackRepository extends ServiceEntityRepository
         if (!empty($params['search'])) {
             $builder->andWhere('vt.title LIKE :search OR vt.author LIKE :search OR vt.albumName LIKE :search OR vt.albumArtist LIKE :search')
                 ->setParameter('search', '%' . $params['search'] . '%');
+        }
+
+        if (empty($params['random'])) {
+            $builder->addOrderBy('vt.author', \SortDirection::Ascending)
+                ->addOrderBy('vt.title', \SortDirection::Ascending)
+                ->setMaxResults($max)
+                ->setFirstResult($offset);
         }
 
         return $builder->getQuery()->getResult();

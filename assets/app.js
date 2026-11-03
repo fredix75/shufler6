@@ -37,24 +37,29 @@ if (navbar) {
     updateNavbar();
 }
 
-document.querySelectorAll('.select2').forEach((el)=>{
-    let settings = {
-        onDropdownOpen:function(dropdown){
-            let bounding = dropdown.getBoundingClientRect();
-            if (bounding.bottom > (window.innerHeight || document.documentElement.clientHeight)) {
-                console.log(bounding.bottom);
-                console.log(window.innerHeight);
-                console.log(document.documentElement.clientHeight);
-                dropdown.style.bottom = "100%";
-                dropdown.style.top = "auto";
-            }
-        },
-        onDropdownClose:function(dropdown){
-            dropdown.style.bottom = "auto";
-        },
-    };
-    new TomSelect(el,settings);
+document.addEventListener('turbo:load', () => {
+    document.querySelectorAll('.select2').forEach(el => {
+        let settings = {
+            onDropdownOpen:function(dropdown){
+                let bounding = dropdown.getBoundingClientRect();
+                if (bounding.bottom > (window.innerHeight || document.documentElement.clientHeight)) {
+                    console.log(bounding.bottom);
+                    console.log(window.innerHeight);
+                    console.log(document.documentElement.clientHeight);
+                    dropdown.style.bottom = "100%";
+                    dropdown.style.top = "auto";
+                }
+            },
+            onDropdownClose:function(dropdown){
+                dropdown.style.bottom = "auto";
+            },
+        };
+
+        if (!el.tomselect) new TomSelect(el, settings);
+
+    });
 });
+
 
 import './vendor/tom-select/dist/css/tom-select.css';
 import './vendor/magnific-popup/dist/magnific-popup.min.css';

@@ -16,21 +16,49 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted("ROLE_ADMIN")]
 final class RadialController extends AbstractController
 {
-    #[Route('/', name: '_index')]
-    public function index(VTrackRepository $vTrackRepository): Response
+    #[Route('/{page}', name: '_index', requirements: ['page' => '\d+'], defaults: ['page' => 1])]
+    public function index(Request $request, VTrackRepository $vTrackRepository, int $page): Response
     {
-        $tracks = $vTrackRepository->createQueryBuilder('vt')
-            ->where('vt.dataOrigin = :origin')
-            ->andWhere('vt.youtubeKey IS NOT NULL')
-            ->setParameter('origin', 'radial')
-            ->getQuery()->getResult();
+        $p = $request->query->all();
+        $params = [
+            'auteur' => $p['auteur'] ?? null,
+            'album' => $p['album'] ?? null,
+            'annee' => $p['annee'] ?? null,
+            'search' => $p['search'] ?? null,
+            'random' => !empty($p['random']) && $p['random'] === '1',
+            'hasYoutubeKey' => true,
+            'dataOrigin' => 'radial',
+        ];
 
-        shuffle($tracks);
+        $form = $this->createForm(FilterVTrackType::class, $params, ['mode' => 'radial']);
+        $form->handleRequest($request);
+        $max = $this->getParameter('radial')['max_nb_tracks'];
+        $offset = ($page - 1) * $max;
 
-        $tracks = array_slice($tracks, 0, 100);
+        $tracks = $vTrackRepository->getVTracks($params, $offset, $max);
+
+        $routeParams = $request->attributes->get('_route_params');
+        if (isset($p['page'])) {
+            $page = 1;
+            $routeParams['page'] = 1;
+        }
+
+        if (false === $params['random']) {
+            $pagination = [
+                'page' => $page,
+                'route' => 'radial_index',
+                'pages_count' => (int)ceil(count($tracks) / $max),
+                'route_params' => array_merge($routeParams, $params)
+            ];
+        } else {
+            $tracks = array_slice($tracks, 0, $max);
+            shuffle($tracks);
+        }
 
         return $this->render('radial/index.html.twig', [
             'tracks' => $tracks,
+            'form_track' => $form,
+            'pagination' => $pagination ?? [],
         ]);
     }
 

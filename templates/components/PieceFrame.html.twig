@@ -11,9 +11,10 @@
             </div>
             <div class="col-8">
                 <div class="card-body">
-                    <h5 class="card-title">{{ this.piece.author|upper }}</h5>
-                    <span class="card-subtitle">{{ this.piece.title }}</span>
-                    <div class="card-text d-flex justify-content-between"><small>{{ this.piece.year|yearDisplay }}</small><span class="categorie" style="font-size:60%;color:grey">{{ this.piece.kind }}</span></div>
+                    <h5 class="card-title">{{ this.piece.title }}</h5>
+                    <span class="card-subtitle"><small>{{ this.piece.author|upper }}</small></span><br>
+                    <span class="card-subtitle"><small>{{ this.piece.albumName }}</small></span>
+                    <div class="card-text d-flex justify-content-between"><strong>{{ this.piece.year|yearDisplay }}</strong><span class="categorie" style="font-size:60%;color:grey">{{ this.piece.kind }}</span></div>
                 </div>
             </div>
         </div>
