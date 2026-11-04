@@ -3,6 +3,8 @@
         <twig:AlbumFrame :album="album" />
     </div>
     <div class="col-12 col-md-8 col-lg-10" data-controller="music">
+        <h2>{{ album.name }}</h2>
+        <h3>{{ album.auteur }}{{ album.annee ? ' - ' ~ album.annee : '' }}</h3>
         <div class="row d-flex justify-content-center align-items-center text-center my-4">
             <div class="col">
                 <a class="btn btn-dark edit-album" href="#" data-id="{{ album.id }}"
