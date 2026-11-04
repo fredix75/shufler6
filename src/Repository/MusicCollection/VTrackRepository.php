@@ -4,6 +4,7 @@ namespace App\Repository\MusicCollection;
 
 use App\Entity\MusicCollection\VTrack;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
@@ -33,7 +34,7 @@ class VTrackRepository extends ServiceEntityRepository
         return $vTracks;
     }
 
-    public function getVTracks(array $params = [], int $offset = 0, int $max = 100): array
+    public function getVTracks(array $params = []): QueryBuilder
     {
         $builder = $this->createQueryBuilder('vt');
 
@@ -87,14 +88,7 @@ class VTrackRepository extends ServiceEntityRepository
                 ->setParameter('search', '%' . $params['search'] . '%');
         }
 
-        if (empty($params['random'])) {
-            $builder->addOrderBy('vt.author', \SortDirection::Ascending)
-                ->addOrderBy('vt.title', \SortDirection::Ascending)
-                ->setMaxResults($max)
-                ->setFirstResult($offset);
-        }
-
-        return $builder->getQuery()->getResult();
+        return $builder;
     }
 
 

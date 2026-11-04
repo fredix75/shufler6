@@ -9,8 +9,8 @@
     </div>
     <div class="row mt-3 justify-content-center">
         <div class="col-6 col-lg-3 btn-group" role="group" aria-label="Tri">
-            {% set sort = pagination is not empty ? pagination['route_params']['sort'] : '' %}
-            {% set order = pagination is not empty ? pagination['route_params']['order'] : '' %}
+            {% set sort = artists.hasNext is defined or artists.hasPrevious is defined ? route_params.sort : '' %}
+            {% set order = artists.hasNext is defined or artists.hasPrevious is defined ? route_params.order : '' %}
 
             <a href="{{ path(app.current_route, app.request.attributes.get('_route_params')) }}" class="btn btn-light {{ (sort == '') ? 'active' : '' }}"
                title="ordre aléatoire" type="button">
@@ -26,8 +26,10 @@
                 <i class="bi bi-clock"></i>
             </a>
         </div>
-        {% if pagination is not empty %}
-            <twig:Pagination :pagination="pagination"/>
+        {% if artists.hasPrevious is defined or artists.hasNext is defined %}
+            <div class="pagination:container justify-content-center mt-4">
+                {{ ux_pagination(artists) }}
+            </div>
         {% endif %}
     </div>
     <div class="row">
@@ -61,8 +63,10 @@
                 </li> <!-- End -->
             {% endfor %}
         </ul>
-        {% if pagination is not empty %}
-            <twig:Pagination :pagination="pagination"/>
+        {% if artists.hasPrevious is defined or artists.hasNext is defined %}
+            <div class="pagination:container justify-content-center mt-4">
+                {{ ux_pagination(artists) }}
+            </div>
         {% endif %}
     </div>
 {% endblock %}

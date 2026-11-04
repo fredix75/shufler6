@@ -4,7 +4,7 @@ namespace App\Repository\Frixtur;
 
 use App\Entity\Frixtur\Painter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Tools\Pagination\Paginator;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -17,7 +17,7 @@ class PainterRepository extends ServiceEntityRepository
         parent::__construct($registry, Painter::class);
     }
 
-    public function getPaintersAndPaintings(int $nb, int $offset = 0, \SortDirection $order = \SortDirection::Ascending, ?string $sort = null): Paginator|array
+    public function getPaintersAndPaintings(?\SortDirection $order = null, ?string $sort = null): QueryBuilder
     {
         $q = $this->createQueryBuilder('p')
             ->leftJoin('p.paintings', 'paintings')
@@ -25,24 +25,18 @@ class PainterRepository extends ServiceEntityRepository
             ->where('p.type IS NULL');
 
         if ($order && $sort) {
-
             if ($sort === 'time') {
                 $q->orderBy('p.birthYear', $order)
                     ->addOrderBy('p.deathYear', $order);
             } elseif ($sort === 'alpha') {
                 $q->orderBy('p.name', $order);
             }
-
-            $q->setFirstResult($offset)->setMaxResults($nb);
-            $q->getQuery();
-
-            return new Paginator($q, true);
         }
 
-        return $q->getQuery()->getResult();
+        return $q;
     }
 
-    public function getPaintersAndPaintingsByPeriode(int $periode, int $nb, int $offset = 0, \SortDirection $order = \SortDirection::Ascending, ?string $sort = null): array
+    public function getPaintersAndPaintingsByPeriode(int $periode, ?\SortDirection $order = null, ?string $sort = null): QueryBuilder
     {
         $year1 = ($periode - ($periode === 14 ? 2 : 1)) * 100 - 20;
         $year2 = ($periode) * 100 + 20;
@@ -62,19 +56,11 @@ class PainterRepository extends ServiceEntityRepository
                 $q->orderBy('p.name', $order);
             }
 
-            $q2 = clone $q;
-            $q2->select('COUNT(p.id)');
-
             $q->leftJoin('p.paintings', 'paintings')
-                ->addSelect('paintings')
-                ->setFirstResult($offset)
-                ->setMaxResults($nb);
-            $q->getQuery();
-
-            return [$q2->getQuery()->getSingleScalarResult(), new Paginator($q)];
+                ->addSelect('paintings');
         }
 
-        return $q->getQuery()->getResult();
+        return $q;
     }
 
     public function getPainterAndPaintings(int $id): Painter

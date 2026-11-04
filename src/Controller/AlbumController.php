@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\UX\Pagination\PaginatorInterface;
 
 #[Route('/music/album', name: 'music_album')]
 #[IsGranted('ROLE_ADMIN')]
@@ -113,7 +114,7 @@ final class AlbumController extends AbstractController
     }
 
     #[Route('s/{page}', name: 's', requirements: ['page' => '\d+'], defaults: ['page' => 1])]
-    public function getAlbums(Request $request, AlbumRepository $albumRepository, int $page): Response
+    public function getAlbums(Request $request, AlbumRepository $albumRepository, PaginatorInterface $paginator): Response
     {
         $p = $request->query->all();
         $params = [
@@ -129,26 +130,21 @@ final class AlbumController extends AbstractController
         $form->handleRequest($request);
 
         $max = $this->getParameter('music_collection')['max_nb_albums'];
-        $routeParams = $request->attributes->get('_route_params');
-        if (isset($p['page'])) {
-            $page = 1;
-            $routeParams['page'] = 1;
-        }
-
-        $albums = $albumRepository->getAlbums($params, $page, $max);
 
         if (false === $params['random']) {
-            $pagination = [
-                'page' => $page,
-                'route' => 'music_albums',
-                'pages_count' => (int)ceil(count($albums) / $max),
-                'route_params' => array_merge($routeParams, $params)
-            ];
+            $albums = $paginator
+                ->query($albumRepository->getAlbums($params))
+                ->perPage($max)
+                ->throwOnOutOfRange()
+                ->paginate();
+        } else {
+            $albums = $albumRepository->getAlbums($params)->getQuery()->getResult();
+            shuffle($albums);
+            $albums = array_slice($albums, 0, $max);
         }
 
         return $this->render('music/albums.html.twig', [
             'albums' => $albums,
-            'pagination' => $pagination ?? [],
             'form_track' => $form,
         ]);
     }

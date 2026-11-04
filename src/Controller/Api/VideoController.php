@@ -4,13 +4,12 @@ namespace App\Controller\Api;
 
 
 use App\Repository\VideoRepository;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 
 class VideoController extends AbstractController
 {
-    public function __invoke(Request $request, VideoRepository $videoRepository): Paginator
+    public function __invoke(Request $request, VideoRepository $videoRepository): array
     {
         $categorie = $request->query->get('categorie') ?? null;
         $genre = $request->query->get('genre') ?? null;
@@ -18,7 +17,10 @@ class VideoController extends AbstractController
         $page = $request->query->get('page') ?? 1;
         $maxItems = $this->getParameter('shufler_video')['api_max_list'];
 
-        return $videoRepository->getPaginatedVideos($categorie, $genre, $periode, $page, $maxItems);
+        return $videoRepository->getVideosQuery($categorie, $genre, $periode)
+            ->setFirstResult(($page - 1) * $maxItems)
+            ->setMaxResults($maxItems)
+            ->getQuery()->getResult();
     }
 
 }

@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../vendor/symfony/dependency-injection/Loader/schema/services.schema.json
 parameters:
     host_front: '%env(HOST_FRONT)%'
     host_cinema: '%env(HOST_CINEMA)%'
@@ -6,7 +7,7 @@ parameters:
     import_directory: '%kernel.project_dir%/datas'
     illustration_directory: 'uploads/villemot'
     shufler_video:
-        max_list: 11
+        max_list: 14
         max_list_couch: 99
         index_max_anim: 6
         index_max_music: 20

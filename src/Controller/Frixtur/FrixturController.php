@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\UX\Pagination\PaginatorInterface;
 
 #[Route('', name: 'frixtur', host: '%host_frixtur%')]
 #[IsGranted("ROLE_ADMIN")]
@@ -27,36 +28,32 @@ final class FrixturController extends AbstractController
     }
 
     #[Route('/list/{periode}/{page}', name: '_list', requirements: ['periode' => '\d{2}|0', 'page' => '\d+'], defaults: ['periode' => 0, 'page' => 1], methods: ['GET'])]
-    public function index(int $periode, int $page, PainterRepository $painterRepository, Request $request): Response
+    public function index(PainterRepository $painterRepository, Request $request, PaginatorInterface $paginator, int $periode): Response
     {
         $limit = 25;
-
-        $offset = ($page - 1) * $limit;
-        $pagination = [];
         $sort = $request->query->get('sort');
-        $order = $request->query->get('order') === 'DESC' ? \SortDirection::Descending : \SortDirection::Ascending;
+        $order = strtoupper($request->query->get('order')) === 'DESC' ? \SortDirection::Descending : \SortDirection::Ascending;
 
         if ($sort) {
             if ($periode) {
-                list($nbArtists, $artists) = $painterRepository->getPaintersAndPaintingsByPeriode($periode, $limit, $offset, $order, $sort);
+                $artists = $paginator
+                    ->query($painterRepository->getPaintersAndPaintingsByPeriode($periode, $order, $sort))
+                    ->perPage($limit)
+                    ->throwOnOutOfRange()
+                    ->paginate();
+
             } else {
-                $nbArtists = $painterRepository->count(['type' => null]);
-                $artists = $painterRepository->getPaintersAndPaintings($limit, $offset, $order, $sort);
+                $artists = $paginator
+                    ->query($painterRepository->getPaintersAndPaintings($order, $sort))
+                    ->perPage($limit)
+                    ->throwOnOutOfRange()
+                    ->paginate();
             }
-            $pagination = [
-                'page' => $page,
-                'route' => 'frixtur_list',
-                'pages_count' => (int)ceil($nbArtists / 25),
-                'route_params' => array_merge($request->attributes->get('_route_params'),[
-                    'sort' => $sort,
-                    'order' => strtoupper($request->query->get('order') ?? 'ASC'),
-                ]),
-            ];
         } else {
             if ($periode) {
-                $artists = $painterRepository->getPaintersAndPaintingsByPeriode($periode, $limit);
+                $artists = $painterRepository->getPaintersAndPaintingsByPeriode($periode)->getQuery()->getResult();
             } else {
-                $artists = $painterRepository->getPaintersAndPaintings($limit);
+                $artists = $painterRepository->getPaintersAndPaintings()->getQuery()->getResult();
             }
             shuffle($artists);
             $artists = array_slice($artists, 0, $limit);
@@ -64,7 +61,10 @@ final class FrixturController extends AbstractController
 
         return $this->render('frixtur/artists_list.html.twig', [
             'artists' => $artists,
-            'pagination' => $pagination,
+            'route_params' => [
+                'sort' => $sort,
+                'order' => strtoupper($request->query->get('order') ?? 'ASC'),
+            ],
         ]);
     }
 

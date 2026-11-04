@@ -333,7 +333,10 @@ final class MusicCollectionController extends AbstractController
         $form = $this->createForm(FilterVTrackType::class, $params, ['mode' => 'pieces']);
 
         if (empty($params['album']) && empty($params['is_disambiguate']) && (!empty($params['auteur']) || !empty($params['genres'] || !empty($params['annee'])) || !empty($params['search']))) {
-            $albums = $albumRepository->getAlbums($params, 1, 100);
+            $albums = $albumRepository->getAlbums($params)
+                ->setFirstResult(0)
+                ->setMaxResults(100)
+                ->getQuery()->getResult();
             if (count($albums) > 0) {
                 return $this->render('music/couch_list_albums.html.twig', [
                     'albums' => $albums,
@@ -343,7 +346,7 @@ final class MusicCollectionController extends AbstractController
             }
         }
 
-        $pieces = $vTrackRepository->getVTracks($params);
+        $pieces = $vTrackRepository->getVTracks($params)->getQuery()->getResult();
 
         if (empty($pieces)) {
             $this->addFlash('warning', 'No Result !');

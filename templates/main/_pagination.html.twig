@@ -1,0 +1,64 @@
+{# templates/pagination/dark_squares.html.twig #}
+{% extends '@UXPagination/theme/bootstrap.html.twig' %}
+
+{# Conteneur principal #}
+{% block navigation %}
+    <nav aria-label="Navigation" class="d-flex justify-content-center my-4">
+        {# Injection de notre classe CSS de customisation 'pagination-dark-squares' #}
+        <ul class="pagination pagination-dark-squares m-0">
+            {{ block('previous') }}
+            {{ block('pages') }}
+            {{ block('next') }}
+        </ul>
+    </nav>
+{% endblock %}
+
+{# Rendu des numéros de page (Carrés parfaits) #}
+{% block pages %}
+    {% for p in pagination.pages %}
+        {% if p.isCurrent %}
+            <li class="page-item active" aria-current="page">
+                <span class="page-link">
+                    {{ p.page }}
+                </span>
+            </li>
+        {% elseif p.isGap %}
+            <li class="page-item gap-item">&hellip;</li>
+        {% else %}
+            <li class="page-item">
+                <a class="page-link" href="{{ p.url }}">
+                    {{ p.page }}
+                </a>
+            </li>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+
+{# Bouton Précédent (Chevron épuré) #}
+{% block previous %}
+    <li class="page-item prev-next-item {% if not pagination.hasPrevious %}disabled{% endif %}">
+        {% if pagination.hasPrevious %}
+            <a class="page-link" href="{{ pagination.previousUrl }}" aria-label="Précédent">
+                <span aria-hidden="true" style="font-size:140%;"><i class="bi bi-chevron-compact-left"></i></span>
+            </a>
+        {% else %}
+            <span class="page-link" aria-hidden="true"><i class="bi bi-chevron-compact-left"></i></span>
+        {% endif %}
+    </li>
+{% endblock %}
+
+{# Bouton Suivant (Chevron épuré) #}
+{% block next %}
+    <li class="page-item prev-next-item {% if not pagination.hasNext %}disabled{% endif %}">
+        {% if pagination.hasNext %}
+            <a class="page-link" href="{{ pagination.nextUrl }}" aria-label="Suivant">
+                <span aria-hidden="true" style="font-size:140%;"><i class="bi bi-chevron-compact-right"></i></span>
+            </a>
+        {% else %}
+            <span class="page-link" aria-hidden="true"><i class="bi bi-chevron-compact-right"></i></span>
+        {% endif %}
+    </li>
+{% endblock %}
+
+{# Suppression du texte informatif pour un style minimaliste strict #}
+{% block info %}{% endblock %}

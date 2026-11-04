@@ -9,14 +9,15 @@ use Symfony\Component\Form\ChoiceList\ArrayChoiceList;
 
 class PieceGenresLoader implements ChoiceLoaderInterface
 {
-    private array $genres;
 
-    public function __construct(PieceRepository $pieceRepository) {
-        $this->genres = $pieceRepository->getGenres();
-    }
+    private array $genres = [];
+
+    public function __construct(private readonly PieceRepository $pieceRepository) {}
 
     public function loadChoiceList(?callable $value = null): ChoiceListInterface
     {
+        $this->genres ??= $this->pieceRepository->getGenres();
+
         $genres = array_map(function($item) {
             return $item['genre'];
         }, $this->genres);

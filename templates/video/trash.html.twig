@@ -13,5 +13,9 @@
                 </div>
             {% endfor %}
         </section>
-        <twig:Pagination :pagination="pagination" />
+    {% if videos.hasPrevious is defined or videos.hasNext is defined %}
+        <div class="pagination:container justify-content-center mt-4">
+            {{ ux_pagination(videos) }}
+        </div>
+    {% endif %}
 {% endblock %}

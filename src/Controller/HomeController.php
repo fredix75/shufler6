@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\UX\Pagination\PaginatorInterface;
 
 #[Route('/', name: 'main', host: '%host_front%')]
 final class HomeController extends AbstractController
@@ -50,13 +51,12 @@ final class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('/search/{page}', name: '_search', requirements: ['id' => '\d+'])]
-    public function search(Request $request, VideoRepository $videoRepository, PieceRepository $pieceRepository, int $page = 1): Response
+    #[Route('/search/{page}', name: '_search', requirements: ['id' => '\d+'], defaults: ['page' => 1])]
+    public function search(Request $request, VideoRepository $videoRepository, PieceRepository $pieceRepository, PaginatorInterface $paginator, int $page): Response
     {
         $search = $request->query->get('search_field');
         $picture = null;
         $videos = [];
-        $videosCount = 0;
 
         if ($request->query->get('type') == 'album' && $request->query->get('auteur')) {
             $tracks = $pieceRepository->getPieces(['auteur' => $request->query->get('auteur'), 'album' => $search]);
@@ -64,26 +64,16 @@ final class HomeController extends AbstractController
         } else if ($request->query->get('type') == 'auteur') {
             $tracks = $pieceRepository->getPieces(['auteur' => $search]);
         } else {
-            $videos = $search ? $videoRepository->searchVideos($search, $page, $this->getParameter('shufler_video')['max_list']) : [];
-            $videosCount = count($videos);
+            $videos = $paginator->query($videoRepository->searchVideos($search))
+                ->perPage($this->getParameter('shufler_video')['max_list'])
+                ->throwOnOutOfRange()
+                ->paginate();
+
             $tracks = $pieceRepository->getPieces(['search' => $search, 'limit' => 600]);
         }
 
-        $pagination = [
-            'search_field' => $search,
-            'page' => $page,
-            'route' => 'main_search',
-            'pages_count' => ceil($videosCount / $this->getParameter('shufler_video')['max_list']),
-            'route_params' => [
-                'search_field' => $search
-            ]
-        ];
-
-
         return $this->render('main/search.html.twig', [
             'search' => $search,
-            'pagination' => $pagination,
-            'videos_count' => $videosCount,
             'videos' => $videos,
             'tracks' => $tracks,
             'picture' => $picture,

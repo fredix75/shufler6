@@ -18,6 +18,7 @@ use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\UX\Pagination\PaginatorInterface;
 
 #[Route('/video', name: 'video')]
 #[IsGranted("ROLE_USER")]
@@ -32,21 +33,18 @@ final class VideoController extends AbstractController
     public function list(
         Request         $request,
         VideoRepository $videoRepository,
+        PaginatorInterface $paginator,
         int             $categorie,
         int             $genre,
         string          $periode,
-        int             $page
     ): Response
     {
         $videoParameters = $this->getParameter('shufler_video');
-        $videos = $videoRepository->getPaginatedVideos($categorie, $genre, $periode, $page, $videoParameters['max_list']);
-
-        $pagination = [
-            'page' => $page,
-            'route' => 'video_list',
-            'pages_count' => (int)ceil(count($videos) / $videoParameters['max_list']),
-            'route_params' => $request->attributes->get('_route_params')
-        ];
+        $videos = $paginator
+            ->query($videoRepository->getVideosQuery($categorie, $genre, $periode))
+            ->perPage($videoParameters['max_list'])
+            ->throwOnOutOfRange()
+            ->paginate();
 
         return $this->render('video/list.html.twig', [
             'videos' => $videos,
@@ -59,7 +57,6 @@ final class VideoController extends AbstractController
             'periodes' => [
                     0 => 'ALL'
                 ] + array_combine($videoParameters['periods'], $videoParameters['periods']),
-            'pagination' => $pagination
         ]);
     }
 
@@ -243,21 +240,16 @@ final class VideoController extends AbstractController
     public function trash(
         Request         $request,
         VideoRepository $videoRepository,
-        int             $page
+        PaginatorInterface $paginator
     ): Response
     {
-        $videos = $videoRepository->getPaginatedTrash($page, $this->getParameter('shufler_video')['max_list']);
-        $pagination = [
-            'page' => $page,
-            'route' => 'video_trash',
-            'pages_count' => ceil(count($videos) / $this->getParameter('shufler_video')['max_list']),
-            'route_params' => $request->attributes->get('_route_params'),
-        ];
+        $videos = $paginator->query($videoRepository->getTrashQuery())
+                    ->perPage($this->getParameter('shufler_video')['max_list'])
+                    ->throwOnOutOfRange()
+                    ->paginate();
 
         return $this->render('video/trash.html.twig', [
             'videos' => $videos,
-            'trash' => true,
-            'pagination' => $pagination,
         ]);
     }
 }

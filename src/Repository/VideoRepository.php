@@ -73,26 +73,7 @@ class VideoRepository extends ServiceEntityRepository
         return $videos;
     }
 
-    public function getPaginatedVideos(
-        ?int $categorie = null,
-        ?int $genre = null,
-        string $periode = '0',
-        int $page = 1,
-        int $maxperpage = 10
-    ) : Paginator
-    {
-        $q = $this->getVideosQuery($categorie, $genre, $periode)
-            ->setFirstResult(($page - 1) * $maxperpage)
-            ->setMaxResults($maxperpage);
-
-        $q->getQuery()->setHint(CountWalker::HINT_DISTINCT, true);
-        $paginator = new Paginator($q, false);
-        $paginator->setUseOutputWalkers(false);
-
-        return $paginator;
-    }
-
-    private function getVideosQuery(
+    public function getVideosQuery(
         ?int $categorie = null,
         ?int $genre = null,
         string $periode = '0',
@@ -100,35 +81,35 @@ class VideoRepository extends ServiceEntityRepository
         ?string $plateforme = null
     ): QueryBuilder
     {
-        $q = $this->createQueryBuilder('a')
+        $q = $this->createQueryBuilder('v')
             ->addSelect('mood')
-            ->leftJoin('a.moods', 'mood')
-            ->where('a.priorite= :priorite')
+            ->leftJoin('v.moods', 'mood')
+            ->where('v.priorite= :priorite')
             ->setParameter('priorite', 1)
-            ->andWhere('a.published = true');
+            ->andWhere('v.published = true');
         if ($plateforme) {
-            $q->andWhere('a.lien like :plateforme')
+            $q->andWhere('v.lien like :plateforme')
                 ->setParameter('plateforme', '%'.$plateforme.'%');
         }
-            $q->orderBy('a.id', \SortDirection::Descending);
+            $q->orderBy('v.id', \SortDirection::Descending);
 
         if ($categorie) {
-            $q->andWhere('a.categorie= :categorie')
+            $q->andWhere('v.categorie= :categorie')
                 ->setParameter('categorie', $categorie);
         }
 
         if ($genre) {
-            $q->andWhere('a.genre= :genre')
+            $q->andWhere('v.genre= :genre')
                 ->setParameter('genre', $genre);
         }
 
         if ($periode) {
-            $q->andWhere('a.periode= :periode')
+            $q->andWhere('v.periode= :periode')
                 ->setParameter('periode', $periode);
         }
 
         if ($search) {
-            $q->andWhere("a.auteur like :search OR a.titre like :search OR a.chapo like :search")
+            $q->andWhere("v.auteur like :search OR v.titre like :search OR v.chapo like :search")
                 ->setParameter('search', '%'.$search.'%');
         }
 
@@ -139,7 +120,7 @@ class VideoRepository extends ServiceEntityRepository
         string $search,
         int $page = 1,
         int $maxperpage = 10
-    ): Paginator
+    ): QueryBuilder
     {
         $q = $this->createQueryBuilder('a')
             ->where('a.published= 1');
@@ -155,17 +136,8 @@ class VideoRepository extends ServiceEntityRepository
             ->add($q->expr()
                 ->like('a.annee', ':search'));
 
-        $q->andWhere($orModule)
-            ->setParameter('search', '%' . $search . '%')
-            ->setFirstResult(($page - 1) * $maxperpage)
-            ->setMaxResults($maxperpage);
-
-        $q->getQuery()->setHint(CountWalker::HINT_DISTINCT, true);
-
-        $paginator = new Paginator($q, false);
-        $paginator->setUseOutputWalkers(false);
-
-        return $paginator;
+        return $q->andWhere($orModule)
+            ->setParameter('search', '%' . $search . '%');
     }
 
     function searchAjax(string $search): array
@@ -211,25 +183,16 @@ class VideoRepository extends ServiceEntityRepository
         return $suggestions;
     }
 
-    public function getPaginatedTrash($page = 1, $maxperpage = 10): Paginator
+    public function getTrashQuery($page = 1, $maxperpage = 10): QueryBuilder
     {
-        $q = $this->createQueryBuilder('a')
+        return $this->createQueryBuilder('a')
             ->where('a.priorite != :priorite')
             ->setParameter('priorite', 1)
             ->orWhere('a.published is null')
             ->orWhere('a.published = false')
             ->orderBy('a.published', \SortDirection::Descending)
             ->addOrderBy('a.priorite', \SortDirection::Ascending)
-            ->addOrderBy('a.id', \SortDirection::Descending)
-            ->setFirstResult(($page - 1) * $maxperpage)
-            ->setMaxResults($maxperpage);
-
-        $q->getQuery()->setHint(CountWalker::HINT_DISTINCT, true);
-
-        $paginator = new Paginator($q, false);
-        $paginator->setUseOutputWalkers(false);
-
-        return $paginator;
+            ->addOrderBy('a.id', \SortDirection::Descending);
     }
 //    /**
 //     * @return Video[] Returns an array of Video objects

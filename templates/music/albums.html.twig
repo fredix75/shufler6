@@ -13,10 +13,10 @@
             {% endif %}
         {% endfor %}
     </div>
-    {% if pagination is not empty %}
-        <section class="col-12 mt-4">
-            <twig:Pagination :pagination="pagination"/>
-        </section>
+    {% if albums.hasPrevious is defined or albums.hasNext is defined %}
+        <div class="pagination:container justify-content-center mt-4">
+            {{ ux_pagination(albums) }}
+        </div>
     {% endif %}
     {% include 'part/_modal.html.twig' with { modalTitle: 'Music', class: 'music-modal' } %}
     {% include 'music/part/_filters.html.twig' %}

@@ -17,9 +17,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class FilterVTrackType extends AbstractType
 {
-    public function __construct(private readonly PieceGenresLoader $genresLoader)
-    {
-    }
+    public function __construct(private readonly PieceGenresLoader $genresLoader) {}
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -101,10 +99,8 @@ class FilterVTrackType extends AbstractType
                     return $notes;
                 }),
             ]);
-        } else {
-            $builder->add('page', HiddenType::class, [
-                'data' => 0,
-            ])->add('random', CheckboxType::class, [
+        } elseif ($options['mode'] !== 'radial') {
+            $builder->add('random', CheckboxType::class, [
                 'required' => false,
             ]);
         }

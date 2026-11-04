@@ -1,0 +1,5 @@
+ux_pagination:
+    theme: 'main/_pagination.html.twig'
+    navigation:
+        mode: sliding
+        size: 3

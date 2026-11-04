@@ -7,7 +7,7 @@
             bottom: 100% !important;
         }
     </style>
-    {{ form_start(form_track, {'method' : 'GET'}) }}
+    {{ form_start(form_track, {'action': path(app.current_route, {'page': 1}), 'method' : 'GET'}) }}
     <div class="row justify-content-center align-items-center filter-form">
         {% if form_track.genres is defined %}
         <div class="col-6 col-md-4 col-lg-2">

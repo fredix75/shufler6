@@ -1,42 +1,66 @@
-.pagination\:container {
-    display: flex;
-    background-color: #20202069;
+/* Customisation de la pagination sous forme de carrés sombres */
+.pagination-dark-squares {
+    gap: 10px; /* Espace discret entre chaque carré */
 }
 
-.pagination\:number {
-    --size: 32px;
-    --margin: 6px;
-    margin: 0 var(--margin);
-    border-radius: 6px;
-    background: #{$pagination-bg-color};
-    color: white;
-    max-width: auto;
-    min-width: var(--size);
-    height: var(--size);
+.pagination-dark-squares .page-item {
+    margin: 0;
+}
+
+/* Base commune pour tous les carrés de page */
+.pagination-dark-squares .page-item .page-link {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 6px;
-    @media (hover: hover) {
-        &:hover {
-            background: lighten(#202020, 3%);
-        }
-    }
-    &.active {
-        color: #{$primary}e;
-    }
+    width: 32px;  /* Largeur fixe pour faire un carré perfect */
+    height: 32px; /* Hauteur fixe */
+    padding: 0.8em;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 8px !important; /* Supprime l'arrondi Bootstrap */
+    background-color: #1e1e1e;    /* Fond sombre minime */
+    color: #a0a0a0;               /* Texte gris discret */
+    border: transparent;    /* Bordure subtile */
+    transition: all 0.2s ease-in-out;
 }
 
-.pagination\:active {
-    background: lighten(#202020, 3%);
-    color: #{$primary};
-    position: relative;
+/* État survolé (Hover) */
+.pagination-dark-squares .page-item:not(.active):not(.disabled) .page-link:hover {
+    background-color: #2d2d2d;
+    color: #ffffff;
 }
 
-.page-link {
-    text-decoration: none;
+/* État Page Active (Carré mis en valeur) */
+.pagination-dark-squares .page-item.active .page-link {
+    color: #{$primary} !important;            /* Chiffre primary à l'intérieur */
+    border-color: #ffffff !important;
+    font-weight: 700;
 }
 
-.page-link:hover .pagination\:number {
-    color:orange;
+/* Style des boutons précédents et suivants (Optionnel : sans fond pour plus de légèreté) */
+.pagination-dark-squares .page-item.prev-next-item .page-link {
+    background-color: transparent;
+    border-color: transparent;
+    font-size: 1.3rem; /* Légèrement plus grand pour les chevrons ‹ et › */
+    line-height: 1;
+}
+.pagination-dark-squares .page-item.prev-next-item:not(.disabled) .page-link:hover {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Style pour l'élément "..." (Gap) */
+.pagination-dark-squares .page-item.gap-item .page-link {
+    background-color: transparent;
+    border-color: transparent;
+    cursor: default;
+}
+
+/* États désactivés (ex: Chevron précédent sur la page 1) */
+.pagination-dark-squares .page-item.disabled .page-link {
+    background-color: transparent;
+    border-color: transparent;
+    color: #444444 !important;
+    opacity: 0.5;
+    pointer-events: none;
 }

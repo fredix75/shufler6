@@ -9,10 +9,10 @@
             <twig:PieceFrame :piece="track"/>
         {% endfor %}
     </div>
-    {% if pagination is not empty %}
-        <section class="col-12 mt-4">
-            <twig:Pagination :pagination="pagination"/>
-        </section>
+    {% if tracks.hasPrevious is defined or tracks.hasNext is defined %}
+        <div class="pagination:container justify-content-center mt-4">
+            {{ ux_pagination(tracks) }}
+        </div>
     {% endif %}
     {% include 'music/part/_filters.html.twig' %}
 {% endblock %}
