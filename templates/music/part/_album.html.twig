@@ -9,35 +9,45 @@
     </div>
 </div>
 <div data-controller="album">
-    <div class="d-flex flex-row justify-content-around mb-4">
-        {% if album.youtubeKey is not empty %}
-            <a class="playlist-link icon-youtube p-2" href="{{ album.youtubeKey|youtubeChannelLink }}"
-               data-id="{{ album.youtubeKey }}" data-action="music#popupPlaylist">
-                <i class="bi bi-youtube"></i>
-            </a>&nbsp;&nbsp;
-        {% endif %}
-        <a class="btn btn-primary p-3"
-           href="{{ path('music_couch', {'auteur' : album.auteur, 'album': album.name }) }}">
-            <i class="bi bi-youtube"></i> Enchainer les titres
-        </a>
-        <div class="btn-group" role="group">
-            <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                <i class="bi bi-binoculars-fill"></i> Search
-            </button>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item"
-                       href="{{ path('api_playlist', {'id_album': album.id, search_api: (album.auteur|lower != 'divers' ? album.auteur : '') ~ ' ' ~ album.name }) }}">Playlist</a>
-                </li>
-                <li><a class="dropdown-item"
-                       href="{{ path('api_album_picture', {'id_album': album.id, 'search_api': album.name, 'artist': album.auteur }) }}">Cover</a>
-                </li>
-            </ul>
+    <div class="row d-flex justify-content-center align-items-center text-center my-4">
+        <div class="col">
+            <a class="btn btn-dark edit-album" href="#" data-id="{{ album.id }}"
+               data-action="album#openEditModal" title="album edit">
+                <i class="bi bi-pencil-square"></i>
+            </a>
         </div>
-        <a class="btn btn-secondary edit-album p-3" href="#" data-id="{{ album.id }}" data-action="album#openEditModal"
-           title="album edit">
-            <i class="bi bi-pencil-square"></i>
-        </a>
+        <div class="col">
+            <a class="btn btn-dark"
+               href="{{ path('music_couch', {'auteur' : album.auteur, 'album': album.name }) }}"
+               title="Enchaîner les titres">
+                <i class="bi bi-youtube"></i>
+            </a>
+        </div>
+        <div class="col">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                    <i class="bi bi-binoculars-fill"></i> Search
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item"
+                           href="{{ path('api_playlist', {'id_album': album.id, search_api: (album.auteur|lower != 'divers' ? album.auteur : '') ~ ' ' ~ album.name }) }}">Playlist</a>
+                    </li>
+                    <li><a class="dropdown-item"
+                           href="{{ path('api_album_picture', {'id_album': album.id, 'search_api': album.name, 'artist' : album.auteur }) }}">Cover</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col">
+            {% if album.youtubeKey is not empty %}
+                <a id="album-youtube-{{ album.id }}" class="playlist-link icon-youtube"
+                   href="{{ album.youtubeKey|youtubeChannelLink }}" data-id="{{ album.youtubeKey }}"
+                   data-action="music#popupPlaylist" title="video Playlist">
+                    <img src="{{ asset('images/disk-icon.png') }}" width="50px">
+                </a>
+            {% endif %}
+        </div>
     </div>
 </div>
 <table class="table table-dark">
