@@ -42,6 +42,9 @@ class Radial
 
     private ?string $albumPicture = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $note = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -151,5 +154,17 @@ class Radial
     public function setAlbumPicture(?string $albumPicture): void
     {
         $this->albumPicture = $albumPicture;
+    }
+
+    public function getNote(): ?int
+    {
+        return $this->note;
+    }
+
+    public function setNote(?int $note): static
+    {
+        $this->note = $note;
+
+        return $this;
     }
 }

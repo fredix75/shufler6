@@ -104,6 +104,8 @@ parameters:
               orderable: true
             - data: bitrate
               orderable: true
+            - data: heart
+              orderable: false
             - data: note
               orderable: true
         album_fields:

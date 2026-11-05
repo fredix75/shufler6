@@ -13,7 +13,7 @@
                     <div class="row justify-content-center text-center">
                         {% if cloudAlbum.id is not null %}
                             <div class="col-4 p-2">
-                                <a class="btn btn-secondary p-2"
+                                <a class="btn btn-secondary p-2" data-turbo="false"
                                    href="{{ path('api_playlist', {'search_api': cloudAlbum.auteur ~ ' ' ~ cloudAlbum.name, 'id_cloudalbum': cloudAlbum.id }) }}">
                                     <i class="bi bi-arrow-left-right"></i>&nbsp;Exchange on Api
                                 </a>

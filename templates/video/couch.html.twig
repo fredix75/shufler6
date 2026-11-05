@@ -42,8 +42,8 @@
                                        style="text-align:center;font-size:1em;" title="Vidéo précédente">
                                         <i class="bi bi-skip-backward"></i>
                                     </a>
-                                    {% if is_granted('ROLE_ADMIN') and track.dataOrigin == 'piece' %}
-                                        <a href="#" data-action="videos-couch#setNote" data-id={{ track.id }}>
+                                    {% if is_granted('ROLE_ADMIN') and track.dataOrigin in ['piece', 'radial'] %}
+                                        <a href="#" data-action="videos-couch#setNote" data-id="{{ track.youtubeKey }}" data-note="{{ track.note != null and track.note != -1 ? -1 : 4}}">
                                             <i class="bi bi-heart{{ track.note != null and track.note != -1 ? '-fill' : '' }}"></i>
                                         </a>
                                     {% endif %}

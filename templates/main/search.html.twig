@@ -8,7 +8,7 @@
     <section class="row d-flex row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 m-4"
              data-controller="video">
         <div>
-            <h1>{% if videos.count > 0 or tracks is not empty %}
+            <h1>{% if videos is not empty or tracks is not empty %}
                     Trouvé&nbsp;<i class="bi bi-binoculars"></i>&nbsp;
                 {% else %}
                     Désolé&nbsp;<i class="bi bi-emoji-frown"></i>&nbsp;
@@ -16,8 +16,8 @@
             </h1>
             <div class="page_videos_sous_titre">
                 "{{ search }}"<br>
-                <span class="badge bg-secondary">{{ 'video.videos_number'|trans({count: videos.count}) }}</span>
-                <span class="badge bg-secondary">{{ 'track.tracks_number'|trans({count: tracks|length}) }}</span>
+                <span class="badge bg-secondary">{{ 'video.videos_number'|trans({ count: videos|length }) }}</span>
+                <span class="badge bg-secondary">{{ 'track.tracks_number'|trans({ count: tracks|length }) }}</span>
             </div>
         </div>
         {% for video in videos %}
@@ -94,6 +94,10 @@
                             {% elseif column.data == "note" %}
                                 <td class="col-stars">
                                     {{ displayStars(attribute(track, column.data), false) }}
+                                </td>
+                            {% elseif column.data == "heart" %}
+                                <td>
+                                    <a type="button" class="btn btn-secondary" data-action="music#setNote" data-id={{ track.youtubeKey }} data-note={{ track.note > 0 ? -1 : 4 }}><i class="bi bi-heart{{ track.note > 0 ? '-fill' : '' }}"></i></a>
                                 </td>
                             {% else %}
                                 <td>{{ attribute(track, column.data) }}</td>

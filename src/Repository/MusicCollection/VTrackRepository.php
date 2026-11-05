@@ -83,6 +83,11 @@ class VTrackRepository extends ServiceEntityRepository
             }
         }
 
+        if (!empty($params['note'])) {
+            $builder->andWhere('vt.note >= :note')
+                ->setParameter('note', $params['note']);
+        }
+
         if (!empty($params['search'])) {
             $builder->andWhere('vt.title LIKE :search OR vt.author LIKE :search OR vt.albumName LIKE :search OR vt.albumArtist LIKE :search')
                 ->setParameter('search', '%' . $params['search'] . '%');

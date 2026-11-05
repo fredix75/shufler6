@@ -28,6 +28,7 @@ final class RadialController extends AbstractController
             'album' => $p['album'] ?? null,
             'annee' => $p['annee'] ?? null,
             'search' => $p['search'] ?? null,
+            'note'  => $p['note'] ?? null,
             'random' => !empty($p['random']) && $p['random'] === '1',
             'hasYoutubeKey' => true,
             'dataOrigin' => 'radial',

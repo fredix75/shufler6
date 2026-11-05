@@ -28,7 +28,7 @@
                     {% if video.id is defined and video.id != 0 %}
                         <div class="row row-cols-3 justify-content-between mt-4 text-center">
                             <div class="col p-2">
-                                <a class="btn btn-secondary btn-lg"
+                                <a class="btn btn-secondary btn-lg" data-turbo="false"
                                    href="{{ path('api_video', {'search_api': video.auteur ~ ' ' ~ video.titre, 'id_video': video.id }) }}">
                                     <i class="bi bi-arrow-left-right"></i>&nbsp;change
                                 </a>

@@ -51,6 +51,10 @@ class MusicHelper
             if (!$piece instanceof VTrack) {
                 continue;
             }
+            if (\in_array($piece->getYoutubeKey(), $playlist, true)) {
+                continue;
+            }
+
             $playlist[] = $piece->getYoutubeKey();
             $list[] = [
                 'id' => $piece->getIdTrack(),

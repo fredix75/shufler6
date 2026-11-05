@@ -87,7 +87,7 @@ class FilterVTrackType extends AbstractType
             ]);
         }
 
-        if ($options['mode'] !== 'album' && $options['mode'] !== 'radial') {
+        if ($options['mode'] !== 'album') {
             $builder->add('note', ChoiceType::class, [
                 'label' => false,
                 'placeholder' => 'Rating',
