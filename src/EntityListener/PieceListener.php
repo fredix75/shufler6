@@ -34,7 +34,7 @@ class PieceListener
         if ($key) {
             $this->musicHelper->updateKeyForAll($key, $piece->getAuteur(), $piece->getTitre());
             if ($piece->getNote()){
-                $this->musicHelper->updateNoteForAll($key, $piece->getNote());
+                $this->musicHelper->updateNoteForAll($key, $piece->getNote(), get_class($piece));
             }
             if ($this->propertyAccessor->isReadable($piece, 'extraNote') && $piece->getExtraNote()){
                 $this->musicHelper->updateExtraNoteForAll($key, $piece->getExtraNote());
