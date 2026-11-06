@@ -71,14 +71,18 @@
 
         <!-- Juke-Box !-->
 
-        <section class="row g-4">
-            <div class="col-12 col-lg-3 p-4 mx-auto" data-controller="music">
+        <section class="row">
+            <div class="col-12 col-lg-3 mx-auto" data-controller="music">
                 <div class="text-center mb-2">
                     <h2>Juke-Box</h2>
                     <p>Des morceaux de choix</p>
-                    <a href="{{ path('main_juke-box') }}" class="btn btn-secondary" data-turbo-frame="juke-box">
-                            <i class="bi bi-arrow-repeat"></i>
-                    </a>
+                    <div class="d-flex justify-content-around">
+                        <a href="{{ path('radial_index', {'random' : 1}) }}" class="btn btn-secondary"><i class="bi bi-list"></i></a>
+                        <a href="{{ path('radial_couch') }}" class="btn btn-secondary"><i class="bi bi-square"></i></a>
+                        <a href="{{ path('main_juke-box') }}" class="btn btn-secondary" data-turbo-frame="juke-box">
+                                <i class="bi bi-arrow-repeat"></i>
+                        </a>
+                    </div>
                 </div>
                 <turbo-frame id="juke-box" src="{{ path('main_juke-box') }}" loading="lazy">
                     <div class="d-flex justify-content-center my-5">
