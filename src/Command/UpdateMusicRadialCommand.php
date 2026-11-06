@@ -31,7 +31,8 @@ class UpdateMusicRadialCommand extends Command
         private readonly RadialRepository       $radialRepository,
         private readonly ApiRequester           $apiRequester,
         ?string                                 $name = null
-    ) {
+    )
+    {
         parent::__construct($name);
     }
 
@@ -46,9 +47,10 @@ class UpdateMusicRadialCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $tracks  = $this->radialRepository
+        $tracks = $this->radialRepository
             ->createQueryBuilder('r')
-            ->orderBy('r.year', \SortDirection::Descending)
+            ->select('r.author', 'r.name')
+            ->distinct(true)
             ->andWhere("r.youtubeKey IS NULL")
             ->setMaxResults(200)
             ->getQuery()->getResult();
@@ -57,11 +59,12 @@ class UpdateMusicRadialCommand extends Command
 
         foreach ($tracks as $track) {
             try {
-                $search = $track->getAuthor() . ' ' . $track->getName();
-                $response = $this->apiRequester->sendRequest(VideoHelper::YOUTUBE,'/search', [
+                $search = $track['author'] . ' ' . $track['name'];
+                $response = $this->apiRequester->sendRequest(VideoHelper::YOUTUBE, '/search', [
                     'q' => $search,
                 ]);
 
+                $track = $this->radialRepository->findOneBy(['author' => $track['author'], 'name' => $track['name']]);
                 if ($response->getStatusCode() === Response::HTTP_OK) {
                     $resultYouTube = json_decode($response->getContent(), true)['items'] ?? [];
                     if (!empty($resultYouTube[0]['id']['videoId'])) {
@@ -70,7 +73,6 @@ class UpdateMusicRadialCommand extends Command
                         $track->setYoutubeKey('nope');
                         $nbNope++;
                     }
-
                     $i++;
                 } elseif ($response->getStatusCode() === Response::HTTP_NOT_FOUND) {
                     $track->setYoutubeKey('nope');

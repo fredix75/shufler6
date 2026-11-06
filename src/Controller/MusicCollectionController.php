@@ -93,7 +93,7 @@ final class MusicCollectionController extends AbstractController
                         'duree' => $track->getDuree(),
                         'pays' => $track->getPays(),
                         'bitrate' => $track->getBitrate(),
-                        'heart'   => '<a type="button" class="btn btn-secondary" data-action="music#setNote" data-id="' . $track->getYoutubeKey() . '" data-note="' . ($track->getNote() > 0  ? -1 : 4) .'"><i class="bi bi-heart' . ($track->getNote() > 0  ? '-fill' : '') . '"></i></a>',
+                        'heart'   => '<a type="button" class="btn btn-secondary" data-action="music#setNote" data-id="' . $track->getId() . '" data-note="' . ($track->getNote() > 0  ? -1 : 4) .'" data-origin="piece"><i class="bi bi-heart' . ($track->getNote() > 0  ? '-fill' : '') . '"></i></a>',
                         'note' => $track->getNote() ? $shuflerRuntime->displayStarsFunction($track->getNote()) : '',
                     ];
                 }
@@ -422,27 +422,24 @@ final class MusicCollectionController extends AbstractController
     #[Route('/set-extra-note', name: '_set_extra_note', methods: ['POST'])]
     public function setExtraNote(Request $request, EntityManagerInterface $em): Response
     {
-        $key = $request->request->get('key');
-        $sendedNote = $request->request->get('note');
+        $id = $request->request->get('id');
+        $origin = $request->request->get('origin');
+        $note = $request->request->get('note');
 
-        $vTracks  = $em->getRepository(VTrack::class)->findBy(['youtubeKey' => $key]);
-        foreach ($vTracks as $vTrack) {
-            switch ($vTrack->getDataOrigin()) {
-                case 'piece':
-                    $note = $sendedNote;
-                    $em->getRepository(Piece::class)->find($vTrack->getIdTrack())->setExtraNote($note);
-                    break;
-                case 'radial':
-                    $note = $sendedNote !== '-1' ? $sendedNote : null;
-                    $em->getRepository(Radial::class)->find($vTrack->getIdTrack())->setNote($note);
-                    break;
-                default:
-                    break;
-            }
+        switch ($origin) {
+            case 'piece':
+                $em->getRepository(Piece::class)->find($id)->setExtraNote($note);
+                break;
+            case 'radial':
+                $note = $note !== '-1' ? $note : null;
+                $em->getRepository(Radial::class)->find($id)->setNote($note);
+                break;
+            default:
+                break;
         }
 
         $em->flush();
 
-        return new JsonResponse(['note' => $sendedNote]);
+        return new JsonResponse(['note' => $note]);
     }
 }

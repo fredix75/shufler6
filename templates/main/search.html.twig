@@ -97,7 +97,7 @@
                                 </td>
                             {% elseif column.data == "heart" %}
                                 <td>
-                                    <a type="button" class="btn btn-secondary" data-action="music#setNote" data-id={{ track.youtubeKey }} data-note={{ track.note > 0 ? -1 : 4 }}><i class="bi bi-heart{{ track.note > 0 ? '-fill' : '' }}"></i></a>
+                                    <a type="button" class="btn btn-secondary" data-action="music#setNote" data-id={{ track.id }} data-note={{ track.note > 0 ? -1 : 4 }} data-origin="piece"><i class="bi bi-heart{{ track.note > 0 ? '-fill' : '' }}"></i></a>
                                 </td>
                             {% else %}
                                 <td>{{ attribute(track, column.data) }}</td>
