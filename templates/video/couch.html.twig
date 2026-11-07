@@ -43,7 +43,7 @@
                                         <i class="bi bi-skip-backward"></i>
                                     </a>
                                     {% if is_granted('ROLE_ADMIN') and track.dataOrigin in ['piece', 'radial'] %}
-                                        <a href="#" data-action="videos-couch#setNote" data-id="{{ track.youtubeKey }}" data-note="{{ track.note != null and track.note != -1 ? -1 : 4}}">
+                                        <a href="#" data-action="videos-couch#setNote" data-id="{{ track.id }}" data-note="{{ track.note > 0 ? -1 : 4}}" data-origin="{{ track.dataOrigin }}">
                                             <i class="bi bi-heart{{ track.note != null and track.note != -1 ? '-fill' : '' }}"></i>
                                         </a>
                                     {% endif %}

@@ -31,7 +31,6 @@ final class VideoController extends AbstractController
         defaults: ['categorie' => 0, 'genre' => 0, 'periode' => '0', 'page' => 1]
     )]
     public function list(
-        Request         $request,
         VideoRepository $videoRepository,
         PaginatorInterface $paginator,
         int             $categorie,
