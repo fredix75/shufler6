@@ -10,7 +10,7 @@ use Symfony\Component\Form\ChoiceList\ArrayChoiceList;
 class PieceGenresLoader implements ChoiceLoaderInterface
 {
 
-    private array $genres = [];
+    private array $genres;
 
     public function __construct(private readonly PieceRepository $pieceRepository) {}
 
