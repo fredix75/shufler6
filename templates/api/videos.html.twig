@@ -58,8 +58,7 @@
                     <div class="row g-4 row-cols-1">
                         {% if plateforme['items'] is not null %}
                             {% for vignette in plateforme['items'] %}
-                                <twig:HorizontalCard title="{{ vignette.name }}" pictureSrc="{{ vignette.link }}"
-                                                     path="{{ vignette.url }}">
+                                <twig:HorizontalCard title="{{ vignette.name }}">
                                     <twig:block name="picture">
                                         <a class="video-link" href="{{ vignette.url }}"
                                            data-action="music#popup">
