@@ -82,7 +82,7 @@ final class ApiController extends AbstractController
             }
 
             // Vimeo
-            $lib = new Vimeo($this->getParameter('vimeo_id'), $this->getParameter('vimeo_secret'), $this->getParameter('vimeo_access_token'));
+//            $lib = new Vimeo($this->getParameter('vimeo_id'), $this->getParameter('vimeo_secret'), $this->getParameter('vimeo_access_token'));
 
 //            $content = $lib->request('/videos', [
 //                'query' => $search,

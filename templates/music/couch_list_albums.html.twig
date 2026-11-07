@@ -14,6 +14,12 @@
             {% for album in albums %}
                 <div class="col col-12 col-md-6 col-xl-4 p-4">
                     <twig:HorizontalCard title="{{ album.name }}" pictureSrc="{{ album.picture }}" path="{{ path('music_couch', {'album': album.name, 'auteur': album.auteur}) }}">
+                        <twig:block name="picture">
+                            {% if album.picture is not null %}
+                                <img src="{{ album.picture }}" class="img-fluid rounded-start"
+                                     alt="{{ album.auteur ~ '-' ~ album.name }}">
+                            {% endif %}
+                        </twig:block>
                         <twig:block name="content">{{ album.auteur }} {{ album.annee ? "(%d)"|format(album.annee) }}</twig:block>
                     </twig:HorizontalCard>
                 </div>

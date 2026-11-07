@@ -6,7 +6,8 @@
     <div class="p-4">
         <h1 class="minor"><i class="bi bi-youtube"></i> Videos Search</h1>
         <div class="row" data-controller="video">
-            <form name="form_search" action="{{ path('api_video') }}" method="POST" class="row justify-content-center" data-turbo="false">
+            <form name="form_search" action="{{ path('api_video') }}" method="POST" class="row justify-content-center"
+                  data-turbo="false">
                 <div class="col col-10 col-sm-10 col-lg-6">
                     <input type="search" id="search_api" name="search_api" value="{{ search|trim }}"
                            class="input-sm form-control big-input" placeholder="videos on youtube">
@@ -24,7 +25,7 @@
                         <i class="bi bi-binoculars"></i></button>
                     {% if idTrack is not defined and (idVideo != 0 or idCloudtrack is defined) %}
                         <a href="#" data-action="video#deleteKey"><span class="badge bg-warning"><i
-                                        class="bi bi-pin-angle-fill"></i>&nbsp;{{ idCloudtrack ?? idVideo }}</span></a>
+                                    class="bi bi-pin-angle-fill"></i>&nbsp;{{ idCloudtrack ?? idVideo }}</span></a>
                     {% endif %}
                 </div>
             </form>
@@ -52,60 +53,66 @@
         {% endif %}
         <div class="row justify-content-center" data-controller="video">
             {% for index, plateforme in resultat %}
-                <section class="col col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4" style="margin-top:10px;">
+                <section class="col col-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 mt-2">
                     <h1><i class="bi bi-{{ index }}"></i> {{ plateforme['label'] }}</h1>
-                    {% if plateforme['items'] is not null %}
-                        {% for vignette in plateforme['items'] %}
-                            <div class="row vignette-item g-0 bg-body-secondary position-relative">
-                                <div class="col-6 col-md-6 mb-md-0 p-md-4">
-                                    <div class="media topcol embed-responsive-16by9">
-                                        <a class="video-link" href="{{ vignette.url }}" onclick="return false;">
-                                            <img src="{{ vignette.link }}" height="180px" alt="Vignette {{ vignette.name }}">
+                    <div class="row g-4 row-cols-1">
+                        {% if plateforme['items'] is not null %}
+                            {% for vignette in plateforme['items'] %}
+                                <twig:HorizontalCard title="{{ vignette.name }}" pictureSrc="{{ vignette.link }}"
+                                                     path="{{ vignette.url }}">
+                                    <twig:block name="picture">
+                                        <a class="video-link" href="{{ vignette.url }}"
+                                           data-action="music#popup">
+                                            <img src="{{ vignette.link }}"
+                                                 class="img-fluid rounded-start object-fit-cover"
+                                                 alt="{{ vignette.name }}" title="{{ vignette.name }}" loading="lazy"
+                                                 width="100%">
                                         </a>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-md-6 p-4 ps-md-0">
-                                    <strong>{{ vignette.name }}</strong>';
-                                    {% if is_granted('ROLE_AUTEUR') %}
-                                        {% set class = "bi bi-patch-plus" %}
-                                        {% if idVideo is defined and idVideo != 0 %}
-                                            {% set class = "bi bi-arrow-left-right" %}
-                                        {% endif %}
-                                        {% if idTrack is defined %}
-                                            <div class="link_edit" style="position:relative;">
-                                                <a href="#"
-                                                 class="btn btn-secondary"
-                                                 data-action="video#editTrack"
-                                                 data-url="{{ vignette.url }}">
-                                                    <i class="bi bi-arrow-left-right"></i>
-                                                </a>
-                                            </div>
-                                        {% elseif idCloudtrack is defined %}
-                                            <div class="link_edit" style="position:relative;">
-                                                <a href="#"
-                                                     class="btn btn-secondary"
-                                                     data-action="video#editCloudtrack"
-                                                     data-url="{{ vignette.url }}">
-                                                    <i class="bi bi-arrow-left-right"></i>
-                                                </a>
-                                            </div>
-                                        {% else %}
-                                            <div class="link_edit" style="position:relative;">
-                                                <a href="#"
-                                                     class="btn btn-secondary"
-                                                     data-action="video#edit"
-                                                     data-url="{{ vignette.url }}">
-                                                    <i class="{{ class }}"></i>
-                                                </a>
-                                            </div>
-                                        {% endif %}
-                                    {% endif %}
-                                    <br>{{ vignette.author }}<br>
-                                    <span class="badge bg-secondary">{{ vignette.date }}</span>
-                                </div>
-                            </div><br><br>
-                        {% endfor %}
-                    {% endif %}
+                                    </twig:block>
+                                    <twig:block name="content">
+                                        <div class="d-flex justify-content-around mt-4">
+                                            {% if is_granted('ROLE_AUTEUR') %}
+                                                {% set class = "bi bi-patch-plus" %}
+                                                {% if idVideo is defined and idVideo != 0 %}
+                                                    {% set class = "bi bi-arrow-left-right" %}
+                                                {% endif %}
+                                                {% if idTrack is defined %}
+                                                    <div class="link_edit" style="position:relative;">
+                                                        <a href="#"
+                                                           class="btn btn-secondary"
+                                                           data-action="video#editTrack"
+                                                           data-url="{{ vignette.url }}">
+                                                            <i class="bi bi-arrow-left-right"></i>
+                                                        </a>
+                                                    </div>
+                                                {% elseif idCloudtrack is defined %}
+                                                    <div class="link_edit" style="position:relative;">
+                                                        <a href="#"
+                                                           class="btn btn-secondary"
+                                                           data-action="video#editCloudtrack"
+                                                           data-url="{{ vignette.url }}">
+                                                            <i class="bi bi-arrow-left-right"></i>
+                                                        </a>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="link_edit" style="position:relative;">
+                                                        <a href="#"
+                                                           class="btn btn-secondary"
+                                                           data-action="video#edit"
+                                                           data-url="{{ vignette.url }}">
+                                                            <i class="{{ class }}"></i>
+                                                        </a>
+                                                    </div>
+                                                {% endif %}
+                                            {% endif %}
+                                            <span>{{ vignette.author }}</span>
+                                            <span class="badge bg-secondary">{{ vignette.date }}</span>
+                                        </div>
+                                    </twig:block>
+                                </twig:HorizontalCard>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
                 </section>
             {% endfor %}
         </div>
