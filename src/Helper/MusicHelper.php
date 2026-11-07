@@ -107,14 +107,14 @@ class MusicHelper
             ->getQuery()->execute();
     }
 
-    public function updateNoteForAll(string $key, int $note, string $type): void
+    public function updateNoteForAll(string $key, ?int $note, string $type): void
     {
         if ($type === Track::class) {
             $this->em
                 ->createQueryBuilder()
                 ->update(Track::class, 't')
                 ->set('t.note', ':note')
-                ->setParameter('note', $note)
+                ->setParameter('note', $note ?? -1)
                 ->where('t.youtubeKey = :key')
                 ->setParameter('key', $key)
                 ->getQuery()->execute();
@@ -123,7 +123,7 @@ class MusicHelper
                 ->createQueryBuilder()
                 ->update(Piece::class, 'p')
                 ->set('p.extraNote', ':note')
-                ->setParameter('note', $note)
+                ->setParameter('note', $note ?? -1)
                 ->where('p.youtubeKey = :key')
                 ->setParameter('key', $key)
                 ->getQuery()->execute();
@@ -139,13 +139,13 @@ class MusicHelper
             ->getQuery()->execute();
     }
 
-    public function updateExtraNoteForAll(string $key, int $note): void
+    public function updateExtraNoteForAll(string $key, ?int $note): void
     {
         $this->em
             ->createQueryBuilder()
             ->update(Piece::class, 'p')
             ->set('p.extraNote', ':note')
-            ->setParameter('note', $note)
+            ->setParameter('note', $note ?? -1)
             ->where('p.youtubeKey = :key')
             ->setParameter('key', $key)
             ->getQuery()->execute();

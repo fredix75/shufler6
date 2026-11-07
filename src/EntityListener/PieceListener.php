@@ -57,7 +57,7 @@ class PieceListener
             if ($args->hasChangedField('note')){
                 $this->musicHelper->updateNoteForAll($key, $piece->getNote(), get_class($piece));
             }
-            if ($this->propertyAccessor->isReadable($piece, 'extraNote') && $piece->getExtraNote() && $args->hasChangedField('extraNote')){
+            if ($args->hasChangedField('extraNote') && $this->propertyAccessor->isReadable($piece, 'extraNote') && $piece->getExtraNote()){
                 $this->musicHelper->updateExtraNoteForAll($key, $piece->getExtraNote());
             }
         }
