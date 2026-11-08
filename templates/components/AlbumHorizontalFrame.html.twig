@@ -3,7 +3,7 @@
 <twig:block name="picture">
     {% if album.picture is not null %}
         <img src="{{ album.picture }}" class="img-fluid rounded-start"
-             alt="{{ album.auteur ~ '-' ~ album.name }}">
+             alt="{{ album.auteur ~ '-' ~ album.name }}" loading="lazy">
     {% endif %}
 </twig:block>
 <twig:block name="title">{{ album.name }}</twig:block>

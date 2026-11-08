@@ -55,14 +55,14 @@
 
         <!-- Affiche recréée façon pulp -->
         <figure class="poster">
-            <img src="{{ asset('uploads/cinema/' ~ film.picture) }}">
+            <img src="{{ asset('uploads/cinema/' ~ film.picture) }}" loading="lazy">
         </figure>
 
         <!-- Fiche technique -->
         <div class="infos">
             {% set logo = film.pictures|default([])|filter(image => image.type == 'logos')|first %}
             {% if logo is not empty %}
-                <img src="{{ asset('https://image.tmdb.org/t/p/w1280' ~ logo.path) }}" width=200 class="logo_img">
+                <img src="{{ asset('https://image.tmdb.org/t/p/w1280' ~ logo.path) }}" width=200 class="logo_img" loading="lazy">
             {% endif %}
             <h2 class="infos__heading">La fiche du film</h2>
 
@@ -118,7 +118,7 @@
     <div class="casting__wrap">
     {% for prod in film.prod %}
         {% if prod.logo != '' %}
-            <img src="https://image.tmdb.org/t/p/w1280{{ prod.logo }}" alt="{{ prod.nom }}" title="{{ prod.nom }}" width="200">
+            <img src="https://image.tmdb.org/t/p/w1280{{ prod.logo }}" alt="{{ prod.nom }}" title="{{ prod.nom }}" width="200" loading="lazy">
         {% endif %}
     {% endfor %}
     </div>
@@ -130,7 +130,7 @@
                 <div class="avatar avatar--director" style="overflow: hidden;">
                     <a href="{{ path('cinema_people', {id : director.id }) }}">
                     {% if director.picture != '' %}
-                        <img src="https://image.tmdb.org/t/p/w1280{{ director.picture }}">
+                        <img src="https://image.tmdb.org/t/p/w1280{{ director.picture }}" loading="lazy">
                     {% else %}
                         <span>QT</span>
                     {% endif %}
@@ -148,7 +148,7 @@
                     <div class="avatar" style="overflow: hidden;">
                         <a href="{{ path('cinema_people', {id : actor.id }) }}">
                         {% if actor.picture != '' %}
-                            <img src="https://image.tmdb.org/t/p/w1280{{ actor.picture }}">
+                            <img src="https://image.tmdb.org/t/p/w1280{{ actor.picture }}" loading="lazy">
                         {% else %}
                             <span>{{ actor.name|split(' ')|map(a => a|slice(0,1))|join() }}</span>
                         {% endif %}

@@ -35,7 +35,7 @@
             <div class="portrait__frame">
                 {%  if films[0].people_picture is not null %}
                 <img src="https://image.tmdb.org/t/p/w1280{{ films[0].people_picture }}"
-                     alt="Portrait de {{ films[0].nom }}">
+                     alt="Portrait de {{ films[0].nom }}" loading="lazy">
                 {% else %}
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path opacity="0.4" d="M12.1207 12.78C12.0507 12.77 11.9607 12.77 11.8807 12.78C10.1207 12.72 8.7207 11.28 8.7207 9.50998C8.7207 7.69998 10.1807 6.22998 12.0007 6.22998C13.8107 6.22998 15.2807 7.69998 15.2807 9.50998C15.2707 11.28 13.8807 12.72 12.1207 12.78Z" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -86,7 +86,7 @@
                         <li class="film">
                             <span class="film__year">{{ film.date|date('Y') }}</span>
                             <div class="film__body">
-                                <img src="{{ asset('uploads/cinema/' ~ film.picture) }}" class="film__picture-mini">
+                                <img src="{{ asset('uploads/cinema/' ~ film.picture) }}" class="film__picture-mini" loading="lazy">
                                 <div>
                                     <h3 class="film__title">{{ film.name|upper }}</h3>
                                     <p class="film__note"
@@ -108,7 +108,7 @@
                         <li class="film">
                             <span class="film__year">{{ film.date|date('Y') }}</span>
                             <div class="film__body">
-                                <img src="{{ asset('uploads/cinema/' ~ film.picture) }}" class="film__picture-mini">
+                                <img src="{{ asset('uploads/cinema/' ~ film.picture) }}" class="film__picture-mini" loading="lazy">
                                 <div>
                                     <h3 class="film__title">{{ film.name|upper }} <small>({{ film.direction|map(a => a.name)|join(', ') }})</small></h3>
                                     <p class="film__note"

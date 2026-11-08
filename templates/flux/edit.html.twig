@@ -44,7 +44,7 @@
                     {% if flux.id is defined %}
                         {% if flux.image is not null %}
                             {% if 'http' in flux.image %}
-                                <img src="{{ asset(flux.image) }}" width="200px" alt="Logo {{ flux.name }}">
+                                <img src="{{ asset(flux.image) }}" width="200px" alt="Logo {{ flux.name }}" loading="lazy">
                             {% elseif no_cover_picture in flux.image %}
                                 {# nothing to do #}
                             {% else %}
@@ -61,10 +61,10 @@
                         {% endif %}
                         {% if flux.channel.id is defined and flux.channel.image is not null %}
                             {% if 'http' in flux.image %}
-                                <img src="{{ asset(flux.channel.image) }}" width="200px" alt="{{ flux.channel.name }}">
+                                <img src="{{ asset(flux.channel.image) }}" width="200px" alt="{{ flux.channel.name }}" loading="lazy">
                             {% else %}
                                 <img class="channel-image" src="{{ asset('uploads/logos/' ~ flux.channel.image) }}"
-                                     width="200px" alt="{{ flux.channel.name }}">
+                                     width="200px" alt="{{ flux.channel.name }}" loading="lazy">
                             {% endif %}
                         {% endif %}
                         {% if flux.channel.id is defined %}

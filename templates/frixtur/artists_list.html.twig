@@ -44,7 +44,7 @@
                             <a href="{{ path('frixtur_artist', {id: artist.id}) }}">
                                 <img
                                     src="{{ asset('uploads/peinture/' ~ (artist.paintings is not empty ? artist.paintings[index].file : '') ) }}"
-                                    class="img-thbnail" alt="{{ artist.name }}" width="100%">
+                                    class="img-thbnail" alt="{{ artist.name }}" width="100%" loading="lazy">
                             </a>
                         </div>
                         <div class="media-body col-12 col-lg-10">

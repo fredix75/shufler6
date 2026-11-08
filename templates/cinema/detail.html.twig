@@ -19,7 +19,7 @@
                 <div class="row">
                     {% set logo = film.pictures|default([])|filter(image => image.type == 'logos')|first %}
                     {% if logo %}
-                        <img class="col-3" src="{{ asset('https://image.tmdb.org/t/p/w1280' ~ logo.path) }}" width="300px">
+                        <img class="col-3" src="{{ asset('https://image.tmdb.org/t/p/w1280' ~ logo.path) }}" width="300px" loading="lazy">
                     {% endif %}
                     <div class="col-9">
                         <h2 style="font-size: 400%;text-shadow: 3px 1px 1px #0b0b0b">{{ film.name|upper }}</h2>
@@ -36,7 +36,7 @@
                 <div>
                 {% for director in film.direction %}
                     <img src="{{ asset('https://image.tmdb.org/t/p/w1280' ~ director.picture) }}"
-                         style="width: 200px;"> {{ director.name }}
+                         style="width: 200px;" loading="lazy"> {{ director.name }}
                 {% endfor %}
                 </div>
             </div>
@@ -45,13 +45,13 @@
             {% if film.poster_path %}
                 <div class="col-3 justify-content-center">
                     <img src="{{ asset('https://image.tmdb.org/t/p/w1280' ~ film.poster_path) }}"
-                         style="width: 100%;">
+                         style="width: 100%;" loading="lazy">
                 </div>
             {% endif %}
             {% for image in film.pictures|default([])|filter(image => image.type != 'logos') %}
                 <a href="#" class="col-3">
                     <div>
-                        <img src="{{ asset('https://image.tmdb.org/t/p/w1280' ~ image.path) }}" style="width: 100%;">
+                        <img src="{{ asset('https://image.tmdb.org/t/p/w1280' ~ image.path) }}" style="width: 100%;" loading="lazy">
                     </div>
                 </a>
             {% endfor %}

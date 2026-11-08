@@ -47,7 +47,7 @@
                 <a id="album-youtube-{{ album.id }}" class="playlist-link icon-youtube"
                    href="{{ album.youtubeKey|youtubeChannelLink }}" data-id="{{ album.youtubeKey }}"
                    data-action="music#popupPlaylist" title="video Playlist">
-                    <img src="{{ asset('images/disk-icon.png') }}" width="50px">
+                    <img src="{{ asset('images/disk-icon.png') }}" width="50px" loading="lazy">
                 </a>
             {% endif %}
         </div>

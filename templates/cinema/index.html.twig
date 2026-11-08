@@ -12,10 +12,10 @@
     <div class="container-fluid" data-controller="cinema">
         <div class="row">
             <div class="col-3">
-                <img src="{{ asset('uploads/cinema/' ~ film.picture) }}" width="100%">
+                <img src="{{ asset('uploads/cinema/' ~ film.picture) }}" width="100%" loading="lazy">
             </div>
             <div class="col-3">
-                <img src="{{ asset('https://image.tmdb.org/t/p/w1280' ~ film.posterPath) }}" width="100%">
+                <img src="{{ asset('https://image.tmdb.org/t/p/w1280' ~ film.posterPath) }}" width="100%" loading="lazy">
             </div>
             <div class="col-6 justify-content-around">
                 <h2>{{ film.name }}</h2>
@@ -41,7 +41,7 @@
                     <div>
                         <p>{{ suggest.name }}</p>
                         <p>({{ suggest.original_title }}) {{ suggest.year }}</p>
-                         <img src="{{ asset('https://image.tmdb.org/t/p/w1280' ~ suggest.poster_path) }}" style="width: 100%;">
+                         <img src="{{ asset('https://image.tmdb.org/t/p/w1280' ~ suggest.poster_path) }}" style="width: 100%;" loading="lazy">
                     </div>
                 </a>
             {% endfor %}

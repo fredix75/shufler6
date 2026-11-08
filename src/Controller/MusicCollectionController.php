@@ -339,7 +339,8 @@ final class MusicCollectionController extends AbstractController
         if (empty($params['album']) && empty($params['is_disambiguate']) && (!empty($params['auteur']) || !empty($params['genres'] || !empty($params['annee'])) || !empty($params['search']))) {
             $albums = $albumRepository->getAlbums($params)
                 ->setFirstResult(0)
-                ->setMaxResults(100)
+                ->setMaxResults(300)
+                ->orderBy('a.name')
                 ->getQuery()->getResult();
             if (count($albums) > 0) {
                 return $this->render('music/couch_list_albums.html.twig', [
