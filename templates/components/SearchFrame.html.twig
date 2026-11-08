@@ -1,0 +1,52 @@
+{% extends 'components/HorizontalCard.html.twig' %}
+
+<twig:block name="picture">
+    <a class="video-link" href="{{ vignette.url }}"
+       data-action="music#popup">
+        <img src="{{ vignette.link }}"
+             class="img-fluid rounded-start object-fit-cover"
+             alt="{{ vignette.name }}" title="{{ vignette.name }}" loading="lazy"
+             width="100%">
+    </a>
+</twig:block>
+<twig:block name="title">{{ vignette.name }}</twig:block>
+<twig:block name="content">
+    <div class="d-flex justify-content-around mt-4">
+        {% if is_granted('ROLE_AUTEUR') %}
+            {% set class = "bi bi-patch-plus" %}
+            {% if idVideo is defined and idVideo != 0 %}
+                {% set class = "bi bi-arrow-left-right" %}
+            {% endif %}
+            {% if idTrack is defined %}
+                <div class="link_edit" style="position:relative;">
+                    <a href="#"
+                       class="btn btn-secondary"
+                       data-action="video#editTrack"
+                       data-url="{{ vignette.url }}">
+                        <i class="bi bi-arrow-left-right"></i>
+                    </a>
+                </div>
+            {% elseif idCloudtrack is defined %}
+                <div class="link_edit" style="position:relative;">
+                    <a href="#"
+                       class="btn btn-secondary"
+                       data-action="video#editCloudtrack"
+                       data-url="{{ vignette.url }}">
+                        <i class="bi bi-arrow-left-right"></i>
+                    </a>
+                </div>
+            {% else %}
+                <div class="link_edit" style="position:relative;">
+                    <a href="#"
+                       class="btn btn-secondary"
+                       data-action="video#edit"
+                       data-url="{{ vignette.url }}">
+                        <i class="{{ class }}"></i>
+                    </a>
+                </div>
+            {% endif %}
+        {% endif %}
+        <span>{{ vignette.author }}</span>
+        <span class="badge bg-secondary">{{ vignette.date }}</span>
+    </div>
+</twig:block>

@@ -3,16 +3,18 @@
 {% block title %}{{ parent() }} :: Radial{% endblock %}
 
 {% block body %}
-    <h1>Radial</h1>
-    <div class="row g-4 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4" data-controller="music">
-        {% for track in tracks %}
-            <twig:PieceFrame :piece="track"/>
-        {% endfor %}
-    </div>
-    {% if tracks.hasPrevious is defined or tracks.hasNext is defined %}
-        <div class="pagination:container justify-content-center mt-4">
-            {{ ux_pagination(tracks) }}
+    <div class="row">
+        <h1 style="text-align: center">Radial</h1>
+        <div class="row col-12 col-lg-10 col-xxl-8 mx-auto g-4 row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xxl-3" data-controller="music">
+            {% for track in tracks %}
+                <twig:PieceFrame :piece="track"/>
+            {% endfor %}
         </div>
-    {% endif %}
+        {% if tracks.hasPrevious is defined or tracks.hasNext is defined %}
+            <div class="pagination:container justify-content-center mt-4">
+                {{ ux_pagination(tracks) }}
+            </div>
+        {% endif %}
+    </div>
     {% include 'music/part/_filters.html.twig' %}
 {% endblock %}

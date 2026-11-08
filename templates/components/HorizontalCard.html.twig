@@ -1,4 +1,4 @@
-<div{{ attributes }}>
+<div>
     <div class="card">
         <div class="row g-0">
             <div class="col-4" style="overflow: hidden;">
@@ -6,7 +6,10 @@
             </div>
             <div class="col-8 d-flex flex-column">
                 <div class="card-body">
-                    <h5 class="card-title">{{ this.title }}</h5>
+                    <h5 class="card-title">{% block title %}{% endblock %}</h5>
+                    <div class="gap-4">
+                        {% block subtitle %}{% endblock %}
+                    </div>
                     <div class="card-text">{% block content %}{% endblock %}</div>
                 </div>
                 <div class="d-flex justify-content-between p-2 pb-1 mt-auto">

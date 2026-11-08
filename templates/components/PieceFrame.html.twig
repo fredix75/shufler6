@@ -1,33 +1,29 @@
-<div{{ attributes }}>
-    <div class="card">
-        <div class="row g-0">
-            <div class="col-4" style="overflow: hidden;">
-                <a class="video-link" href="{{ this.piece.youtubeKey|popUpYoutube }}"
-                   data-action="music#popup">
-                    <img src="{{ this.piece.albumPicture|default(asset('images/no_cover.jpeg')) }}"
-                         class="img-fluid rounded-start object-fit-cover"
-                         alt="{{ this.piece.author ~ ' ' ~ this.piece.title }}" title="{{ this.piece.author ~ ' ' ~ this.piece.title }}" loading="lazy" width="100%">
-                </a>
-            </div>
-            <div class="col-8 d-flex flex-column">
-                <div class="card-body">
-                    <h5 class="card-title">{{ this.piece.title }}</h5>
-                    <span class="card-subtitle"><small>{{ this.piece.author|upper }}</small></span><br>
-                    <span class="card-subtitle"><small>{{ this.piece.albumName }}</small></span>
-                </div>
-                <div class="d-flex justify-content-between p-2 pb-1 mt-auto">
-                    <div class="gap-4">
-                    <span class="text-secondary"><small>{{ this.piece.year|yearDisplay }}</small></span>
-                    <span class="text-secondary categorie">{{ this.piece.kind }}</span>
-                    </div>
-                    <div class="d-flex gap-4">
-                        {% if is_granted('ROLE_ADMIN') %}
-                        <a href="#" class="text-secondary" title="Favori" data-action="music#setNote" data-id={{ this.piece.idTrack }} data-note={{ this.piece.note > 0 ? -1 : 4 }} data-origin="{{ this.piece.dataOrigin }}"><i class="bi bi-heart{{ this.piece.note > 0 ? '-fill' : '' }}"></i></a>
-                        <a href="#" class="text-secondary" title="Ajouter à une playlist"><i class="bi bi-pencil"></i></a>
-                    {% endif%}
-                    </div>
-                </div>
-            </div>
-        </div>
+{% extends 'components/HorizontalCard.html.twig' %}
+{% block picture %}
+    <a class="video-link" href="{{ this.piece.youtubeKey|popUpYoutube }}"
+       data-action="music#popup">
+        <img src="{{ this.piece.albumPicture|default(asset('images/no_cover.jpeg')) }}"
+             class="img-fluid rounded-start object-fit-cover"
+             alt="{{ this.piece.author ~ ' ' ~ this.piece.title }}"
+             title="{{ this.piece.author ~ ' ' ~ this.piece.title }}" loading="lazy" width="100%">
+    </a>
+{% endblock %}
+{% block title %}{{ this.piece.title }}{% endblock %}
+{% block subtitle %}
+    <span class="card-subtitle"><small>{{ this.piece.author|upper }}</small></span><br>
+    <span class="card-subtitle"><small>{{ this.piece.albumName }}</small></span>
+{% endblock %}
+{% block bottomTools %}
+    <span class="text-secondary"><small>{{ this.piece.year|yearDisplay }}</small></span>
+    <span class="text-secondary categorie">{{ this.piece.kind }}</span>
+    <div class="d-flex gap-4">
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="#" class="text-secondary" title="Favori" data-action="music#setNote"
+               data-id={{ this.piece.idTrack }} data-note={{ this.piece.note > 0 ? -1 : 4 }}
+               data-origin="{{ this.piece.dataOrigin }}"><i
+                    class="bi bi-heart{{ this.piece.note > 0 ? '-fill' : '' }}"></i></a>
+            <a href="#" class="text-secondary" title="Ajouter à une playlist"><i
+                    class="bi bi-pencil"></i></a>
+        {% endif %}
     </div>
-</div>
+{% endblock %}
