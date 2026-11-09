@@ -65,4 +65,6 @@ return [
     'tom-select/dist/css/tom-select.default.min.css' => ['version' => '2.6.2', 'type' => 'css'],
     'leaflet' => ['version' => '1.9.4'],
     'leaflet/dist/leaflet.min.css' => ['version' => '1.9.4', 'type' => 'css'],
+    'chart.js' => ['version' => '4.6.1'],
+    '@kurkle/color' => ['version' => '0.3.4'],
 ];

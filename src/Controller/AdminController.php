@@ -6,6 +6,7 @@ use App\Form\ExtraNotationType;
 use App\Helper\ApiRequester;
 use App\Helper\VideoHelper;
 use App\Repository\MusicCollection\TrackRepository;
+use App\Repository\RadialRepository;
 use App\Repository\VideoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,6 +17,8 @@ use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
+use Symfony\UX\Chartjs\Model\Chart;
 
 #[Route('/admin', name: 'admin')]
 #[IsGranted('ROLE_ADMIN')]
@@ -100,4 +103,52 @@ final class AdminController extends AbstractController
             'tracks_0' => $tracks0,
         ]);
     }
+
+    #[Route('/radial', name: '_radial')]
+    public function radialStats(ChartBuilderInterface $chartBuilder, RadialRepository $radialRepository): Response
+    {
+        $stats = $radialRepository->createQueryBuilder('r')
+            ->select('r.year, count(r.id) as nb')
+            ->addSelect('SUM(CASE WHEN r.youtubeKey IS NOT NULL THEN 1 ELSE 0 END) AS tracked')
+            ->groupBy('r.year')
+            ->orderBy('r.year', \SortDirection::Descending)
+            ->getQuery()->getResult();
+
+        $chart = $chartBuilder->createChart(Chart::TYPE_BAR);
+
+        $chart->setData([
+            'labels' => array_map(fn($stat) => $stat['year'], $stats),
+            'backgroundColor' => 'rgb(45,45,45)',
+            'datasets' => [
+                [
+                    'label' => 'Non trackés',
+                    'backgroundColor' => 'rgb(255, 99, 132)',
+                    'data' => array_map(fn($stat) => (int)$stat['nb'] - (int)$stat['tracked'], $stats),
+                ],
+                [
+                    'label' => 'Trackés',
+                    'backgroundColor' => 'rgb(54, 162, 235)',
+                    'data' => array_map(fn($stat) => (int)$stat['tracked'], $stats),
+                ],
+            ],
+        ]);
+
+        $chart->setOptions([
+            'animation' => true,
+            'scales' => [
+                'x' => [
+                    'stacked' => true,
+                ],
+                'y' => [
+                    'stacked' => true,
+                    'suggestedMax' => 10000,
+                ],
+            ],
+        ]);
+
+        return $this->render('admin/radial_stats.html.twig', [
+            'chart' => $chart,
+        ]);
+    }
+
 }

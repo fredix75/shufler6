@@ -49,6 +49,7 @@
         "symfony/translation": "8.1.*",
         "symfony/twig-bundle": "8.1.*",
         "symfony/ux-autocomplete": "^3.6",
+        "symfony/ux-chartjs": "^3.7",
         "symfony/ux-leaflet-map": "^3.4",
         "symfony/ux-map": "^3.4",
         "symfony/ux-pagination": "^3.6",

@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} :: Radial Stats{% endblock %}
+
+{% block body %}
+    <h1>Radial Stats</h1>
+    <div>
+        {{ render_chart(chart, {'class': 'my-chart'}) }}
+    </div>
+{% endblock %}
+
+

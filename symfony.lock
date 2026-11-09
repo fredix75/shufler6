@@ -367,6 +367,9 @@
             "config/routes/ux_autocomplete.yaml"
         ]
     },
+    "symfony/ux-chartjs": {
+        "version": "v3.7.0"
+    },
     "symfony/ux-leaflet-map": {
         "version": "3.6",
         "recipe": {
