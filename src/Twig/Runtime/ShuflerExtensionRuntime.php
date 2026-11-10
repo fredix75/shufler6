@@ -23,7 +23,7 @@ final class ShuflerExtensionRuntime implements RuntimeExtensionInterface
     /**
      * Display category
      */
-    public function categoryFilter(int $categorie): string
+    public function categoryFilter(?int $categorie = 0): string
     {
         $categories = [0 => 'ALL'] + $this->videoParameters['categories'];
 

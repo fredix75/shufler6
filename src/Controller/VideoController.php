@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Dto\VideoQuery;
 use App\Entity\Video;
 use App\Form\FilterVideosFormType;
 use App\Form\VideoFormType;
@@ -12,6 +13,7 @@ use App\Repository\VideoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -25,22 +27,20 @@ use Symfony\UX\Pagination\PaginatorInterface;
 final class VideoController extends AbstractController
 {
 
-    #[Route('/list/{categorie}/{genre}/{periode}/{page}',
+    #[Route('/list/{page}',
         name: '_list',
-        requirements: ['categorie' => '\d+', 'genre' => '\d+|-\d+', 'page' => '\d+'],
-        defaults: ['categorie' => 0, 'genre' => 0, 'periode' => '0', 'page' => 1]
+        requirements: ['page' => '\d+'],
+        defaults: ['page' => 1]
     )]
     public function list(
         VideoRepository $videoRepository,
         PaginatorInterface $paginator,
-        int             $categorie,
-        int             $genre,
-        string          $periode,
+        #[MapQueryString] VideoQuery $query
     ): Response
     {
         $videoParameters = $this->getParameter('shufler_video');
         $videos = $paginator
-            ->query($videoRepository->getVideosQuery($categorie, $genre, $periode))
+            ->query($videoRepository->getVideosQuery($query->categorie, $query->genre, $query->periode))
             ->perPage($videoParameters['max_list'])
             ->throwOnOutOfRange()
             ->paginate();
@@ -59,24 +59,17 @@ final class VideoController extends AbstractController
         ]);
     }
 
-    #[Route('/couch/{categorie}/{genre}/{periode}',
-        name: '_couch',
-        requirements: ['categorie' => '\d+', 'genre' => '\d+|-\d+'],
-        defaults: ['categorie' => 0, 'genre' => 0, 'periode' => '0']
-    )]
+    #[Route('/couch', name: '_couch')]
     public function couch(
-        Request         $request,
         VideoRepository $videoRepository,
         VideoHelper     $videoHelper,
-        ?int            $categorie,
-        ?int            $genre,
-        string          $periode
+        #[MapQueryString] VideoQuery $query
     ): Response
     {
-        $categorie = (int)$request->query->get('categorie') ?? $categorie;
-        $genre = (int)$request->query->get('genre') ?? $genre;
-        $periode = $request->query->get('periode') ?? $periode;
-        $search = $request->query->get('search') ?? null;
+        $categorie = $query->categorie;
+        $genre = $query->genre;
+        $periode = $query->periode;
+        $search = $query->search;
 
         $form = $this->createForm(FilterVideosFormType::class, [
             'categorie' => $categorie,

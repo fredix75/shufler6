@@ -6,7 +6,7 @@
     <section class="row d-flex row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 m-4"
              data-controller="video">
         <div>
-            <h1>{{ app.current_route_parameters.categorie|categorieDisplay|trans }}</h1>
+            <h1>{{ app.request.query.get('categorie')|default(0)|categorieDisplay|trans }}</h1>
             <div class="row justify-content-start">
                 <div class="col col-8">
                     <div class="d-grid gap-1 dropend">
@@ -17,12 +17,12 @@
                         <ul class="dropdown-menu">
                             {% for index, value in categories %}
                                 <li>
-                                    <a class="dropdown-item {% if index == app.current_route_parameters.categorie %}active{% endif %}"
-                                       href="{{ path('video_list', {'categorie' : index , 'genre' : index == 2 ? app.current_route_parameters.genre : 0, 'periode' : app.current_route_parameters.periode}) }}">{{ value }}</a>
+                                    <a class="dropdown-item {% if index == app.request.query.get('categorie') %}active{% endif %}"
+                                       href="{{ path('video_list', {'categorie' : index , 'genre' : index == 2 ? app.request.query.get('genre') : 0, 'periode' : app.request.query.get('periode') }) }}">{{ value }}</a>
                                 </li>
                             {% endfor %}
                         </ul>
-                        {% if app.current_route_parameters.categorie == 2 %}
+                        {% if app.request.query.get('categorie') == 2 %}
                             <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown"
                                     aria-expanded="false">
                                 <i class="bi bi-list-task"></i> Genre
@@ -30,8 +30,8 @@
                             <ul class="dropdown-menu">
                                 {% for index, value in genres %}
                                     <li>
-                                        <a class="dropdown-item {% if index == app.current_route_parameters.genre %}active{% endif %}"
-                                           href="{{ path('video_list', {'categorie' : app.current_route_parameters.categorie, 'genre' : index, 'periode' : app.current_route_parameters.periode}) }}">{{ value }}</a>
+                                        <a class="dropdown-item {% if index == app.request.query.get('genre') %}active{% endif %}"
+                                           href="{{ path('video_list', {'categorie' : app.request.query.get('categorie'), 'genre' : index, 'periode' : app.request.query.get('periode')}) }}">{{ value }}</a>
                                     </li>
                                 {% endfor %}
                             </ul>
@@ -43,23 +43,23 @@
                         <ul class="dropdown-menu">
                             {% for index, value in periodes %}
                                 <li>
-                                    <a class="dropdown-item {% if index == app.current_route_parameters.periode %}active{% endif %}"
-                                       href="{{ path('video_list', {'categorie' : app.current_route_parameters.categorie, 'genre' : app.current_route_parameters.genre, 'periode' : index}) }}">{{ value }}</a>
+                                    <a class="dropdown-item {% if index == app.request.query.get('periode') %}active{% endif %}"
+                                       href="{{ path('video_list', {'categorie' : app.request.query.get('categorie'), 'genre' : app.request.query.get('genre'), 'periode' : index}) }}">{{ value }}</a>
                                 </li>
                             {% endfor %}
                         </ul>
                         <a type="button" class="btn btn-secondary"
-                           href="{{ path('video_couch', {'categorie' : app.current_route_parameters.categorie, 'genre' : app.current_route_parameters.genre, 'periode' : app.current_route_parameters.periode}) }}"><i
+                           href="{{ path('video_couch', {'categorie' : app.request.query.get('categorie'), 'genre' : app.request.query.get('genre'), 'periode' : app.request.query.get('periode') }) }}"><i
                                 class="bi bi-collection-play"></i>&nbsp;Couch' Mode</a>
                     </div>
                     <br><br>
                 </div>
                 <div class="col col-12 text-center">
-                    {% if app.current_route_parameters.genre != 0 %}
-                        <div class="page_videos_genre">{{ app.current_route_parameters.genre|genreDisplay|trans }}</div>
+                    {% if app.request.query.get('genre') != 0 %}
+                        <div class="page_videos_genre">{{ app.request.query.get('genre')|genreDisplay|trans }}</div>
                     {% endif %}
-                    {% if app.current_route_parameters.periode != 0 %}
-                        <div class="page_videos_periode">{{ app.current_route_parameters.periode }}</div>
+                    {% if app.request.query.get('periode') != 0 %}
+                        <div class="page_videos_periode">{{ app.request.query.get('periode') }}</div>
                     {% endif %}
                 </div>
             </div>
