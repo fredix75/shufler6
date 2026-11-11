@@ -50,9 +50,11 @@ class UpdateMusicRadialCommand extends Command
         $tracks = $this->radialRepository
             ->createQueryBuilder('r')
             ->select('r.author', 'r.name')
-            ->distinct(true)
+            ->distinct()
+            ->addSelect( 'r.year')
             ->andWhere("r.youtubeKey IS NULL")
             ->setMaxResults(200)
+            ->orderBy('r.year', 'DESC')
             ->getQuery()->getResult();
 
         $i = $nbNope = 0;
