@@ -3,24 +3,26 @@
 namespace App\Controller\Api;
 
 
+use ApiPlatform\Doctrine\Orm\Paginator;
+use App\Dto\VideoQuery;
 use App\Repository\VideoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
+use Symfony\UX\Pagination\PaginatorInterface;
 
 class VideoController extends AbstractController
 {
-    public function __invoke(Request $request, VideoRepository $videoRepository): array
+    public function __invoke(VideoRepository $videoRepository, PaginatorInterface $paginator, #[MapQueryString] VideoQuery $query): array
     {
-        $categorie = $request->query->get('categorie') ?? null;
-        $genre = $request->query->get('genre') ?? null;
-        $periode = $request->query->get('periode') ?? '0';
-        $page = $request->query->get('page') ?? 1;
+        $categorie = $query->categorie;
+        $genre = $query->genre;
+        $periode = $query->periode;
         $maxItems = $this->getParameter('shufler_video')['api_max_list'];
 
-        return $videoRepository->getVideosQuery($categorie, $genre, $periode)
-            ->setFirstResult(($page - 1) * $maxItems)
-            ->setMaxResults($maxItems)
-            ->getQuery()->getResult();
+        return $paginator->query($videoRepository->getVideosQuery($categorie, $genre, $periode)->orderBy('v.id', 'ASC'))
+            ->perPage($maxItems)
+            ->throwOnOutOfRange()
+            ->paginate()->getItems();
     }
-
 }

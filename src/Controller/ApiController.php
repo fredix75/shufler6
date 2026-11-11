@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Dto\ApiSearchPlaylistQuery;
+use App\Dto\ApiSearchVideoQuery;
 use App\Entity\Commune;
 use App\Form\SearchCommuneType;
 use App\Helper\ApiRequester;
@@ -12,6 +14,7 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -39,16 +42,16 @@ final class ApiController extends AbstractController
      */
     #[Route('/video', name: '_video')]
     #[IsGranted('ROLE_ADMIN')]
-    public function searchVideo(Request $request, ApiRequester $apiRequester): Response
+    public function searchVideo(Request $request, ApiRequester $apiRequester, #[MapQueryString] ApiSearchVideoQuery $query): Response
     {
         $search = $idVideo = $idTrack = $idCloudtrack = $wiki = null;
         $resultat = [];
 
-        if ($request->query->get('search_api') || $request->request->get('search_api')) {
-            $search = $request->request->get('search_api') ?? $request->query->get('search_api');
-            $idVideo = $request->request->get('id_video') ?? $request->query->get('id_video');
-            $idTrack = $request->request->get('id_track') ?? $request->query->get('id_track');
-            $idCloudtrack = $request->request->get('id_cloud_track') ?? $request->query->get('id_cloud_track');
+        if ($query->search_api || $request->request->get('search_api')) {
+            $search = $request->request->get('search_api') ?? $query->search_api;
+            $idVideo = $request->request->get('id_video') ?? $query->id_video;
+            $idTrack = $request->request->get('id_track') ?? $query->id_track;
+            $idCloudtrack = $request->request->get('id_cloud_track') ?? $query->id_cloud_track;
 
             $resultat = [
                 'youtube' => [
@@ -183,14 +186,14 @@ final class ApiController extends AbstractController
 
     #[Route('/playlist', name: '_playlist')]
     #[IsGranted('ROLE_ADMIN')]
-    public function searchPlaylist(Request $request, ApiRequester $apiRequester): Response
+    public function searchPlaylist(Request $request, ApiRequester $apiRequester, #[MapQueryString] ApiSearchPlaylistQuery $query): Response
     {
         $search = $idAlbum = null;
         $resultat = [];
-        if ($request->request->get('search_api') || $request->query->get('search_api')) {
-            $search = $request->request->get('search_api') ?? $request->query->get('search_api');
-            $idAlbum = $request->request->get('id_album') ?? $request->query->get('id_album');
-            $idCloudalbum = $request->request->get('id_cloudalbum') ?? $request->query->get('id_cloudalbum');
+        if ($request->request->get('search_api') || $query->search_api) {
+            $search = $request->request->get('search_api') ?? $query->search_api;
+            $idAlbum = $request->request->get('id_album') ?? $query->id_album;
+            $idCloudalbum = $request->request->get('id_cloudalbum') ?? $query->id_cloudalbum;
 
             $response = $apiRequester->sendRequest(VideoHelper::YOUTUBE, '/search', [
                 'q' => $search,
@@ -221,16 +224,16 @@ final class ApiController extends AbstractController
 
     #[Route('/album_picture', name: '_album_picture')]
     #[IsGranted('ROLE_ADMIN')]
-    public function searchPicture(Request $request, ApiRequester $apiRequester): Response
+    public function searchPicture(Request $request, ApiRequester $apiRequester, #[MapQueryString] ApiSearchPlaylistQuery $query): Response
     {
         $album = $idAlbum = $artist = null;
         $resultat = [];
-        if ($request->query->get('search_api') || $request->request->get('search_api')
-            || $request->query->get('artist') || $request->request->get('artist')) {
+        if ($query->search_api || $request->request->get('search_api')
+            || $query->artist || $request->request->get('artist')) {
 
-            $album = $request->request->get('search_api') ?? $request->query->get('search_api');
-            $artist = $request->request->get('artist') ?? $request->query->get('artist');
-            $idAlbum = $request->request->get('id_album') ?? $request->query->get('id_album') ?? null;
+            $album = $request->request->get('search_api') ?? $query->search_api;
+            $artist = $request->request->get('artist') ?? $query->artist;
+            $idAlbum = $request->request->get('id_album') ?? $query->id_album;
 
             $params = [
                 'album' => $album != "" ? $album : $artist,

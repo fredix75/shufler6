@@ -54,18 +54,18 @@ class TrackRepository extends ServiceEntityRepository
     }
 
     public function getTracksAjax(
-        array $data,
+        ?string $query,
         int $page = 0,
         ?int $max = null,
         string $sort = 'titre',
-        string $dir = 'ASC'
+        ?string $dir = 'ASC'
     ): array
     {
         $qb = $this->createQueryBuilder('t');
 
-        if (!empty($data['query'])) {
+        if ($query) {
             $qb->andWhere('t.auteur like :query OR t.artiste like :query OR t.titre like :query OR t.album like :query')
-                ->setParameter(':query', "%" . $data['query'] . "%");
+                ->setParameter(':query', "%" . $query . "%");
         }
         $direction = strtoupper($dir) === 'ASC' ? \SortDirection::Ascending : \SortDirection::Descending;
         $qb->orderBy('t.' . $sort, $direction);
@@ -103,11 +103,11 @@ class TrackRepository extends ServiceEntityRepository
      * @throws Exception
      */
     public function getTracksByAlbumsAjax(
-        array $data,
+        ?string $query,
         int $page = 0,
         ?int $max = null,
         string $sort = 'album',
-        string $dir = 'ASC',
+        ?string $dir = 'ASC',
     ): array
     {
         $params[':sort'] = $sort;
@@ -118,9 +118,9 @@ SELECT a.id as id, t.album, t.artiste, a.youtube_key as youtubeKey, json_arrayag
 FROM piece t
 SQL;
         $rawSQL .= ' JOIN album a on a.auteur=t.artiste and a.name=t.album WHERE t.data_type = 1';
-        if (!empty($data['query'])) {
-            $rawSQL .= ' AND (artiste like "%'.$data['query'].'%" OR album like "%'.$data['query'].'%")';
-            $params[':query'] = '%'.$data['query'].'%';
+        if ($query) {
+            $rawSQL .= ' AND (artiste like "%'.$query.'%" OR album like "%'.$query.'%")';
+            $params[':query'] = '%'.$query.'%';
         }
         $rawSQL .= " GROUP BY id, album, artiste, a.youtube_key ORDER BY $sort $dir";
 

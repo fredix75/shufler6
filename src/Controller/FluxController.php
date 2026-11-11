@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Dto\FluxFileQuery;
 use App\Entity\Flux;
 use App\Form\FluxFormType;
 use App\Helper\FluxHelper;
@@ -13,6 +14,8 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -22,9 +25,9 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class FluxController extends AbstractController
 {
     #[Route('/podcasts', name: '_podcasts')]
-    public function podcasts(FluxRepository $fluxRepository, Request $request, ParameterBagInterface $parameterBag): Response
+    public function podcasts(FluxRepository $fluxRepository, ParameterBagInterface $parameterBag, #[MapQueryParameter] ?int $resource): Response
     {
-        if ($request->query->get('resource')) {
+        if ($resource) {
             $resources = [];
             $dir = $parameterBag->get('uploads') . $parameterBag->get('resources')['downloads'];
             if (is_dir($dir)) {
@@ -104,13 +107,14 @@ final class FluxController extends AbstractController
     }
 
     #[Route('/handle', name: '_handle_file')]
-    public function handleFlux(Request $request, FluxHelper $fluxHelper): Response
+    public function handleFlux(#[MapQueryString] FluxFileQuery $query, Request $request, FluxHelper $fluxHelper): Response
     {
         if ($request->isXmlHttpRequest()) {
-            $id = $request->query->get('id');
-            $url = $request->query->get('url');
-            $type = $request->query->get('type');
-            $page = $request->query->get('page');
+            $id = $query->id;
+            $url = $query->url;
+            $type = $query->type;
+            $page = $query->page;
+
             $nbParPage = $this->getParameter('shufler_flux')['max_flux_card'];
             $offset = ($page - 1) * $nbParPage;
             $infos = $fluxHelper->getContent($url, $nbParPage, $offset);

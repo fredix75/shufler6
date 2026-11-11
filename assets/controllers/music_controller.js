@@ -198,7 +198,7 @@ export default class extends PieceController {
             url = '/fr/music/artist';
         }
 
-        query += '&modal=true';
+        query += '&isModal=true';
 
         if ($(event.target).closest('a').data('album')) {
             const offcanvas = new Offcanvas('#offcanvasRight');

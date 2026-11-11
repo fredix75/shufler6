@@ -2,17 +2,21 @@
 
 namespace App\Controller;
 
+use App\Dto\MusicQuery;
 use App\Entity\MusicCollection\Album;
 use App\Entity\MusicCollection\CloudAlbum;
 use App\Form\AlbumFormType;
 use App\Form\CloudAlbumFormType;
 use App\Form\FilterVTrackType;
 use App\Helper\ApiRequester;
+use App\Helper\MusicHelper;
 use App\Repository\MusicCollection\AlbumRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\Pagination\PaginatorInterface;
@@ -101,9 +105,9 @@ final class AlbumController extends AbstractController
     }
 
     #[Route('/cloud/delete/{id}', name: '_cloud_delete', requirements: ['id' => '\d+'])]
-    public function deleteCloudTrack(CloudAlbum $cloudAlbum, Request $request, EntityManagerInterface $em): Response
+    public function deleteCloudTrack(CloudAlbum $cloudAlbum, EntityManagerInterface $em, #[MapQueryParameter] string $_token): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $cloudAlbum->getId(), $request->query->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $cloudAlbum->getId(), $_token)) {
             $em->remove($cloudAlbum);
             $em->flush();
             $this->addFlash('success', 'Un album a été supprimée');
@@ -114,17 +118,9 @@ final class AlbumController extends AbstractController
     }
 
     #[Route('s/{page}', name: 's', requirements: ['page' => '\d+'], defaults: ['page' => 1])]
-    public function getAlbums(Request $request, AlbumRepository $albumRepository, PaginatorInterface $paginator): Response
+    public function getAlbums(#[MapQueryString] MusicQuery $query, Request $request, AlbumRepository $albumRepository, MusicHelper $musicHelper, PaginatorInterface $paginator): Response
     {
-        $p = $request->query->all();
-        $params = [
-            'auteur' => $p['auteur'] ?? null,
-            'album' => $p['album'] ?? null,
-            'genres' => $p['genres'] ?? null,
-            'annee' => $p['annee'] ?? null,
-            'search' => $p['search'] ?? null,
-            'random' => !empty($p['random']) && $p['random'] === '1',
-        ];
+        $params = $musicHelper->handleParams($query);
 
         $form = $this->createForm(FilterVTrackType::class, $params, ['mode' => 'album']);
         $form->handleRequest($request);
@@ -133,7 +129,7 @@ final class AlbumController extends AbstractController
 
         if (false === $params['random']) {
             $albums = $paginator
-                ->query($albumRepository->getAlbums($params))
+                ->query($albumRepository->getAlbums($params)->orderBy('a.name'))
                 ->perPage($max)
                 ->throwOnOutOfRange()
                 ->paginate();

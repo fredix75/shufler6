@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -40,9 +41,9 @@ final class TipController extends AbstractController
     }
 
     #[Route('/delete/{id}', name: '_delete', requirements: ['id' => '\d+'], methods: ['GET'])]
-    public function delete(Tip $tip, Request $request, EntityManagerInterface $em): Response
+    public function delete(Tip $tip, EntityManagerInterface $em, #[MapQueryParameter] string $_token): Response
     {
-        if ($this->isCsrfTokenValid('delete'. $tip->getId(), $request->query->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete'. $tip->getId(), $_token)) {
             $em->remove($tip);
             $em->flush();
             $this->addFlash('success', 'Une note a été supprimée');

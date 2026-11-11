@@ -2,6 +2,7 @@
 
 namespace App\Helper;
 
+use App\Dto\MusicQuery;
 use App\Entity\MusicCollection\Piece;
 use App\Entity\MusicCollection\Track;
 use App\Entity\MusicCollection\VTrack;
@@ -17,19 +18,18 @@ class MusicHelper
     {
     }
 
-    public function handleParams(Request $request): array
+    public function handleParams(MusicQuery $query): array
     {
-        $p = $request->query->all();
-
         return [
-            'auteur' => $p['auteur'] ?? null,
-            'album' => $p['album'] ?? null,
-            'genres' => $p['genres'] ?? null,
-            'annee' => $p['annee'] ?? null,
-            'search' => $p['search'] ?? null,
-            'note' => $p['note'] ?? null,
+            'auteur' => $query->auteur,
+            'album' => $query->album,
+            'genres' => $query->genres,
+            'annee' => $query->annee,
+            'search' => $query->search,
+            'note' => $query->note,
+            'random' => $query->random,
             'hasYoutubeKey' => true,
-            'is_disambiguate' => $p['is_disambiguate'] ?? false,
+            'is_disambiguate' => $query->is_disambiguate,
         ];
     }
 

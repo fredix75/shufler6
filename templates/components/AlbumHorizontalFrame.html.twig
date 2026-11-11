@@ -9,7 +9,7 @@
 <twig:block name="title">{{ album.name }}</twig:block>
 <twig:block name="content">
     <div class="card-subtitle">{{ album.auteur }}</div>
-    <span>{{ album.annee }}</span>
+    <span>{{ album.annee|yearDisplay }}</span>
     <div class="text-center mt-2">
         <a type="button" class="btn btn-secondary" href="{{ path('music_couch', {'album': album.name, 'auteur': album.auteur}) }}"><i class="bi bi-check-circle-fill"></i></a>
     </div>

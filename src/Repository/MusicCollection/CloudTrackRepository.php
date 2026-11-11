@@ -17,18 +17,18 @@ class CloudTrackRepository extends ServiceEntityRepository
     }
 
     public function getTracksAjax(
-        array $data,
+        ?string $query,
         int $page = 0,
         ?int $max = null,
         string $sort = 'titre',
-        string $dir = 'ASC'
+        ?string $dir = 'ASC'
     ): array
     {
         $qb = $this->createQueryBuilder('t');
 
-        if (!empty($data['query'])) {
+        if ($query) {
             $qb->andWhere('t.auteur like :query OR t.titre like :query')
-                ->setParameter(':query', "%" . $data['query'] . "%");
+                ->setParameter(':query', "%" . $query . "%");
         }
         $direction = strtoupper($dir) === 'ASC' ? \SortDirection::Ascending : \SortDirection::Descending;
         $qb->orderBy('t.' . $sort, $direction);

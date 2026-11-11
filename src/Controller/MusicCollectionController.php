@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Dto\DataTableQuery;
+use App\Dto\MusicQuery;
 use App\Entity\MusicCollection\Album;
 use App\Entity\MusicCollection\Piece;
 use App\Entity\MusicCollection\Track;
@@ -27,6 +29,8 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Repository\MusicCollection\AlbumRepository;
 use App\Repository\MusicCollection\TrackRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -37,44 +41,39 @@ final class MusicCollectionController extends AbstractController
 {
     #[Route('/all/{mode}', name: '_all', requirements: ['mode' => 'tracks|albums'], defaults: ['mode' => 'tracks'], methods: ['GET'])]
     public function getAll(
-        Request                 $request,
-        ParameterBagInterface   $parameters,
-        TrackRepository         $trackRepository,
-        ShuflerExtensionRuntime $shuflerRuntime,
-        string                  $mode
+        Request                          $request,
+        ParameterBagInterface            $parameters,
+        TrackRepository                  $trackRepository,
+        ShuflerExtensionRuntime          $shuflerRuntime,
+        #[MapQueryString] DataTableQuery $query,
+        string                           $mode
     ): Response
     {
-
         $columnsToDisplay = $parameters->get('music_collection')['track_fields'];
         if ($mode === 'albums') {
             $columnsToDisplay = $parameters->get('music_collection')['album_fields'];
         }
 
         if ($request->isXmlHttpRequest()) {
-            $parameters = $request->query->all();
-            $length = $parameters['length'];
-            $length = $length && ($length > 0) ? $length : 0;
+            $length = $query->length;
+            $start = $query->start;
+            $search = $query->search;
+            $order = $query->order;
 
-            $start = $parameters['start'];
-            $start = $length ? ($start && $start > 0 ? $start : 0) / $length : 0;
+            $offset = $length ? ($start && $start > 0 ? $start : 0) / $length : 0;
+            $search = !empty($search['value']) ? $search['value'] : null;
 
-            $search = $parameters['search'];
-
-            $filters = [
-                'query' => @$search['value']
-            ];
-
-            $sort = !empty($parameters['order'][0]['column']) ? $parameters['order'][0]['column'] : 1;
+            $sort = !empty($order[0]['column']) ? $order[0]['column'] : 1;
             $sort = $columnsToDisplay[$sort]['data'];
 
-            $dir = @$parameters['order'][0]['dir'];
+            $dir = !empty($order[0]['dir']) ? $order[0]['dir'] : null;
 
             if ($mode === 'tracks') {
-                $tracks = $trackRepository->getTracksAjax($filters, $start, $length, $sort, $dir);
+                $tracks = $trackRepository->getTracksAjax($search, $offset, $length, $sort, $dir);
 
                 $output = [
                     'data' => [],
-                    'recordsFiltered' => count($trackRepository->getTracksAjax($filters, 0, false)),
+                    'recordsFiltered' => count($trackRepository->getTracksAjax($search, 0, false)),
                     'recordsTotal' => $trackRepository->count([]),
                 ];
                 foreach ($tracks as $track) {
@@ -98,13 +97,12 @@ final class MusicCollectionController extends AbstractController
                     ];
                 }
             } elseif ($mode === 'albums') {
-
-                $albums = $trackRepository->getTracksByAlbumsAjax($filters, $start, $length, $sort, $dir);
+                $albums = $trackRepository->getTracksByAlbumsAjax($search, $offset, $length, $sort, $dir);
 
                 $output = [
                     'data' => [],
-                    'recordsFiltered' => count($trackRepository->getTracksByAlbumsAjax($filters, 0, false)),
-                    'recordsTotal' => count($trackRepository->getTracksByAlbumsAjax([], 0, false)),
+                    'recordsFiltered' => count($trackRepository->getTracksByAlbumsAjax($search, 0, false)),
+                    'recordsTotal' => count($trackRepository->getTracksByAlbumsAjax(null, 0, false)),
                 ];
 
                 foreach ($albums as $album) {
@@ -143,6 +141,7 @@ final class MusicCollectionController extends AbstractController
         CloudTrackRepository    $cloudTrackRepository,
         CloudAlbumRepository    $cloudAlbumRepository,
         ShuflerExtensionRuntime $shuflerRuntime,
+        #[MapQueryString]   DataTableQuery $query,
         string                  $mode
     ): Response
     {
@@ -152,30 +151,25 @@ final class MusicCollectionController extends AbstractController
         }
 
         if ($request->isXmlHttpRequest()) {
-            $parameters = $request->query->all();
-            $length = $parameters['length'];
-            $length = $length && ($length > 0) ? $length : 0;
+            $length = $query->length;
+            $start = $query->start;
+            $search = $query->search;
+            $order = $query->order;
 
-            $start = $parameters['start'];
-            $start = $length ? ($start && $start > 0 ? $start : 0) / $length : 0;
+            $offset = $length ? ($start && $start > 0 ? $start : 0) / $length : 0;
+            $search = !empty($search['value']) ? $search['value'] : null;
 
-            $search = $parameters['search'];
-
-            $filters = [
-                'query' => @$search['value']
-            ];
-
-            $sort = !empty($parameters['order'][0]['column']) ? $parameters['order'][0]['column'] : 1;
+            $sort = !empty($order[0]['column']) ? $order[0]['column'] : 1;
             $sort = $columnsToDisplay[$sort]['data'];
 
-            $dir = @$parameters['order'][0]['dir'];
+            $dir = !empty($order[0]['dir']) ? $order[0]['dir'] : null;
 
             if ($mode === 'tracks') {
-                $tracks = $cloudTrackRepository->getTracksAjax($filters, $start, $length, $sort, $dir);
+                $tracks = $cloudTrackRepository->getTracksAjax($search, $offset, $length, $sort, $dir);
 
                 $output = [
                     'data' => [],
-                    'recordsFiltered' => count($cloudTrackRepository->getTracksAjax($filters, 0, false)),
+                    'recordsFiltered' => count($cloudTrackRepository->getTracksAjax($search, 0, false)),
                     'recordsTotal' => $cloudTrackRepository->count([]),
                 ];
 
@@ -194,13 +188,12 @@ final class MusicCollectionController extends AbstractController
                     ];
                 }
             } elseif ($mode === 'albums') {
-
-                $albums = $cloudAlbumRepository->getAlbumsAjax($filters, $start, $length, $sort, $dir);
+                $albums = $cloudAlbumRepository->getAlbumsAjax($search, $offset, $length, $sort, $dir);
 
                 $output = [
                     'data' => [],
-                    'recordsFiltered' => count($cloudAlbumRepository->getAlbumsAjax($filters, 0, false)),
-                    'recordsTotal' => count($cloudAlbumRepository->getAlbumsAjax([], 0, false)),
+                    'recordsFiltered' => count($cloudAlbumRepository->getAlbumsAjax($search, 0, false)),
+                    'recordsTotal' => count($cloudAlbumRepository->getAlbumsAjax(null, 0, false)),
                 ];
 
                 foreach ($albums as $album) {
@@ -230,9 +223,8 @@ final class MusicCollectionController extends AbstractController
     }
 
     #[Route('/artist', name: '_artist', methods: ['GET'])]
-    public function getArtist(Request $request, ArtistRepository $artistRepository): Response
+    public function getArtist(Request $request, ArtistRepository $artistRepository, #[MapQueryParameter] string $artist): Response
     {
-        $artist = $request->query->get('artist');
         $artist = $artistRepository->findOneBy(['name' => $artist]);
 
         if (!$artist) {
@@ -245,21 +237,18 @@ final class MusicCollectionController extends AbstractController
     }
 
     #[Route('/tracks_album', name: '_tracks_album', methods: ['GET'])]
-    public function getTracksByAlbumAjax(Request $request, TrackRepository $trackRepository, AlbumRepository $albumRepository): Response
+    public function getTracksByAlbumAjax(#[MapQueryString] MusicQuery $query, TrackRepository $trackRepository, AlbumRepository $albumRepository): Response
     {
-        $artist = $request->query->get('artist');
-        $albumName = $request->query->get('album');
-        $isModal = $request->query->get('modal') ?? false;
+        $artist = $query->artist;
+        $albumName = $query->album;
+        $isModal = $query->isModal ?? false;
         $tracks = $trackRepository->getTracksByAlbum($artist, $albumName);
         $album = $albumRepository->findOneBy(['auteur' => $artist, 'name' => $albumName]);
 
         if (empty($album)) {
-            $album['auteur'] = $artist;
-            $album['name'] = $albumName;
-            $album['annee'] = null;
-            $album['genre'] = null;
-            $album['picture'] = null;
-            $album['youtubeKey'] = null;
+            $album = new Album();
+            $album->setAuteur($artist);
+            $album->setName($albumName);
         }
 
         if ($isModal) {
@@ -312,9 +301,9 @@ final class MusicCollectionController extends AbstractController
     }
 
     #[Route('/filter-couch', name: '_filter_couch', methods: ['GET'])]
-    public function filterCouch(Request $request, FilterPieceRepository $filterPieceRepository, MusicHelper $musicHelper): Response
+    public function filterCouch(#[MapQueryString] MusicQuery $query, FilterPieceRepository $filterPieceRepository, MusicHelper $musicHelper): Response
     {
-        $params = $musicHelper->handleParams($request);
+        $params = $musicHelper->handleParams($query);
         $form = $this->createForm(FilterVTrackType::class, $params, ['mode' => 'pieces']);
         $filterlistes = $filterPieceRepository->findBy([], ['name' => 'ASC']);
 
@@ -326,13 +315,13 @@ final class MusicCollectionController extends AbstractController
 
     #[Route('/couch', name: '_couch', methods: ['GET'])]
     public function couch(
-        Request $request,
-        VTrackRepository $vTrackRepository,
-        AlbumRepository $albumRepository,
-        MusicHelper $musicHelper
+        #[MapQueryString] MusicQuery $query,
+        VTrackRepository             $vTrackRepository,
+        AlbumRepository              $albumRepository,
+        MusicHelper                  $musicHelper
     ): Response
     {
-        $params = $musicHelper->handleParams($request);
+        $params = $musicHelper->handleParams($query);
         $params['dataOrigin'] = 'piece';
         $form = $this->createForm(FilterVTrackType::class, $params, ['mode' => 'pieces']);
 

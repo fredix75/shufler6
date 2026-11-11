@@ -17,18 +17,18 @@ class CloudAlbumRepository extends ServiceEntityRepository
     }
 
     public function getAlbumsAjax(
-        array $data,
+        ?string $query,
         int $page = 0,
         ?int $max = null,
         string $sort = 'name',
-        string $dir = 'ASC'
+        ?string $dir = 'ASC'
     ): array
     {
         $qb = $this->createQueryBuilder('a');
 
-        if (!empty($data['query'])) {
+        if ($query) {
             $qb->andWhere('a.auteur like :query OR a.name like :query')
-                ->setParameter(':query', "%" . $data['query'] . "%");
+                ->setParameter(':query', "%" . $query . "%");
         }
         $direction = strtoupper($dir) === 'ASC' ? \SortDirection::Ascending : \SortDirection::Descending;
         $qb->orderBy('a.' . $sort, $direction);

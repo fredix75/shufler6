@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -51,9 +52,9 @@ final class CloudTrackController extends AbstractController
     }
 
     #[Route('/delete/{id}', name: '_delete', requirements: ['id' => '\d+'])]
-    public function deleteCloudTrack(CloudTrack $cloudTrack, Request $request, EntityManagerInterface $em): Response
+    public function deleteCloudTrack(CloudTrack $cloudTrack, EntityManagerInterface $em, #[MapQueryParameter] string $_token): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $cloudTrack->getId(), $request->query->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $cloudTrack->getId(), $_token)) {
             $em->remove($cloudTrack);
             $em->flush();
             $this->addFlash('success', 'Une track a été supprimée');

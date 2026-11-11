@@ -6,6 +6,7 @@ use App\Helper\FileHelper;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -19,10 +20,9 @@ final class ResourceController extends AbstractController
      * @throws \Exception
      */
     #[Route('/download', name: '_download')]
-    public function downloadResource(Request $request, FileHelper $fileHelper, SluggerInterface $slugger): JsonResponse
+    public function downloadResource(FileHelper $fileHelper, SluggerInterface $slugger, #[MapQueryParameter] string $url, #[MapQueryParameter] string $title): JsonResponse
     {
-        $url = $request->query->get('url');
-        $title = strtolower($slugger->slug($request->query->get('title')));
+        $title = strtolower($slugger->slug($title));
         $directory = $this->getParameter('resources')['downloads'];
         $filePath = $fileHelper->copyFileFromUrl($url, $directory, $title);
 
@@ -30,9 +30,8 @@ final class ResourceController extends AbstractController
     }
 
     #[Route('/delete', name: '_delete')]
-    public function deleteResources(Request $request, FileHelper $fileHelper): JsonResponse
+    public function deleteResources(FileHelper $fileHelper, #[MapQueryParameter] string $file): JsonResponse
     {
-        $file = $request->query->get('file');
         $directory = $this->getParameter('resources')['downloads'];
         $fileHelper->deleteFile($directory . '/' . $file);
         return new JsonResponse('ok', 204);

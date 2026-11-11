@@ -52,7 +52,7 @@ final class HomeController extends AbstractController
     }
 
     #[Route('/search/{page}', name: '_search', requirements: ['id' => '\d+'], defaults: ['page' => 1])]
-    public function search(Request $request, VideoRepository $videoRepository, PieceRepository $pieceRepository, PaginatorInterface $paginator, int $page): Response
+    public function search(Request $request, VideoRepository $videoRepository, PieceRepository $pieceRepository, PaginatorInterface $paginator): Response
     {
         $search = $request->query->get('search_field');
         $picture = null;

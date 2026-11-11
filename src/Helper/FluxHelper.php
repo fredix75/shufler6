@@ -15,6 +15,8 @@ class FluxHelper
         }
 
         $namespaces = $contenu ? $contenu->getNamespaces(true) : [];
+        $infos = [];
+
         for ($i = $offset; $i < $offset + $nbByPage; $i++) {
             if (empty($contenu[$i])) {
                 break;

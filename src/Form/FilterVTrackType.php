@@ -99,7 +99,9 @@ class FilterVTrackType extends AbstractType
                     return $notes;
                 }),
             ]);
-        } elseif ($options['mode'] !== 'radial') {
+        }
+
+        if ($options['mode'] !== 'pieces') {
             $builder->add('random', CheckboxType::class, [
                 'required' => false,
             ]);

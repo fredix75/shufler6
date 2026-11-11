@@ -13,6 +13,7 @@ use App\Repository\VideoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -144,9 +145,9 @@ final class VideoController extends AbstractController
 
     #[Route('/delete/{id}', name: '_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     #[IsGranted('VIDEO_DELETE', "video", "No pasaran")]
-    public function delete(Request $request, VideoRepository $videoRepository, Video $video): Response
+    public function delete(VideoRepository $videoRepository, Video $video, #[MapQueryParameter] string $_token): Response
     {
-        if ($this->isCsrfTokenValid('video_delete'.$video->getId(), $request->query->get('_token'))) {
+        if ($this->isCsrfTokenValid('video_delete'.$video->getId(), $_token)) {
             $videoRepository->remove($video, true);
             $this->addFlash('success', 'Vidéo supprimée');
         }
@@ -192,12 +193,11 @@ final class VideoController extends AbstractController
     }
 
     #[Route('/autocomplete', name: '_autocomplete')]
-    public function autocomplete(Request $request, VideoRepository $videoRepository, TrackRepository $trackRepository): Response
+    public function autocomplete(Request $request, VideoRepository $videoRepository, TrackRepository $trackRepository, #[MapQueryParameter] string $q): Response
     {
         if ($request->isXmlHttpRequest()) {
-            $search = $request->query->get('q');
-            $videos = $videoRepository->searchAjax($search);
-            $tracks = $trackRepository->searchAjax($search);
+            $videos = $videoRepository->searchAjax($q);
+            $tracks = $trackRepository->searchAjax($q);
             $suggestions = [];
             if ($videos) {
                 foreach ($videos as $video) {
