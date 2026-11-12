@@ -71,9 +71,9 @@
 
         <!-- Juke-Box !-->
 
-        <section class="row">
-            <div class="col-12 col-lg-3 mx-auto" data-controller="music">
-                <div class="text-center mb-2">
+        <section class="row align-items-center">
+            <div class="col-12 col-lg-3 mx-auto my-2" data-controller="music">
+                <div class="text-center">
                     <h2>Juke-Box</h2>
                     <p>Des morceaux de choix</p>
                     <div class="d-flex justify-content-around">
@@ -84,7 +84,7 @@
                         </a>
                     </div>
                 </div>
-                <turbo-frame id="juke-box" src="{{ path('main_juke-box') }}" loading="lazy">
+                <turbo-frame id="juke-box" src="{{ path('main_juke-box') }}" loading="lazy" class="m-4">
                     <div class="d-flex justify-content-center my-5">
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="font-size:6em;color:orange;"></span>
                     </div>
@@ -100,10 +100,10 @@
 
             <!-- OMG !-->
 
-            <div class="col-12 col-lg-3 p-4 text-center mx-auto" style="background-color:#4d1500;">
+            <div class="col-12 col-lg-3 p-4 text-center mx-auto">
                 <h2>OMG, WTF ??</h2>
                 <p>Du bizarre, du cheulou comme disent les jeunes.. On y trouve aussi du mdr, voire du ptdr</p>
-                <div class="row g-4 row-cols-1 row-cols-sm-2 row-cols-lg-1 p-2">
+                <div class="row g-4 row-cols-1 row-cols-sm-2 row-cols-lg-1 p-2 mt-4">
                     {% for video in stranges|slice(0, 4) %}
                         <div>
                             <twig:VideoFrame :video="video"/>

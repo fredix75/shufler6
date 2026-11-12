@@ -27,7 +27,6 @@ use Symfony\UX\Pagination\PaginatorInterface;
 #[IsGranted("ROLE_USER")]
 final class VideoController extends AbstractController
 {
-
     #[Route('/list/{page}',
         name: '_list',
         requirements: ['page' => '\d+'],

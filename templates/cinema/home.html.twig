@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} :: CINEMA DE MINUIT{% endblock %}
+
+{% block body %}
+    <h1 style="text-align: center">CINEMA DU 20e SIECLE</h1>
+    <div class="d-flex row p-4 row-cols-2 row-cols-md-4 row-cols-xl-6 g-4 align-items-center justify-content-center">
+    {% for film in films %}
+        <div>
+            <a href="{{ path('cinema_film', {id: film.id}) }}">
+            <img src="{{ asset('uploads/cinema/' ~ film.picture) }}" width="100%" loading="lazy" alt="{{ film.name }}" title="{{ film.name }}">
+            </a>
+            <div class="media-body text-center p-4">
+                <h3>{{ film.name|upper }}</h3>
+                <span>{{ film.directors|join(', ') }} - {{ film.year }}</span>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+    {% include 'cinema/part/_filters.html.twig' %}
+{% endblock %}
+
+

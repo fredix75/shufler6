@@ -8,8 +8,7 @@ class ApiSearchPlaylistQuery
 {
     public ?string $search_api = null;
 
-    #[Assert\PositiveOrZero]
-    public ?int $artist = null;
+    public string $artist;
 
     #[Assert\PositiveOrZero]
     public ?int $id_album = null;

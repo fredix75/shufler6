@@ -2,16 +2,19 @@
 
 namespace App\Controller\Cinema;
 
+use App\Dto\FilmQuery;
 use App\Entity\Film;
 use App\Entity\Genrefilm;
 use App\Enum\FilmTypeEnum;
 use App\Form\FilmType;
+use App\Form\FilterFilmsType;
 use App\Helper\ApiRequester;
 use App\Repository\FilmRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -20,9 +23,24 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class CinemaController extends AbstractController
 {
     #[Route('/', name: '_home')]
-    public function homeCine(): Response
+    public function homeCine(Request $request, FilmRepository $filmRepository, #[MapQueryString] FilmQuery $query): Response
     {
-        return new Response('CINEMA !!');
+        $films = $filmRepository->getFilmsRandom();
+
+        $films = array_map(function($film) {
+            $film['directors'] = array_unique(json_decode($film['directors'], true));
+            $film['genres'] = array_unique(json_decode($film['genres'], true));
+            $film['genres2'] = array_unique(json_decode($film['genres2'], true));
+            return $film;
+        }, $films);
+
+        $form = $this->createForm(FilterFilmsType::class);
+        $form->handleRequest($request);
+
+        return $this->render('cinema/home.html.twig', [
+           'films' => $films,
+            'form_cinema' => $form,
+        ]);
     }
 
     #[Route('/update/film/{id}', name: '_update_film', defaults: ['id' => 0])]
