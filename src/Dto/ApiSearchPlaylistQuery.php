@@ -14,6 +14,6 @@ final class ApiSearchPlaylistQuery
         public readonly ?int $id_album,
 
         #[Assert\PositiveOrZero]
-        public ?int $id_cloudalbum
+        public readonly ?int $id_cloudalbum
     ) {}
 }

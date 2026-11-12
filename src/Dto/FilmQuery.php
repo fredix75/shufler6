@@ -5,12 +5,12 @@ namespace App\Dto;
 class FilmQuery
 {
     public function __construct(
-        public ?string $search,
+        public readonly ?string $search,
 
-        public ?array $genres,
+        public readonly ?array $genres,
 
-        public ?string $director,
+        public readonly ?string $director,
 
-        public ?string $year,
+        public readonly ?string $year,
     ) {}
 }
