@@ -6,12 +6,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 final class VideoQuery
 {
-    #[Assert\PositiveOrZero]
-    public ?int $categorie = 0;
+    public function __construct(
+        #[Assert\PositiveOrZero]
+        public readonly ?int $categorie,
 
-    public ?int $genre = 0;
+        public readonly ?int $genre,
 
-    #[Assert\Regex(pattern: "/^(<1939|\d{4}-\d{4})$/i")]
-    public string $periode = '';
-    public string $search = '';
+        #[Assert\Regex(pattern: "/^(<1939|\d{4}-\d{4})$/i")]
+        public readonly ?string $periode,
+        public readonly ?string $search,
+    ){}
 }

@@ -4,15 +4,16 @@ namespace App\Dto;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class ApiSearchPlaylistQuery
+final class ApiSearchPlaylistQuery
 {
-    public ?string $search_api = null;
+    public function __construct(
+        public readonly ?string $search_api,
+        public readonly ?string $artist,
 
-    public string $artist;
+        #[Assert\PositiveOrZero]
+        public readonly ?int $id_album,
 
-    #[Assert\PositiveOrZero]
-    public ?int $id_album = null;
-
-    #[Assert\PositiveOrZero]
-    public ?int $id_cloudalbum = null;
+        #[Assert\PositiveOrZero]
+        public ?int $id_cloudalbum
+    ) {}
 }

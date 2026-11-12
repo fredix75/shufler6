@@ -6,13 +6,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 final class DataTableQuery
 {
-    #[Assert\PositiveOrZero]
-    public int $length = 0;
+    public function __construct(
+        #[Assert\PositiveOrZero]
+        public readonly ?int $length,
 
-    #[Assert\PositiveOrZero]
-    public int $start = 0;
+        #[Assert\PositiveOrZero]
+        public readonly ?int $start,
 
-    public array $order = [];
+        public readonly ?array $order,
 
-    public array $search = [];
+        public readonly ?array $search
+    ){}
 }

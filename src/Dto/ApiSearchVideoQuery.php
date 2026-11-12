@@ -6,14 +6,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class ApiSearchVideoQuery
 {
-    public ?string $search_api = null;
+    public function __construct(
+        public readonly ?string $search_api,
 
-    #[Assert\PositiveOrZero]
-    public ?int $id_video = null;
+        #[Assert\PositiveOrZero]
+        public readonly ?int $id_video,
 
-    #[Assert\PositiveOrZero]
-    public ?int $id_track = null;
+        #[Assert\PositiveOrZero]
+        public readonly ?int $id_track,
 
-    #[Assert\PositiveOrZero]
-    public ?int $id_cloud_track = null;
+        #[Assert\PositiveOrZero]
+        public readonly ?int $id_cloud_track
+    ) {}
 }

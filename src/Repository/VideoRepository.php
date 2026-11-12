@@ -60,7 +60,7 @@ class VideoRepository extends ServiceEntityRepository
         ?string $search = null,
         ?int $categorie = null,
         ?int $genre = null,
-        string $periode = '0',
+        ?string $periode = '0',
         ?string $plateforme = null
     ): array
     {
@@ -76,7 +76,7 @@ class VideoRepository extends ServiceEntityRepository
     public function getVideosQuery(
         ?int $categorie = null,
         ?int $genre = null,
-        string $periode = '0',
+        ?string $periode = '0',
         ?string $search = null,
         ?string $plateforme = null
     ): QueryBuilder

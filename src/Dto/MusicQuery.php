@@ -6,25 +6,27 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 final class MusicQuery
 {
-    public ?string $auteur = null;
+    public function __construct(
+        public readonly ?string $auteur,
 
-    public ?string $artist = null;
+        public readonly ?string $artist,
 
-    public ?string $album = null;
+        public readonly ?string $album,
 
-    public ?array $genres = [];
+        public readonly ?array $genres,
 
-    #[Assert\Positive]
-    public ?int $annee = null;
+        #[Assert\Positive]
+        public readonly ?int $annee,
 
-    public ?string $search = null;
+        public readonly ?string $search,
 
-    #[Assert\PositiveOrZero]
-    public ?int $note = null;
+        #[Assert\PositiveOrZero]
+        public readonly ?int $note,
 
-    public ?bool $random = false;
+        public readonly ?bool $random,
 
-    public bool $is_disambiguate = false;
+        public readonly ?bool $is_disambiguate,
 
-    public bool $isModal = false;
+        public readonly ?bool $isModal,
+    ) {}
 }
