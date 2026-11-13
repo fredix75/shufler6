@@ -60,16 +60,6 @@ final class AdminController extends AbstractController
         ]);
     }
 
-    #[Route('/stats', name: '_stats')]
-    public function statistiques(TrackRepository $trackRepository): Response
-    {
-        $stats = $trackRepository->getTracksByCountry();
-
-        dd($stats);
-
-        return $this->render('admin/statistiques.html.twig');
-    }
-
     #[Route('/extra-note', name: '_extra_note')]
     public function listExtraNote(Request $request, TrackRepository $trackRepository): Response
     {
@@ -104,6 +94,84 @@ final class AdminController extends AbstractController
         ]);
     }
 
+    #[Route('/stats/tracks', name: '_stats_tracks')]
+    public function musicCollStats(TrackRepository $trackRepository, ChartBuilderInterface $chartBuilder): Response
+    {
+        $genresStats = $trackRepository->createQueryBuilder('t')
+            ->select('t.genre, COUNT(DISTINCT t.id) as nb')
+            ->groupBy('t.genre')
+            ->getQuery()->getResult();
+
+        $yearsStats = $trackRepository->createQueryBuilder('t')
+            ->select('t.annee, count(t.id) as nb')
+            ->addSelect('SUM(CASE WHEN t.youtubeKey <> :nope THEN 1 ELSE 0 END) AS tracked')
+            ->setParameter('nope', 'nope')
+            ->groupBy('t.annee')
+            ->orderBy('t.annee', \SortDirection::Descending)
+            ->having('t.annee <> :null AND t.annee > :seuil')
+            ->setParameter('null', '')
+            ->setParameter('seuil', 1920)
+            ->getQuery()->getResult();
+
+        $genresChart = $chartBuilder->createChart(Chart::TYPE_PIE);
+        $genresChart->setData([
+            'labels' => array_map(fn($stat) => $stat['genre'], $genresStats),
+            'datasets' => [
+                [
+                    'data' => array_map(fn($stat) => (int)$stat['nb'], $genresStats),
+                ]
+            ]
+        ]);
+
+        $genresChart->setOptions([
+            'responsive' => true,
+            'plugins' => [
+                'legend' => [
+                    'position' => 'top',
+                ],
+            ],
+        ]);
+
+        $yearChart = $chartBuilder->createChart(Chart::TYPE_BAR);
+
+        $yearChart->setData([
+            'labels' => array_map(fn($stat) => $stat['annee'], $yearsStats),
+            'backgroundColor' => 'rgb(45,45,45)',
+            'datasets' => [
+                [
+                    'label' => 'Non trackés',
+                    'backgroundColor' => 'rgb(255, 99, 132)',
+                    'data' => array_map(fn($stat) => (int)$stat['nb'] - (int)$stat['tracked'], $yearsStats),
+                ],
+                [
+                    'label' => 'Trackés',
+                    'backgroundColor' => 'rgb(54, 162, 235)',
+                    'data' => array_map(fn($stat) => (int)$stat['tracked'], $yearsStats),
+                ],
+            ],
+        ]);
+
+        $yearChart->setOptions([
+            'animation' => true,
+            'responsive' => true,
+            'scales' => [
+                'x' => [
+                    'stacked' => true,
+                ],
+                'y' => [
+                    'stacked' => true,
+                    'suggestedMax' => 1600,
+                ],
+            ],
+        ]);
+
+        return $this->render('admin/music_stats.html.twig', [
+            'chart_genres' => $genresChart,
+            'chart_years' => $yearChart,
+        ]);
+
+    }
+
     #[Route('/radial', name: '_radial')]
     public function radialStats(ChartBuilderInterface $chartBuilder, RadialRepository $radialRepository): Response
     {
@@ -135,6 +203,7 @@ final class AdminController extends AbstractController
 
         $chart->setOptions([
             'animation' => true,
+            'responsive' => true,
             'scales' => [
                 'x' => [
                     'stacked' => true,

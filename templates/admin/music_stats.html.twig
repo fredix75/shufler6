@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} :: Radial Stats{% endblock %}
+
+{% block body %}
+    <h1>Music Stats</h1>
+    <div class="row d-flex row-cols-1 row-cols-md-2 row-cols-xxl-3 justify-content-center g-4">
+        <div class="" style="background-color: #130e0e;color:white;">
+            {{ render_chart(chart_genres, {'class': 'my-chart'}) }}
+        </div>
+        <div class="" style="background-color: #130e0e;color:white;">
+            {{ render_chart(chart_years, {'class': 'my-chart'}) }}
+        </div>
+    </div>
+{% endblock %}
+
+
