@@ -89,8 +89,8 @@ class MusicHelper
             ->update(Piece::class, 'p')
             ->set('p.youtubeKey', ':key')
             ->setParameter('key', $key)
-            ->where('p.auteur = :auteur')
-            ->andWhere('p.titre = :titre')
+            ->where('p.auteur like :auteur')
+            ->andWhere('p.titre like :titre')
             ->setParameter('auteur', $author)
             ->setParameter('titre', $title)
             ->getQuery()->execute();
@@ -100,8 +100,8 @@ class MusicHelper
             ->update(Radial::class, 'r')
             ->set('r.youtubeKey', ':key')
             ->setParameter('key', $key)
-            ->where('r.author = :auteur')
-            ->andWhere('r.name = :titre')
+            ->where('r.author like :auteur')
+            ->andWhere('r.name like :titre')
             ->setParameter('auteur', $author)
             ->setParameter('titre', $title)
             ->getQuery()->execute();
