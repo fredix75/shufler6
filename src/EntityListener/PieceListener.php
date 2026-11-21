@@ -52,9 +52,9 @@ class PieceListener
         }
         if ($key) {
             if ($args->hasChangedField('youtubeKey')) {
-                if (get_class($piece) === Piece::class) {
+                if ($piece instanceof Piece) {
                     $this->musicHelper->updateKeyForAll($key, $piece->getAuteur(), $piece->getTitre());
-                } elseif (get_class($piece) === Radial::class) {
+                } elseif ($piece instanceof Radial) {
                     $this->musicHelper->updateKeyForAll($key, $piece->getAuthor(), $piece->getName());
                 }
             }

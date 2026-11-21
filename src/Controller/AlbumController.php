@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Dto\AlbumInput;
 use App\Dto\MusicQuery;
 use App\Entity\MusicCollection\Album;
 use App\Entity\MusicCollection\CloudAlbum;
@@ -17,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\Pagination\PaginatorInterface;
@@ -26,17 +28,17 @@ use Symfony\UX\Pagination\PaginatorInterface;
 final class AlbumController extends AbstractController
 {
     #[Route('/edit/{id}', name: '_edit', requirements: ['id' => '\d+'])]
-    public function editAlbum(Album $album, Request $request, AlbumRepository $albumRepository): Response
+    public function editAlbum(Album $album, Request $request, AlbumRepository $albumRepository, #[MapRequestPayload] AlbumInput $input): Response
     {
-        if ($request->request->get('albumkey')) {
-            $album->setYoutubeKey($request->request->get('albumkey'));
+        if ($input->albumkey) {
+            $album->setYoutubeKey($input->albumkey);
             $albumRepository->save($album, true);
 
             return $this->redirectToRoute('music_albums');
         }
 
-        if ($request->request->get('albumpicture')) {
-            $album->setPicture($request->request->get('albumpicture'));
+        if ($input->albumpicture) {
+            $album->setPicture($input->albumpicture);
             $albumRepository->save($album, true);
 
             return $this->redirectToRoute('music_albums');
@@ -52,15 +54,15 @@ final class AlbumController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            $album->setYoutubeKey($form->get('youtubeKey')->getData());
-            $album->setPicture($form->get('picture')->getData());
+            $album->setYoutubeKey($input->youtubeKey);
+            $album->setPicture($input->picture);
             $albumRepository->save($album, true);
 
             return new Response(json_encode([
                 'youtube_key' => $album->getYoutubeKey(),
                 'picture' => $album->getPicture(),
                 'id' => $album->getId(),
-            ]), 200);
+            ]), Response::HTTP_OK);
         }
 
         return $this->render('music/album_edit.html.twig', [

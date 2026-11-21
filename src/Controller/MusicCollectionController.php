@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Dto\DataTableQuery;
 use App\Dto\MusicQuery;
+use App\Dto\NoteInput;
 use App\Entity\MusicCollection\Album;
 use App\Entity\MusicCollection\Piece;
 use App\Entity\MusicCollection\Track;
@@ -31,6 +32,7 @@ use App\Repository\MusicCollection\TrackRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -410,11 +412,11 @@ final class MusicCollectionController extends AbstractController
     }
 
     #[Route('/set-extra-note', name: '_set_extra_note', methods: ['POST'])]
-    public function setExtraNote(Request $request, EntityManagerInterface $em): Response
+    public function setExtraNote(EntityManagerInterface $em, #[MapRequestPayload] NoteInput $input): Response
     {
-        $id = $request->request->get('id');
-        $origin = $request->request->get('origin');
-        $note = $request->request->get('note');
+        $id = $input->id;
+        $origin = $input->origin;
+        $note = $input->note;
 
         switch ($origin) {
             case 'piece':

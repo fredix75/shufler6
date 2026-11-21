@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -94,7 +95,7 @@ final class VideoController extends AbstractController
     public function edit(
         Request         $request,
         VideoRepository $videoRepository,
-        ?Video          $video
+        ?Video          $video,
     ): Response
     {
         if ($video && !empty($request->query->get('publish'))) {
