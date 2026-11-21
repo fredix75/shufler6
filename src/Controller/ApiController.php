@@ -2,11 +2,9 @@
 
 namespace App\Controller;
 
-use App\Dto\ApiSearchPlaylistInput;
 use App\Dto\ApiSearchPlaylistQuery;
 use App\Dto\ApiSearchVideoQuery;
 use App\Entity\Commune;
-use App\Form\AlbumPictureType;
 use App\Form\SearchCommuneType;
 use App\Helper\ApiRequester;
 use App\Helper\VideoHelper;
@@ -17,7 +15,6 @@ use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
-use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -32,7 +29,6 @@ use Symfony\UX\Map\Map;
 use Symfony\UX\Map\Marker;
 use Symfony\UX\Map\Point;
 use Vimeo\Exceptions\VimeoRequestException;
-use Vimeo\Vimeo;
 
 #[Route('/api', name: 'api')]
 final class ApiController extends AbstractController
