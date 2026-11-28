@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} :: radial Import CSV{% endblock %}
+
+{% block body %}
+    <h1>Radial Import CSV</h1>
+    <section class="row">
+        <div class="col-12 col-xl-6 mx-auto text-center">
+            {{ form_start(form) }}
+
+            {{ form_widget(form) }}
+            <button type="submit" class="btn btn-primary btn-lg">OK</button>
+
+            {{ form_end(form) }}
+        </div>
+    </section>
+{% endblock %}
+
+
+

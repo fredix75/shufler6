@@ -58,12 +58,13 @@ class FileHelper
         UploadedFile $file,
         ?string $fileName = null,
         ?string $subPath = null,
-        ?string $imageToDelete = null
+        ?string $imageToDelete = null,
+        ?string $mainDir = null
     ): string
     {
         $safeFilename = $fileName ? strtolower($this->slugger->slug($fileName)) : md5(uniqid());
         $newFilename = sprintf('%s.%s', $safeFilename, $file->guessExtension());
-        $directory = $this->directory;
+        $directory = $mainDir ? $mainDir.'/' : $this->directory;
         $directory .= $subPath ?? '';
         try {
             if ($imageToDelete) {

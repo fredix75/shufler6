@@ -3,12 +3,15 @@
 namespace App\Controller;
 
 use App\Form\ExtraNotationType;
+use App\Form\UploadRadialType;
 use App\Helper\ApiRequester;
+use App\Helper\FileHelper;
 use App\Helper\VideoHelper;
 use App\Repository\MusicCollection\TrackRepository;
 use App\Repository\RadialRepository;
 use App\Repository\VideoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -218,6 +221,34 @@ final class AdminController extends AbstractController
         return $this->render('admin/radial_stats.html.twig', [
             'chart' => $chart,
         ]);
+    }
+
+    #[Route('/radial/upload', name: '_radial_upload', methods: ['GET', 'POST'])]
+    public function uploadRadialFile(Request $request, FileHelper $fileHelper, #[Autowire('%import_directory%')] string $dir): Response
+    {
+        $form = $this->createForm(UploadRadialType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $file = $form->get('file')->getData();
+
+            if ($file) {
+                $name = sprintf('%s-export', new \DateTime()->format('YmdHis'));
+                if ($fileHelper->uploadFile($file, $name, 'radial', null, $dir)) {
+                    $this->addFlash('success', 'Upload success!');
+                } else {
+                    $this->addFlash('error', 'Upload failed!');
+                }
+            }
+
+            return $this->redirectToRoute($request->attributes->get('_route'));
+        }
+
+        return $this->render('admin/radial_upload.html.twig', [
+            'form' => $form,
+        ]);
+
     }
 
 }

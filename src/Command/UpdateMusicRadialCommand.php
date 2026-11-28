@@ -8,8 +8,11 @@ use App\Repository\RadialRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -27,10 +30,12 @@ class UpdateMusicRadialCommand extends Command
 {
 
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
-        private readonly RadialRepository       $radialRepository,
-        private readonly ApiRequester           $apiRequester,
-        ?string                                 $name = null
+        private readonly EntityManagerInterface          $entityManager,
+        private readonly RadialRepository                $radialRepository,
+        private readonly ApiRequester                    $apiRequester,
+        private readonly Filesystem                      $filesystem,
+        #[Autowire('%import_directory%')] private string $dir,
+        ?string                                          $name = null
     )
     {
         parent::__construct($name);
@@ -47,11 +52,13 @@ class UpdateMusicRadialCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $this->handleFile($output);
+
         $tracks = $this->radialRepository
             ->createQueryBuilder('r')
             ->select('r.author', 'r.name')
             ->distinct()
-            ->addSelect( 'r.year')
+            ->addSelect('r.year')
             ->andWhere("r.youtubeKey IS NULL")
             ->setMaxResults(200)
             ->orderBy('r.year', 'DESC')
@@ -93,5 +100,53 @@ class UpdateMusicRadialCommand extends Command
         $output->writeln(sprintf('%s: %d tracks updated, %d ignorés', $now->format('d-m-Y G:i:s'), $i, $nbNope));
 
         return Command::SUCCESS;
+    }
+
+    protected function handleFile(OutputInterface $output): bool
+    {
+        $files = [];
+        $dir = $this->dir . '/radial';
+        if (is_dir($dir)) {
+            $files = scandir($dir);
+            $files = array_filter($files, function ($item) {
+                return !is_dir($item) && preg_match('/^.*(?<!-done\.csv)$/', $item, $matches, PREG_OFFSET_CAPTURE);
+            });
+        }
+
+        if (empty($files)) {
+            return false;
+        }
+
+        $files = array_merge($files);
+        $file = $files[0];
+
+        $command = $this->getApplication()->find('shufler:import-data');
+        $arguments = [
+            'command' => 'shufler:import-data',
+            'filename' => sprintf('radial/%s', $file),
+            'entity' => 'Radial',
+        ];
+
+        $greetInput = new ArrayInput($arguments);
+        $returnCode = $command->run($greetInput, $output);
+        if ($returnCode !== Command::SUCCESS) {
+            $output->writeln('<error>Handle File a échoué</error>');
+            return false;
+        }
+
+        $filePath = sprintf('%s/%s', $dir, $file);
+        $infos = pathinfo($filePath);
+
+        $newName = sprintf(
+            '%s/%s-done.%s',
+            $dir,
+            $infos['filename'],
+            $infos['extension']
+        );
+
+        $this->filesystem->rename($filePath, $newName, true);
+        $output->writeln(sprintf('%s a été importé', $file));
+
+        return true;
     }
 }
